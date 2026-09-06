@@ -1,7 +1,7 @@
 import { Entity } from '../../engine/core/Entity';
 import { Vector2 } from '../../engine/core/Vector2';
 import { Bullet } from '../../engine/core/Bullet';
-import { BulletPattern } from '../bullet-patterns/BulletPattern';
+import { BulletPattern, BulletFactory } from '../bullet-patterns/BulletPattern';
 
 export interface EnemyMovementWayPoint {
   time: number;
@@ -17,6 +17,7 @@ export interface EnemyConfig {
   shootInterval?: number;
   shootPattern?: BulletPattern;
   movementWayPoints?: EnemyMovementWayPoint[];
+  bulletFactory?: BulletFactory;
 }
 
 export class Enemy extends Entity {
@@ -41,6 +42,9 @@ export class Enemy extends Entity {
     this.color = config.color ?? 0x44aaff;
     this.shootInterval = config.shootInterval ?? 0;
     this.shootPattern = config.shootPattern;
+    if (this.shootPattern && config.bulletFactory) {
+      this.shootPattern = this.shootPattern.withFactory(config.bulletFactory);
+    }
     this.waypoints = config.movementWayPoints ?? [];
   }
 

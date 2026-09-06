@@ -52,15 +52,29 @@
         position: relative;
         width: 640px;
         height: 480px;
+        max-width: 100vw;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(91, 184, 179, 0.2);
         border: 2px solid #2f7571;
         border-radius: 8px;
         overflow: hidden;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
       }
       #game-root canvas {
         display: block;
         width: 100%;
         height: 100%;
+      }
+      @media (max-width: 700px) {
+        #game-root {
+          width: 100vw;
+          height: 75vw;
+          border-radius: 0;
+          border-left: none;
+          border-right: none;
+        }
       }
     </style>
   </head>
@@ -68,7 +82,7 @@
     <header>
       <h1>東方永夜抄 ~ Imperishable Night (Stage 1 Demo)</h1>
       <p class="instructions">
-        移动: <span>方向键 / WASD</span> | 射击: <span>Z / Space</span> | 灵击(Bomb): <span>X</span> | 低速: <span>Shift</span> | 性能监控: <span>F12</span>
+        移动: <span>方向键 / WASD</span> | 射击: <span>Z / Space</span> | 灵击(Bomb): <span>X</span> | 低速: <span>Shift</span> | 性能监控: <span>F12</span> | 触屏: <span>拖动自机</span>
       </p>
     </header>
 

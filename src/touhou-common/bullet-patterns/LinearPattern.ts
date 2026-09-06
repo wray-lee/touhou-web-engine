@@ -1,6 +1,7 @@
-import { BulletPattern } from './BulletPattern';
+import { BulletPattern, spawnSpread } from './BulletPattern';
 import { Entity } from '../../engine/core/Entity';
 import { Bullet } from '../../engine/core/Bullet';
+import { EntityTag } from '../../engine/core/Entity';
 
 export interface LinearPatternConfig {
   count: number;
@@ -9,7 +10,7 @@ export interface LinearPatternConfig {
   spreadAngle?: number;
   radius?: number;
   color?: number;
-  tag?: string;
+  tag?: EntityTag;
 }
 
 export class LinearPattern extends BulletPattern {
@@ -18,24 +19,15 @@ export class LinearPattern extends BulletPattern {
   }
 
   spawn(emitter: Entity, _time: number, _player?: Entity): Bullet[] {
-    const { count, speed, baseAngle, spreadAngle = 0, radius = 4, color = 0x3388ff, tag = 'enemy-bullet' } = this.config;
-    const bullets: Bullet[] = [];
-
-    const startAngle = count > 1 ? baseAngle - (spreadAngle * (count - 1)) / 2 : baseAngle;
-
-    for (let i = 0; i < count; i++) {
-      const angle = startAngle + spreadAngle * i;
-      bullets.push(
-        new Bullet({
-          position: { x: emitter.position.x, y: emitter.position.y },
-          velocity: { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
-          radius,
-          color,
-          tag,
-        })
-      );
-    }
-
-    return bullets;
+    const {
+      count,
+      speed,
+      baseAngle,
+      spreadAngle = 0,
+      radius = 4,
+      color = 0x3388ff,
+      tag = 'enemy-bullet',
+    } = this.config;
+    return spawnSpread(this.factory, emitter, { count, speed, baseAngle, spreadAngle, radius, color, tag });
   }
 }

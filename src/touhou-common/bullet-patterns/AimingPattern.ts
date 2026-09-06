@@ -1,6 +1,7 @@
-import { BulletPattern } from './BulletPattern';
+import { BulletPattern, spawnSpread } from './BulletPattern';
 import { Entity } from '../../engine/core/Entity';
 import { Bullet } from '../../engine/core/Bullet';
+import { EntityTag } from '../../engine/core/Entity';
 
 export interface AimingPatternConfig {
   count?: number;
@@ -8,9 +9,10 @@ export interface AimingPatternConfig {
   spreadAngle?: number;
   radius?: number;
   color?: number;
-  tag?: string;
+  tag?: EntityTag;
 }
 
+/** Self-aiming spread — targets the player, then delegates to the shared spread generator. */
 export class AimingPattern extends BulletPattern {
   constructor(public config: AimingPatternConfig) {
     super();
@@ -18,24 +20,7 @@ export class AimingPattern extends BulletPattern {
 
   spawn(emitter: Entity, _time: number, player?: Entity): Bullet[] {
     const { count = 1, speed, spreadAngle = 0.2, radius = 4, color = 0xee44aa, tag = 'enemy-bullet' } = this.config;
-    const bullets: Bullet[] = [];
-
     const targetAngle = player ? emitter.angleTo(player) : Math.PI / 2;
-    const startAngle = count > 1 ? targetAngle - (spreadAngle * (count - 1)) / 2 : targetAngle;
-
-    for (let i = 0; i < count; i++) {
-      const angle = startAngle + spreadAngle * i;
-      bullets.push(
-        new Bullet({
-          position: { x: emitter.position.x, y: emitter.position.y },
-          velocity: { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
-          radius,
-          color,
-          tag,
-        })
-      );
-    }
-
-    return bullets;
+    return spawnSpread(this.factory, emitter, { count, speed, baseAngle: targetAngle, spreadAngle, radius, color, tag });
   }
 }

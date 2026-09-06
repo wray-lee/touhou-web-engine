@@ -65,4 +65,32 @@ describe('Player Controller', () => {
     player.update(180);
     expect(player.isInvulnerable).toBe(false);
   });
+
+  it('flies toward the finger while touch-dragging (mobile)', () => {
+    const input = new InputSystem();
+    const player = new Player({ x: 200, y: 300 });
+
+    // Finger starts 80px above the ship
+    input.pointerDown(200, 220);
+
+    // Simulate the real per-frame loop
+    const frame = () => {
+      player.handleInput(input);
+      player.update(1);
+    };
+
+    frame();
+    // Moves toward the finger, never overshooting past it
+    expect(player.position.y).toBeGreaterThan(220);
+    expect(player.position.y).toBeLessThan(300);
+
+    for (let i = 0; i < 30; i++) frame();
+    // Arrives at (and stays at) the finger
+    expect(player.position.y).toBeCloseTo(220, 0);
+
+    // Holds still once arrived — does not jitter past the finger
+    const before = player.position.y;
+    frame();
+    expect(player.position.y).toBe(before);
+  });
 });

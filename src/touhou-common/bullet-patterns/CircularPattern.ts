@@ -1,5 +1,5 @@
 import { BulletPattern } from './BulletPattern';
-import { Entity } from '../../engine/core/Entity';
+import { Entity, EntityTag } from '../../engine/core/Entity';
 import { Bullet } from '../../engine/core/Bullet';
 
 export interface CircularPatternConfig {
@@ -10,7 +10,7 @@ export interface CircularPatternConfig {
   color?: number;
   angularVelocity?: number;
   acceleration?: number;
-  tag?: string;
+  tag?: EntityTag;
 }
 
 export class CircularPattern extends BulletPattern {

@@ -1,4 +1,4 @@
-import { Entity } from './Entity';
+import { Entity, EntityTag } from './Entity';
 import { Vector2 } from './Vector2';
 
 export interface BulletConfig {
@@ -11,7 +11,7 @@ export interface BulletConfig {
   grazed?: boolean;
   angularVelocity?: number;
   acceleration?: number;
-  tag?: string;
+  tag?: EntityTag;
 }
 
 export class Bullet extends Entity {
@@ -36,6 +36,27 @@ export class Bullet extends Entity {
     this.grazed = config.grazed ?? false;
     this.angularVelocity = config.angularVelocity ?? 0;
     this.acceleration = config.acceleration ?? 0;
+  }
+
+  /** Re-arm a pooled instance with fresh config so it can be reused. */
+  reset(config: BulletConfig = {}): void {
+    // Reuse the bullet's existing id; re-arm everything else
+    this.position.x = config.position?.x ?? 0;
+    this.position.y = config.position?.y ?? 0;
+    this.velocity.x = config.velocity?.x ?? 0;
+    this.velocity.y = config.velocity?.y ?? 0;
+    this.rotation = 0;
+    this.hitbox.radius = config.radius ?? 4;
+    this.hitbox.offset = { x: 0, y: 0 };
+    this.isAlive = true;
+    this.tag = config.tag ?? 'enemy-bullet';
+    this.color = config.color ?? 0xff3366;
+    this.sprite = config.sprite ?? 'bullet_small';
+    this.damage = config.damage ?? 1;
+    this.grazed = config.grazed ?? false;
+    this.angularVelocity = config.angularVelocity ?? 0;
+    this.acceleration = config.acceleration ?? 0;
+    this.lifetime = 0;
   }
 
   override update(dt: number): void {

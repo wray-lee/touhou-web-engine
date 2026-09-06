@@ -6,6 +6,9 @@ export interface Hitbox {
   offset?: Vector2;
 }
 
+/** Discriminates entity kinds for collision & rendering logic. */
+export type EntityTag = 'default' | 'player' | 'enemy' | 'boss' | 'player-bullet' | 'enemy-bullet';
+
 export class Entity extends EventEmitter {
   public id: string;
   public position: Vector2;
@@ -13,7 +16,7 @@ export class Entity extends EventEmitter {
   public rotation: number;
   public hitbox: Hitbox;
   public isAlive: boolean;
-  public tag: string;
+  public tag: EntityTag;
 
   private static nextId = 1;
 
@@ -21,7 +24,7 @@ export class Entity extends EventEmitter {
     position: Partial<Vector2> = {},
     velocity: Partial<Vector2> = {},
     hitbox: Partial<Hitbox> = {},
-    tag = 'default'
+    tag: EntityTag = 'default'
   ) {
     super();
     this.id = `entity_${Entity.nextId++}`;

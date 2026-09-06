@@ -1,8 +1,9 @@
 import { Entity } from '../../engine/core/Entity';
 import { Vector2 } from '../../engine/core/Vector2';
 import { InputSystem } from '../../engine/core/InputSystem';
-import { Bullet } from '../../engine/core/Bullet';
+import { Bullet, BulletConfig } from '../../engine/core/Bullet';
 import { Bounds } from '../../engine/core/BulletSystem';
+import { BulletFactory } from '../bullet-patterns/BulletPattern';
 
 export interface PlayerConfig {
   fastSpeed?: number;
@@ -11,6 +12,8 @@ export interface PlayerConfig {
   initialLives?: number;
   initialBombs?: number;
   playfield?: Bounds;
+  /** Bullet creation hook — lets the game route shots through its object pool. */
+  bulletFactory?: BulletFactory;
 }
 
 export const DEFAULT_PLAYFIELD: Bounds = {
@@ -33,6 +36,7 @@ export class Player extends Entity {
   public invulnerabilityTimer = 0;
   public shootCooldown = 0;
   public playfield: Bounds;
+  public bulletFactory: BulletFactory;
 
   constructor(position: Partial<Vector2> = {}, config: PlayerConfig = {}) {
     super(
@@ -46,10 +50,33 @@ export class Player extends Entity {
     this.lives = config.initialLives ?? 3;
     this.bombs = config.initialBombs ?? 3;
     this.playfield = config.playfield ?? DEFAULT_PLAYFIELD;
+    this.bulletFactory = config.bulletFactory ?? ((cfg) => new Bullet(cfg));
+  }
+
+  private makeBullet(config: BulletConfig): Bullet {
+    return this.bulletFactory(config);
   }
 
   handleInput(input: InputSystem): void {
     this.isSlowMode = input.isKeyDown('slow');
+
+    // Touch drag: fly the ship toward the finger, smoothed & speed-capped
+    if (input.isDragging) {
+      const dx = input.pointerPos.x - this.position.x;
+      const dy = input.pointerPos.y - this.position.y;
+      const dist = Math.hypot(dx, dy);
+      const speed = this.isSlowMode ? this.slowSpeed : this.fastSpeed;
+      if (dist > 1) {
+        const travel = Math.min(dist, speed);
+        this.velocity.x = (dx / dist) * travel;
+        this.velocity.y = (dy / dist) * travel;
+      } else {
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+      }
+      return;
+    }
+
     const dir = input.getMovementVector();
     const speed = this.isSlowMode ? this.slowSpeed : this.fastSpeed;
 
@@ -62,7 +89,7 @@ export class Player extends Entity {
     this.shootCooldown = 5; // shoots every 5 frames
 
     const bullets: Bullet[] = [
-      new Bullet({
+      this.makeBullet({
         position: { x: this.position.x - 8, y: this.position.y - 12 },
         velocity: { x: 0, y: -16 },
         radius: 3,
@@ -70,7 +97,7 @@ export class Player extends Entity {
         damage: 15,
         tag: 'player-bullet',
       }),
-      new Bullet({
+      this.makeBullet({
         position: { x: this.position.x + 8, y: this.position.y - 12 },
         velocity: { x: 0, y: -16 },
         radius: 3,
@@ -83,7 +110,7 @@ export class Player extends Entity {
     if (!this.isSlowMode) {
       // Homing / wide needles in fast mode
       bullets.push(
-        new Bullet({
+        this.makeBullet({
           position: { x: this.position.x - 16, y: this.position.y - 8 },
           velocity: { x: -2, y: -14 },
           radius: 3,
@@ -91,7 +118,7 @@ export class Player extends Entity {
           damage: 10,
           tag: 'player-bullet',
         }),
-        new Bullet({
+        this.makeBullet({
           position: { x: this.position.x + 16, y: this.position.y - 8 },
           velocity: { x: 2, y: -14 },
           radius: 3,
@@ -103,7 +130,7 @@ export class Player extends Entity {
     } else {
       // Focused stream in slow mode
       bullets.push(
-        new Bullet({
+        this.makeBullet({
           position: { x: this.position.x - 4, y: this.position.y - 16 },
           velocity: { x: 0, y: -18 },
           radius: 3,
@@ -111,7 +138,7 @@ export class Player extends Entity {
           damage: 12,
           tag: 'player-bullet',
         }),
-        new Bullet({
+        this.makeBullet({
           position: { x: this.position.x + 4, y: this.position.y - 16 },
           velocity: { x: 0, y: -18 },
           radius: 3,

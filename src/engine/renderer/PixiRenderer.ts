@@ -35,6 +35,12 @@ export class PixiRenderer {
 
   private width: number;
   private height: number;
+  private pauseOverlay: Graphics;
+  private pauseText: Text;
+
+  /** HUD.showSpellCard 默认展示窗口（帧）—— 前 DISPLAY_ANIM_FRAMES 帧为弹出动画。 */
+  private static readonly DISPLAY_WINDOW = 90;
+  private static readonly DISPLAY_ANIM_FRAMES = 30;
 
   constructor() {
     this.app = new Application();
@@ -109,6 +115,18 @@ export class PixiRenderer {
       }),
     });
 
+    this.pauseOverlay = new Graphics();
+    this.pauseText = new Text({
+      text: '',
+      style: new TextStyle({
+        fontFamily: 'sans-serif',
+        fontSize: 30,
+        fill: 0xffffff,
+        fontWeight: 'bold',
+        stroke: { color: 0x000000, width: 4 },
+      }),
+    });
+
     this.width = 640;
     this.height = 480;
   }
@@ -149,6 +167,13 @@ export class PixiRenderer {
     this.debugContainer.addChild(this.debugGraphics);
     this.debugContainer.addChild(this.debugText);
 
+    // Pause overlay (top-most, above HUD)
+    this.pauseOverlay.visible = false;
+    this.pauseText.visible = false;
+    this.pauseText.anchor.set(0.5, 0.5);
+    this.app.stage.addChild(this.pauseOverlay);
+    this.app.stage.addChild(this.pauseText);
+
     // Layout HUD (Right panel: x >= 448)
     const rightPanelX = 460;
     this.scoreText.position.set(rightPanelX, 40);
@@ -157,11 +182,11 @@ export class PixiRenderer {
     this.powerText.position.set(rightPanelX, 125);
     this.grazeText.position.set(rightPanelX, 150);
 
-    // Spellcard Banner at top of gamefield
-    this.spellNameText.position.set(224, 20);
-    this.spellNameText.anchor.set(0.5, 0);
+    // Spellcard Banner — centered pop-in (US#6)
+    this.spellNameText.anchor.set(0.5);
+    this.spellNameText.position.set(this.width / 2, this.height / 2);
 
-    this.spellTimerText.position.set(400, 16);
+    this.spellTimerText.position.set(this.width / 2 + 260, this.height / 2 - 10);
     this.spellTimerText.anchor.set(1, 0);
 
     // Center warning banner
@@ -178,7 +203,8 @@ export class PixiRenderer {
     enemies: Enemy[],
     bullets: Bullet[],
     hud: HUD,
-    monitor: PerformanceMonitor
+    monitor: PerformanceMonitor,
+    isPaused = false
   ): void {
     // 1. Clear dynamic graphics
     this.entityGraphics.clear();
@@ -287,9 +313,20 @@ export class PixiRenderer {
       this.spellTimerText.text = Math.ceil(hud.spellCardTime).toString();
       this.spellNameText.visible = true;
       this.spellTimerText.visible = true;
+
+      // 居中弹出动画：前 30 帧 scale 1.6 -> 1.0 + 淡入，其余时间保持
+      const elapsedFrames =
+        PixiRenderer.DISPLAY_WINDOW - Math.max(0, hud.spellCardDisplayTimer);
+      const progress = Math.min(1, elapsedFrames / PixiRenderer.DISPLAY_ANIM_FRAMES);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      this.spellNameText.alpha = Math.min(1, 0.2 + eased * 0.8);
+      this.spellNameText.scale.set(1.6 - 0.6 * eased);
+      this.spellNameText.position.set(this.width / 2, this.height / 2 - 14);
     } else {
       this.spellNameText.visible = false;
       this.spellTimerText.visible = false;
+      this.spellNameText.scale.set(1);
+      this.spellNameText.alpha = 1;
     }
 
     if (hud.centerMessage) {
@@ -306,6 +343,21 @@ export class PixiRenderer {
       this.debugGraphics.rect(5, 5, 170, 75).fill({ color: 0x000000, alpha: 0.7 });
     } else {
       this.debugContainer.visible = false;
+    }
+
+    // 9. Pause menu overlay
+    if (isPaused) {
+      this.pauseOverlay.clear();
+      this.pauseOverlay
+        .rect(0, 0, this.width, this.height)
+        .fill({ color: 0x000000, alpha: 0.55 });
+      this.pauseText.text = 'PAUSED — 按 ESC 继续';
+      this.pauseText.position.set(this.width / 2, this.height / 2);
+      this.pauseOverlay.visible = true;
+      this.pauseText.visible = true;
+    } else {
+      this.pauseOverlay.visible = false;
+      this.pauseText.visible = false;
     }
   }
 

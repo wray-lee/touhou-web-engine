@@ -17,7 +17,10 @@
   2. **Touhou Common** (`@touhou`): Reusable abstractions for the Touhou series (Bullet Patterns, Player Controller, Boss/SpellCard mechanics, HUD).
   3. **Game Implementations** (`@/games/th08`): Game-specific stages, bosses, and spellcard scripts.
 - **Battle-Tested Patterns**: Composite, Circular, Linear, Aiming bullet patterns with high-precision angle & angular velocity calculation.
-- **Zero Heavy Audio Assets Required**: Built-in Web Audio API synthesis engine for retro arcade SE (shooting, graze, bombing, spellcards).
+- **Zero Heavy Audio Assets Required**: Built-in Web Audio API synthesis engine for retro arcade SE (shooting, graze, bombing, spellcards) **and BGM** (synthesized stage theme) — no asset files needed.
+- **Object Pooled Bullets**: All bullet creation (player shots, enemy patterns, boss spellcards) routes through a shared object pool to minimize GC pressure.
+- **Spatial Hash Collision**: Every collision (player bullets vs enemies/boss, player graze) resolves via 64px spatial hash neighbourhood queries — O(n²) loops eliminated.
+- **Mobile Ready**: Touch-drag flies the ship and auto-fires; ESC pauses with a dedicated pause menu.
 
 ---
 
@@ -35,17 +38,20 @@ The engine comes with a complete implementation of **東方永夜抄 ~ Imperisha
   - Focused / Slow mode (2.0 px/f with visible hitbox)
   - Spirit Strike Bomb (X) with 5-second invulnerability & screen clear
   - Real-time Graze counter, SpellCard countdown, and Score tracking
-  - F12 Performance & Collision monitor
+  - F12 Performance & Collision monitor (real distance-comparison count)
+  - ESC pause menu (freezes gameplay + BGM)
+  - SpellCard banner with centered pop-in animation
 
 ### Controls
 
-| Action | Primary Key | Alternate Key |
-|---|---|---|
-| **Move** | `Arrow Keys` | `W` / `A` / `S` / `D` |
-| **Shoot** | `Z` | `Space` |
-| **Bomb (灵击)** | `X` | - |
-| **Focus / Slow (低速)** | `Shift` | - |
-| **Toggle Performance HUD** | `F12` | `P` |
+| Action | Primary Key | Alternate Key | Touch |
+|---|---|---|---|
+| **Move** | `Arrow Keys` | `W` / `A` / `S` / `D` | Drag on canvas |
+| **Shoot** | `Z` | `Space` | Auto while dragging |
+| **Bomb (灵击)** | `X` | - | - |
+| **Focus / Slow (低速)** | `Shift` | - | - |
+| **Pause / Resume** | `ESC` | - | - |
+| **Toggle Performance HUD** | `F12` | `P` | - |
 
 ---
 
@@ -160,15 +166,20 @@ export class SpiralLaserPattern extends BulletPattern {
 
 Continuous Integration runs on GitHub Actions on every commit:
 - TypeScript 5.7 strict mode verification
-- 34+ Unit tests covering:
+- 54+ Unit tests covering:
   - Vector & Entity math & lifecycle
   - Spatial Hash Grid collision bounds & neighbor queries
-  - Input system & key state buffering
+  - CollisionSystem spatial queries, tag filtering & graze radius
+  - Object pool reuse / cap / recycling on collision & bounds culling
+  - Input system & key state buffering, touch drag & canvas-coord mapping
   - Bullet lifecycle & bounds culling
   - Pattern generators (Circular, Linear, Aiming, Composite)
-  - Player controller movement clamping & invulnerability
+  - Player controller movement clamping & invulnerability, touch-follow physics
   - Boss HP phase transitions & SpellCard timeouts
   - TH08 Stage 1 Rumia AI & event timeline triggers
+  - TH08Game pause freeze/resume & ESC toggle
+  - HUD spellcard banner display window
+  - AudioManager BGM state & fade-in config
 
 ---
 

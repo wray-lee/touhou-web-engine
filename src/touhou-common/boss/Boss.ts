@@ -2,7 +2,7 @@ import { Entity } from '../../engine/core/Entity';
 import { Vector2 } from '../../engine/core/Vector2';
 import { SpellCard } from './SpellCard';
 import { Bullet } from '../../engine/core/Bullet';
-import { BulletPattern } from '../bullet-patterns/BulletPattern';
+import { BulletPattern, BulletFactory } from '../bullet-patterns/BulletPattern';
 
 export interface BossPhase {
   maxHp: number;
@@ -17,6 +17,8 @@ export interface BossConfig {
   phases: BossPhase[];
   position?: Partial<Vector2>;
   hitboxRadius?: number;
+  /** Bullet creation hook — lets the game route boss bullets through its object pool. */
+  bulletFactory?: BulletFactory;
 }
 
 export class Boss extends Entity {
@@ -36,7 +38,19 @@ export class Boss extends Entity {
     );
     this.name = config.name;
     this.phases = config.phases;
+    if (config.bulletFactory) {
+      this.withBulletFactory(config.bulletFactory);
+    }
     this.initPhase(0);
+  }
+
+  /** Route bullet patterns through a shared object-pool factory. */
+  withBulletFactory(factory: BulletFactory): this {
+    for (const phase of this.phases) {
+      phase.spellCard?.pattern?.withFactory(factory);
+      phase.pattern?.withFactory(factory);
+    }
+    return this;
   }
 
   get currentPhase(): BossPhase | undefined {

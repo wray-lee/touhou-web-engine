@@ -12,6 +12,8 @@ export class HUD {
   public spellCardName: string | null = null;
   public spellCardTime = 0;
   public spellCardBonus = 0;
+  /** Frames remaining for the pop-in banner animation (US#6). */
+  public spellCardDisplayTimer = 0;
   public centerMessage: string | null = null;
   public centerMessageTimer = 0;
 
@@ -35,16 +37,18 @@ export class HUD {
     }
   }
 
-  showSpellCard(name: string, durationSeconds: number, bonus = 1000000): void {
+  showSpellCard(name: string, durationSeconds: number, bonus = 1000000, displayFrames = 90): void {
     this.spellCardName = name;
     this.spellCardTime = durationSeconds;
     this.spellCardBonus = bonus;
+    this.spellCardDisplayTimer = displayFrames;
   }
 
   hideSpellCard(): void {
     this.spellCardName = null;
     this.spellCardTime = 0;
     this.spellCardBonus = 0;
+    this.spellCardDisplayTimer = 0;
   }
 
   showMessage(msg: string, frames = 180): void {
@@ -53,6 +57,9 @@ export class HUD {
   }
 
   update(dtFrames: number): void {
+    if (this.spellCardDisplayTimer > 0) {
+      this.spellCardDisplayTimer = Math.max(0, this.spellCardDisplayTimer - dtFrames);
+    }
     if (this.centerMessageTimer > 0) {
       this.centerMessageTimer -= dtFrames;
       if (this.centerMessageTimer <= 0) {

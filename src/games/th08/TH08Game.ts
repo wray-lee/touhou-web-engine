@@ -10,6 +10,8 @@ import { Stage } from '../../engine/core/Stage';
 import { createStage1 } from './stages/Stage1';
 import { Rumia } from './bosses/Rumia';
 import { Enemy } from '../../touhou-common/enemy/Enemy';
+import { Bullet } from '../../engine/core/Bullet';
+import { BulletFactory } from '../../touhou-common/bullet-patterns/BulletPattern';
 
 export interface TH08GameOptions {
   container?: HTMLElement;
@@ -32,11 +34,17 @@ export class TH08Game {
   private isRunning = false;
   private animFrameId?: number;
   private headless: boolean;
+  private bulletFactory: BulletFactory;
+  /** Paused via ESC — freezes all gameplay logic while remaining renderable. */
+  public isPaused = false;
+  private audioUnlocked = false;
 
   constructor(options: TH08GameOptions = {}) {
     this.headless = options.headless ?? false;
-    this.player = new Player({ x: 224, y: 380 });
     this.bulletSystem = new BulletSystem();
+    // Route every bullet creation through the object pool
+    this.bulletFactory = (config) => this.bulletSystem.createBullet(config);
+    this.player = new Player({ x: 224, y: 380 }, { bulletFactory: this.bulletFactory });
     this.collisionSystem = new CollisionSystem(48);
     this.input = new InputSystem();
     this.audio = new AudioManager();
@@ -47,6 +55,7 @@ export class TH08Game {
       spawnEnemy: (enemy) => this.enemies.push(enemy),
       spawnBoss: (boss) => {
         this.boss = boss;
+        boss.withBulletFactory(this.bulletFactory);
         boss.on('spellcard-start', (spell) => {
           this.audio.playSE('spellcard');
           this.hud.showSpellCard(spell.name, spell.durationSeconds, spell.bonusScore);
@@ -67,6 +76,7 @@ export class TH08Game {
       showMessage: (text, frames) => {
         this.hud.showMessage(text, frames);
       },
+      bulletFactory: this.bulletFactory,
     });
 
     this.setupListeners();
@@ -100,12 +110,18 @@ export class TH08Game {
     if (this.headless) return;
     this.renderer = new PixiRenderer();
     await this.renderer.init({ container });
-    this.input.attach(window);
+    // Attach to the container so pointer/touch coords map to canvas-local space
+    this.input.attach(container);
   }
 
   start(): void {
     if (this.isRunning) return;
     this.isRunning = true;
+
+    // Stage 1 BGM — 内置合成回退保证任何环境立即有声；
+    // 若浏览器因 autoplay 限制静默，会在首次交互时解锁（见 setupAudioUnlock）。
+    this.audio.playBGM(undefined, { loop: true, volume: 0.7, fadeIn: 1000 });
+    this.setupAudioUnlock();
 
     if (!this.headless) {
       const loop = () => {
@@ -123,7 +139,40 @@ export class TH08Game {
     if (this.animFrameId) {
       cancelAnimationFrame(this.animFrameId);
     }
-    this.input.detach(window);
+    this.input.detach();
+  }
+
+  /** Freeze gameplay (ESC pause menu state). */
+  pause(): void {
+    this.isPaused = true;
+    this.audio.pauseBGM();
+  }
+
+  resume(): void {
+    this.isPaused = false;
+    this.audio.resumeBGM();
+  }
+
+  /** Toggle pause (ESC edge). */
+  togglePause(): void {
+    if (this.isPaused) {
+      this.resume();
+    } else {
+      this.pause();
+    }
+  }
+
+  /** Browsers block audio until the first user gesture — unlock then. */
+  private setupAudioUnlock(): void {
+    if (typeof window === 'undefined' || this.audioUnlocked) return;
+    const unlock = () => {
+      this.audioUnlocked = true;
+      this.audio.resumeBGM();
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+    window.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
   }
 
   stepFrame(dtFrames = 1): void {
@@ -134,6 +183,12 @@ export class TH08Game {
       this.monitor.toggle();
     }
 
+    // ESC toggles pause; no other gameplay when paused
+    if (this.input.wasKeyPressed('pause')) {
+      this.togglePause();
+    }
+    if (this.isPaused) return;
+
     if (this.input.wasKeyPressed('bomb')) {
       this.player.useBomb();
     }
@@ -142,8 +197,8 @@ export class TH08Game {
     this.player.handleInput(this.input);
     this.player.update(dtFrames);
 
-    // Player Shooting
-    if (this.input.isKeyDown('shoot')) {
+    // Player Shooting (auto-fire while touch-dragging on mobile)
+    if (this.input.isKeyDown('shoot') || this.input.isDragging) {
       const newShots = this.player.shoot(this.stage.currentFrame);
       if (newShots.length > 0) {
         this.audio.playSE('shoot');
@@ -189,7 +244,7 @@ export class TH08Game {
     // 5. Update Bullets
     this.bulletSystem.update(dtFrames);
 
-    // 6. Collision Resolution
+    // 6. Collision Resolution (all through the spatial hash grid)
     const allEntities = [
       ...(this.player.isAlive ? [this.player] : []),
       ...this.enemies,
@@ -198,56 +253,53 @@ export class TH08Game {
     ];
     this.collisionSystem.update(allEntities);
 
-    // Check Player bullets hitting enemies/boss
-    for (const b of this.bulletSystem.getBullets()) {
+    // Player bullets vs enemies/boss — spatial hash neighbourhood queries
+    const bullets = this.bulletSystem.getBullets();
+    for (const b of bullets) {
       if (!b.isAlive || b.tag !== 'player-bullet') continue;
 
-      // Check Boss hit
-      if (this.boss && this.boss.isAlive) {
-        const dist = b.distanceTo(this.boss);
-        if (dist <= b.hitbox.radius + this.boss.hitbox.radius) {
-          this.boss.takeDamage(b.damage);
+      const hits = this.collisionSystem.checkCollisions(b, ['enemy', 'boss']);
+      for (const hit of hits) {
+        const target = hit.entity;
+        if (target.tag === 'boss') {
+          (target as Rumia).takeDamage(b.damage);
           b.destroy();
           this.player.score += 200;
           this.audio.playSE('enemy-hit');
-          continue;
+          break;
         }
-      }
-
-      // Check Enemies hit
-      for (const enemy of this.enemies) {
-        if (!enemy.isAlive) continue;
-        const dist = b.distanceTo(enemy);
-        if (dist <= b.hitbox.radius + enemy.hitbox.radius) {
-          const killed = enemy.takeDamage(b.damage);
+        // enemy
+        if (target.isAlive) {
+          const killed = (target as Enemy).takeDamage(b.damage);
           b.destroy();
           this.audio.playSE('enemy-hit');
-          this.player.score += killed ? enemy.scoreValue : 100;
+          this.player.score += killed ? (target as Enemy).scoreValue : 100;
           break;
         }
       }
     }
 
-    // Check Enemy bullets hitting Player & Graze
-    if (this.player.isAlive && !this.player.isInvulnerable) {
-      const hits = this.collisionSystem.checkCollision(this.player);
-      for (const hit of hits) {
-        if (hit.tag === 'enemy-bullet') {
-          this.player.hit();
-          hit.destroy();
-          break;
+    // Enemy bullets vs player (hit + graze within 16px)
+    if (this.player.isAlive) {
+      if (!this.player.isInvulnerable) {
+        const hits = this.collisionSystem.checkCollisions(this.player, 'enemy-bullet');
+        for (const hit of hits) {
+          if (hit.entity.isAlive) {
+            this.player.hit();
+            hit.entity.destroy();
+            break;
+          }
         }
       }
 
-      // Graze detection (within 16px of player)
-      for (const b of this.bulletSystem.getBullets()) {
-        if (b.isAlive && b.tag === 'enemy-bullet' && !b.grazed) {
-          if (b.distanceTo(this.player) <= 16) {
-            b.grazed = true;
-            this.player.graze++;
-            this.player.score += 500;
-            this.audio.playSE('graze');
-          }
+      const grazes = this.collisionSystem.queryNearby(this.player, 16, 'enemy-bullet');
+      for (const g of grazes) {
+        const bullet = g.entity as Bullet;
+        if (bullet.isAlive && !bullet.grazed) {
+          bullet.grazed = true;
+          this.player.graze++;
+          this.player.score += 500;
+          this.audio.playSE('graze');
         }
       }
     }
@@ -270,7 +322,8 @@ export class TH08Game {
         this.enemies,
         this.bulletSystem.getBullets(),
         this.hud,
-        this.monitor
+        this.monitor,
+        this.isPaused
       );
     }
   }

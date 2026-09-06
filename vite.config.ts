@@ -15,7 +15,8 @@ export default defineConfig({
     lib: {
       entry: {
         index: path.resolve(__dirname, 'src/index.ts'),
-        th08: path.resolve(__dirname, 'src/games/th08/index.ts'),
+        // 与 package.json exports "./th08" 对齐：产物落在 dist/games/th08/index.js
+        'games/th08/index': path.resolve(__dirname, 'src/games/th08/index.ts'),
       },
       formats: ['es'],
     },

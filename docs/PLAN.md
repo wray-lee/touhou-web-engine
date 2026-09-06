@@ -86,12 +86,26 @@ src/
 
 ## ✅ 验收标准（Phase 1）
 
-- [ ] Stage 1 可完整游玩（击败露米娅）
-- [ ] 60 FPS 稳定，1000+ 弹幕不掉帧
-- [ ] 所有测试通过（`npm run ci`）
-- [ ] 编译成 npm 包可导入
-- [ ] 性能监控显示 FPS/实体数/碰撞检测次数
-- [ ] README 包含使用示例和架构说明
+- [x] Stage 1 可完整游玩（击败露米娅）
+- [ ] 60 FPS 稳定，1000+ 弹幕不掉帧（性能目标：同屏 2000+ 不掉帧，见 SPEC「性能目标」）
+- [x] 所有测试通过（`npm run ci` —— 当前 54 项）
+- [x] 编译成 npm 包可导入（`@uestc-touhou/touhou-web-engine/th08` 路径已验证）
+- [x] 性能监控显示 FPS/实体数/碰撞检测次数（碰撞次数为空间哈希真实距离比较计数）
+- [x] README 包含使用示例和架构说明
+
+### 评审修复记录（2026-09-07）
+
+对照「代码评审」修复项：
+
+- [x] US#7 ESC 暂停 + 暂停菜单（含 BGM 暂停/续播）
+- [x] US#9 移动端：触摸拖动自机 + 自动射击（替换"仅在桌面游玩"提示）
+- [x] SPEC L181 弹幕对象池（BulletSystem 内置池 + 全链路注入）
+- [x] SPEC L127-130 碰撞全量迁移空间哈希网格 + F12 真实计数
+- [x] US#6 符卡名牌居中弹出动画
+- [x] Ticket 13 BGM fadeIn/loop/preload + 内置合成回退
+- [x] npm 包 `./th08` 导出路径对齐（vite entry `games/th08/index`）
+- [x] 标准层：EntityTag 联合类型 + AimingPattern 委托共享 spread 生成器
+- [ ] Bullet.sprite / CompositePattern 保留但未接入 SpriteManager 渲染（Phase 2 素材接入时启用）
 
 ## 📊 预估工作量
 
