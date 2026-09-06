@@ -1,0 +1,315 @@
+import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js';
+import { Bullet } from '../core/Bullet';
+import { Player } from '../../touhou-common/player/Player';
+import { Boss } from '../../touhou-common/boss/Boss';
+import { Enemy } from '../../touhou-common/enemy/Enemy';
+import { HUD } from '../../touhou-common/ui/HUD';
+import { PerformanceMonitor } from '../debug/PerformanceMonitor';
+
+export interface PixiRendererConfig {
+  container: HTMLElement;
+  width?: number;
+  height?: number;
+}
+
+export class PixiRenderer {
+  public app: Application;
+  public gameContainer: Container;
+  public hudContainer: Container;
+  public debugContainer: Container;
+
+  private bulletGraphics: Graphics;
+  private entityGraphics: Graphics;
+  private hudGraphics: Graphics;
+  private debugGraphics: Graphics;
+
+  private scoreText: Text;
+  private livesText: Text;
+  private bombsText: Text;
+  private powerText: Text;
+  private grazeText: Text;
+  private spellNameText: Text;
+  private spellTimerText: Text;
+  private centerBannerText: Text;
+  private debugText: Text;
+
+  private width: number;
+  private height: number;
+
+  constructor() {
+    this.app = new Application();
+    this.gameContainer = new Container();
+    this.hudContainer = new Container();
+    this.debugContainer = new Container();
+
+    this.bulletGraphics = new Graphics();
+    this.entityGraphics = new Graphics();
+    this.hudGraphics = new Graphics();
+    this.debugGraphics = new Graphics();
+
+    const titleStyle = new TextStyle({
+      fontFamily: 'Consolas, monospace',
+      fontSize: 14,
+      fill: 0xffffff,
+      fontWeight: 'bold',
+      dropShadow: {
+        alpha: 0.8,
+        angle: 45,
+        blur: 2,
+        color: 0x000000,
+        distance: 2,
+      },
+    });
+
+    this.scoreText = new Text({ text: 'Score: 0000000000', style: titleStyle });
+    this.livesText = new Text({ text: 'Player: ★★★', style: titleStyle });
+    this.bombsText = new Text({ text: 'Spell:  ★★★', style: titleStyle });
+    this.powerText = new Text({ text: 'Power:  128 / 128', style: titleStyle });
+    this.grazeText = new Text({ text: 'Graze:  0', style: titleStyle });
+
+    this.spellNameText = new Text({
+      text: '',
+      style: new TextStyle({
+        fontFamily: 'serif, sans-serif',
+        fontSize: 18,
+        fill: 0xffd700,
+        fontWeight: 'bold',
+        stroke: { color: 0x220000, width: 3 },
+      }),
+    });
+
+    this.spellTimerText = new Text({
+      text: '',
+      style: new TextStyle({
+        fontFamily: 'Consolas, monospace',
+        fontSize: 22,
+        fill: 0xff4444,
+        fontWeight: 'bold',
+        stroke: { color: 0x000000, width: 3 },
+      }),
+    });
+
+    this.centerBannerText = new Text({
+      text: '',
+      style: new TextStyle({
+        fontFamily: 'sans-serif',
+        fontSize: 24,
+        fill: 0xffffff,
+        fontWeight: 'bold',
+        stroke: { color: 0xc41e3a, width: 4 },
+      }),
+    });
+
+    this.debugText = new Text({
+      text: '',
+      style: new TextStyle({
+        fontFamily: 'Consolas, monospace',
+        fontSize: 12,
+        fill: 0x00ff88,
+      }),
+    });
+
+    this.width = 640;
+    this.height = 480;
+  }
+
+  async init(config: PixiRendererConfig): Promise<void> {
+    this.width = config.width ?? 640;
+    this.height = config.height ?? 480;
+
+    await this.app.init({
+      width: this.width,
+      height: this.height,
+      backgroundColor: 0x0d0d16,
+      antialias: true,
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true,
+    });
+
+    config.container.appendChild(this.app.canvas);
+
+    // Setup containers
+    this.app.stage.addChild(this.gameContainer);
+    this.app.stage.addChild(this.hudContainer);
+    this.app.stage.addChild(this.debugContainer);
+
+    this.gameContainer.addChild(this.entityGraphics);
+    this.gameContainer.addChild(this.bulletGraphics);
+
+    this.hudContainer.addChild(this.hudGraphics);
+    this.hudContainer.addChild(this.scoreText);
+    this.hudContainer.addChild(this.livesText);
+    this.hudContainer.addChild(this.bombsText);
+    this.hudContainer.addChild(this.powerText);
+    this.hudContainer.addChild(this.grazeText);
+    this.hudContainer.addChild(this.spellNameText);
+    this.hudContainer.addChild(this.spellTimerText);
+    this.hudContainer.addChild(this.centerBannerText);
+
+    this.debugContainer.addChild(this.debugGraphics);
+    this.debugContainer.addChild(this.debugText);
+
+    // Layout HUD (Right panel: x >= 448)
+    const rightPanelX = 460;
+    this.scoreText.position.set(rightPanelX, 40);
+    this.livesText.position.set(rightPanelX, 70);
+    this.bombsText.position.set(rightPanelX, 95);
+    this.powerText.position.set(rightPanelX, 125);
+    this.grazeText.position.set(rightPanelX, 150);
+
+    // Spellcard Banner at top of gamefield
+    this.spellNameText.position.set(224, 20);
+    this.spellNameText.anchor.set(0.5, 0);
+
+    this.spellTimerText.position.set(400, 16);
+    this.spellTimerText.anchor.set(1, 0);
+
+    // Center warning banner
+    this.centerBannerText.position.set(224, 240);
+    this.centerBannerText.anchor.set(0.5, 0.5);
+
+    // Debug text (top left)
+    this.debugText.position.set(10, 10);
+  }
+
+  render(
+    player: Player,
+    boss: Boss | null,
+    enemies: Enemy[],
+    bullets: Bullet[],
+    hud: HUD,
+    monitor: PerformanceMonitor
+  ): void {
+    // 1. Clear dynamic graphics
+    this.entityGraphics.clear();
+    this.bulletGraphics.clear();
+    this.hudGraphics.clear();
+    this.debugGraphics.clear();
+
+    // 2. Draw Playfield Frame (Left side 32..416, 32..448)
+    this.hudGraphics.rect(32, 32, 384, 416).stroke({ width: 2, color: 0x5bb8b3 });
+    this.hudGraphics.rect(440, 32, 180, 416).stroke({ width: 2, color: 0xc41e3a });
+
+    // 3. Render Player
+    if (player.isAlive) {
+      const px = player.position.x;
+      const py = player.position.y;
+
+      // Invulnerability blink
+      if (!player.isInvulnerable || Math.floor(player.invulnerabilityTimer / 6) % 2 === 0) {
+        // Body (Reimu Red/White Shrine Maiden dress)
+        this.entityGraphics.circle(px, py - 4, 8).fill({ color: 0xfff0e6 }); // head
+        this.entityGraphics.poly([
+          { x: px, y: py - 4 },
+          { x: px - 12, y: py + 14 },
+          { x: px + 12, y: py + 14 },
+        ]).fill({ color: 0xc41e3a }); // red skirt
+        this.entityGraphics.rect(px - 10, py - 10, 20, 6).fill({ color: 0xff3344 }); // red ribbon
+
+        // Hitbox dot (visible in slow mode)
+        if (player.isSlowMode) {
+          this.entityGraphics.circle(px, py, 6).fill({ color: 0xffffff, alpha: 0.4 });
+          this.entityGraphics.circle(px, py, 2).fill({ color: 0xff0044 });
+        }
+      }
+    }
+
+    // 4. Render Enemies
+    for (const enemy of enemies) {
+      if (!enemy.isAlive) continue;
+      const ex = enemy.position.x;
+      const ey = enemy.position.y;
+
+      // Fairy wings
+      this.entityGraphics.ellipse(ex - 8, ey - 4, 10, 5).fill({ color: 0xffffff, alpha: 0.6 });
+      this.entityGraphics.ellipse(ex + 8, ey - 4, 10, 5).fill({ color: 0xffffff, alpha: 0.6 });
+
+      // Fairy body
+      this.entityGraphics.circle(ex, ey, enemy.hitbox.radius).fill({ color: enemy.color });
+    }
+
+    // 5. Render Boss
+    if (boss && boss.isAlive && !boss.isDefeated) {
+      const bx = boss.position.x;
+      const by = boss.position.y;
+
+      // Boss aura
+      const auraAlpha = 0.2 + 0.1 * Math.sin(boss.timer * 0.1);
+      this.entityGraphics.circle(bx, by, 32).fill({
+        color: boss.isSpellCardActive ? 0xff2255 : 0x4488ff,
+        alpha: auraAlpha,
+      });
+
+      // Rumia character silhouette (Black dress + yellow hair + red ribbon)
+      this.entityGraphics.circle(bx, by - 6, 12).fill({ color: 0xffe066 }); // yellow hair
+      this.entityGraphics.poly([
+        { x: bx, y: by },
+        { x: bx - 14, y: by + 20 },
+        { x: bx + 14, y: by + 20 },
+      ]).fill({ color: 0x1a1a24 }); // black dress
+      this.entityGraphics.rect(bx - 12, by - 14, 8, 8).fill({ color: 0xcc1122 }); // red side ribbon
+
+      // Boss Health Bar (top of playfield)
+      const maxHp = boss.currentPhase?.maxHp ?? 1;
+      const hpRatio = Math.max(0, Math.min(1, boss.currentHp / maxHp));
+      this.hudGraphics.rect(40, 36, 368, 6).fill({ color: 0x222222 });
+      this.hudGraphics
+        .rect(40, 36, 368 * hpRatio, 6)
+        .fill({ color: boss.isSpellCardActive ? 0xff3366 : 0x33cc88 });
+    }
+
+    // 6. Batch Render Bullets
+    for (const b of bullets) {
+      if (!b.isAlive) continue;
+      const bx = b.position.x;
+      const by = b.position.y;
+      const r = b.hitbox.radius;
+
+      if (b.tag === 'player-bullet') {
+        // Player amulets / needles
+        this.bulletGraphics.rect(bx - 2, by - 6, 4, 12).fill({ color: b.color });
+      } else {
+        // Danmaku bullet with glowing border
+        this.bulletGraphics.circle(bx, by, r + 1.5).fill({ color: 0xffffff, alpha: 0.5 });
+        this.bulletGraphics.circle(bx, by, r).fill({ color: b.color });
+      }
+    }
+
+    // 7. Update HUD Texts
+    this.scoreText.text = `Score:  ${hud.formattedScore}`;
+    this.livesText.text = `Player: ${'★'.repeat(Math.max(0, hud.lives))}`;
+    this.bombsText.text = `Spell:  ${'★'.repeat(Math.max(0, hud.bombs))}`;
+    this.powerText.text = `Power:  ${hud.power} / 128`;
+    this.grazeText.text = `Graze:  ${hud.graze}`;
+
+    if (hud.spellCardName) {
+      this.spellNameText.text = hud.spellCardName;
+      this.spellTimerText.text = Math.ceil(hud.spellCardTime).toString();
+      this.spellNameText.visible = true;
+      this.spellTimerText.visible = true;
+    } else {
+      this.spellNameText.visible = false;
+      this.spellTimerText.visible = false;
+    }
+
+    if (hud.centerMessage) {
+      this.centerBannerText.text = hud.centerMessage;
+      this.centerBannerText.visible = true;
+    } else {
+      this.centerBannerText.visible = false;
+    }
+
+    // 8. Update Debug Overlay
+    if (monitor.isVisible) {
+      this.debugContainer.visible = true;
+      this.debugText.text = monitor.getMetricsText().join('\n');
+      this.debugGraphics.rect(5, 5, 170, 75).fill({ color: 0x000000, alpha: 0.7 });
+    } else {
+      this.debugContainer.visible = false;
+    }
+  }
+
+  destroy(): void {
+    this.app.destroy(true, { children: true, texture: true });
+  }
+}

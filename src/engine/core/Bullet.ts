@@ -1,0 +1,64 @@
+import { Entity } from './Entity';
+import { Vector2 } from './Vector2';
+
+export interface BulletConfig {
+  position?: Partial<Vector2>;
+  velocity?: Partial<Vector2>;
+  radius?: number;
+  color?: number;
+  sprite?: string;
+  damage?: number;
+  grazed?: boolean;
+  angularVelocity?: number;
+  acceleration?: number;
+  tag?: string;
+}
+
+export class Bullet extends Entity {
+  public color: number;
+  public sprite: string;
+  public damage: number;
+  public grazed: boolean;
+  public angularVelocity: number;
+  public acceleration: number;
+  public lifetime = 0;
+
+  constructor(config: BulletConfig = {}) {
+    super(
+      config.position,
+      config.velocity,
+      { radius: config.radius ?? 4 },
+      config.tag ?? 'enemy-bullet'
+    );
+    this.color = config.color ?? 0xff3366;
+    this.sprite = config.sprite ?? 'bullet_small';
+    this.damage = config.damage ?? 1;
+    this.grazed = config.grazed ?? false;
+    this.angularVelocity = config.angularVelocity ?? 0;
+    this.acceleration = config.acceleration ?? 0;
+  }
+
+  override update(dt: number): void {
+    if (!this.isAlive) return;
+
+    if (this.angularVelocity !== 0) {
+      const speed = Math.hypot(this.velocity.x, this.velocity.y);
+      const angle = Math.atan2(this.velocity.y, this.velocity.x) + this.angularVelocity * dt;
+      this.velocity.x = Math.cos(angle) * speed;
+      this.velocity.y = Math.sin(angle) * speed;
+    }
+
+    if (this.acceleration !== 0) {
+      const currentSpeed = Math.hypot(this.velocity.x, this.velocity.y);
+      if (currentSpeed > 0.0001) {
+        const nextSpeed = Math.max(0, currentSpeed + this.acceleration * dt);
+        const ratio = nextSpeed / currentSpeed;
+        this.velocity.x *= ratio;
+        this.velocity.y *= ratio;
+      }
+    }
+
+    super.update(dt);
+    this.lifetime += dt;
+  }
+}

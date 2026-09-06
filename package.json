@@ -1,0 +1,66 @@
+{
+  "name": "@uestc-touhou/touhou-web-engine",
+  "version": "0.1.0",
+  "description": "A modern, extensible STG engine for Touhou Project in the browser",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./th08": {
+      "import": "./dist/games/th08/index.js",
+      "types": "./dist/games/th08/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,json,md}\"",
+    "ci": "npm run typecheck && npm run test"
+  },
+  "keywords": [
+    "touhou",
+    "stg",
+    "danmaku",
+    "game-engine",
+    "pixijs",
+    "typescript"
+  ],
+  "author": "UESTC Gensokyo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wray-lee/touhou-web-engine.git"
+  },
+  "dependencies": {
+    "pixi.js": "^8.6.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

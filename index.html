@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Touhou Web Engine - TH08 Stage 1 Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #0b0a12;
+        color: #e8dcc8;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+      header {
+        margin-bottom: 12px;
+        text-align: center;
+      }
+      h1 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        background: linear-gradient(135deg, #c41e3a, #d4a94e, #5bb8b3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 4px;
+      }
+      .instructions {
+        font-size: 0.85rem;
+        color: #8c827a;
+      }
+      .instructions span {
+        display: inline-block;
+        padding: 1px 6px;
+        background: #221c24;
+        border: 1px solid #4a3e4e;
+        border-radius: 4px;
+        color: #e8dcc8;
+        margin: 0 2px;
+        font-family: monospace;
+      }
+      #game-root {
+        position: relative;
+        width: 640px;
+        height: 480px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(91, 184, 179, 0.2);
+        border: 2px solid #2f7571;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      #game-root canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>東方永夜抄 ~ Imperishable Night (Stage 1 Demo)</h1>
+      <p class="instructions">
+        移动: <span>方向键 / WASD</span> | 射击: <span>Z / Space</span> | 灵击(Bomb): <span>X</span> | 低速: <span>Shift</span> | 性能监控: <span>F12</span>
+      </p>
+    </header>
+
+    <div id="game-root"></div>
+
+    <script type="module">
+      import { TH08Game } from './src/games/th08/TH08Game.ts';
+
+      window.addEventListener('DOMContentLoaded', async () => {
+        const container = document.getElementById('game-root');
+        const game = new TH08Game();
+        await game.init(container);
+        game.start();
+        window.__TOUHOU_GAME__ = game;
+      });
+    </script>
+  </body>
+</html>
