@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Entity } from '../../engine/core/Entity';
+import { Bullet, BulletConfig } from '../../engine/core/Bullet';
 import { CircularPattern } from './CircularPattern';
 import { LinearPattern } from './LinearPattern';
 import { AimingPattern } from './AimingPattern';
@@ -48,5 +49,22 @@ describe('Bullet Patterns', () => {
 
     const bullets = comp.spawn(boss, 0, player);
     expect(bullets.length).toBe(7);
+  });
+
+  it('withFactory propagates to every child pattern (composite bullets pool)', () => {
+    const circ = new CircularPattern({ count: 4, speed: 2 });
+    const aim = new AimingPattern({ count: 3, speed: 3 });
+    const comp = new CompositePattern([circ, aim]);
+
+    let created = 0;
+    const factory = (config: BulletConfig) => {
+      created++;
+      return new Bullet(config);
+    };
+    comp.withFactory(factory);
+
+    const bullets = comp.spawn(boss, 0, player);
+    expect(bullets.length).toBe(7);
+    expect(created).toBe(7); // every child bullet went through the pool factory
   });
 });
