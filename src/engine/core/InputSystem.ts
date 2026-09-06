@@ -45,11 +45,17 @@ export class InputSystem {
     return typeof window !== 'undefined' ? window : undefined;
   }
 
-  attach(target?: HTMLElement): void {
+  /**
+   * 绑定输入监听。
+   * - 传 `HTMLElement`（推荐：游戏容器/canvas）：键盘监听在 window 上生效，
+   *   pointer/touch 拖动以该元素为坐标基准并启用。
+   * - 传 `window` 或省略：仅键盘监听（兼容旧 API `attach(window)`）。
+   */
+  attach(target?: Window | HTMLElement): void {
     const viewport = this.viewport;
-    // Element used to map viewport pointer coords -> canvas-local coords
-    if (target) {
-      this.attachTarget = target;
+    // 仅 HTMLElement 作为触摸坐标基准；window/undefined 走键盘-only 模式
+    if (target && typeof (target as HTMLElement).addEventListener === 'function' && target !== viewport) {
+      this.attachTarget = target as HTMLElement;
     }
 
     // Keyboard listeners always go on the viewport so they work regardless of focus
@@ -82,7 +88,10 @@ export class InputSystem {
     }
   }
 
-  detach(): void {
+  /**
+   * 解绑输入监听。参数保留仅为兼容旧 API `detach(window)`。
+   */
+  detach(_target?: Window | HTMLElement): void {
     const viewport = this.viewport;
     if (this.boundKeyDownHandler) {
       viewport?.removeEventListener('keydown', this.boundKeyDownHandler as EventListener);

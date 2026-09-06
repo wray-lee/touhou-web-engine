@@ -293,4 +293,18 @@ export class AudioManager {
       this.bgmGainNode = undefined;
     }
   }
+
+  /** Release all audio resources (close AudioContext, drop preloads). */
+  destroy(): void {
+    this.stopBGM();
+    this.preloaded.clear();
+    if (this.audioCtx) {
+      try {
+        void this.audioCtx.close();
+      } catch {
+        // already closed
+      }
+      this.audioCtx = undefined;
+    }
+  }
 }

@@ -29,7 +29,7 @@ export class CircularPattern extends BulletPattern {
       const vy = Math.sin(angle) * speed;
 
       bullets.push(
-        new Bullet({
+        this.factory({
           position: { x: emitter.position.x, y: emitter.position.y },
           velocity: { x: vx, y: vy },
           radius,

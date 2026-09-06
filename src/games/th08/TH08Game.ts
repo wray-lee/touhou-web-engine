@@ -38,6 +38,7 @@ export class TH08Game {
   /** Paused via ESC — freezes all gameplay logic while remaining renderable. */
   public isPaused = false;
   private audioUnlocked = false;
+  private audioUnlockHandler?: () => void;
 
   constructor(options: TH08GameOptions = {}) {
     this.headless = options.headless ?? false;
@@ -165,14 +166,32 @@ export class TH08Game {
   /** Browsers block audio until the first user gesture — unlock then. */
   private setupAudioUnlock(): void {
     if (typeof window === 'undefined' || this.audioUnlocked) return;
-    const unlock = () => {
+    this.audioUnlockHandler = () => {
       this.audioUnlocked = true;
       this.audio.resumeBGM();
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('keydown', unlock);
+      this.removeAudioUnlockListeners();
     };
-    window.addEventListener('pointerdown', unlock);
-    window.addEventListener('keydown', unlock);
+    window.addEventListener('pointerdown', this.audioUnlockHandler);
+    window.addEventListener('keydown', this.audioUnlockHandler);
+  }
+
+  private removeAudioUnlockListeners(): void {
+    if (typeof window === 'undefined' || !this.audioUnlockHandler) return;
+    window.removeEventListener('pointerdown', this.audioUnlockHandler);
+    window.removeEventListener('keydown', this.audioUnlockHandler);
+    this.audioUnlockHandler = undefined;
+  }
+
+  /**
+   * Full teardown: stop the loop, detach input, release audio + renderer.
+   * Call from framework hosts (e.g. React `useEffect` cleanup).
+   */
+  destroy(): void {
+    this.stop();
+    this.removeAudioUnlockListeners();
+    this.audio.destroy();
+    this.renderer?.destroy();
+    this.renderer = undefined;
   }
 
   stepFrame(dtFrames = 1): void {
@@ -326,10 +345,5 @@ export class TH08Game {
         this.isPaused
       );
     }
-  }
-
-  destroy(): void {
-    this.stop();
-    this.renderer?.destroy();
   }
 }

@@ -107,6 +107,19 @@ src/
 - [x] 标准层：EntityTag 联合类型 + AimingPattern 委托共享 spread 生成器
 - [ ] Bullet.sprite / CompositePattern 保留但未接入 SpriteManager 渲染（Phase 2 素材接入时启用）
 
+### 工具链与框架接口完备性（2026-09-07）
+
+- [x] **Bun 迁移**：`packageManager: bun@1.4.0` + `bun.lock`（移除 package-lock.json）；
+      `bun run ci/build/dev/preview` 全链路验证通过（npm 仍兼容）
+- [x] **CircularPattern 对象池修复**：环形弹幕此前直接 `new Bullet` 绕过池，
+      现统一走 `this.factory`（框架级缺陷，符卡/精英怪弹幕此前未真正复用）
+- [x] **InputSystem API 兼容**：`attach/detach` 恢复接受 `Window | HTMLElement`，
+      旧调用 `attach(window)` 不再静默失效
+- [x] **生命周期接口**：`TH08Game.destroy()` 完整清理（loop + input + audio +
+      renderer + 解锁监听）；`AudioManager.destroy()` 关闭 AudioContext
+- [x] **README 扩展指南**：新增 API 速查表 + 自定义弹幕/Boss/关卡/游戏装配四段
+      端到端示例（全部池感知）
+
 ## 📊 预估工作量
 
 - **Week 1-2**: 基础引擎框架 (Tasks 01-10)

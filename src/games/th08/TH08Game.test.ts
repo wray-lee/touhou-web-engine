@@ -69,4 +69,14 @@ describe('TH08Game', () => {
       expect(game.isPaused).toBe(false);
     });
   });
+
+  describe('Lifecycle', () => {
+    it('destroy() tears down cleanly (headless)', () => {
+      const game = new TH08Game({ headless: true });
+      game.stepFrame(10);
+      expect(() => game.destroy()).not.toThrow();
+      // After destroy, stepping further frames must not crash either
+      expect(() => game.stepFrame(1)).not.toThrow();
+    });
+  });
 });

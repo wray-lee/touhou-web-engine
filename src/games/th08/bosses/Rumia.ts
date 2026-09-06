@@ -2,6 +2,7 @@ import { Boss, BossPhase } from '../../../touhou-common/boss/Boss';
 import { SpellCard } from '../../../touhou-common/boss/SpellCard';
 import { Entity } from '../../../engine/core/Entity';
 import { Bullet } from '../../../engine/core/Bullet';
+import { BulletPattern, BulletFactory } from '../../../touhou-common/bullet-patterns/BulletPattern';
 import { CircularPattern } from '../../../touhou-common/bullet-patterns/CircularPattern';
 import { AimingPattern } from '../../../touhou-common/bullet-patterns/AimingPattern';
 
@@ -10,6 +11,20 @@ export class Rumia extends Boss {
   private moveAngle = 0;
   private targetX = 224;
   private targetY = 120;
+
+  /** 运行时弹幕工厂（对象池）；由 withBulletFactory 注入。 */
+  private runtimeFactory: BulletFactory = (config) => new Bullet(config);
+
+  override withBulletFactory(factory: BulletFactory): this {
+    super.withBulletFactory(factory);
+    this.runtimeFactory = factory;
+    return this;
+  }
+
+  /** 运行时生成的 pattern 路由到对象池工厂。 */
+  private pooled<P extends BulletPattern>(pattern: P): P {
+    return pattern.withFactory(this.runtimeFactory);
+  }
 
   constructor() {
     const nightBirdSpell = new SpellCard({
@@ -76,13 +91,15 @@ export class Rumia extends Boss {
     if (currentPhase === 0) {
       if (this.aiFrame % 50 === 0) {
         // 16-way circular pattern with rotating offset
-        const circ = new CircularPattern({
-          count: 16,
-          speed: 2.5,
-          angleOffset: (this.aiFrame * 0.05) % (Math.PI * 2),
-          color: 0x33bbff,
-          radius: 4,
-        });
+        const circ = this.pooled(
+          new CircularPattern({
+            count: 16,
+            speed: 2.5,
+            angleOffset: (this.aiFrame * 0.05) % (Math.PI * 2),
+            color: 0x33bbff,
+            radius: 4,
+          })
+        );
         bullets.push(...circ.spawn(this, this.aiFrame, player));
       }
     }
@@ -90,25 +107,29 @@ export class Rumia extends Boss {
     else if (currentPhase === 1) {
       if (this.aiFrame % 40 === 0) {
         // Red circular expanding wave
-        const circ = new CircularPattern({
-          count: 20,
-          speed: 2.2,
-          angleOffset: (this.aiFrame * 0.08) % (Math.PI * 2),
-          color: 0xff3355,
-          radius: 5,
-        });
+        const circ = this.pooled(
+          new CircularPattern({
+            count: 20,
+            speed: 2.2,
+            angleOffset: (this.aiFrame * 0.08) % (Math.PI * 2),
+            color: 0xff3355,
+            radius: 5,
+          })
+        );
         bullets.push(...circ.spawn(this, this.aiFrame, player));
       }
 
       if (this.aiFrame % 60 === 20 && player) {
         // Sharp aimed needle shot at player
-        const aim = new AimingPattern({
-          count: 3,
-          speed: 4.2,
-          spreadAngle: 0.15,
-          color: 0xdd22ff,
-          radius: 3,
-        });
+        const aim = this.pooled(
+          new AimingPattern({
+            count: 3,
+            speed: 4.2,
+            spreadAngle: 0.15,
+            color: 0xdd22ff,
+            radius: 3,
+          })
+        );
         bullets.push(...aim.spawn(this, this.aiFrame, player));
       }
     }
@@ -116,35 +137,41 @@ export class Rumia extends Boss {
     else if (currentPhase === 2) {
       if (this.aiFrame % 60 === 0) {
         // Darkness boundary pattern - spiraling dual rings with angular velocity
-        const pattern1 = new CircularPattern({
-          count: 18,
-          speed: 2.4,
-          angleOffset: this.aiFrame * 0.03,
-          angularVelocity: 0.015,
-          color: 0x9922ff,
-          radius: 5,
-        });
-        const pattern2 = new CircularPattern({
-          count: 18,
-          speed: 2.4,
-          angleOffset: -this.aiFrame * 0.03,
-          angularVelocity: -0.015,
-          color: 0x3344cc,
-          radius: 5,
-        });
+        const pattern1 = this.pooled(
+          new CircularPattern({
+            count: 18,
+            speed: 2.4,
+            angleOffset: this.aiFrame * 0.03,
+            angularVelocity: 0.015,
+            color: 0x9922ff,
+            radius: 5,
+          })
+        );
+        const pattern2 = this.pooled(
+          new CircularPattern({
+            count: 18,
+            speed: 2.4,
+            angleOffset: -this.aiFrame * 0.03,
+            angularVelocity: -0.015,
+            color: 0x3344cc,
+            radius: 5,
+          })
+        );
         bullets.push(...pattern1.spawn(this, this.aiFrame, player));
         bullets.push(...pattern2.spawn(this, this.aiFrame, player));
       }
 
       if (this.aiFrame % 80 === 30 && player) {
         // 5-way spread aimed at player
-        const aim = new AimingPattern({
-          count: 5,
-          speed: 3.5,
-          spreadAngle: 0.25,
-          color: 0xff22aa,
-          radius: 4,
-        });
+        const aim = this.pooled(
+          new AimingPattern({
+            count: 5,
+            speed: 3.5,
+            spreadAngle: 0.25,
+            color: 0xff22aa,
+            radius: 4,
+          })
+        );
         bullets.push(...aim.spawn(this, this.aiFrame, player));
       }
     }

@@ -57,10 +57,14 @@ The engine comes with a complete implementation of **東方永夜抄 ~ Imperisha
 
 ## 🚀 Installation & Usage
 
+> This project is managed with [Bun](https://bun.sh). `bun install` / `bun run <script>`
+> work out of the box; npm is fully compatible as well.
+
 ### Installing as a dependency
 
 ```bash
-npm install @uestc-touhou/touhou-web-engine
+bun add @uestc-touhou/touhou-web-engine
+# or: npm install @uestc-touhou/touhou-web-engine
 ```
 
 ### React / Web Integration Example
@@ -127,29 +131,54 @@ npm run build
 
 ## 🏛️ Architecture & Extension
 
-### Custom Bullet Pattern Example
+The engine is a **three-tier framework**. Everything you need to ship a new stage
+or boss lives behind a small, stable API surface.
+
+```
+@uestc-touhou/touhou-web-engine          ← engine core + touhou-common (this package root)
+@uestc-touhou/touhou-web-engine/th08     ← a reference game (TH08 Stage 1)
+```
+
+### API at a glance
+
+| Layer | Class / function | Responsibility |
+|---|---|---|
+| **Engine** | `Entity` | Position / velocity / hitbox / lifecycle base for everything |
+| | `Bullet` | Pooled projectile with angular velocity & acceleration |
+| | `BulletSystem` | Owns live bullets + **object pool** (`createBullet` / `recycle`) |
+| | `CollisionSystem` | Spatial-hash queries by tag, graze radius, real check count |
+| | `InputSystem` | Keyboard + touch-drag, `isActionPressed/JustPressed` |
+| | `Stage` | Frame-based timeline (`{ frame, action }`) |
+| | `PixiRenderer` | WebGL scene, HUD, banners, pause overlay |
+| | `AudioManager` | Synthesized SE + BGM (`playBGM` / `preload` / fade) |
+| **Touhou** | `Player` | Movement, focus/slow, bomb, graze, touch-follow |
+| | `Enemy` | Waypoint movement + periodic pattern fire |
+| | `Boss` / `SpellCard` | Multi-phase HP, spellcard timer & bonus |
+| | `BulletPattern` | Base — implement `spawn()`; `withFactory()` for pooling |
+| | `Circular/Linear/Aiming/Composite` | Ready-made patterns |
+| | `HUD` | Score / lives / bombs / power / graze / spellcard banner |
+
+### 1 · Custom bullet pattern (pool-aware)
+
+Always create bullets through `this.factory`, never `new Bullet(...)` — otherwise
+they bypass the object pool and defeat the GC optimization:
 
 ```typescript
 import { BulletPattern, Entity, Bullet } from '@uestc-touhou/touhou-web-engine';
 
-export class SpiralLaserPattern extends BulletPattern {
-  constructor(public count: number, public speed: number) {
+export class SpiralPattern extends BulletPattern {
+  constructor(private count: number, private speed: number) {
     super();
   }
 
-  spawn(emitter: Entity, time: number, player?: Entity): Bullet[] {
+  spawn(emitter: Entity, time: number, _player?: Entity): Bullet[] {
     const bullets: Bullet[] = [];
-    const angleOffset = time * 0.05;
-
     for (let i = 0; i < this.count; i++) {
-      const angle = (Math.PI * 2 / this.count) * i + angleOffset;
+      const angle = (Math.PI * 2 / this.count) * i + time * 0.05;
       bullets.push(
-        new Bullet({
+        this.factory({                       // ← pooled creation
           position: emitter.position,
-          velocity: {
-            x: Math.cos(angle) * this.speed,
-            y: Math.sin(angle) * this.speed,
-          },
+          velocity: { x: Math.cos(angle) * this.speed, y: Math.sin(angle) * this.speed },
           radius: 4,
           color: 0xff3399,
         })
@@ -158,6 +187,104 @@ export class SpiralLaserPattern extends BulletPattern {
     return bullets;
   }
 }
+```
+
+### 2 · Custom boss
+
+Extend `Boss`, declare phases (non-spell + spellcards), and emit bullets from
+`updateAI`. Route runtime patterns through the pool with `withBulletFactory`:
+
+```typescript
+import { Boss, SpellCard, CircularPattern, AimingPattern, Entity, Bullet }
+  from '@uestc-touhou/touhou-web-engine';
+
+export class MyBoss extends Boss {
+  private frame = 0;
+
+  constructor() {
+    super({
+      name: 'My Boss',
+      phases: [
+        { maxHp: 200, isSpellCard: false },
+        {
+          maxHp: 300,
+          isSpellCard: true,
+          spellCard: new SpellCard({
+            name: '符「My Spell」',
+            durationSeconds: 40,
+            bonusScore: 1_000_000,
+            maxHp: 300,
+            pattern: new CircularPattern({ count: 24, speed: 2.4 }),
+          }),
+        },
+      ],
+    });
+  }
+
+  updateAI(_dt: number, player?: Entity): Bullet[] {
+    this.frame++;
+    const out: Bullet[] = [];
+    if (this.frame % 45 === 0) {
+      out.push(...new AimingPattern({ count: 3, speed: 4 }).spawn(this, this.frame, player));
+    }
+    return out;
+  }
+}
+
+// In your game setup:
+// boss.withBulletFactory((cfg) => bulletSystem.createBullet(cfg));
+```
+
+### 3 · Custom stage timeline
+
+A stage is just a list of frame-triggered actions. Spawn enemies/bosses via
+callbacks so the game loop owns lifecycle & pooling:
+
+```typescript
+import { Stage, StageTimelineEvent, Enemy, AimingPattern }
+  from '@uestc-touhou/touhou-web-engine';
+
+export function createMyStage(cb: {
+  spawnEnemy: (e: Enemy) => void;
+  onClear: () => void;
+  bulletFactory?: (cfg: any) => any;
+}): Stage {
+  const timeline: StageTimelineEvent[] = [
+    {
+      frame: 60,
+      action: () => {
+        const enemy = new Enemy(
+          { x: 200, y: -20 },
+          { x: 0, y: 2 },
+          cb.bulletFactory
+            ? { hp: 20, shootInterval: 50,
+                shootPattern: new AimingPattern({ count: 1, speed: 2.8 }),
+                bulletFactory: cb.bulletFactory }
+            : { hp: 20, shootInterval: 50,
+                shootPattern: new AimingPattern({ count: 1, speed: 2.8 }) }
+        );
+        cb.spawnEnemy(enemy);
+      },
+    },
+    { frame: 1800, action: () => cb.onClear() },
+  ];
+  return new Stage({ name: 'My Stage', timeline });
+}
+```
+
+### 4 · Wire it into a game
+
+`TH08Game` is the reference orchestrator. To build your own, compose the systems
+and drive them from one `stepFrame()` (see `src/games/th08/TH08Game.ts`):
+
+```typescript
+import { TH08Game } from '@uestc-touhou/touhou-web-engine/th08';
+
+const game = new TH08Game();
+await game.init(document.getElementById('root')!); // mounts Pixi canvas + input
+game.start();
+// game.pause() / game.resume() / game.togglePause() — ESC handled internally
+// game.destroy() — removes listeners & disposes renderer
 ```
 
 ---

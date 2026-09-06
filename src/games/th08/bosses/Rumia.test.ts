@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Rumia } from './Rumia';
 import { Player } from '../../../touhou-common/player/Player';
+import { Bullet } from '../../../engine/core/Bullet';
 
 describe('TH08 Stage 1 Rumia Boss AI', () => {
   it('creates Rumia with 3 phases (non-spell, Night Bird, Demarcation)', () => {
@@ -33,5 +34,22 @@ describe('TH08 Stage 1 Rumia Boss AI', () => {
     expect(rumia.currentPhaseIndex).toBe(1);
     expect(rumia.isSpellCardActive).toBe(true);
     expect(rumia.currentSpellCard?.name).toBe('夜符「Night Bird」');
+  });
+
+  it('routes runtime bullets through the injected object-pool factory', () => {
+    const rumia = new Rumia();
+    const player = new Player({ x: 224, y: 400 });
+    const factory = vi.fn((config: ConstructorParameters<typeof Bullet>[0]) => new Bullet(config));
+    rumia.withBulletFactory(factory);
+
+    // Step until the non-spell attack fires
+    let spawned = 0;
+    for (let f = 0; f < 120 && spawned === 0; f++) {
+      const bullets = rumia.updateAI(1, player);
+      spawned = bullets.length;
+    }
+    expect(spawned).toBeGreaterThan(0);
+    // Every runtime pattern bullet went through the pool factory
+    expect(factory).toHaveBeenCalled();
   });
 });
