@@ -1,11 +1,12 @@
 import { Entity, EntityTag } from '../../engine/core/Entity';
-import { Bullet, BulletConfig } from '../../engine/core/Bullet';
+import { Bullet, BulletConfig, obtainBullet } from '../../engine/core/Bullet';
 
 /** Bullet creation hook — lets the game route bullets through its object pool. */
 export type BulletFactory = (config: BulletConfig) => Bullet;
 
 export abstract class BulletPattern {
-  protected factory: BulletFactory = (config) => new Bullet(config);
+  /** Defaults to the shared Bullet pool; override with withFactory() to route elsewhere. */
+  protected factory: BulletFactory = (config) => obtainBullet(config);
 
   /** Override how spawned bullets are created (used for object pooling). */
   withFactory(factory: BulletFactory): this {

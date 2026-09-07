@@ -14,6 +14,12 @@ export interface PixiRendererConfig {
   height?: number;
 }
 
+/**
+ * Optional per-entity opacity (0..1) — e.g. Boss death fade-out sets `alpha`.
+ * Entities without the field render fully opaque (behavior unchanged).
+ */
+const entityAlpha = (e: object): number => (e as { alpha?: number }).alpha ?? 1;
+
 export class PixiRenderer {
   public app: Application;
   public gameContainer: Container;
@@ -28,6 +34,7 @@ export class PixiRenderer {
   private debugGraphics: Graphics;
 
   private scoreText: Text;
+  private hiScoreText: Text;
   private livesText: Text;
   private bombsText: Text;
   private powerText: Text;
@@ -72,6 +79,7 @@ export class PixiRenderer {
     });
 
     this.scoreText = new Text({ text: 'Score: 0000000000', style: titleStyle });
+    this.hiScoreText = new Text({ text: 'HiScore: 0999999990', style: titleStyle });
     this.livesText = new Text({ text: 'Player: ★★★', style: titleStyle });
     this.bombsText = new Text({ text: 'Spell:  ★★★', style: titleStyle });
     this.powerText = new Text({ text: 'Power:  128 / 128', style: titleStyle });
@@ -160,6 +168,7 @@ export class PixiRenderer {
 
     this.hudContainer.addChild(this.hudGraphics);
     this.hudContainer.addChild(this.scoreText);
+    this.hudContainer.addChild(this.hiScoreText);
     this.hudContainer.addChild(this.livesText);
     this.hudContainer.addChild(this.bombsText);
     this.hudContainer.addChild(this.powerText);
@@ -181,6 +190,7 @@ export class PixiRenderer {
     // Layout HUD (Right panel: x >= 448)
     const rightPanelX = 460;
     this.scoreText.position.set(rightPanelX, 40);
+    this.hiScoreText.position.set(rightPanelX, 55);
     this.livesText.position.set(rightPanelX, 70);
     this.bombsText.position.set(rightPanelX, 95);
     this.powerText.position.set(rightPanelX, 125);
@@ -225,24 +235,27 @@ export class PixiRenderer {
     if (player.isAlive) {
       const px = player.position.x;
       const py = player.position.y;
+      const pa = entityAlpha(player);
 
       // Invulnerability blink
       if (!player.isInvulnerable || Math.floor(player.invulnerabilityTimer / 6) % 2 === 0) {
         // Body (Reimu Red/White Shrine Maiden dress)
-        this.entityGraphics.circle(px, py - 4, 8).fill({ color: 0xfff0e6 }); // head
+        this.entityGraphics.circle(px, py - 4, 8).fill({ color: 0xfff0e6, alpha: pa }); // head
         this.entityGraphics
           .poly([
             { x: px, y: py - 4 },
             { x: px - 12, y: py + 14 },
             { x: px + 12, y: py + 14 },
           ])
-          .fill({ color: 0xc41e3a }); // red skirt
-        this.entityGraphics.rect(px - 10, py - 10, 20, 6).fill({ color: 0xff3344 }); // red ribbon
+          .fill({ color: 0xc41e3a, alpha: pa }); // red skirt
+        this.entityGraphics
+          .rect(px - 10, py - 10, 20, 6)
+          .fill({ color: 0xff3344, alpha: pa }); // red ribbon
 
         // Hitbox dot (visible in slow mode)
         if (player.isSlowMode) {
-          this.entityGraphics.circle(px, py, 6).fill({ color: 0xffffff, alpha: 0.4 });
-          this.entityGraphics.circle(px, py, 2).fill({ color: 0xff0044 });
+          this.entityGraphics.circle(px, py, 6).fill({ color: 0xffffff, alpha: 0.4 * pa });
+          this.entityGraphics.circle(px, py, 2).fill({ color: 0xff0044, alpha: pa });
         }
       }
     }
@@ -252,37 +265,43 @@ export class PixiRenderer {
       if (!enemy.isAlive) continue;
       const ex = enemy.position.x;
       const ey = enemy.position.y;
+      const ea = entityAlpha(enemy);
 
       // Fairy wings
-      this.entityGraphics.ellipse(ex - 8, ey - 4, 10, 5).fill({ color: 0xffffff, alpha: 0.6 });
-      this.entityGraphics.ellipse(ex + 8, ey - 4, 10, 5).fill({ color: 0xffffff, alpha: 0.6 });
+      this.entityGraphics.ellipse(ex - 8, ey - 4, 10, 5).fill({ color: 0xffffff, alpha: 0.6 * ea });
+      this.entityGraphics.ellipse(ex + 8, ey - 4, 10, 5).fill({ color: 0xffffff, alpha: 0.6 * ea });
 
       // Fairy body
-      this.entityGraphics.circle(ex, ey, enemy.hitbox.radius).fill({ color: enemy.color });
+      this.entityGraphics
+        .circle(ex, ey, enemy.hitbox.radius)
+        .fill({ color: enemy.color, alpha: ea });
     }
 
     // 5. Render Boss
     if (boss && boss.isAlive && !boss.isDefeated) {
       const bx = boss.position.x;
       const by = boss.position.y;
+      const ba = entityAlpha(boss);
 
       // Boss aura
-      const auraAlpha = 0.2 + 0.1 * Math.sin(boss.timer * 0.1);
+      const auraAlpha = (0.2 + 0.1 * Math.sin(boss.timer * 0.1)) * ba;
       this.entityGraphics.circle(bx, by, 32).fill({
         color: boss.isSpellCardActive ? 0xff2255 : 0x4488ff,
         alpha: auraAlpha,
       });
 
       // Rumia character silhouette (Black dress + yellow hair + red ribbon)
-      this.entityGraphics.circle(bx, by - 6, 12).fill({ color: 0xffe066 }); // yellow hair
+      this.entityGraphics.circle(bx, by - 6, 12).fill({ color: 0xffe066, alpha: ba }); // yellow hair
       this.entityGraphics
         .poly([
           { x: bx, y: by },
           { x: bx - 14, y: by + 20 },
           { x: bx + 14, y: by + 20 },
         ])
-        .fill({ color: 0x1a1a24 }); // black dress
-      this.entityGraphics.rect(bx - 12, by - 14, 8, 8).fill({ color: 0xcc1122 }); // red side ribbon
+        .fill({ color: 0x1a1a24, alpha: ba }); // black dress
+      this.entityGraphics
+        .rect(bx - 12, by - 14, 8, 8)
+        .fill({ color: 0xcc1122, alpha: ba }); // red side ribbon
 
       // Boss Health Bar (top of playfield)
       const maxHp = boss.currentPhase?.maxHp ?? 1;
@@ -301,11 +320,13 @@ export class PixiRenderer {
         color: b.color,
         radius: b.hitbox.radius,
         rotation,
+        alpha: entityAlpha(b),
       });
     }
 
     // 7. Update HUD Texts
     this.scoreText.text = `Score:  ${hud.formattedScore}`;
+    this.hiScoreText.text = `HiScore:${hud.formattedHiScore}`;
     this.livesText.text = `Player: ${'★'.repeat(Math.max(0, hud.lives))}`;
     this.bombsText.text = `Spell:  ${'★'.repeat(Math.max(0, hud.bombs))}`;
     this.powerText.text = `Power:  ${hud.power} / 128`;
@@ -317,13 +338,14 @@ export class PixiRenderer {
       this.spellNameText.visible = true;
       this.spellTimerText.visible = true;
 
-      // 居中弹出动画：前 30 帧 scale 1.6 -> 1.0 + 淡入，其余时间保持
+      // 弹出动画：前 30 帧从右侧滑入 + scale 1.6 -> 1.0 + 淡入，最终停在 playfield 居中，其余时间保持
       const elapsedFrames = PixiRenderer.DISPLAY_WINDOW - Math.max(0, hud.spellCardDisplayTimer);
       const progress = Math.min(1, elapsedFrames / PixiRenderer.DISPLAY_ANIM_FRAMES);
       const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
       this.spellNameText.alpha = Math.min(1, 0.2 + eased * 0.8);
       this.spellNameText.scale.set(1.6 - 0.6 * eased);
-      this.spellNameText.position.set(this.width / 2, this.height / 2 - 14);
+      const centerX = this.width / 2;
+      this.spellNameText.position.set(centerX + (1 - eased) * (this.width - centerX), this.height / 2 - 14);
     } else {
       this.spellNameText.visible = false;
       this.spellTimerText.visible = false;
@@ -347,7 +369,9 @@ export class PixiRenderer {
         lines.push(`Input: ${active.length > 0 ? active.join(' ') : '—'}`);
       }
       this.debugText.text = lines.join('\n');
-      this.debugGraphics.rect(5, 5, 170, 75 + (input ? 16 : 0)).fill({ color: 0x000000, alpha: 0.7 });
+      this.debugGraphics
+        .rect(5, 5, 230, lines.length * 15 + 10)
+        .fill({ color: 0x000000, alpha: 0.7 });
     } else {
       this.debugContainer.visible = false;
     }

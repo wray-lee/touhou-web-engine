@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { InputSystem } from './InputSystem';
 
 /** Fake standard-layout gamepad with the given pressed button indices & axes. */
@@ -6,6 +6,34 @@ const pad = (buttons: number[], axes: number[] = [0, 0, 0, 0]) => ({
   buttons: Array.from({ length: 16 }, (_, i) => ({ pressed: buttons.includes(i) })),
   axes,
 });
+
+/** Minimal event-capturing element + window pair for pointer wiring tests. */
+function makePointerEnv(rect: { left: number; top: number; width: number; height: number }) {
+  const elHandlers: Record<string, ((e: unknown) => void)[]> = {};
+  const winHandlers: Record<string, ((e: unknown) => void)[]> = {};
+  const element = {
+    getBoundingClientRect: () => rect,
+    addEventListener: (type: string, fn: (e: unknown) => void) => {
+      (elHandlers[type] ??= []).push(fn);
+    },
+    removeEventListener: () => undefined,
+  } as unknown as HTMLElement;
+  const fakeWindow = {
+    addEventListener: (type: string, fn: (e: unknown) => void) => {
+      (winHandlers[type] ??= []).push(fn);
+    },
+    removeEventListener: () => undefined,
+  } as unknown as Window & typeof globalThis;
+  const emit = (handlers: Record<string, ((e: unknown) => void)[]>, type: string, e: unknown) => {
+    for (const fn of handlers[type] ?? []) fn(e);
+  };
+  return {
+    element,
+    fakeWindow,
+    emitOnElement: (type: string, e: unknown) => emit(elHandlers, type, e),
+    emitOnWindow: (type: string, e: unknown) => emit(winHandlers, type, e),
+  };
+}
 
 describe('InputSystem', () => {
   it('tracks key states properly', () => {
@@ -69,6 +97,60 @@ describe('InputSystem', () => {
 
       input.pointerUp();
       expect(input.isDragging).toBe(false);
+    });
+
+    it('undoes CSS scaling when a game resolution is provided (mobile, US#9)', () => {
+      const input = new InputSystem();
+      const fakeCanvas = {
+        // CSS box is 320x240 but the game renders at 640x480 -> 2x scale
+        getBoundingClientRect: () => ({ left: 10, top: 5, width: 320, height: 240 }),
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      } as unknown as HTMLElement;
+      input.attach(fakeCanvas, { width: 640, height: 480 });
+
+      input.pointerDown(170, 125); // viewport coords
+      // local (160, 120) * (640/320, 480/240) = (320, 240)
+      expect(input.pointerPos).toEqual({ x: 320, y: 240 });
+      expect(input.getPointerTarget()).toEqual({ x: 320, y: 240 });
+      input.pointerUp();
+      expect(input.getPointerTarget()).toBeNull();
+    });
+
+    it('getPointerTarget returns a copy, not the live position', () => {
+      const input = new InputSystem();
+      input.pointerDown(100, 200);
+      const target = input.getPointerTarget()!;
+      target.x = 999;
+      expect(input.pointerPos.x).toBe(100);
+    });
+
+    it('wires pointerdown/move/up events on attach (simulated pointer events)', () => {
+      const env = makePointerEnv({ left: 0, top: 0, width: 640, height: 480 });
+      const g = globalThis as { window?: unknown };
+      const hadWindow = 'window' in g;
+      const originalWindow = g.window;
+      g.window = env.fakeWindow;
+      try {
+        const input = new InputSystem();
+        input.attach(env.element, { width: 640, height: 480 });
+
+        // Touch pointerdown on the game element starts a drag
+        env.emitOnElement('pointerdown', { pointerType: 'touch', button: 0, clientX: 120, clientY: 300 });
+        expect(input.isDragging).toBe(true);
+        expect(input.getPointerTarget()).toEqual({ x: 120, y: 300 });
+
+        // pointermove on the window keeps tracking (finger leaves the canvas)
+        env.emitOnWindow('pointermove', { pointerType: 'touch', clientX: 200, clientY: 150 });
+        expect(input.getPointerTarget()).toEqual({ x: 200, y: 150 });
+
+        env.emitOnWindow('pointerup', { pointerType: 'touch' });
+        expect(input.isDragging).toBe(false);
+        expect(input.getPointerTarget()).toBeNull();
+      } finally {
+        if (hadWindow) g.window = originalWindow;
+        else delete g.window;
+      }
     });
   });
 
@@ -169,6 +251,29 @@ describe('InputSystem', () => {
       input.update();
       expect(input.isKeyDown('shoot')).toBe(true);
       expect(input.wasKeyPressed('pause')).toBe(true);
+    });
+
+    it('pollGamepad() samples pads without a full update() and is safe without a provider', () => {
+      const input = new InputSystem();
+      // No provider: must not throw
+      expect(() => input.pollGamepad()).not.toThrow();
+
+      input.enableGamepad(() => [pad([4])]); // LB = focus/slow
+      input.pollGamepad();
+      expect(input.isKeyDown('slow')).toBe(true);
+    });
+
+    it('reads navigator.getGamepads() by default when available', () => {
+      // Node >= 21 exposes a getter-only `navigator` — stub it via vi.
+      vi.stubGlobal('navigator', { getGamepads: () => [pad([2])] }); // X = bomb
+      try {
+        const input = new InputSystem();
+        input.enableGamepad();
+        input.update();
+        expect(input.isKeyDown('bomb')).toBe(true);
+      } finally {
+        vi.unstubAllGlobals();
+      }
     });
   });
 

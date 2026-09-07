@@ -14,6 +14,50 @@ export interface BulletConfig {
   tag?: EntityTag;
 }
 
+/** Default cap for the shared bullet free-list (0 = unlimited). */
+export const DEFAULT_BULLET_POOL_CAP = 512;
+
+/** Module-level shared free-list backing obtainBullet()/releaseBullet(). */
+const bulletFreeList: Bullet[] = [];
+
+/**
+ * Take a Bullet from the shared pool (or allocate one) and arm it with `config`.
+ * Prefer this over `new Bullet()` for anything spawned per-frame; pair every
+ * obtain with a releaseBullet() when the bullet dies.
+ */
+export function obtainBullet(config: BulletConfig = {}): Bullet {
+  const reused = bulletFreeList.pop();
+  if (reused) {
+    reused.reset(config);
+    return reused;
+  }
+  return new Bullet(config);
+}
+
+/**
+ * Return a dead Bullet to the shared pool. Double-release safe (guarded by
+ * `isPooled`); live bullets and instances above `cap` are dropped.
+ */
+export function releaseBullet(bullet: Bullet, cap: number = DEFAULT_BULLET_POOL_CAP): void {
+  if (!(bullet instanceof Bullet) || bullet.isAlive || bullet.isPooled) return;
+  if (cap > 0 && bulletFreeList.length >= cap) return;
+  bullet.isPooled = true;
+  bulletFreeList.push(bullet);
+}
+
+/** Number of bullets currently held in the shared pool (debug/metrics). */
+export function getBulletPoolSize(): number {
+  return bulletFreeList.length;
+}
+
+/** Empty the shared pool and hand back its contents (test isolation / teardown). */
+export function drainBulletPool(): Bullet[] {
+  return bulletFreeList.splice(0, bulletFreeList.length).map((b) => {
+    b.isPooled = false;
+    return b;
+  });
+}
+
 export class Bullet extends Entity {
   public color: number;
   public sprite: string;
@@ -22,6 +66,8 @@ export class Bullet extends Entity {
   public angularVelocity: number;
   public acceleration: number;
   public lifetime = 0;
+  /** True while this instance sits in the shared free-list awaiting reuse. */
+  public isPooled = false;
 
   constructor(config: BulletConfig = {}) {
     super(config.position, config.velocity, { radius: config.radius ?? 4 }, config.tag ?? 'enemy-bullet');
@@ -36,6 +82,7 @@ export class Bullet extends Entity {
   /** Re-arm a pooled instance with fresh config so it can be reused. */
   reset(config: BulletConfig = {}): void {
     // Reuse the bullet's existing id; re-arm everything else
+    this.isPooled = false;
     this.position.x = config.position?.x ?? 0;
     this.position.y = config.position?.y ?? 0;
     this.velocity.x = config.velocity?.x ?? 0;

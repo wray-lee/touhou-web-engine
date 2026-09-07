@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Entity } from '../../engine/core/Entity';
-import { Bullet, BulletConfig } from '../../engine/core/Bullet';
+import { Bullet, BulletConfig, releaseBullet, drainBulletPool } from '../../engine/core/Bullet';
 import { CircularPattern } from './CircularPattern';
 import { LinearPattern } from './LinearPattern';
 import { AimingPattern } from './AimingPattern';
@@ -9,6 +9,11 @@ import { CompositePattern } from './CompositePattern';
 describe('Bullet Patterns', () => {
   const boss = new Entity({ x: 192, y: 100 });
   const player = new Entity({ x: 192, y: 400 });
+
+  // Default factories draw from the shared module pool — keep tests isolated.
+  beforeEach(() => {
+    drainBulletPool();
+  });
 
   it('CircularPattern generates N bullets equally spaced around a circle', () => {
     const pattern = new CircularPattern({ count: 8, speed: 3, angleOffset: 0 });
@@ -49,6 +54,28 @@ describe('Bullet Patterns', () => {
 
     const bullets = comp.spawn(boss, 0, player);
     expect(bullets.length).toBe(7);
+  });
+
+  it('default factories draw from the shared bullet pool (spawn+release+respawn reuses)', () => {
+    const patterns = [
+      new CircularPattern({ count: 2, speed: 2 }),
+      new LinearPattern({ count: 2, speed: 2, baseAngle: Math.PI / 2 }),
+      new AimingPattern({ count: 2, speed: 2 }),
+    ];
+
+    for (const pattern of patterns) {
+      const fired = pattern.spawn(boss, 0, player);
+      expect(fired.length).toBe(2);
+      for (const b of fired) {
+        b.destroy();
+        releaseBullet(b);
+      }
+
+      const refired = pattern.spawn(boss, 0, player);
+      expect(refired[0]).toBe(fired[1]); // LIFO free-list: last released pops first
+      expect(refired[1]).toBe(fired[0]);
+      expect(refired[0].isAlive).toBe(true);
+    }
   });
 
   it('withFactory propagates to every child pattern (composite bullets pool)', () => {

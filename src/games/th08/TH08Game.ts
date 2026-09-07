@@ -111,8 +111,9 @@ export class TH08Game {
     if (this.headless) return;
     this.renderer = new PixiRenderer();
     await this.renderer.init({ container });
-    // Attach to the container so pointer/touch coords map to canvas-local space
-    this.input.attach(container);
+    // Attach to the container so pointer/touch coords map to canvas-local space;
+    // pass the game resolution so CSS-scaled canvases map back to game coords.
+    this.input.attach(container, { width: 640, height: 480 });
   }
 
   start(): void {
@@ -194,6 +195,35 @@ export class TH08Game {
     this.renderer = undefined;
   }
 
+  /**
+   * Drain the Stage context queues (票据 08 StageContext API):
+   * spawnEntity → enemies, showDialogue → hud.showMessage, startBossPhase → boss phase.
+   */
+  private consumeStageQueues(): void {
+    if (this.stage.spawnedEntities.length > 0) {
+      for (const entity of this.stage.spawnedEntities.splice(0)) {
+        if (entity instanceof Enemy) {
+          this.enemies.push(entity);
+        }
+      }
+    }
+    if (this.stage.dialogueQueue.length > 0) {
+      for (const line of this.stage.dialogueQueue.splice(0)) {
+        this.hud.showMessage(line.text, line.frames);
+      }
+    }
+    if (this.stage.bossPhaseRequests.length > 0) {
+      for (const req of this.stage.bossPhaseRequests.splice(0)) {
+        const boss = this.boss;
+        if (boss && req.boss === boss) {
+          while (boss.currentPhaseIndex < req.index && !boss.isDefeated) {
+            boss.nextPhase();
+          }
+        }
+      }
+    }
+  }
+
   stepFrame(dtFrames = 1): void {
     this.monitor.updateFrame();
     this.input.update();
@@ -227,6 +257,7 @@ export class TH08Game {
 
     // 2. Update Stage Timeline
     this.stage.update(dtFrames);
+    this.consumeStageQueues();
 
     // 3. Update Enemies
     for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -248,14 +279,16 @@ export class TH08Game {
       }
     }
 
-    // 4. Update Boss AI
-    if (this.boss && this.boss.isAlive) {
+    // 4. Update Boss AI（死亡后保留至 alpha 淡出结束，渲染消费由任务 D 负责）
+    if (this.boss && (this.boss.isAlive || this.boss.alpha > 0)) {
       this.boss.update(dtFrames);
-      const bossBullets = this.boss.updateAI(dtFrames, this.player);
-      if (bossBullets.length > 0) {
-        this.bulletSystem.add(...bossBullets);
+      if (this.boss.isAlive) {
+        const bossBullets = this.boss.updateAI(dtFrames, this.player);
+        if (bossBullets.length > 0) {
+          this.bulletSystem.add(...bossBullets);
+        }
       }
-      if (this.boss.isDefeated) {
+      if (this.boss.isDefeated && this.boss.alpha <= 0) {
         this.boss = null;
       }
     }
@@ -330,7 +363,11 @@ export class TH08Game {
       this.hud.spellCardTime = this.boss.currentSpellCard.timeRemaining;
     }
 
-    this.monitor.updateMetrics(allEntities.length, this.collisionSystem.totalChecks);
+    this.monitor.updateMetrics(allEntities.length, this.collisionSystem.totalChecks, {
+      bullets: this.bulletSystem.getCount(),
+      enemies: this.enemies.length + (this.boss && this.boss.isAlive ? 1 : 0),
+      player: this.player.isAlive ? 1 : 0,
+    });
   }
 
   renderFrame(): void {

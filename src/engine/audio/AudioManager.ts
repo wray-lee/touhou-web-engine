@@ -5,6 +5,13 @@ export interface BgmOptions {
   volume?: number;
   /** Fade-in duration in ms (boolean `true` = 1000ms). */
   fadeIn?: boolean | number;
+  /** Alias for `fadeIn` as a plain number (ticket 13 API). */
+  fadeInMs?: number;
+}
+
+export interface SeOptions {
+  /** Per-play volume (0-1), multiplied on top of the global SE volume. */
+  volume?: number;
 }
 
 /** 东方风格合成 BGM 回退：无外部素材时用 Web Audio 琶音循环（Phase 1 程序生成）。 */
@@ -23,6 +30,7 @@ export class AudioManager {
   private bgmAudio?: HTMLAudioElement;
   private bgmGainNode?: GainNode;
   private bgmScheduler?: number;
+  private bgmFadeInterval?: number;
   private lastBgmUrl?: string;
   private lastBgmOptions: BgmOptions = {};
   private preloaded = new Set<HTMLAudioElement>();
@@ -61,7 +69,7 @@ export class AudioManager {
     this.seVolume = Math.max(0, Math.min(1, volume));
   }
 
-  playSE(type: SoundEffectType): void {
+  playSE(type: SoundEffectType, options: SeOptions = {}): void {
     if (this.isMuted || this.seVolume <= 0) return;
     const ctx = this.getContext();
     if (!ctx) return;
@@ -73,7 +81,8 @@ export class AudioManager {
       osc.connect(gain);
       gain.connect(ctx.destination);
 
-      const vol = this.seVolume * 0.2;
+      const perPlayVolume = Math.max(0, Math.min(1, options.volume ?? 1));
+      const vol = this.seVolume * perPlayVolume * 0.2;
 
       switch (type) {
         case 'shoot': {
@@ -152,9 +161,11 @@ export class AudioManager {
     this.stopBGM();
     this.lastBgmUrl = url;
     this.lastBgmOptions = { ...options };
-    const { loop = true, volume, fadeIn = false } = options;
+    const { loop = true, volume, fadeIn = false, fadeInMs } = options;
     // 记录最后请求的 fade-in 配置（stop 后保留以供查询）
-    this.fadeInMs = typeof fadeIn === 'number' ? Math.max(0, fadeIn) : fadeIn ? 1000 : 0;
+    const fadeInRequested = fadeInMs ?? fadeIn;
+    this.fadeInMs =
+      typeof fadeInRequested === 'number' ? Math.max(0, fadeInRequested) : fadeInRequested ? 1000 : 0;
     const targetVolume = Math.max(0, Math.min(1, volume ?? this.bgmVolume));
     this.isBgmPlaying = true;
 
@@ -172,12 +183,12 @@ export class AudioManager {
         this.bgmAudio.volume = 0;
         const steps = 20;
         let step = 0;
-        const interval = window.setInterval(() => {
+        this.bgmFadeInterval = window.setInterval(() => {
           step++;
           if (this.bgmAudio && step <= steps) {
             this.bgmAudio.volume = targetVolume * (step / steps);
           } else {
-            clearInterval(interval);
+            this.stopFadeIn();
           }
         }, this.fadeInMs / steps);
       }
@@ -237,6 +248,14 @@ export class AudioManager {
     scheduleBar();
   }
 
+  /** Cancel a running fade-in ramp (interval handle is kept for cleanup). */
+  private stopFadeIn(): void {
+    if (this.bgmFadeInterval !== undefined) {
+      clearInterval(this.bgmFadeInterval);
+      this.bgmFadeInterval = undefined;
+    }
+  }
+
   /** 预加载音频资源（Ticket 13）。非浏览器环境为 noop。 */
   preload(urls: string[]): void {
     if (typeof window === 'undefined' || typeof Audio === 'undefined') return;
@@ -246,6 +265,11 @@ export class AudioManager {
       audio.load();
       this.preloaded.add(audio);
     }
+  }
+
+  /** 预加载单首 BGM（Ticket 13）：`new Audio(url).load()`，非浏览器环境为 noop。 */
+  preloadBGM(url: string): void {
+    this.preload([url]);
   }
 
   /** 暂停 BGM（保留位置，resume 时续播）。 */
@@ -274,6 +298,7 @@ export class AudioManager {
     this.isBgmPlaying = false;
     this.lastBgmUrl = undefined;
     this.lastBgmOptions = {};
+    this.stopFadeIn();
     if (this.bgmAudio) {
       this.bgmAudio.pause();
       this.bgmAudio.currentTime = 0;

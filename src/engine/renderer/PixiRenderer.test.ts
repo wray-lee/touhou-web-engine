@@ -21,13 +21,22 @@ vi.mock('pixi.js', () => {
     clear() { return this; }
   }
 
+  class Vec2Mock {
+    x = 0;
+    y = 0;
+    set(x: number, y: number) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+
   class Text {
     public text = '';
     public visible = true;
     public alpha = 1;
     public anchor = { set: () => {} };
-    public position = { set: () => {} };
-    public scale = { set: () => {} };
+    public position = new Vec2Mock();
+    public scale = new Vec2Mock();
     public style: unknown = {};
     constructor(opts?: { text?: string; style?: unknown }) {
       this.text = opts?.text ?? '';
@@ -135,5 +144,53 @@ describe('PixiRenderer', () => {
     const debugText = (renderer as unknown as { debugText: { text: string } }).debugText;
     expect(debugText.text).toContain('Input:');
     expect(debugText.text).toContain('shoot');
+  });
+
+  it('shows the PAUSED overlay only while isPaused', async () => {
+    const renderer = new PixiRenderer();
+    await renderer.init({ container: makeContainer() });
+    const internals = renderer as unknown as {
+      pauseOverlay: { visible: boolean };
+      pauseText: { visible: boolean; text: string };
+    };
+
+    renderer.render(new Player(), null, [], [], new HUD(), new PerformanceMonitor(), true);
+    expect(internals.pauseOverlay.visible).toBe(true);
+    expect(internals.pauseText.visible).toBe(true);
+    expect(internals.pauseText.text).toContain('PAUSED');
+    expect(internals.pauseText.text).toContain('ESC');
+
+    renderer.render(new Player(), null, [], [], new HUD(), new PerformanceMonitor(), false);
+    expect(internals.pauseOverlay.visible).toBe(false);
+    expect(internals.pauseText.visible).toBe(false);
+  });
+
+  it('slides the spellcard banner in from the right and settles centered', async () => {
+    const renderer = new PixiRenderer();
+    await renderer.init({ container: makeContainer(), width: 640, height: 480 });
+    const spellName = (renderer as unknown as {
+      spellNameText: { visible: boolean; position: { x: number }; scale: { x: number } };
+    }).spellNameText;
+    const player = new Player();
+    const monitor = new PerformanceMonitor();
+
+    const hud = new HUD();
+    hud.showSpellCard('夜符「Night Bird」', 40); // 90-frame display window
+    // Frame 0 of the animation: off to the right, enlarged
+    renderer.render(player, null, [], [], hud, monitor);
+    expect(spellName.visible).toBe(true);
+    expect(spellName.position.x).toBeGreaterThan(400);
+    expect(spellName.scale.x).toBeGreaterThan(1.5);
+
+    // After the 30-frame pop-in: centered, scale 1
+    hud.update(30);
+    renderer.render(player, null, [], [], hud, monitor);
+    expect(spellName.position.x).toBeCloseTo(320, 1);
+    expect(spellName.scale.x).toBeCloseTo(1, 2);
+
+    // No active card: hidden
+    hud.hideSpellCard();
+    renderer.render(player, null, [], [], hud, monitor);
+    expect(spellName.visible).toBe(false);
   });
 });

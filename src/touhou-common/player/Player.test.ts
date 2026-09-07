@@ -1,8 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Player } from './Player';
 import { InputSystem } from '../../engine/core/InputSystem';
+import { releaseBullet, drainBulletPool } from '../../engine/core/Bullet';
 
 describe('Player Controller', () => {
+  beforeEach(() => {
+    drainBulletPool(); // shared module pool — start each test empty
+  });
   it('moves according to speed setting (fast vs slow mode)', () => {
     const input = new InputSystem();
     const player = new Player({ x: 200, y: 300 });
@@ -49,6 +53,28 @@ describe('Player Controller', () => {
     const bullets = player.shoot(0);
     expect(bullets.length).toBeGreaterThan(0);
     expect(bullets[0].velocity.y).toBeLessThan(0); // Upward
+  });
+
+  it('shoots through the shared bullet pool by default (kill + release -> next volley reuses)', () => {
+    const player = new Player({ x: 200, y: 400 });
+
+    const volleyA = player.shoot(0);
+    expect(volleyA.length).toBe(4); // fast mode: 2 needles + 2 wide
+    for (const b of volleyA) {
+      b.destroy();
+      releaseBullet(b);
+    }
+
+    player.shootCooldown = 0;
+    const volleyB = player.shoot(5);
+    expect(volleyB.length).toBe(4);
+    // LIFO free-list: the same instances come back, re-armed as player bullets
+    expect(new Set(volleyB)).toEqual(new Set(volleyA));
+    for (const b of volleyB) {
+      expect(b.isAlive).toBe(true);
+      expect(b.tag).toBe('player-bullet');
+      expect(b.sprite).toBe('player_needle');
+    }
   });
 
   it('handles death and respawn invulnerability', () => {

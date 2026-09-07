@@ -1,7 +1,7 @@
 import { Entity } from '../../engine/core/Entity';
 import { Vector2 } from '../../engine/core/Vector2';
 import { InputSystem } from '../../engine/core/InputSystem';
-import { Bullet, BulletConfig } from '../../engine/core/Bullet';
+import { Bullet, BulletConfig, obtainBullet } from '../../engine/core/Bullet';
 import { Bounds } from '../../engine/core/BulletSystem';
 import { BulletFactory } from '../bullet-patterns/BulletPattern';
 
@@ -45,7 +45,7 @@ export class Player extends Entity {
     this.lives = config.initialLives ?? 3;
     this.bombs = config.initialBombs ?? 3;
     this.playfield = config.playfield ?? DEFAULT_PLAYFIELD;
-    this.bulletFactory = config.bulletFactory ?? ((cfg) => new Bullet(cfg));
+    this.bulletFactory = config.bulletFactory ?? ((cfg) => obtainBullet(cfg));
   }
 
   private makeBullet(config: BulletConfig): Bullet {

@@ -30,7 +30,7 @@ UESTC Gensokyo（成电幻想乡）需要在其网站上展示技术实力，但
 6. As a 玩家, I want to 在符卡开始时看到符卡名牌居中弹出, so that 知道当前挑战的符卡名称
 7. As a 玩家, I want to 按 ESC 暂停游戏并显示暂停菜单, so that 可以中途休息或退出
 8. As a 技术爱好者, I want to 按 F12 显示性能监控面板（FPS/实体数/碰撞检测次数）, so that 看到引擎的技术实力
-9. As a 移动端访客, I want to 看到友好的提示"请在桌面浏览器游玩", so that 知道当前设备不支持
+9. As a 移动端访客, I want to 通过触摸拖动自机游玩（拖动即自动射击）, so that 在手机上也能体验游戏 —— ✅ 已实现（原"仅提示桌面游玩"方案已被触摸拖动替代，虚拟摇杆仍不在范围内）
 
 ### 开发者视角
 
@@ -80,44 +80,47 @@ UESTC Gensokyo（成电幻想乡）需要在其网站上展示技术实力，但
 - **构建工具**: Vite 6.x（快速 HMR + 生产构建）
 - **测试框架**: Vitest 2.x（与 Vite 原生集成）
 - **代码质量**: ESLint + Prettier（统一代码风格）
+- **包管理/任务运行**: **Bun**（`packageManager: bun@1.4.0` + `bun.lock`；CI 用
+  `oven-sh/setup-bun@v2` + `bun install --frozen-lockfile`；npm 命令仍兼容）
 
 ### 弹幕系统设计
 
 采用 **Pattern 模式**，从 th08-web 的 `BulletSpawnDescriptor` 和 toho-like-js 的配置格式提炼：
 
+实际实现（`src/touhou-common/bullet-patterns/`）：pattern 以**配置对象**构造，
+子弹一律经 `this.factory` 创建（默认走共享对象池 `obtainBullet`，可由
+`withFactory()` 注入宿主 `BulletSystem.createBullet`），绝不直接 `new Bullet`：
+
 ```typescript
 abstract class BulletPattern {
-  abstract spawn(emitter: Entity, time: number, player: Entity): Bullet[];
+  protected factory: BulletFactory = (config) => obtainBullet(config); // 默认共享池
+  withFactory(factory: BulletFactory): this; // 注入宿主池
+  abstract spawn(emitter: Entity, time: number, player?: Entity): Bullet[];
 }
 
-// 具体 pattern
+// 具体 pattern（配置对象式）
 class CircularPattern extends BulletPattern {
-  constructor(
-    public count: number,       // 弹幕数量
-    public speed: number,       // 速度
-    public angleOffset: number  // 角度偏移
-  ) {}
-  
-  spawn(emitter: Entity, time: number): Bullet[] {
-    // 从 th08-web BulletSpawnDescriptor 翻译而来
-    const bullets = [];
-    for (let i = 0; i < this.count; i++) {
-      const angle = (Math.PI * 2 / this.count) * i + this.angleOffset;
-      bullets.push(new Bullet({
-        position: emitter.position,
-        velocity: { x: Math.cos(angle) * this.speed, y: Math.sin(angle) * this.speed },
-        sprite: 'ball_red'  // Taisei 素材
+  constructor(public config: CircularPatternConfig) { super(); } // { count, speed, angleOffset?, radius?, color?, sprite?, ... }
+  spawn(emitter: Entity): Bullet[] {
+    const { count, speed, angleOffset = 0 } = this.config;
+    const bullets: Bullet[] = [];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 / count) * i + angleOffset;
+      bullets.push(this.factory({
+        position: { x: emitter.position.x, y: emitter.position.y },
+        velocity: { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
+        sprite: 'bullet_ring', // SpriteManager 程序化精灵键（零外部素材）
       }));
     }
     return bullets;
   }
 }
 
-// 组合 pattern（复杂符卡）
+// 组合 pattern（复杂符卡）；withFactory 向子 pattern 传播
 class CompositePattern extends BulletPattern {
-  constructor(public patterns: BulletPattern[]) {}
-  spawn(emitter: Entity, time: number, player: Entity): Bullet[] {
-    return this.patterns.flatMap(p => p.spawn(emitter, time, player));
+  constructor(public patterns: BulletPattern[]) { super(); }
+  spawn(emitter: Entity, time: number, player?: Entity): Bullet[] {
+    return this.patterns.flatMap((p) => p.spawn(emitter, time, player));
   }
 }
 ```
@@ -132,36 +135,48 @@ class CompositePattern extends BulletPattern {
 
 ### 关卡脚本格式
 
-采用 **TypeScript 配置文件**（类似 toho-like-js，但类型安全）：
+采用 **TypeScript 配置文件**（类似 toho-like-js，但类型安全）。落地形态为
+**帧制时间轴** `{ frame, action }`（非毫秒 `time`），由 `Stage` 驱动；关卡工厂函数
+接收一组回调（`spawnEnemy` / `spawnBoss` / `onClear` / `bulletFactory`），把实体生命周期
+与对象池的所有权留给宿主游戏循环。以下为 `src/games/th08/stages/Stage1.ts` 的真实 API：
 
 ```typescript
-// src/games/th08/stages/Stage1.ts
-export const stage1Timeline: TimelineEvent[] = [
-  { 
-    time: 0, 
-    action: (ctx) => ctx.spawnEnemyWave('fairy', 5, { formation: 'V' })
-  },
-  { 
-    time: 2100, 
-    action: (ctx) => ctx.spawnBoss(Rumia, { 
-      x: 240, 
-      y: 0,
-      entrance: 'top'
-    })
-  },
-  {
-    time: 3200,
-    action: (ctx) => ctx.startSpellcard({
-      name: '夜符「Night Bird」',
-      duration: 60000,
-      pattern: new CompositePattern([
-        new CircularPattern(16, 3, 0),
-        new AimingPattern(5, 4)
-      ])
-    })
-  }
-];
+// src/games/th08/stages/Stage1.ts —— 实际实现
+export interface Stage1Callbacks {
+  spawnEnemy: (enemy: Enemy) => void;
+  spawnBoss: (boss: Rumia) => void;
+  onClear: () => void;
+  showMessage?: (text: string, durationFrames?: number) => void;
+  bulletFactory?: BulletFactory; // 注入对象池工厂
+}
+
+export function createStage1(callbacks: Stage1Callbacks): Stage {
+  const timeline: StageTimelineEvent[] = [
+    {
+      frame: 60, // 帧制，非毫秒
+      action: () => {
+        const enemy = new Enemy(
+          { x: 120, y: -20 },
+          { x: 0, y: 2.2 },
+          {
+            hp: 20,
+            shootInterval: 50,
+            shootPattern: new AimingPattern({ count: 1, speed: 2.8 }),
+            bulletFactory: callbacks.bulletFactory, // 走对象池
+          },
+        );
+        callbacks.spawnEnemy(enemy);
+      },
+    },
+    // ... 更多波次；Boss 登场、阶段切换、onClear 同理
+  ];
+  return new Stage({ name: 'Stage 1', stageNumber: 1, timeline });
+}
 ```
+
+`Stage` 另提供一组 **StageContext API**（票据 08）供时间轴回调调用，宿主游戏负责消费：
+`spawnEntity(entity)`、`startBossPhase(boss, index)`、`showDialogue(text, frames)`，
+产出队列 `spawnedEntities` / `bossPhaseRequests` / `dialogueQueue`。
 
 ### 美术资源策略
 
@@ -178,31 +193,40 @@ export const stage1Timeline: TimelineEvent[] = [
 
 ### 性能优化
 
-- **对象池**（Object Pool）：复用 Bullet 对象，减少 GC
+- **对象池**（Object Pool）：✅ 已接线。`src/engine/core/Bullet.ts` 提供模块级共享空闲链表
+  （`obtainBullet` / `releaseBullet` / `getBulletPoolSize` / `drainBulletPool`，默认上限
+  `DEFAULT_BULLET_POOL_CAP = 512`，双重释放安全）。`BulletSystem.createBullet()` 复用实例，
+  越界剔除与 `clearAll()` 回收；Player / Enemy / Boss / 全部 Pattern 的子弹创建统一经
+  `BulletFactory`（宿主注入 `bulletSystem.createBullet`），无一处 `new Bullet` 旁路。
+  `BulletSystem.getStats()` 报告 `poolReused` / `poolAllocated` / `poolSize`。
+- **空间哈希网格**：✅ 全量迁移。`CollisionSystem` 惰性重建网格（`ensureGrid()`），
+  玩家子弹 vs 敌人/Boss、擦弹查询全部走 9 格邻域；`totalChecks` 统计真实距离比较次数
+  （F12 面板展示，2000+ 弹峰值 ~14k 次 ≪ O(n²) 420 万次）。
 - **Dirty Flag**：只在状态变化时重新渲染
 - **PixiJS Batch Rendering**：自动合并 draw call
 - **RAF 锁帧**：60 FPS 固定时间步长
 
 ### 前端集成
 
+实际 `TH08Game` 构造仅接受 `{ container?: HTMLElement; headless?: boolean }`，
+容器在 `await game.init(container)` 时挂载（Phase 1 固定 Stage 1 / 单角色，
+`stage`/`difficulty`/`player` 选项留待后续迭代）：
+
 ```typescript
 // UESTCGensokyo-Frontend/src/pages/games/TH08Stage1.tsx
+import { useEffect, useRef } from 'react';
 import { TH08Game } from '@uestc-touhou/touhou-web-engine/th08';
 
 export default function TH08Stage1Page() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
-    const game = new TH08Game({
-      container: containerRef.current!,
-      stage: 1,
-      difficulty: 'Normal',
-      player: 'ReimuYukari'
-    });
-    game.start();
+    if (!containerRef.current) return;
+    const game = new TH08Game();
+    game.init(containerRef.current).then(() => game.start());
     return () => game.destroy();
   }, []);
-  
+
   return (
     <div ref={containerRef} className="game-container">
       {/* PixiJS 自动创建 canvas */}
@@ -278,12 +302,40 @@ export default function TH08Stage1Page() {
 | 1 | **对象池**（SPEC 「性能优化」L181） | `BulletSystem` 内置对象池：`createBullet()` 复用 + `recycle()`，全游戏子弹创建（Player/Enemy/Boss/Pattern）统一走池，F12 面板展示复用/分配计数 |
 | 2 | **暂停**（US#7） | ESC 暂停/恢复；暂停冻结全部游戏逻辑（时间轴、实体、HUD）但仍渲染；暂停覆盖菜单 + BGM 暂停/续播 |
 | 3 | **碰撞检测**（「碰撞检测优化」） | 玩家子弹 vs 敌人/Boss、擦弹（graze 16px）全部迁移到空间哈希网格邻域查询；F12 `Collision Checks` 统计真实距离比较次数 |
-| 4 | **符卡名牌**（US#6） | 名牌在 playfield 中心弹出（scale 1.6→1.0 缓动 + 淡入动画） |
+| 4 | **符卡名牌**（US#6） | 名牌 30 帧内从右侧滑入 playfield 中心（ease-out cubic），叠加 scale 1.6→1.0 缓动 + 淡入动画 |
 | 5 | **移动端**（US#9） | 触摸拖动自机跟随 + 自动射击（见上） |
 | 6 | **BGM**（Ticket 13） | `playBGM(url, { loop, volume, fadeIn })` + `preload()`；无外部素材时回退内置 Web Audio 合成琶音循环；首次用户手势解锁 |
 | 7 | **npm 导出**（「前端集成」L190） | 修正 `dist/th08.js` 与 `dist/games/th08/index.d.ts` 路径不一致：vite entry 改为 `games/th08/index` |
 
 **协作方式**：以上修复同时附带单元测试覆盖（TDD）。
+
+### Phase 1 交付状态（2026-09-07 同步）
+
+`.scratch/touhou-web-engine-mvp/issues/` 的 **16 张票据已全部交付**（核心验收标准满足；
+个别细节项以等效实现替代或留待 Phase 2，已在各票据复选框行尾逐条注明原因），
+`bun run ci`（typecheck + lint + test）与 `bun run build` 全绿，测试 **136 项**。
+
+| 票据 | 状态 | 备注（与原规格的替代实现） |
+|---|---|---|
+| 01 脚手架 + CI | ✅ | 工具链 **bun 代 npm**（`bun.lock`、CI `setup-bun`）；npm 仍可用 |
+| 02 Entity | ✅ | 额外补 `Transform` 视图 + 泛型类型化 `EventEmitter` |
+| 03 Pixi 渲染层 | ✅ | `demo/renderer-test.html`（100 圆 60FPS 基准） |
+| 04 碰撞系统 | ✅ | `demo/collision-test.html`（1000 弹 + `D` 键网格/判定点浮层） |
+| 05 输入系统 | ✅ | 超出原规格：手柄 + 运行时重绑定 + 触摸拖动 |
+| 06 弹幕 + Pattern | ✅ | 4 种 pattern 全走对象池（`this.factory`） |
+| 07 玩家控制器 | ✅ | 触摸跟随替代独立 Bomb 占位（Bomb 已实装灵击） |
+| 08 关卡时间轴 | ✅ | 事件格式落地为 `{ frame, action }`（帧制，非毫秒 `time`） |
+| 09 Boss + 符卡 | ✅ | 名牌居中弹出动画（US#6） |
+| 10 HUD | ✅ | TH08 右侧面板布局（Score/Lives/Bombs/Power/Graze） |
+| 11 露米娅 AI | ✅ | 3 阶段（原票据写 2 阶段，实交付含闇符「Demarcation」） |
+| 12 Stage 1 时间轴 | ✅ | 妖精波次 + 中 Boss + Boss，可全程游玩至 STAGE CLEAR |
+| 13 音频系统 | ✅ | 占位素材 **WAV 代 MP3**（`public/audio/bgm/stage1.wav`、`public/audio/se/shoot.wav`）；无素材时回退内置合成 |
+| 14 性能监控 | ✅ | F12 浮层含实体分类 + 真实碰撞比较计数 + 实时输入行 |
+| 15 库构建 | ✅ | `example/index.html` 库用法示例；`./th08` 导出路径已对齐 |
+| 16 文档 | ✅ | README（架构图/Demo 页/React/扩展指南）+ `CONTRIBUTING.md`；截图因无头环境留 TODO |
+
+**未落地项（Phase 2+）**：Taisei 真实素材、LaserPattern、对话系统、TH08 Stage 2-6、
+多角色差异化 —— 见「Out of Scope」与「开发优先级」。
 
 ## Further Notes
 

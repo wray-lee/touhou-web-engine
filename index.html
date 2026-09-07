@@ -67,6 +67,39 @@
         width: 100%;
         height: 100%;
       }
+      #audio-controls {
+        margin-top: 14px;
+        display: flex;
+        gap: 12px;
+      }
+      #audio-controls button {
+        padding: 6px 18px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        color: #e8dcc8;
+        background: #221c24;
+        border: 1px solid #4a3e4e;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      #audio-controls button:hover {
+        border-color: #5bb8b3;
+      }
+      footer {
+        margin-top: 14px;
+        font-size: 0.8rem;
+        color: #8c827a;
+        text-align: center;
+        line-height: 1.8;
+      }
+      footer a {
+        color: #5bb8b3;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
       @media (max-width: 700px) {
         #game-root {
           width: 100vw;
@@ -82,11 +115,23 @@
     <header>
       <h1>東方永夜抄 ~ Imperishable Night (Stage 1 Demo)</h1>
       <p class="instructions">
-        移动: <span>方向键 / WASD</span> | 射击: <span>Z / Space</span> | 灵击(Bomb): <span>X</span> | 低速: <span>Shift</span> | 性能监控: <span>F12</span> | 触屏: <span>拖动自机</span>
+        移动: <span>方向键 / WASD</span> | 射击: <span>Z / Space</span> | 灵击(Bomb): <span>X</span> | 低速: <span>Shift</span> | 暂停: <span>ESC</span> | 性能监控: <span>F12</span> | 触屏: <span>拖动自机</span>（拖动即 <span>自动射击</span>）
       </p>
     </header>
 
     <div id="game-root"></div>
+
+    <div id="audio-controls">
+      <button type="button" id="bgm-toggle">BGM: 播放「/audio/bgm/stage1.wav」</button>
+      <button type="button" id="se-shoot">射击 SE</button>
+    </div>
+
+    <footer>
+      引擎演示页:
+      <a href="./demo/input-test.html">输入测试 Input</a>
+      <a href="./demo/collision-test.html">碰撞测试 Collision</a>
+      <a href="./demo/renderer-test.html">渲染测试 Renderer</a>
+    </footer>
 
     <script type="module">
       import { TH08Game } from './src/games/th08/TH08Game.ts';
@@ -97,6 +142,28 @@
         await game.init(container);
         game.start();
         window.__TOUHOU_GAME__ = game;
+
+        // Audio demo controls: BGM toggle plays the placeholder stage1.wav,
+        // the SE button plays the placeholder shoot.wav (per-play volume 0.6).
+        const bgmToggle = document.getElementById('bgm-toggle');
+        const seButton = document.getElementById('se-shoot');
+        bgmToggle.addEventListener('click', () => {
+          if (game.audio.isBgmPlaying && !game.isPaused) {
+            game.audio.pauseBGM();
+          } else {
+            game.audio.playBGM('./audio/bgm/stage1.wav', {
+              loop: true,
+              volume: 0.7,
+              fadeIn: 1000,
+            });
+          }
+          bgmToggle.textContent = game.audio.isBgmPlaying
+            ? 'BGM: 暂停'
+            : 'BGM: 播放「/audio/bgm/stage1.wav」';
+        });
+        seButton.addEventListener('click', () => {
+          game.audio.playSE('shoot', { volume: 0.6 });
+        });
       });
     </script>
   </body>

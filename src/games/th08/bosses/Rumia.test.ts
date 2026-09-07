@@ -75,4 +75,53 @@ describe('TH08 Stage 1 Rumia Boss AI', () => {
     expect(cw).toBe(18);
     expect(ccw).toBe(18);
   });
+
+  describe('Entrance & death fade (票据 11)', () => {
+    it('starts above the screen top', () => {
+      const rumia = new Rumia();
+      expect(rumia.position.y).toBe(-50);
+      expect(rumia.alpha).toBe(1);
+    });
+
+    it('slides from y=-50 to y=100 over the first 60 frames', () => {
+      const rumia = new Rumia();
+      rumia.update(30);
+      expect(rumia.position.y).toBeCloseTo(25, 5); // 中点
+      rumia.update(30);
+      expect(rumia.position.y).toBeCloseTo(100, 5);
+      rumia.update(30);
+      expect(rumia.position.y).toBeCloseTo(100, 5); // 到位后不再移动
+    });
+
+    it('does not attack during the 60-frame entrance', () => {
+      const rumia = new Rumia();
+      const player = new Player({ x: 224, y: 400 });
+      for (let f = 0; f < 60; f++) {
+        expect(rumia.updateAI(1, player)).toHaveLength(0);
+      }
+      // 入场结束后恢复攻击节奏（aiFrame=100 时发射）
+      let fired = false;
+      for (let f = 60; f < 120; f++) {
+        if (rumia.updateAI(1, player).length > 0) fired = true;
+      }
+      expect(fired).toBe(true);
+    });
+
+    it('fades alpha 1→0 over ~30 frames after death', () => {
+      const rumia = new Rumia();
+      rumia.takeDamage(150);
+      rumia.takeDamage(250);
+      rumia.takeDamage(320);
+      expect(rumia.isDefeated).toBe(true);
+      expect(rumia.isAlive).toBe(false);
+      expect(rumia.alpha).toBe(1);
+
+      rumia.update(15);
+      expect(rumia.alpha).toBeCloseTo(0.5, 5);
+      rumia.update(15);
+      expect(rumia.alpha).toBe(0);
+      rumia.update(60);
+      expect(rumia.alpha).toBe(0); // 不会低于 0
+    });
+  });
 });

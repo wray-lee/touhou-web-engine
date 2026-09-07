@@ -5,7 +5,7 @@ export type SpriteDrawFn = (
   g: Graphics,
   x: number,
   y: number,
-  opts: { color: number; radius: number; rotation?: number },
+  opts: { color: number; radius: number; rotation?: number; alpha?: number },
 ) => void;
 
 /**
@@ -40,26 +40,26 @@ export class SpriteManager {
     key: string,
     x: number,
     y: number,
-    opts: { color: number; radius: number; rotation?: number },
+    opts: { color: number; radius: number; rotation?: number; alpha?: number },
   ): void {
     (this.sprites.get(key) ?? this.defaultSprite)(g, x, y, opts);
   }
 
   /** Classic glowing orb: white halo + colored core. */
-  static ball: SpriteDrawFn = (g, x, y, { color, radius }) => {
-    g.circle(x, y, radius + 1.5).fill({ color: 0xffffff, alpha: 0.5 });
-    g.circle(x, y, radius).fill({ color });
+  static ball: SpriteDrawFn = (g, x, y, { color, radius, alpha = 1 }) => {
+    g.circle(x, y, radius + 1.5).fill({ color: 0xffffff, alpha: 0.5 * alpha });
+    g.circle(x, y, radius).fill({ color, alpha });
   };
 
   /** Hollow ring danmaku (Demarcation-style boundary bullets). */
-  static ring: SpriteDrawFn = (g, x, y, { color, radius }) => {
-    g.circle(x, y, radius + 1.5).fill({ color: 0xffffff, alpha: 0.6 });
-    g.circle(x, y, radius).fill({ color });
-    g.circle(x, y, Math.max(1, radius * 0.45)).fill({ color: 0x101018 });
+  static ring: SpriteDrawFn = (g, x, y, { color, radius, alpha = 1 }) => {
+    g.circle(x, y, radius + 1.5).fill({ color: 0xffffff, alpha: 0.6 * alpha });
+    g.circle(x, y, radius).fill({ color, alpha });
+    g.circle(x, y, Math.max(1, radius * 0.45)).fill({ color: 0x101018, alpha });
   };
 
   /** Elongated needle, oriented along `rotation` (velocity angle). */
-  static needle: SpriteDrawFn = (g, x, y, { color, radius, rotation = 0 }) => {
+  static needle: SpriteDrawFn = (g, x, y, { color, radius, rotation = 0, alpha = 1 }) => {
     const len = radius * 3;
     const w = Math.max(1.5, radius * 0.6);
     const cos = Math.cos(rotation);
@@ -69,17 +69,17 @@ export class SpriteManager {
       { x: x + cos * len + sin * w, y: y + sin * len - cos * w },
       { x: x - cos * len + sin * w, y: y - sin * len - cos * w },
       { x: x - cos * len - sin * w, y: y - sin * len + cos * w },
-    ]).fill({ color });
+    ]).fill({ color, alpha });
   };
 
   /** 5-point star (fairy / item-flavored bullets). */
-  static star: SpriteDrawFn = (g, x, y, { color, radius }) => {
+  static star: SpriteDrawFn = (g, x, y, { color, radius, alpha = 1 }) => {
     const points: { x: number; y: number }[] = [];
     for (let i = 0; i < 10; i++) {
       const r = i % 2 === 0 ? radius + 1.5 : radius * 0.5;
       const a = (Math.PI / 5) * i - Math.PI / 2;
       points.push({ x: x + Math.cos(a) * r, y: y + Math.sin(a) * r });
     }
-    g.poly(points).fill({ color });
+    g.poly(points).fill({ color, alpha });
   };
 }

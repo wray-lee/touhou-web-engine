@@ -2,7 +2,8 @@ import { Entity } from '../core/Entity';
 import { distanceBetween } from '../core/Vector2';
 
 export class SpatialHashGrid {
-  private cellSize: number;
+  /** Cell edge length in px (read-only; exposed for debug visualization). */
+  public readonly cellSize: number;
   private grid: Map<string, Set<Entity>>;
 
   constructor(cellSize = 64) {
@@ -54,6 +55,13 @@ export class SpatialHashGrid {
     }
 
     return results;
+  }
+
+  /** Read-only traversal of occupied cells (key = "cx,cy"); for debug visualization only. */
+  forEachCell(callback: (key: string, entities: ReadonlySet<Entity>) => void): void {
+    for (const [key, cell] of this.grid) {
+      callback(key, cell);
+    }
   }
 
   checkCollisions(entity: Entity): Entity[] {

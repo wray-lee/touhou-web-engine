@@ -1,8 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { BulletSystem } from './BulletSystem';
-import { Bullet } from './Bullet';
+import { Bullet, obtainBullet, releaseBullet, drainBulletPool, getBulletPoolSize } from './Bullet';
 
 describe('BulletSystem', () => {
+  // The bullet pool is a shared module-level facility — start every test empty.
+  beforeEach(() => {
+    drainBulletPool();
+  });
   it('manages bullets update and culling outside boundary', () => {
     const system = new BulletSystem({
       minX: 0,
@@ -92,6 +96,89 @@ describe('BulletSystem', () => {
       system.add(...bullets);
       system.clearAll();
       expect(system.poolSize).toBe(3);
+    });
+  });
+
+  describe('Shared module pool (obtainBullet / releaseBullet)', () => {
+    it('spawn+kill cycles reuse instances across independent BulletSystems', () => {
+      const a = new BulletSystem();
+      const b = new BulletSystem();
+
+      const first = a.createBullet({ position: { x: 10, y: 10 } });
+      a.add(first);
+      first.position.y = 99999; // out of bounds -> culled & released
+      a.update(1);
+      expect(first.isAlive).toBe(false);
+      expect(getBulletPoolSize()).toBe(1);
+
+      // A completely different system draws from the same free-list
+      const second = b.createBullet({ position: { x: 20, y: 30 } });
+      expect(second).toBe(first);
+      expect(getBulletPoolSize()).toBe(0);
+      expect(b.getStats().reused).toBe(1);
+    });
+
+    it('obtainBullet resets all mutable state from a dirty released bullet', () => {
+      const dirty = obtainBullet({
+        position: { x: 5, y: 6 },
+        velocity: { x: 1, y: 2 },
+        radius: 7,
+        color: 0x112233,
+        sprite: 'bullet_ring',
+        damage: 3,
+        grazed: true,
+        angularVelocity: 0.5,
+        acceleration: 0.1,
+        tag: 'player-bullet',
+      });
+      dirty.update(1); // move + tick lifetime
+      dirty.rotation = 1.23;
+      dirty.destroy();
+      releaseBullet(dirty);
+      expect(getBulletPoolSize()).toBe(1);
+
+      const fresh = obtainBullet(); // no config -> everything back to defaults
+      expect(fresh).toBe(dirty);
+      expect(fresh.isAlive).toBe(true);
+      expect(fresh.isPooled).toBe(false);
+      expect(fresh.position.x).toBe(0);
+      expect(fresh.position.y).toBe(0);
+      expect(fresh.velocity.x).toBe(0);
+      expect(fresh.velocity.y).toBe(0);
+      expect(fresh.rotation).toBe(0);
+      expect(fresh.hitbox.radius).toBe(4);
+      expect(fresh.hitbox.offset).toEqual({ x: 0, y: 0 });
+      expect(fresh.color).toBe(0xff3366);
+      expect(fresh.sprite).toBe('bullet_small');
+      expect(fresh.damage).toBe(1);
+      expect(fresh.grazed).toBe(false);
+      expect(fresh.angularVelocity).toBe(0);
+      expect(fresh.acceleration).toBe(0);
+      expect(fresh.lifetime).toBe(0);
+      expect(fresh.tag).toBe('enemy-bullet');
+    });
+
+    it('releaseBullet is double-release safe and refuses live bullets', () => {
+      const live = obtainBullet();
+      releaseBullet(live); // still alive -> ignored
+      expect(getBulletPoolSize()).toBe(0);
+
+      live.destroy();
+      releaseBullet(live);
+      expect(getBulletPoolSize()).toBe(1);
+
+      releaseBullet(live); // already pooled -> ignored
+      expect(getBulletPoolSize()).toBe(1);
+    });
+
+    it('releaseBullet honours the cap', () => {
+      const bullets = [0, 1, 2].map((i) => {
+        const b = obtainBullet({ position: { x: i, y: i } });
+        b.destroy();
+        return b;
+      });
+      for (const b of bullets) releaseBullet(b, 2);
+      expect(getBulletPoolSize()).toBe(2);
     });
   });
 });

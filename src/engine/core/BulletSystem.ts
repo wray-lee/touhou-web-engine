@@ -1,4 +1,5 @@
-import { Bullet, BulletConfig } from './Bullet';
+import { Bullet, BulletConfig, obtainBullet, releaseBullet, getBulletPoolSize } from './Bullet';
+import { EntityTag } from './Entity';
 
 export interface Bounds {
   minX: number;
@@ -21,8 +22,8 @@ export const DEFAULT_BOUNDS: Bounds = {
 
 export class BulletSystem {
   private bullets: Bullet[] = [];
-  private pool: Bullet[] = [];
   public bounds: Bounds;
+  /** Cap for the shared bullet free-list (0 = unlimited). */
   public maxPoolSize: number;
 
   /** Debug counters (reported through getStats()). */
@@ -39,27 +40,21 @@ export class BulletSystem {
     this.maxPoolSize = config.maxPoolSize ?? 512;
   }
 
-  /** Create a bullet, reusing a pooled instance when available. */
+  /** Create a bullet from the shared module pool, reusing a dead instance when available. */
   createBullet(config: BulletConfig = {}): Bullet {
-    const reused = this.pool.pop();
-    if (reused) {
-      reused.reset(config);
+    const freeBefore = getBulletPoolSize();
+    const bullet = obtainBullet(config);
+    if (getBulletPoolSize() < freeBefore) {
       this.poolReused++;
-      return reused;
+    } else {
+      this.poolAllocated++;
     }
-    this.poolAllocated++;
-    return new Bullet(config);
+    return bullet;
   }
 
-  /** Pool an instance for reuse (only while it is dead and under the cap). */
+  /** Return a dead bullet to the shared pool (double-release safe, respects the cap). */
   private recycle(bullet: Bullet): void {
-    if (
-      !bullet.isAlive &&
-      bullet instanceof Bullet &&
-      (this.maxPoolSize <= 0 || this.pool.length < this.maxPoolSize)
-    ) {
-      this.pool.push(bullet);
-    }
+    releaseBullet(bullet, this.maxPoolSize);
   }
 
   add(...newBullets: Bullet[]): void {
@@ -95,7 +90,7 @@ export class BulletSystem {
     }
   }
 
-  clearAll(tag?: string): void {
+  clearAll(tag?: EntityTag): void {
     const survivors: Bullet[] = [];
     for (const b of this.bullets) {
       if (!tag || b.tag === tag) {
@@ -116,16 +111,16 @@ export class BulletSystem {
     return this.bullets.length;
   }
 
-  /** Number of bullets currently held in the reuse pool. */
+  /** Number of bullets currently held in the shared reuse pool. */
   get poolSize(): number {
-    return this.pool.length;
+    return getBulletPoolSize();
   }
 
   getStats(): { reused: number; allocated: number; poolSize: number } {
     return {
       reused: this.poolReused,
       allocated: this.poolAllocated,
-      poolSize: this.pool.length,
+      poolSize: getBulletPoolSize(),
     };
   }
 }

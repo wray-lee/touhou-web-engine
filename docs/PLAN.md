@@ -38,7 +38,8 @@ src/
 - **语言**: TypeScript 5.7 (严格模式)
 - **构建**: Vite 6.x
 - **测试**: Vitest 2.x
-- **素材**: Taisei Project (MIT 许可)
+- **工具链**: **Bun**（`bun install` / `bun run ci`，`bun.lock` 锁文件；npm 兼容）
+- **素材**: Taisei Project (MIT 许可)（Phase 1 程序生成占位 + 合成 WAV 音频）
 
 ## 🎮 代码参考来源
 
@@ -46,31 +47,31 @@ src/
 - **toho-like-js**: 配置格式（关卡脚本、弹幕 pattern）
 - **Taisei Project**: 美术资源（精灵图、音频）
 
-## 📋 任务清单（16 个任务）
+## 📋 任务清单（16 个任务）—— 全部完成 ✅
 
 ### 基础设施 (Week 1)
-1. **01-foundation** - 项目脚手架 + CI/CD ✨ **可立即开始**
-2. **02-entity-system** - 核心实体抽象
-3. **03-pixi-renderer** - PixiJS 渲染层
-4. **04-collision-system** - 空间哈希碰撞检测
-5. **05-input-system** - 键盘输入管理
+1. [x] **01-foundation** - 项目脚手架 + CI/CD（工具链已迁移至 **bun**：`packageManager: bun@1.4.0` + `bun.lock`，CI 用 `setup-bun` + `--frozen-lockfile`；npm 仍兼容）
+2. [x] **02-entity-system** - 核心实体抽象（含 Transform 视图 + 泛型类型化 EventEmitter）
+3. [x] **03-pixi-renderer** - PixiJS 渲染层（`demo/renderer-test.html` 100 圆 60FPS 基准页）
+4. [x] **04-collision-system** - 空间哈希碰撞检测（`demo/collision-test.html` 1000 弹 + D 键调试浮层）
+5. [x] **05-input-system** - 键盘输入管理（扩展：手柄 + 运行时重绑定 + 3 帧缓冲 + `demo/input-test.html` 输入映射可视化页）
 
 ### 游戏系统 (Week 2)
-6. **06-bullet-system** - 弹幕系统 + Pattern 抽象
-7. **07-player-controller** - 玩家控制器
-8. **08-stage-system** - 关卡时间轴管理器
-9. **09-boss-spellcard** - Boss 系统 + 符卡机制
-10. **10-hud** - HUD 界面（分数/残机/Bomb）
+6. [x] **06-bullet-system** - 弹幕系统 + Pattern 抽象（对象池全链路）
+7. [x] **07-player-controller** - 玩家控制器（4.5/2.0 px/f、2px 判定点、触摸跟随）
+8. [x] **08-stage-system** - 关卡时间轴管理器（帧制 `{ frame, action }`）
+9. [x] **09-boss-spellcard** - Boss 系统 + 符卡机制（多阶段 HP、名牌居中弹出）
+10. [x] **10-hud** - HUD 界面（分数/残机/Bomb/Power/擦弹/符卡计时）
 
 ### Stage 1 实现 (Week 3)
-11. **11-rumia-boss** - 露米娅 Boss AI
-12. **12-stage1-timeline** - Stage 1 完整时间轴
-13. **13-audio-system** - 音频管理器
-14. **14-performance-monitor** - 性能监控面板
+11. [x] **11-rumia-boss** - 露米娅 Boss AI（3 阶段：非符 + 夜符「Night Bird」+ 闇符「Demarcation」）
+12. [x] **12-stage1-timeline** - Stage 1 完整时间轴（妖精波次 + 中 Boss + Boss 登场，可全程游玩）
+13. [x] **13-audio-system** - 音频管理器（合成 SE + BGM loop/fadeIn/preload；占位素材为 **WAV** 代 MP3：`public/audio/bgm/stage1.wav`、`public/audio/se/shoot.wav`）
+14. [x] **14-performance-monitor** - 性能监控面板（F12：FPS/实体分类/真实碰撞比较计数/内存）
 
 ### 打包发布 (Week 4)
-15. **15-library-build** - 库构建配置
-16. **16-documentation** - README + API 文档
+15. [x] **15-library-build** - 库构建配置（`dist/index.js` + `dist/games/th08/index.js` + d.ts；`example/index.html` 库用法示例）
+16. [x] **16-documentation** - README + API 文档（README 三层架构图/Demo 页/React 集成/扩展指南 + CONTRIBUTING.md 贡献规范）
 
 ## 🔗 依赖关系
 
@@ -90,7 +91,7 @@ src/
 - [x] 60 FPS 稳定，1000+ 弹幕不掉帧（性能目标：同屏 2000+ 不掉帧，见 SPEC「性能目标」）
       —— `src/engine/perf/performance.bench.test.ts` 锁定：2051 弹 × 300 帧全管线模拟，
       逻辑 avg 0.55ms / p95 0.94ms（预算 16.6ms），空间哈希峰值 14k 次比较 ≪ O(n²) 420 万
-- [x] 所有测试通过（`bun run ci` —— 当前 63 项）
+- [x] 所有测试通过（`bun run ci` —— 当前 136 项 / 19 文件）
 - [x] 编译成 npm 包可导入（`@uestc-touhou/touhou-web-engine/th08` 路径已验证）
 - [x] 性能监控显示 FPS/实体数/碰撞检测次数（碰撞次数为空间哈希真实距离比较计数）
 - [x] README 包含使用示例和架构说明
@@ -135,14 +136,13 @@ src/
 
 ## 🚀 下一步
 
-从 **Task 01 (foundation)** 开始实施：
+Phase 1（16 个任务）已全部交付，`bun run ci` 全绿。后续迭代方向：
 
-```bash
-cd /d/Projects/touhou-web-engine
-# 按照 .scratch/touhou-web-engine-mvp/issues/01-foundation.md 执行
-```
+1. **Phase 2**: TH08 Stage 2-6、4 组人物差异化、Taisei 素材集成、完整 UI（标题/难度/结算）
+2. **截图补全**: README「Screenshots」小节留有无头环境 TODO，待有 GUI 环境补图
+3. **主站集成**: 编译产物发布 npm 包，接入 UESTCGensokyo-Frontend `/games` 页面
 
-完成后直接推送到 main 分支（个人仓库，无需 PR）。
+贡献流程见 [CONTRIBUTING.md](../CONTRIBUTING.md)（分支 → PR → CI 绿 → review）。
 
 ## 📚 文档位置
 

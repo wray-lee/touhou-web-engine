@@ -79,6 +79,23 @@ describe('CollisionSystem', () => {
     expect(nearby[0].entity).toBe(close);
   });
 
+  it('exposes read-only cellSize / forEachCell for debug visualization', () => {
+    const system = buildSystem([
+      makeEntity(100, 100, 2, 'player'), // cell 1,1
+      makeEntity(104, 100, 4, 'enemy-bullet'), // cell 1,1
+      makeEntity(500, 500, 4, 'enemy-bullet'), // cell 7,7
+    ]);
+
+    expect(system.cellSize).toBe(64);
+
+    const keys: string[] = [];
+    system.forEachCell((key, entities) => {
+      keys.push(key);
+      expect(entities.size).toBeGreaterThan(0);
+    });
+    expect(keys.sort()).toEqual(['1,1', '7,7']);
+  });
+
   it('tracks real distance comparisons in totalChecks (F12 metric)', () => {
     const player = makeEntity(100, 100, 2, 'player');
     const b1 = makeEntity(104, 100, 4, 'enemy-bullet'); // dist 4 -> hit
@@ -90,5 +107,45 @@ describe('CollisionSystem', () => {
 
     // All three are within the player's 9-cell neighbourhood -> 3 real distance comparisons
     expect(system.totalChecks).toBe(3);
+  });
+
+  it('rebuilds the grid lazily once per update() and stays valid across repeated queries', () => {
+    const player = makeEntity(100, 100, 2, 'player');
+    const bullet = makeEntity(104, 100, 4, 'enemy-bullet');
+    const system = new CollisionSystem(64);
+
+    system.update([player, bullet]);
+    expect(system.checkCollisions(player, 'enemy-bullet').length).toBe(1);
+    // Second query without update(): grid is reused, not rebuilt, still finds the hit
+    expect(system.checkCollisions(player, 'enemy-bullet').length).toBe(1);
+    // totalChecks resets per update(), not per query
+    expect(system.totalChecks).toBe(2);
+
+    // New entity registered via update() becomes visible on the next query
+    const late = makeEntity(106, 100, 4, 'enemy-bullet');
+    system.update([player, bullet, late]);
+    expect(system.checkCollisions(player, 'enemy-bullet').length).toBe(2);
+  });
+
+  it('queries only the neighbourhood: 2000 bullets + 1 player stays far below 2000 checks', () => {
+    const player = makeEntity(224, 400, 2, 'player');
+    const bullets: Entity[] = [];
+    for (let i = 0; i < 2000; i++) {
+      // Deterministic quasi-uniform scatter across the playfield
+      const x = 32 + ((i * 97) % 384);
+      const y = 32 + ((i * 53) % 448);
+      bullets.push(makeEntity(x, y, 4, 'enemy-bullet'));
+    }
+    const overlapping = makeEntity(226, 400, 4, 'enemy-bullet'); // guaranteed hit
+    bullets.push(overlapping);
+
+    const system = new CollisionSystem(64);
+    system.update([player, ...bullets]);
+    const hits = system.checkCollisions(player, 'enemy-bullet');
+
+    expect(hits.map((h) => h.entity)).toContain(overlapping);
+    // Grid locality: only the 9-cell neighbourhood is distance-checked, not all 2001.
+    expect(bullets.length).toBe(2001);
+    expect(system.totalChecks).toBeLessThan(1000);
   });
 });

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Input Test - 输入映射可视化</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        background: #0b0a12;
+        color: #e8dcc8;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+        gap: 14px;
+      }
+      h1 {
+        font-size: 1.2rem;
+        letter-spacing: 0.08em;
+        color: #d4a94e;
+      }
+      .hint {
+        font-size: 0.85rem;
+        color: #8c827a;
+        text-align: center;
+        line-height: 1.6;
+      }
+      .hint kbd {
+        display: inline-block;
+        padding: 1px 6px;
+        background: #221c24;
+        border: 1px solid #4a3e4e;
+        border-radius: 4px;
+        color: #e8dcc8;
+        font-family: monospace;
+      }
+      #bindings {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+        gap: 8px;
+        width: 100%;
+        max-width: 720px;
+      }
+      .chip {
+        padding: 8px 10px;
+        background: #17131d;
+        border: 1px solid #3a3140;
+        border-radius: 6px;
+        text-align: center;
+        transition: background 0.05s, border-color 0.05s;
+      }
+      .chip.active {
+        background: #2f7571;
+        border-color: #5bb8b3;
+        box-shadow: 0 0 12px rgba(91, 184, 179, 0.5);
+      }
+      .chip .action {
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .chip .keys {
+        font-size: 0.7rem;
+        color: #8c827a;
+        margin-top: 2px;
+        font-family: monospace;
+      }
+      #drag-area {
+        width: 100%;
+        max-width: 720px;
+        height: 120px;
+        border: 1px dashed #4a3e4e;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #8c827a;
+        font-size: 0.85rem;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      #drag-area.dragging {
+        border-color: #5bb8b3;
+        color: #5bb8b3;
+      }
+      #raw {
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: #ff5fa2;
+      }
+      #gamepads {
+        width: 100%;
+        max-width: 720px;
+        font-size: 0.8rem;
+        font-family: monospace;
+        color: #8c827a;
+        white-space: pre-wrap;
+      }
+      #gamepads .pad-id {
+        color: #5bb8b3;
+      }
+      .back {
+        font-size: 0.8rem;
+      }
+      .back a {
+        color: #5bb8b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>InputSystem 实时状态</h1>
+    <p class="hint">
+      按下 <kbd>↑↓←→</kbd> / <kbd>WASD</kbd> / <kbd>Z</kbd> / <kbd>Space</kbd> / <kbd>X</kbd> /
+      <kbd>Shift</kbd> / <kbd>Esc</kbd>，连接手柄后按任意键唤醒，或在下方区域拖动鼠标 / 手指。
+    </p>
+
+    <div id="bindings"></div>
+
+    <div id="drag-area">在此拖动（模拟触屏自机）</div>
+
+    <div id="raw">last key code: —</div>
+    <div id="gamepads">gamepads: 未检测到（连接手柄后按任意键）</div>
+
+    <p class="back"><a href="../index.html">← 返回游戏</a></p>
+
+    <script type="module" src="./input-test.ts"></script>
+  </body>
+</html>

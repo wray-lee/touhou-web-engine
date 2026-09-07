@@ -1,6 +1,6 @@
 import { Vector2, createVector2 } from './Vector2';
 
-export type InputAction = 'up' | 'down' | 'left' | 'right' | 'shoot' | 'bomb' | 'slow' | 'pause' | 'debug';
+export type InputAction = 'up' | 'down' | 'left' | 'right' | 'shoot' | 'bomb' | 'slow' | 'pause' | 'debug' | 'debug-collision';
 
 export interface KeyBindings {
   [action: string]: string[];
@@ -16,6 +16,8 @@ export const DEFAULT_KEY_BINDINGS: Record<InputAction, string[]> = {
   slow: ['ShiftLeft', 'ShiftRight'],
   pause: ['Escape'],
   debug: ['F12', 'KeyP'],
+  /** 碰撞网格可视化开关（票据 04 的 "D" 与 WASD 右移冲突，改用 G） */
+  'debug-collision': ['KeyG'],
 };
 
 /**
@@ -72,10 +74,12 @@ export class InputSystem {
 
   /** True while a touch/pointer is dragging the player ship. */
   public isDragging = false;
-  /** Pointer position in canvas-local coordinates. */
+  /** Pointer position in game coordinates (canvas-local, CSS-scale corrected). */
   public pointerPos: Vector2 = { x: 0, y: 0 };
   /** Element used to map screen pointer coords -> canvas coords. */
   private attachTarget?: HTMLElement;
+  /** Game resolution — needed to undo the CSS scaling of the canvas (US#9). */
+  private gameSize?: { width: number; height: number };
 
   constructor(
     bindings = DEFAULT_KEY_BINDINGS,
@@ -127,9 +131,12 @@ export class InputSystem {
    * - 传 `HTMLElement`（推荐：游戏容器/canvas）：键盘监听在 window 上生效，
    *   pointer/touch 拖动以该元素为坐标基准并启用。
    * - 传 `window` 或省略：仅键盘监听（兼容旧 API `attach(window)`）。
+   * - `gameSize`：游戏内部分辨率（默认 640×480）。canvas 被 CSS 缩放时，
+   *   指针坐标会按 rect/gameSize 比例换算回游戏坐标（US#9）。
    */
-  attach(target?: Window | HTMLElement): void {
+  attach(target?: Window | HTMLElement, gameSize?: { width: number; height: number }): void {
     const viewport = this.viewport;
+    this.gameSize = gameSize;
     // 仅 HTMLElement 作为触摸坐标基准；window/undefined 走键盘-only 模式
     if (target && typeof (target as HTMLElement).addEventListener === 'function' && target !== viewport) {
       this.attachTarget = target as HTMLElement;
@@ -152,7 +159,7 @@ export class InputSystem {
 
     // Touch / pointer drag — pointerdown on the game element, move/up on the
     // viewport so the drag continues even when the finger leaves the canvas.
-    if (viewport && typeof PointerEvent !== 'undefined' && this.attachTarget) {
+    if (this.attachTarget) {
       this.boundPointerDownHandler = (e: PointerEvent) => {
         if (e.pointerType === 'touch' || e.button === 0) {
           this.pointerDown(e.clientX, e.clientY);
@@ -165,8 +172,8 @@ export class InputSystem {
         this.pointerUp();
       };
       this.attachTarget.addEventListener('pointerdown', this.boundPointerDownHandler as EventListener);
-      viewport.addEventListener('pointermove', this.boundPointerMoveHandler as EventListener);
-      viewport.addEventListener('pointerup', this.boundPointerUpHandler as EventListener);
+      viewport?.addEventListener('pointermove', this.boundPointerMoveHandler as EventListener);
+      viewport?.addEventListener('pointerup', this.boundPointerUpHandler as EventListener);
     }
   }
 
@@ -214,9 +221,12 @@ export class InputSystem {
     const target = this.attachTarget;
     if (target) {
       const rect = target.getBoundingClientRect();
+      // The canvas is CSS-scaled (e.g. 100vw on mobile) — map back to game coords.
+      const sx = this.gameSize && rect.width > 0 ? this.gameSize.width / rect.width : 1;
+      const sy = this.gameSize && rect.height > 0 ? this.gameSize.height / rect.height : 1;
       this.pointerPos = {
-        x: clientX - rect.left,
-        y: clientY - rect.top,
+        x: (clientX - rect.left) * sx,
+        y: (clientY - rect.top) * sy,
       };
     } else {
       this.pointerPos = { x: clientX, y: clientY };
@@ -225,6 +235,11 @@ export class InputSystem {
 
   pointerUp(): void {
     this.isDragging = false;
+  }
+
+  /** Current drag target in game coordinates, or null when not dragging. */
+  getPointerTarget(): Vector2 | null {
+    return this.isDragging ? { ...this.pointerPos } : null;
   }
 
   private refreshCurrentActions(): void {
@@ -242,11 +257,19 @@ export class InputSystem {
       }
     }
     // Poll gamepads and merge — reuses the same edge-detection as keyboard.
-    if (this.gamepadProvider) {
-      for (const action of Object.keys(this.gamepadBindings) as InputAction[]) {
-        if (this.isGamepadActionPressed(action)) {
-          this.currentFrameDown.add(action);
-        }
+    this.pollGamepad();
+  }
+
+  /**
+   * Sample connected gamepads (via `navigator.getGamepads()` or an injected
+   * provider) and merge pressed actions into the current frame state.
+   * No-op when no provider is available (e.g. Node, or gamepad unsupported).
+   */
+  pollGamepad(): void {
+    if (!this.gamepadProvider) return;
+    for (const action of Object.keys(this.gamepadBindings) as InputAction[]) {
+      if (this.isGamepadActionPressed(action)) {
+        this.currentFrameDown.add(action);
       }
     }
   }

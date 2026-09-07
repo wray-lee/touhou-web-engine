@@ -25,6 +25,33 @@
 
 ---
 
+## 🕹️ Demo Pages
+
+`bun run dev` 启动 Vite（默认 `http://localhost:3000`）后可访问：
+
+| 路径 | 内容 |
+|---|---|
+| `/` | **主 Demo** —— TH08 Stage 1 完整可玩（露米娅三面 + 音频控制按钮） |
+| `/demo/input-test.html` | 输入映射可视化：8 个绑定芯片实时高亮 + 原始 `KeyboardEvent.code` + 拖动指针坐标 + 手柄状态（票据 05） |
+| `/demo/renderer-test.html` | 渲染基准：100 个弹跳彩色圆圈 + 左上角 FPS 计数（票据 03） |
+| `/demo/collision-test.html` | 碰撞基准：1000 弹 + 自机，`D` 键切换空间哈希网格/判定点调试浮层（票据 04） |
+| `/example/index.html` | **库用法示例**：把引擎当 npm 包嵌入的最小装配（`new TH08Game()` → `init` → `start`，票据 15） |
+
+---
+
+## 🖼️ Screenshots
+
+> **TODO** — 本项目的 CI/开发环境为无头（headless）环境，暂时无法自动截取游戏画面。
+> 后续将在下列占位处补充：
+>
+> - `image/screenshot-stage1.png` — Stage 1 实机画面（露米娅符卡）
+> - `image/screenshot-perf-monitor.png` — F12 性能监控面板
+> - `image/screenshot-collision-debug.png` — 空间哈希碰撞调试浮层
+>
+> 本地补图：`bun run dev` 打开 `http://localhost:3000/`，按 `F12` 显示性能浮层后截图即可。
+
+---
+
 ## 🎮 Playable Demo (TH08 Stage 1: Rumia)
 
 The engine comes with a complete implementation of **東方永夜抄 ~ Imperishable Night** Stage 1:
@@ -126,7 +153,7 @@ bun install
 # Start local interactive demo server
 bun run dev
 
-# Run Vitest test suite (74 tests incl. a 2000-bullet perf benchmark)
+# Run Vitest test suite (136 tests incl. a 2000-bullet perf benchmark)
 bun run test
 
 # Lint + typecheck
@@ -150,6 +177,31 @@ or boss lives behind a small, stable API surface.
 ```
 @uestc-touhou/touhou-web-engine          ← engine core + touhou-common (this package root)
 @uestc-touhou/touhou-web-engine/th08     ← a reference game (TH08 Stage 1)
+```
+
+### Three-tier architecture (ASCII)
+
+依赖方向严格自下而上：上层可 import 下层，下层永不反向依赖。
+
+```
+┌───────────────────────────────────────────────────────────────────────────┐
+│  GAME IMPL          src/games/th08/            (TH08 专属，可整体替换)      │
+│    TH08Game · stages/Stage1 (帧时间轴) · bosses/Rumia (3 阶段 AI/符卡)      │
+├───────────────────────────────────────────────────────────────────────────┤
+│  TOUHOU COMMON      src/touhou-common/         (TH06–TH18 系列可复用)       │
+│    player/Player (移动/低速/Bomb/擦弹/触摸)   enemy/Enemy (航点+周期射击)    │
+│    boss/Boss + SpellCard (多阶段 HP/符卡计时)  ui/HUD (分数/残机/名牌)       │
+│    bullet-patterns/ BulletPattern · Circular · Linear · Aiming · Composite │
+├───────────────────────────────────────────────────────────────────────────┤
+│  ENGINE CORE        src/engine/                (完全游戏无关)               │
+│    core/     Entity · Vector2 · EventEmitter · Bullet · BulletSystem(池)   │
+│              CollisionSystem · InputSystem · Stage (帧时间轴)               │
+│    physics/  SpatialHashGrid (64px 网格邻域查询)                            │
+│    renderer/ PixiRenderer (WebGL/HUD/暂停浮层) · SpriteManager (程序化精灵)  │
+│    audio/    AudioManager (合成 SE + BGM/loop/fadeIn/preload)              │
+│    debug/    PerformanceMonitor (FPS/实体/真实碰撞比较计数)                  │
+│    perf/     performance.bench.test (2000+ 弹帧预算基准)                     │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### API at a glance
@@ -327,8 +379,9 @@ game.start();
 
 Continuous Integration runs on GitHub Actions on every commit (`typecheck → lint → test → build`):
 - TypeScript 5.7 strict mode verification + ESLint flat-config lint
-- 74 Unit tests covering:
-  - Vector & Entity math & lifecycle
+- 136 Unit tests covering:
+  - Vector & Entity math & lifecycle（含 `Entity.transform` 位置/速度/旋转联动视图）
+  - Typed `EventEmitter`（泛型 EventMap：`on` / `off` / `once` / `emit`）
   - Spatial Hash Grid collision bounds & neighbor queries
   - CollisionSystem spatial queries, tag filtering & graze radius
   - Object pool reuse / cap / recycling on collision & bounds culling
@@ -347,6 +400,9 @@ Continuous Integration runs on GitHub Actions on every commit (`typecheck → li
   **2000+ live danmaku over 300 frames** and asserts the frame budget holds. Measured on CI
   hardware: avg **~0.55 ms/frame**, p95 **~0.94 ms** (budget 16.6 ms), peak collision
   comparisons ~14 k/frame — far below the O(n²) ≈ 4.2 M a naive loop would cost.
+
+Contributing guidelines (code style, TDD requirements, PR flow, commit conventions) live in
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 

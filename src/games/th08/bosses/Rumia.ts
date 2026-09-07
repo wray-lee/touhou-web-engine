@@ -8,7 +8,17 @@ import { AimingPattern } from '../../../touhou-common/bullet-patterns/AimingPatt
 import { CompositePattern } from '../../../touhou-common/bullet-patterns/CompositePattern';
 
 export class Rumia extends Boss {
+  /** 入场滑入帧数：前 60 帧 y 从 -50 移到 100，期间不攻击（票据 11）。 */
+  static readonly ENTRANCE_FRAMES = 60;
+  /** 死亡淡出帧数：isAlive=false 后 alpha 1→0（票据 11，渲染由任务 D 消费）。 */
+  static readonly FADE_FRAMES = 30;
+
+  /** 渲染透明度：入场/战斗期为 1，死亡后 30 帧线性淡出到 0。 */
+  public alpha = 1;
+
   private aiFrame = 0;
+  /** 入场进度计数器：独立于 timer（timer 会随阶段切换归零）。 */
+  private entranceFrame = 0;
   private moveAngle = 0;
   private targetX = 224;
   private targetY = 120;
@@ -67,15 +77,36 @@ export class Rumia extends Boss {
     super({
       name: 'Rumia',
       phases,
-      position: { x: 224, y: 120 },
+      position: { x: 224, y: -50 }, // 入场起点：屏幕顶外，update() 滑入到 y=100
       hitboxRadius: 20,
     });
+  }
+
+  override update(dtFrames: number): void {
+    // 死亡淡出：alpha 1→0 约 30 帧（数据字段，渲染消费由任务 D 负责）
+    if (this.isDefeated || !this.isAlive) {
+      if (this.alpha > 0) {
+        this.alpha = Math.max(0, this.alpha - dtFrames / Rumia.FADE_FRAMES);
+      }
+      return;
+    }
+
+    super.update(dtFrames);
+
+    // 入场：前 ENTRANCE_FRAMES 帧从 y=-50 线性滑入到 y=100
+    if (this.entranceFrame < Rumia.ENTRANCE_FRAMES) {
+      this.entranceFrame = Math.min(this.entranceFrame + dtFrames, Rumia.ENTRANCE_FRAMES);
+      this.position.y = -50 + 150 * (this.entranceFrame / Rumia.ENTRANCE_FRAMES);
+    }
   }
 
   override updateAI(dtFrames: number, player?: Entity): Bullet[] {
     if (!this.isAlive || this.isDefeated) return [];
 
     this.aiFrame += dtFrames;
+    // 入场期间不攻击
+    if (this.aiFrame <= Rumia.ENTRANCE_FRAMES) return [];
+
     const bullets: Bullet[] = [];
 
     // Boss smooth floating movement

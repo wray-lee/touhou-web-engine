@@ -63,8 +63,9 @@ export class Boss extends Entity {
   private initPhase(index: number): void {
     if (index >= this.phases.length) {
       this.isDefeated = true;
-      this.destroy();
+      // 先通知再销毁：destroy() 会清空监听器，顺序颠倒会让 defeat 永远收不到
       this.emit('defeat', this);
+      this.destroy();
       return;
     }
 

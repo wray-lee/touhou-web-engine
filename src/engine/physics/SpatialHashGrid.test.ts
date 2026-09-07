@@ -32,6 +32,35 @@ describe('SpatialHashGrid & Collision Detection', () => {
     expect(hits[0]).toBe(bulletHitting);
   });
 
+  it('exposes cellSize and forEachCell for debug visualization', () => {
+    const grid = new SpatialHashGrid(64);
+    expect(grid.cellSize).toBe(64);
+
+    const e1 = new Entity({ x: 50, y: 50 }, {}, { radius: 10 }); // cell 0,0
+    const e2 = new Entity({ x: 60, y: 60 }, {}, { radius: 10 }); // cell 0,0
+    const e3 = new Entity({ x: 500, y: 500 }, {}, { radius: 10 }); // cell 7,7
+    grid.insert(e1);
+    grid.insert(e2);
+    grid.insert(e3);
+
+    const visited = new Map<string, number>();
+    grid.forEachCell((key, entities) => visited.set(key, entities.size));
+
+    expect(visited.get('0,0')).toBe(2);
+    expect(visited.get('7,7')).toBe(1);
+    expect(visited.size).toBe(2);
+  });
+
+  it('forEachCell yields nothing after clear', () => {
+    const grid = new SpatialHashGrid(64);
+    grid.insert(new Entity({ x: 50, y: 50 }));
+    grid.clear();
+
+    let count = 0;
+    grid.forEachCell(() => count++);
+    expect(count).toBe(0);
+  });
+
   it('clears grid for new frame updates', () => {
     const grid = new SpatialHashGrid(64);
     const e = new Entity({ x: 50, y: 50 });
