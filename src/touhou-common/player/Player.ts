@@ -54,7 +54,8 @@ export class Player extends Entity {
   }
 
   private makeBullet(config: BulletConfig): Bullet {
-    return this.bulletFactory(config);
+    // Player shots default to the oriented needle sprite unless overridden
+    return this.bulletFactory({ sprite: 'player_needle', ...config });
   }
 
   handleInput(input: InputSystem): void {

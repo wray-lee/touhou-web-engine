@@ -11,6 +11,8 @@ export interface CircularPatternConfig {
   angularVelocity?: number;
   acceleration?: number;
   tag?: EntityTag;
+  /** Sprite key resolved by the renderer's SpriteManager (e.g. 'bullet_ring'). */
+  sprite?: string;
 }
 
 export class CircularPattern extends BulletPattern {
@@ -19,7 +21,7 @@ export class CircularPattern extends BulletPattern {
   }
 
   spawn(emitter: Entity, _time: number, _player?: Entity): Bullet[] {
-    const { count, speed, angleOffset = 0, radius = 4, color = 0xff3344, angularVelocity = 0, acceleration = 0, tag = 'enemy-bullet' } = this.config;
+    const { count, speed, angleOffset = 0, radius = 4, color = 0xff3344, angularVelocity = 0, acceleration = 0, tag = 'enemy-bullet', sprite } = this.config;
     const bullets: Bullet[] = [];
     const step = (Math.PI * 2) / count;
 
@@ -37,6 +39,7 @@ export class CircularPattern extends BulletPattern {
           angularVelocity,
           acceleration,
           tag,
+          sprite,
         })
       );
     }

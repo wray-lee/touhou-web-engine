@@ -87,8 +87,10 @@ src/
 ## ✅ 验收标准（Phase 1）
 
 - [x] Stage 1 可完整游玩（击败露米娅）
-- [ ] 60 FPS 稳定，1000+ 弹幕不掉帧（性能目标：同屏 2000+ 不掉帧，见 SPEC「性能目标」）
-- [x] 所有测试通过（`npm run ci` —— 当前 54 项）
+- [x] 60 FPS 稳定，1000+ 弹幕不掉帧（性能目标：同屏 2000+ 不掉帧，见 SPEC「性能目标」）
+      —— `src/engine/perf/performance.bench.test.ts` 锁定：2051 弹 × 300 帧全管线模拟，
+      逻辑 avg 0.55ms / p95 0.94ms（预算 16.6ms），空间哈希峰值 14k 次比较 ≪ O(n²) 420 万
+- [x] 所有测试通过（`bun run ci` —— 当前 63 项）
 - [x] 编译成 npm 包可导入（`@uestc-touhou/touhou-web-engine/th08` 路径已验证）
 - [x] 性能监控显示 FPS/实体数/碰撞检测次数（碰撞次数为空间哈希真实距离比较计数）
 - [x] README 包含使用示例和架构说明
@@ -105,7 +107,10 @@ src/
 - [x] Ticket 13 BGM fadeIn/loop/preload + 内置合成回退
 - [x] npm 包 `./th08` 导出路径对齐（vite entry `games/th08/index`）
 - [x] 标准层：EntityTag 联合类型 + AimingPattern 委托共享 spread 生成器
-- [ ] Bullet.sprite / CompositePattern 保留但未接入 SpriteManager 渲染（Phase 2 素材接入时启用）
+- [x] Bullet.sprite / CompositePattern 已接入渲染与实战：
+      `SpriteManager` 程序化精灵注册表（ball/ring/needle/star，零外部素材），
+      PixiRenderer 按 `Bullet.sprite` 键查找绘制（未知键回退默认）；
+      Demarcation 符卡改用 `CompositePattern` 反向双环齐射（36 弹/轮，ring 精灵）
 
 ### 工具链与框架接口完备性（2026-09-07）
 

@@ -24,6 +24,8 @@ export interface SpreadBulletConfig {
   radius?: number;
   color?: number;
   tag?: EntityTag;
+  /** Sprite key resolved by the renderer's SpriteManager. */
+  sprite?: string;
 }
 
 /** Shared fan/spread bullet generator used by Linear & Aiming patterns. */
@@ -40,6 +42,7 @@ export function spawnSpread(
     radius = 4,
     color = 0x3388ff,
     tag = 'enemy-bullet',
+    sprite,
   } = config;
   const bullets: Bullet[] = [];
   const startAngle = count > 1 ? baseAngle - (spreadAngle * (count - 1)) / 2 : baseAngle;
@@ -53,6 +56,7 @@ export function spawnSpread(
         radius,
         color,
         tag,
+        sprite,
       })
     );
   }

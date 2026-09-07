@@ -1,4 +1,5 @@
 import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js';
+import { SpriteManager } from './SpriteManager';
 import { Bullet } from '../core/Bullet';
 import { Player } from '../../touhou-common/player/Player';
 import { Boss } from '../../touhou-common/boss/Boss';
@@ -20,6 +21,8 @@ export class PixiRenderer {
 
   private bulletGraphics: Graphics;
   private entityGraphics: Graphics;
+  /** Named procedural sprites; renderer draws bullets by `Bullet.sprite` key. */
+  public readonly sprites = new SpriteManager();
   private hudGraphics: Graphics;
   private debugGraphics: Graphics;
 
@@ -284,21 +287,15 @@ export class PixiRenderer {
         .fill({ color: boss.isSpellCardActive ? 0xff3366 : 0x33cc88 });
     }
 
-    // 6. Batch Render Bullets
+    // 6. Batch Render Bullets — style resolved from Bullet.sprite via SpriteManager
     for (const b of bullets) {
       if (!b.isAlive) continue;
-      const bx = b.position.x;
-      const by = b.position.y;
-      const r = b.hitbox.radius;
-
-      if (b.tag === 'player-bullet') {
-        // Player amulets / needles
-        this.bulletGraphics.rect(bx - 2, by - 6, 4, 12).fill({ color: b.color });
-      } else {
-        // Danmaku bullet with glowing border
-        this.bulletGraphics.circle(bx, by, r + 1.5).fill({ color: 0xffffff, alpha: 0.5 });
-        this.bulletGraphics.circle(bx, by, r).fill({ color: b.color });
-      }
+      const rotation = Math.atan2(b.velocity.y, b.velocity.x);
+      this.sprites.draw(this.bulletGraphics, b.sprite, b.position.x, b.position.y, {
+        color: b.color,
+        radius: b.hitbox.radius,
+        rotation,
+      });
     }
 
     // 7. Update HUD Texts

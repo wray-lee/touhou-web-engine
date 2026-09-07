@@ -11,6 +11,8 @@ export interface LinearPatternConfig {
   radius?: number;
   color?: number;
   tag?: EntityTag;
+  /** Sprite key resolved by the renderer's SpriteManager. */
+  sprite?: string;
 }
 
 export class LinearPattern extends BulletPattern {
@@ -27,7 +29,8 @@ export class LinearPattern extends BulletPattern {
       radius = 4,
       color = 0x3388ff,
       tag = 'enemy-bullet',
+      sprite,
     } = this.config;
-    return spawnSpread(this.factory, emitter, { count, speed, baseAngle, spreadAngle, radius, color, tag });
+    return spawnSpread(this.factory, emitter, { count, speed, baseAngle, spreadAngle, radius, color, tag, sprite });
   }
 }

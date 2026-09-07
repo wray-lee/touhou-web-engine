@@ -5,6 +5,7 @@ import { Bullet } from '../../../engine/core/Bullet';
 import { BulletPattern, BulletFactory } from '../../../touhou-common/bullet-patterns/BulletPattern';
 import { CircularPattern } from '../../../touhou-common/bullet-patterns/CircularPattern';
 import { AimingPattern } from '../../../touhou-common/bullet-patterns/AimingPattern';
+import { CompositePattern } from '../../../touhou-common/bullet-patterns/CompositePattern';
 
 export class Rumia extends Boss {
   private aiFrame = 0;
@@ -136,29 +137,30 @@ export class Rumia extends Boss {
     // Phase 2: Darkness Sign "Demarcation"
     else if (currentPhase === 2) {
       if (this.aiFrame % 60 === 0) {
-        // Darkness boundary pattern - spiraling dual rings with angular velocity
-        const pattern1 = this.pooled(
-          new CircularPattern({
-            count: 18,
-            speed: 2.4,
-            angleOffset: this.aiFrame * 0.03,
-            angularVelocity: 0.015,
-            color: 0x9922ff,
-            radius: 5,
-          })
+        // Darkness boundary pattern — counter-rotating dual rings as one composite salvo
+        const dualRing = this.pooled(
+          new CompositePattern([
+            new CircularPattern({
+              count: 18,
+              speed: 2.4,
+              angleOffset: this.aiFrame * 0.03,
+              angularVelocity: 0.015,
+              color: 0x9922ff,
+              radius: 5,
+              sprite: 'bullet_ring',
+            }),
+            new CircularPattern({
+              count: 18,
+              speed: 2.4,
+              angleOffset: -this.aiFrame * 0.03,
+              angularVelocity: -0.015,
+              color: 0x3344cc,
+              radius: 5,
+              sprite: 'bullet_ring',
+            }),
+          ])
         );
-        const pattern2 = this.pooled(
-          new CircularPattern({
-            count: 18,
-            speed: 2.4,
-            angleOffset: -this.aiFrame * 0.03,
-            angularVelocity: -0.015,
-            color: 0x3344cc,
-            radius: 5,
-          })
-        );
-        bullets.push(...pattern1.spawn(this, this.aiFrame, player));
-        bullets.push(...pattern2.spawn(this, this.aiFrame, player));
+        bullets.push(...dualRing.spawn(this, this.aiFrame, player));
       }
 
       if (this.aiFrame % 80 === 30 && player) {
