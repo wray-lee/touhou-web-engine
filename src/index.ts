@@ -13,6 +13,7 @@ export * from './engine/physics/SpatialHashGrid';
 
 // Renderer & Debug & Audio
 export * from './engine/renderer/PixiRenderer';
+export * from './engine/renderer/SpriteManager';
 export * from './engine/audio/AudioManager';
 export * from './engine/debug/PerformanceMonitor';
 

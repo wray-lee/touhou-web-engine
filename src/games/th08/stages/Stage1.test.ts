@@ -9,7 +9,9 @@ describe('TH08 Stage 1 Timeline', () => {
 
     const stage = createStage1({
       spawnEnemy: (enemy) => enemies.push(enemy),
-      spawnBoss: () => { bossSpawned = true; },
+      spawnBoss: () => {
+        bossSpawned = true;
+      },
       onClear: () => {},
     });
 

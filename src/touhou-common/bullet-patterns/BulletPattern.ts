@@ -29,11 +29,7 @@ export interface SpreadBulletConfig {
 }
 
 /** Shared fan/spread bullet generator used by Linear & Aiming patterns. */
-export function spawnSpread(
-  factory: BulletFactory,
-  emitter: Entity,
-  config: SpreadBulletConfig
-): Bullet[] {
+export function spawnSpread(factory: BulletFactory, emitter: Entity, config: SpreadBulletConfig): Bullet[] {
   const {
     count,
     speed,
@@ -57,7 +53,7 @@ export function spawnSpread(
         color,
         tag,
         sprite,
-      })
+      }),
     );
   }
 

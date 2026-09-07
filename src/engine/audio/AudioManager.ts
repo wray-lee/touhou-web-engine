@@ -30,7 +30,9 @@ export class AudioManager {
   private getContext(): AudioContext | undefined {
     if (typeof window === 'undefined') return undefined;
     if (!this.audioCtx) {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (AudioCtx) {
         this.audioCtx = new AudioCtx();
       }

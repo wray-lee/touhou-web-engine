@@ -24,7 +24,7 @@ export class Entity extends EventEmitter {
     position: Partial<Vector2> = {},
     velocity: Partial<Vector2> = {},
     hitbox: Partial<Hitbox> = {},
-    tag: EntityTag = 'default'
+    tag: EntityTag = 'default',
   ) {
     super();
     this.id = `entity_${Entity.nextId++}`;

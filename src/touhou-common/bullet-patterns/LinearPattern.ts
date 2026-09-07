@@ -31,6 +31,15 @@ export class LinearPattern extends BulletPattern {
       tag = 'enemy-bullet',
       sprite,
     } = this.config;
-    return spawnSpread(this.factory, emitter, { count, speed, baseAngle, spreadAngle, radius, color, tag, sprite });
+    return spawnSpread(this.factory, emitter, {
+      count,
+      speed,
+      baseAngle,
+      spreadAngle,
+      radius,
+      color,
+      tag,
+      sprite,
+    });
   }
 }

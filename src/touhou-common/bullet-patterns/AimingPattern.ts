@@ -21,8 +21,25 @@ export class AimingPattern extends BulletPattern {
   }
 
   spawn(emitter: Entity, _time: number, player?: Entity): Bullet[] {
-    const { count = 1, speed, spreadAngle = 0.2, radius = 4, color = 0xee44aa, tag = 'enemy-bullet', sprite } = this.config;
+    const {
+      count = 1,
+      speed,
+      spreadAngle = 0.2,
+      radius = 4,
+      color = 0xee44aa,
+      tag = 'enemy-bullet',
+      sprite,
+    } = this.config;
     const targetAngle = player ? emitter.angleTo(player) : Math.PI / 2;
-    return spawnSpread(this.factory, emitter, { count, speed, baseAngle: targetAngle, spreadAngle, radius, color, tag, sprite });
+    return spawnSpread(this.factory, emitter, {
+      count,
+      speed,
+      baseAngle: targetAngle,
+      spreadAngle,
+      radius,
+      color,
+      tag,
+      sprite,
+    });
   }
 }

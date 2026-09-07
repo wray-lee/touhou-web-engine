@@ -24,12 +24,7 @@ export class Bullet extends Entity {
   public lifetime = 0;
 
   constructor(config: BulletConfig = {}) {
-    super(
-      config.position,
-      config.velocity,
-      { radius: config.radius ?? 4 },
-      config.tag ?? 'enemy-bullet'
-    );
+    super(config.position, config.velocity, { radius: config.radius ?? 4 }, config.tag ?? 'enemy-bullet');
     this.color = config.color ?? 0xff3366;
     this.sprite = config.sprite ?? 'bullet_small';
     this.damage = config.damage ?? 1;

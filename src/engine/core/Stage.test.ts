@@ -7,8 +7,18 @@ describe('Stage System & Timeline', () => {
     let firedB = false;
 
     const timeline: StageTimelineEvent[] = [
-      { frame: 10, action: () => { firedA = true; } },
-      { frame: 20, action: () => { firedB = true; } },
+      {
+        frame: 10,
+        action: () => {
+          firedA = true;
+        },
+      },
+      {
+        frame: 20,
+        action: () => {
+          firedB = true;
+        },
+      },
     ];
 
     const stage = new Stage({ timeline });

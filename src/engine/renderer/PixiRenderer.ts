@@ -207,7 +207,7 @@ export class PixiRenderer {
     bullets: Bullet[],
     hud: HUD,
     monitor: PerformanceMonitor,
-    isPaused = false
+    isPaused = false,
   ): void {
     // 1. Clear dynamic graphics
     this.entityGraphics.clear();
@@ -228,11 +228,13 @@ export class PixiRenderer {
       if (!player.isInvulnerable || Math.floor(player.invulnerabilityTimer / 6) % 2 === 0) {
         // Body (Reimu Red/White Shrine Maiden dress)
         this.entityGraphics.circle(px, py - 4, 8).fill({ color: 0xfff0e6 }); // head
-        this.entityGraphics.poly([
-          { x: px, y: py - 4 },
-          { x: px - 12, y: py + 14 },
-          { x: px + 12, y: py + 14 },
-        ]).fill({ color: 0xc41e3a }); // red skirt
+        this.entityGraphics
+          .poly([
+            { x: px, y: py - 4 },
+            { x: px - 12, y: py + 14 },
+            { x: px + 12, y: py + 14 },
+          ])
+          .fill({ color: 0xc41e3a }); // red skirt
         this.entityGraphics.rect(px - 10, py - 10, 20, 6).fill({ color: 0xff3344 }); // red ribbon
 
         // Hitbox dot (visible in slow mode)
@@ -271,11 +273,13 @@ export class PixiRenderer {
 
       // Rumia character silhouette (Black dress + yellow hair + red ribbon)
       this.entityGraphics.circle(bx, by - 6, 12).fill({ color: 0xffe066 }); // yellow hair
-      this.entityGraphics.poly([
-        { x: bx, y: by },
-        { x: bx - 14, y: by + 20 },
-        { x: bx + 14, y: by + 20 },
-      ]).fill({ color: 0x1a1a24 }); // black dress
+      this.entityGraphics
+        .poly([
+          { x: bx, y: by },
+          { x: bx - 14, y: by + 20 },
+          { x: bx + 14, y: by + 20 },
+        ])
+        .fill({ color: 0x1a1a24 }); // black dress
       this.entityGraphics.rect(bx - 12, by - 14, 8, 8).fill({ color: 0xcc1122 }); // red side ribbon
 
       // Boss Health Bar (top of playfield)
@@ -312,8 +316,7 @@ export class PixiRenderer {
       this.spellTimerText.visible = true;
 
       // 居中弹出动画：前 30 帧 scale 1.6 -> 1.0 + 淡入，其余时间保持
-      const elapsedFrames =
-        PixiRenderer.DISPLAY_WINDOW - Math.max(0, hud.spellCardDisplayTimer);
+      const elapsedFrames = PixiRenderer.DISPLAY_WINDOW - Math.max(0, hud.spellCardDisplayTimer);
       const progress = Math.min(1, elapsedFrames / PixiRenderer.DISPLAY_ANIM_FRAMES);
       const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
       this.spellNameText.alpha = Math.min(1, 0.2 + eased * 0.8);
@@ -345,9 +348,7 @@ export class PixiRenderer {
     // 9. Pause menu overlay
     if (isPaused) {
       this.pauseOverlay.clear();
-      this.pauseOverlay
-        .rect(0, 0, this.width, this.height)
-        .fill({ color: 0x000000, alpha: 0.55 });
+      this.pauseOverlay.rect(0, 0, this.width, this.height).fill({ color: 0x000000, alpha: 0.55 });
       this.pauseText.text = 'PAUSED — 按 ESC 继续';
       this.pauseText.position.set(this.width / 2, this.height / 2);
       this.pauseOverlay.visible = true;

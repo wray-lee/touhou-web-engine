@@ -31,7 +31,9 @@ describe('Performance: 60 FPS with 2000+ bullets', () => {
     // Composite ring + aim pattern, pooled through BulletSystem
     const factory = (cfg: Parameters<BulletSystem['createBullet']>[0]) => bullets.createBullet(cfg);
     const salvo = new CompositePattern([
-      new CircularPattern({ count: 24, speed: 2.0, color: 0xff3355, angularVelocity: 0.01 }).withFactory(factory),
+      new CircularPattern({ count: 24, speed: 2.0, color: 0xff3355, angularVelocity: 0.01 }).withFactory(
+        factory,
+      ),
       new AimingPattern({ count: 3, speed: 3.5, spreadAngle: 0.2 }).withFactory(factory),
     ]);
 
@@ -79,7 +81,7 @@ describe('Performance: 60 FPS with 2000+ bullets', () => {
 
     // eslint-disable-next-line no-console
     console.log(
-      `[perf] ${peakLive} bullets × ${FRAMES} frames | avg ${avg.toFixed(2)}ms | p95 ${p95.toFixed(2)}ms | max ${worst.toFixed(2)}ms | peak checks/frame ${peakChecks}`
+      `[perf] ${peakLive} bullets × ${FRAMES} frames | avg ${avg.toFixed(2)}ms | p95 ${p95.toFixed(2)}ms | max ${worst.toFixed(2)}ms | peak checks/frame ${peakChecks}`,
     );
 
     // The screen really held 2000+ live danmaku

@@ -342,7 +342,7 @@ export class TH08Game {
         this.bulletSystem.getBullets(),
         this.hud,
         this.monitor,
-        this.isPaused
+        this.isPaused,
       );
     }
   }

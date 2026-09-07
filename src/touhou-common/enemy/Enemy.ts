@@ -30,11 +30,7 @@ export class Enemy extends Entity {
   public timer = 0;
   public waypoints: EnemyMovementWayPoint[] = [];
 
-  constructor(
-    position: Partial<Vector2> = {},
-    velocity: Partial<Vector2> = {},
-    config: EnemyConfig = {}
-  ) {
+  constructor(position: Partial<Vector2> = {}, velocity: Partial<Vector2> = {}, config: EnemyConfig = {}) {
     super(position, velocity, { radius: config.radius ?? 14 }, 'enemy');
     this.hp = config.hp ?? 30;
     this.maxHp = this.hp;

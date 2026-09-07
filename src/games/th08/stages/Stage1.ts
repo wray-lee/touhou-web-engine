@@ -38,10 +38,8 @@ export function createStage1(callbacks: Stage1Callbacks): Stage {
             color: 0x55ccff,
             shootInterval: 50,
             shootPattern: new AimingPattern({ count: 1, speed: 2.8, color: 0x55ccff, radius: 3 }),
-            movementWayPoints: [
-              { time: 80, velocity: { x: i < 2 ? -1.5 : 1.5, y: 1.0 } },
-            ],
-          })
+            movementWayPoints: [{ time: 80, velocity: { x: i < 2 ? -1.5 : 1.5, y: 1.0 } }],
+          }),
         );
         callbacks.spawnEnemy(enemy);
       },
@@ -55,7 +53,7 @@ export function createStage1(callbacks: Stage1Callbacks): Stage {
       action: () => {
         const fromLeft = i % 2 === 0;
         const enemy = new Enemy(
-          { x: fromLeft ? 0 : 440, y: 80 + (i * 20) },
+          { x: fromLeft ? 0 : 440, y: 80 + i * 20 },
           { x: fromLeft ? 2.5 : -2.5, y: 0.8 },
           withPooledBullets(callbacks, {
             hp: 35,
@@ -69,7 +67,7 @@ export function createStage1(callbacks: Stage1Callbacks): Stage {
               spreadAngle: 0.25,
               color: 0xffaa33,
             }),
-          })
+          }),
         );
         callbacks.spawnEnemy(enemy);
       },
@@ -100,7 +98,7 @@ export function createStage1(callbacks: Stage1Callbacks): Stage {
             { time: 60, velocity: { x: 0, y: 0 } },
             { time: 240, velocity: { x: 0, y: -1.5 } },
           ],
-        })
+        }),
       );
       callbacks.spawnEnemy(elite);
     },
@@ -120,7 +118,7 @@ export function createStage1(callbacks: Stage1Callbacks): Stage {
             color: 0x33ee99,
             shootInterval: 40,
             shootPattern: new AimingPattern({ count: 2, speed: 3.2, spreadAngle: 0.2, color: 0x33ee99 }),
-          })
+          }),
         );
         callbacks.spawnEnemy(enemy);
       },

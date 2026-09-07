@@ -99,7 +99,7 @@ export class Rumia extends Boss {
             angleOffset: (this.aiFrame * 0.05) % (Math.PI * 2),
             color: 0x33bbff,
             radius: 4,
-          })
+          }),
         );
         bullets.push(...circ.spawn(this, this.aiFrame, player));
       }
@@ -115,7 +115,7 @@ export class Rumia extends Boss {
             angleOffset: (this.aiFrame * 0.08) % (Math.PI * 2),
             color: 0xff3355,
             radius: 5,
-          })
+          }),
         );
         bullets.push(...circ.spawn(this, this.aiFrame, player));
       }
@@ -129,7 +129,7 @@ export class Rumia extends Boss {
             spreadAngle: 0.15,
             color: 0xdd22ff,
             radius: 3,
-          })
+          }),
         );
         bullets.push(...aim.spawn(this, this.aiFrame, player));
       }
@@ -158,7 +158,7 @@ export class Rumia extends Boss {
               radius: 5,
               sprite: 'bullet_ring',
             }),
-          ])
+          ]),
         );
         bullets.push(...dualRing.spawn(this, this.aiFrame, player));
       }
@@ -172,7 +172,7 @@ export class Rumia extends Boss {
             spreadAngle: 0.25,
             color: 0xff22aa,
             radius: 4,
-          })
+          }),
         );
         bullets.push(...aim.spawn(this, this.aiFrame, player));
       }

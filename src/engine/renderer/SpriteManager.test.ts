@@ -33,7 +33,9 @@ describe('SpriteManager', () => {
   it('built-in draw hooks execute without throwing on a chainable Graphics', () => {
     const sm = new SpriteManager();
     for (const key of ['bullet_small', 'bullet_ring', 'bullet_needle', 'bullet_star']) {
-      expect(() => sm.draw(fakeGraphics, key, 5, 5, { color: 0x123456, radius: 4, rotation: 0.7 })).not.toThrow();
+      expect(() =>
+        sm.draw(fakeGraphics, key, 5, 5, { color: 0x123456, radius: 4, rotation: 0.7 }),
+      ).not.toThrow();
     }
   });
 });

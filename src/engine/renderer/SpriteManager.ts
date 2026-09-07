@@ -5,7 +5,7 @@ export type SpriteDrawFn = (
   g: Graphics,
   x: number,
   y: number,
-  opts: { color: number; radius: number; rotation?: number }
+  opts: { color: number; radius: number; rotation?: number },
 ) => void;
 
 /**
@@ -35,7 +35,13 @@ export class SpriteManager {
     return this.sprites.has(key);
   }
 
-  draw(g: Graphics, key: string, x: number, y: number, opts: { color: number; radius: number; rotation?: number }): void {
+  draw(
+    g: Graphics,
+    key: string,
+    x: number,
+    y: number,
+    opts: { color: number; radius: number; rotation?: number },
+  ): void {
     (this.sprites.get(key) ?? this.defaultSprite)(g, x, y, opts);
   }
 

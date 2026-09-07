@@ -39,12 +39,7 @@ export class Player extends Entity {
   public bulletFactory: BulletFactory;
 
   constructor(position: Partial<Vector2> = {}, config: PlayerConfig = {}) {
-    super(
-      position,
-      {},
-      { radius: config.hitboxRadius ?? 2 },
-      'player'
-    );
+    super(position, {}, { radius: config.hitboxRadius ?? 2 }, 'player');
     this.fastSpeed = config.fastSpeed ?? 4.5;
     this.slowSpeed = config.slowSpeed ?? 2.0;
     this.lives = config.initialLives ?? 3;
@@ -126,7 +121,7 @@ export class Player extends Entity {
           color: 0xff3344,
           damage: 10,
           tag: 'player-bullet',
-        })
+        }),
       );
     } else {
       // Focused stream in slow mode
@@ -146,7 +141,7 @@ export class Player extends Entity {
           color: 0xaa2233,
           damage: 12,
           tag: 'player-bullet',
-        })
+        }),
       );
     }
 

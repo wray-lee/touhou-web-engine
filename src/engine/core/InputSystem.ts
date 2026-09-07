@@ -186,5 +186,4 @@ export class InputSystem {
 
     return createVector2(dx, dy);
   }
-
 }

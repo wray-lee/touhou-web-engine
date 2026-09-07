@@ -30,12 +30,7 @@ export class Boss extends Entity {
   public timer = 0;
 
   constructor(config: BossConfig) {
-    super(
-      config.position ?? { x: 224, y: 120 },
-      {},
-      { radius: config.hitboxRadius ?? 24 },
-      'boss'
-    );
+    super(config.position ?? { x: 224, y: 120 }, {}, { radius: config.hitboxRadius ?? 24 }, 'boss');
     this.name = config.name;
     this.phases = config.phases;
     if (config.bulletFactory) {
