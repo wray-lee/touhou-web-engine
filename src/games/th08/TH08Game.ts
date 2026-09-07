@@ -343,6 +343,7 @@ export class TH08Game {
         this.hud,
         this.monitor,
         this.isPaused,
+        this.input,
       );
     }
   }

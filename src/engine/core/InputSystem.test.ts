@@ -148,6 +148,19 @@ describe('InputSystem', () => {
       expect(input.isKeyDown('right')).toBe(false); // 0.2 < 0.5 threshold
     });
 
+    it('exposes held actions for real-time input display', () => {
+      const input = new InputSystem();
+      input.enableGamepad(() => [pad([0])]); // A = shoot held via gamepad
+      input.simulateKeyDown('ArrowLeft');
+      input.update();
+      expect(input.getActiveActions().sort()).toEqual(['left', 'shoot']);
+
+      input.simulateKeyUp('ArrowLeft');
+      input.enableGamepad(() => []);
+      input.update();
+      expect(input.getActiveActions()).toEqual([]);
+    });
+
     it('merges gamepad with keyboard state', () => {
       const input = new InputSystem();
       input.enableGamepad(() => [pad([9])]); // Start = pause

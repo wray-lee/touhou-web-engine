@@ -126,7 +126,7 @@ bun install
 # Start local interactive demo server
 bun run dev
 
-# Run Vitest test suite (73 tests incl. a 2000-bullet perf benchmark)
+# Run Vitest test suite (74 tests incl. a 2000-bullet perf benchmark)
 bun run test
 
 # Lint + typecheck
@@ -327,7 +327,7 @@ game.start();
 
 Continuous Integration runs on GitHub Actions on every commit (`typecheck → lint → test → build`):
 - TypeScript 5.7 strict mode verification + ESLint flat-config lint
-- 73 Unit tests covering:
+- 74 Unit tests covering:
   - Vector & Entity math & lifecycle
   - Spatial Hash Grid collision bounds & neighbor queries
   - CollisionSystem spatial queries, tag filtering & graze radius

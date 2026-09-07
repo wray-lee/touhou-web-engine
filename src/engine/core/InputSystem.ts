@@ -279,6 +279,11 @@ export class InputSystem {
     return this.currentFrameDown.has(action);
   }
 
+  /** Currently-held actions (keyboard or gamepad) — for real-time input display. */
+  getActiveActions(): InputAction[] {
+    return [...this.currentFrameDown];
+  }
+
   wasKeyPressed(action: InputAction): boolean {
     // A buffered tap (pressed & released between samples) counts as a press.
     if (this.bufferedPresses.has(action)) return true;

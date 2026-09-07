@@ -6,6 +6,7 @@ import { Boss } from '../../touhou-common/boss/Boss';
 import { Enemy } from '../../touhou-common/enemy/Enemy';
 import { HUD } from '../../touhou-common/ui/HUD';
 import { PerformanceMonitor } from '../debug/PerformanceMonitor';
+import { InputSystem } from '../core/InputSystem';
 
 export interface PixiRendererConfig {
   container: HTMLElement;
@@ -208,6 +209,7 @@ export class PixiRenderer {
     hud: HUD,
     monitor: PerformanceMonitor,
     isPaused = false,
+    input: InputSystem | null = null,
   ): void {
     // 1. Clear dynamic graphics
     this.entityGraphics.clear();
@@ -336,11 +338,16 @@ export class PixiRenderer {
       this.centerBannerText.visible = false;
     }
 
-    // 8. Update Debug Overlay
+    // 8. Update Debug Overlay (metrics + real-time input state)
     if (monitor.isVisible) {
       this.debugContainer.visible = true;
-      this.debugText.text = monitor.getMetricsText().join('\n');
-      this.debugGraphics.rect(5, 5, 170, 75).fill({ color: 0x000000, alpha: 0.7 });
+      const lines = monitor.getMetricsText();
+      if (input) {
+        const active = input.getActiveActions();
+        lines.push(`Input: ${active.length > 0 ? active.join(' ') : '—'}`);
+      }
+      this.debugText.text = lines.join('\n');
+      this.debugGraphics.rect(5, 5, 170, 75 + (input ? 16 : 0)).fill({ color: 0x000000, alpha: 0.7 });
     } else {
       this.debugContainer.visible = false;
     }
