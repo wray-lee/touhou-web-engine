@@ -21,6 +21,7 @@
 - **Object Pooled Bullets**: All bullet creation (player shots, enemy patterns, boss spellcards) routes through a shared object pool to minimize GC pressure.
 - **Spatial Hash Collision**: Every collision (player bullets vs enemies/boss, player graze) resolves via 64px spatial hash neighbourhood queries — O(n²) loops eliminated.
 - **Mobile Ready**: Touch-drag flies the ship and auto-fires; ESC pauses with a dedicated pause menu.
+- **Gamepad + Rebindable Keys**: Standard-layout gamepads are polled automatically (D-pad/stick = move, A = shoot, B/X = bomb, LB/LT = focus, Start = pause); every binding can be remapped at runtime.
 
 ---
 
@@ -44,14 +45,22 @@ The engine comes with a complete implementation of **東方永夜抄 ~ Imperisha
 
 ### Controls
 
-| Action | Primary Key | Alternate Key | Touch |
-|---|---|---|---|
-| **Move** | `Arrow Keys` | `W` / `A` / `S` / `D` | Drag on canvas |
-| **Shoot** | `Z` | `Space` | Auto while dragging |
-| **Bomb (灵击)** | `X` | - | - |
-| **Focus / Slow (低速)** | `Shift` | - | - |
-| **Pause / Resume** | `ESC` | - | - |
-| **Toggle Performance HUD** | `F12` | `P` | - |
+| Action | Primary Key | Alternate Key | Touch | Gamepad |
+|---|---|---|---|---|
+| **Move** | `Arrow Keys` | `W` / `A` / `S` / `D` | Drag on canvas | Left stick / D-pad |
+| **Shoot** | `Z` | `Space` | Auto while dragging | `A` |
+| **Bomb (灵击)** | `X` | - | - | `B` / `X` |
+| **Focus / Slow (低速)** | `Shift` | - | - | `LB` / `LT` |
+| **Pause / Resume** | `ESC` | - | - | `Start` |
+| **Toggle Performance HUD** | `F12` | `P` | - | - |
+
+All bindings are rebindable at runtime:
+
+```typescript
+game.input.setKeyBinding('shoot', ['KeyJ']);          // keyboard
+game.input.setGamepadBinding('bomb', { buttons: [5] }); // gamepad (RB)
+const map = game.input.getBindings();                  // render a settings screen
+```
 
 ---
 
@@ -117,7 +126,7 @@ bun install
 # Start local interactive demo server
 bun run dev
 
-# Run Vitest test suite (63 tests incl. a 2000-bullet perf benchmark)
+# Run Vitest test suite (73 tests incl. a 2000-bullet perf benchmark)
 bun run test
 
 # Lint + typecheck
@@ -151,7 +160,7 @@ or boss lives behind a small, stable API surface.
 | | `Bullet` | Pooled projectile with angular velocity & acceleration |
 | | `BulletSystem` | Owns live bullets + **object pool** (`createBullet` / `recycle`) |
 | | `CollisionSystem` | Spatial-hash queries by tag, graze radius, real check count |
-| | `InputSystem` | Keyboard + touch-drag, `isActionPressed/JustPressed` |
+| | `InputSystem` | Keyboard + gamepad + touch-drag, 3-frame press buffering, runtime rebinding |
 | | `Stage` | Frame-based timeline (`{ frame, action }`) |
 | | `PixiRenderer` | WebGL scene, HUD, banners, pause overlay |
 | | `SpriteManager` | Named procedural sprites; bullets draw by `Bullet.sprite` key |
@@ -318,12 +327,12 @@ game.start();
 
 Continuous Integration runs on GitHub Actions on every commit (`typecheck → lint → test → build`):
 - TypeScript 5.7 strict mode verification + ESLint flat-config lint
-- 63 Unit tests covering:
+- 73 Unit tests covering:
   - Vector & Entity math & lifecycle
   - Spatial Hash Grid collision bounds & neighbor queries
   - CollisionSystem spatial queries, tag filtering & graze radius
   - Object pool reuse / cap / recycling on collision & bounds culling
-  - Input system & key state buffering, touch drag & canvas-coord mapping
+  - Input system: key state, 3-frame press buffering, gamepad buttons/stick, runtime rebinding, touch drag & canvas-coord mapping
   - Bullet lifecycle & bounds culling
   - Pattern generators (Circular, Linear, Aiming, Composite) + pool-factory propagation
   - SpriteManager procedural sprite registry (built-ins, custom keys, default fallback)
