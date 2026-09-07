@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Entity } from './Entity';
 
 describe('Entity', () => {
@@ -36,5 +36,37 @@ describe('Entity', () => {
     const e2 = new Entity({ x: 3, y: 4 });
     expect(e1.distanceTo(e2)).toBe(5);
     expect(e1.angleTo(e2)).toBeCloseTo(Math.atan2(4, 3));
+  });
+
+  it('exposes a transform view sharing the same position/velocity references', () => {
+    const entity = new Entity({ x: 5, y: 6 }, { x: 7, y: 8 });
+    const transform = entity.transform;
+
+    expect(transform).toBe(entity.transform); // stable reference
+    expect(transform.position).toBe(entity.position);
+    expect(transform.velocity).toBe(entity.velocity);
+    expect(transform.rotation).toBe(0);
+
+    entity.update(1);
+    expect(transform.position.x).toBe(12); // mutations via flat fields are visible
+
+    entity.velocity.x = 0;
+    entity.velocity.y = 0;
+    entity.rotation = Math.PI / 2;
+    expect(transform.rotation).toBeCloseTo(Math.PI / 2); // rotation stays in sync
+
+    transform.rotation = 1;
+    expect(entity.rotation).toBe(1);
+  });
+
+  it('emits a typed destroy event to on("destroy") listeners', () => {
+    const entity = new Entity();
+    const listener = vi.fn();
+    entity.on('destroy', listener);
+
+    entity.destroy();
+
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(entity.isAlive).toBe(false);
   });
 });

@@ -9,15 +9,29 @@ export interface Hitbox {
 /** Discriminates entity kinds for collision & rendering logic. */
 export type EntityTag = 'default' | 'player' | 'enemy' | 'boss' | 'player-bullet' | 'enemy-bullet';
 
-export class Entity extends EventEmitter {
+/** Live motion state of an entity; `position`/`velocity` alias the entity's own vectors. */
+export interface Transform {
+  position: Vector2;
+  velocity: Vector2;
+  rotation: number;
+}
+
+/** Typed events emitted by Entity and its subclasses; unknown names stay allowed. */
+export interface EntityEvents {
+  destroy: void;
+  collided: { other: Entity };
+  [event: string]: any;
+}
+
+export class Entity extends EventEmitter<EntityEvents> {
   public id: string;
   public position: Vector2;
   public velocity: Vector2;
-  public rotation: number;
   public hitbox: Hitbox;
   public isAlive: boolean;
   public tag: EntityTag;
 
+  private readonly _transform: Transform;
   private static nextId = 1;
 
   constructor(
@@ -30,13 +44,26 @@ export class Entity extends EventEmitter {
     this.id = `entity_${Entity.nextId++}`;
     this.position = createVector2(position.x ?? 0, position.y ?? 0);
     this.velocity = createVector2(velocity.x ?? 0, velocity.y ?? 0);
-    this.rotation = 0;
+    this._transform = { position: this.position, velocity: this.velocity, rotation: 0 };
     this.hitbox = {
       radius: hitbox.radius ?? 0,
       offset: hitbox.offset ?? { x: 0, y: 0 },
     };
     this.isAlive = true;
     this.tag = tag;
+  }
+
+  /** Shared Transform view; `rotation` reads/writes through to keep both sides live. */
+  get transform(): Transform {
+    return this._transform;
+  }
+
+  get rotation(): number {
+    return this._transform.rotation;
+  }
+
+  set rotation(value: number) {
+    this._transform.rotation = value;
   }
 
   update(dt: number): void {
