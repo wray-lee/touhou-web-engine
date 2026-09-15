@@ -137,6 +137,20 @@ export class PlayerSim {
     return this.bombStateTimer > 0 && this.bombStateTimer % 8 < 2;
   }
   /**
+   * `playerState != PLAYER_STATE_ALIVE` inside the hit test.
+   *
+   * `FUN_0040be30` puts the ship in `PLAYER_STATE_DEAD` in the same call that arms
+   * the card (`PlayerBomb.cpp:172`), and `Player::FUN_0044a230` / `FUN_0044a360`
+   * answer a hit in that state by returning 1 *without* reaching `Die()`
+   * (`Player.cpp:335-336`, `:362-363`). So the bomb's real protection is this window
+   * -- the whole card plus the 30..60 frames of red flash after it -- and not the
+   * size of its cancel circle. Grazing keeps working (the graze test only refuses
+   * DYING and SPAWNING, `:385`), and so does moving and shooting (`:1093`).
+   */
+  get bombImmune(): boolean {
+    return this.bombStateTimer > 0;
+  }
+  /**
    * `0xE2A70`: frames of full-screen bullet cancel left. Retail's only post-respawn
    * protection -- there is no invulnerability timer in the reference at all.
    */
@@ -165,6 +179,12 @@ export class PlayerSim {
   /** One-tick flags for the 低速 entry/exit puffs (effects 29 and 28). */
   focusEntered = false;
   focusExited = false;
+  /**
+   * Set by `StageRunner` for the frames a conversation is on screen. Retail hangs
+   * the whole 妖率計 block on `!Gui::IsDialogPresent()` (`Player.cpp:924`), so the
+   * meter holds its breath across a talk scene exactly as it does across a card.
+   */
+  holdGauge = false;
 
   // Resources (carried across stages, only reset by continue)
   lives: number;
@@ -397,8 +417,19 @@ export class PlayerSim {
      * forced swing (`StageRunner` passes `force`).
      */
     this.gauge.frameStop = this.gs.bombRunning;
-    if (this.stanceTimer >= STANCE_METER_DELAY_FRAMES && !this.gs.bombRunning) {
-      this.gauge.tick({ shooting: input.shoot, isYoukai: this.isSlow });
+    if (
+      this.stanceTimer >= STANCE_METER_DELAY_FRAMES &&
+      !this.gs.bombRunning &&
+      !this.holdGauge
+    ) {
+      // `Player.cpp:939` / `:961` push the meter through
+      // `(i32)(gaugeDelta * g_EclGameTimeScale)`, so a scripted slow-motion slows
+      // the 妖力 gauge down with everything else.
+      this.gauge.tick({
+        shooting: input.shoot,
+        isYoukai: this.isSlow,
+        timeScale: this.gs.timeScale,
+      });
     }
     if (this.killHoldoff > 0) this.killHoldoff--;
 
@@ -408,6 +439,11 @@ export class PlayerSim {
     // normalised vector: see `movementDirectionIndex`.
     const axis = this.isSlow ? this.slowSpeed : this.fastSpeed;
     const diagonal = this.isSlow ? this.slowDiagonalSpeed : this.fastDiagonalSpeed;
+    // `Player.cpp:880-881` scales the two finished components by
+    // `g_EclGameTimeScale` on their way into the velocity fields `+0x3F8`/`+0x3FC`,
+    // which are the same fields the walk animation reads - so under a slow-motion
+    // the ship crawls, and its lean crawls with it.
+    const ts = this.gs.timeScale;
     if (input.moveTarget) {
       // Pointer steering: home straight in, and stop inside a pixel so the ship
       // does not buzz around the cursor.
@@ -415,7 +451,7 @@ export class PlayerSim {
       const oy = input.moveTarget.y - this.y;
       const dist = Math.hypot(ox, oy);
       if (dist > 1) {
-        const travel = Math.min(dist, axis);
+        const travel = Math.min(dist, axis) * ts;
         this.x += (ox / dist) * travel;
         this.y += (oy / dist) * travel;
         this.leanX = (ox / dist) * travel;
@@ -432,10 +468,10 @@ export class PlayerSim {
           (input.dx < 0 ? MOVE_BITS.left : 0) |
           (input.dx > 0 ? MOVE_BITS.right : 0);
       const [vx, vy] = movementAxisSpeeds(movementDirectionIndex(bits), axis, diagonal);
-      this.x += vx;
-      this.y += vy;
-      this.leanX = vx;
-      this.leanY = vy;
+      this.x += vx * ts;
+      this.y += vy * ts;
+      this.leanX = vx * ts;
+      this.leanY = vy * ts;
     }
     this.x = Math.max(8, Math.min(PLAYFIELD_W - 8, this.x));
     this.y = Math.max(16, Math.min(PLAYFIELD_H - 16, this.y));

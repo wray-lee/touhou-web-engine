@@ -30,6 +30,7 @@ import {
   BULLET_LIVE,
   BULLET_DYING,
   SF_APPEAR,
+  SF_NO_CANCEL,
   advanceShotRecords,
   isLive,
   runShotHandlers,
@@ -39,7 +40,7 @@ import {
 } from './BulletTransform';
 
 export type { BulletWorld, ShotPattern, ShotRecord } from './BulletTransform';
-export { BULLET_LIVE, BULLET_DYING, isLive, simplePattern } from './BulletTransform';
+export { BULLET_LIVE, BULLET_DYING, SF_NO_CANCEL, isLive, simplePattern } from './BulletTransform';
 
 /** A detached bullet with every field zeroed, for hosts that build their own. */
 export const blankBullet = createBullet;
@@ -192,9 +193,17 @@ export class BulletPool {
     spawned: 0,
     /** Bullets armed with a non-empty record chain (`record->kind != 0`). */
     recorded: 0,
-    /** Frames on which some bullet had a transform handler running. */
+  /** Frames on which some bullet had a transform handler running. */
     handlerFrames: 0,
   };
+
+  /**
+   * `g_EclGameTimeScale`, which `BulletManager.cpp:183-184` folds into a fresh
+   * bullet's velocity but not into its raw speed field `+0xD68`. The host keeps
+   * this in step with its own time scale once per frame; `arm` is the one site
+   * that needs it without a `BulletWorld` in hand.
+   */
+  timeScale = 1;
 
   constructor() {
     this.bullets = Array.from({ length: MAX_BULLETS }, createBullet);
@@ -231,8 +240,10 @@ export class BulletPool {
     b.color = p.color;
     b.angle = angle;
     b.speed = speed;
-    b.vx = Math.cos(angle) * speed;
-    b.vy = Math.sin(angle) * speed;
+    // `:183-184`: velocity launches at `speed * g_EclGameTimeScale`, while the
+    // raw `+0xD68` keeps the unscaled figure the handlers renormalise from.
+    b.vx = Math.cos(angle) * (speed * this.timeScale);
+    b.vy = Math.sin(angle) * (speed * this.timeScale);
     b.x = x;
     b.y = y;
     b.radius = p.radius;
@@ -405,6 +416,65 @@ export class BulletPool {
       b.state = 0;
       n++;
     }
+    return n;
+  }
+
+  /**
+   * One bullet caught by a cancel slot of `Player::FUN_00449ff0`.
+   *
+   * Retail does not zero the slot here the way ECL op 161 does: the bullet goes to
+   * state 5, which is the little 点 animation the field then collects, and the host
+   * drops `bulletCancelItemType` on the spot (`BulletManager.cpp:942-959`, and the
+   * same shape in `RemoveAllBullets` at `:498-520`). Two things keep a bullet out of
+   * it: the `0x1000` shot flag (`SF_NO_CANCEL`, tested in the same `if`), and being
+   * the ship's own shot -- only the enemy channel is walked by that switch.
+   */
+  private cancelOne(b: Bullet): boolean {
+    if (!b.active || b.tag !== 'enemy') return false;
+    if (b.state === BULLET_DYING) return false;
+    if ((b.tfFlags & SF_NO_CANCEL) !== 0) return false;
+    this.beginDeath(b);
+    return true;
+  }
+
+  /** The `slot->radius != 0` branch of `FUN_00449ff0`: a circle. */
+  cancelInCircle(cx: number, cy: number, radius: number): number {
+    const r2 = radius * radius;
+    let n = 0;
+    for (const b of this.bullets) {
+      const dx = b.x - cx;
+      const dy = b.y - cy;
+      if (dx * dx + dy * dy > r2) continue;
+      if (this.cancelOne(b)) n++;
+    }
+    return n;
+  }
+
+  /**
+   * The rectangle branch of `FUN_00449ff0` (`Player::FUN_0044de60`): `w * h` about
+   * (cx, cy), rotated by `angle` when the card gives the slot a facing.
+   */
+  cancelInRect(cx: number, cy: number, w: number, h: number, angle = 0): number {
+    const halfW = w / 2;
+    const halfH = h / 2;
+    let n = 0;
+    const cos = Math.cos(-angle);
+    const sin = Math.sin(-angle);
+    for (const b of this.bullets) {
+      const dx = b.x - cx;
+      const dy = b.y - cy;
+      const rx = angle === 0 ? dx : dx * cos - dy * sin;
+      const ry = angle === 0 ? dy : dx * sin + dy * cos;
+      if (Math.abs(rx) > halfW || Math.abs(ry) > halfH) continue;
+      if (this.cancelOne(b)) n++;
+    }
+    return n;
+  }
+
+  /** `BulletManager::RemoveAllBullets(4)`: every live enemy bullet turns into a point. */
+  cancelAllEnemy(): number {
+    let n = 0;
+    for (const b of this.bullets) if (this.cancelOne(b)) n++;
     return n;
   }
 

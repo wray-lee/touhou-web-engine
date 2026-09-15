@@ -70,7 +70,9 @@ export function checkPlayerCollisions(
     const dy = Math.abs(b.y - player.y);
     // `Player::FUN_0044a230` (`Player.cpp:314-340`).
     if (dx < hitboxHalfExtent + b.radius && dy < hitboxHalfExtent + b.radius) {
-      hits.push(b);
+      // `:335`: while the ship is not ALIVE -- which is every frame of a bomb card and
+      // its red-flash tail -- the overlap is swallowed instead of being fatal.
+      if (!player.bombImmune) hits.push(b);
       continue;
     }
     // `Player::FUN_0044a470` (`Player.cpp:371-396`) also refuses to graze while the
@@ -161,7 +163,8 @@ export function checkLaserCollisions(
       localY + playerRadius > minY &&
       localY - playerRadius < maxY;
     if (overlaps && lethal) {
-      hits.push(laser);
+      // `Player::CalcLaserHitbox:472` has the same `playerState != ALIVE` bail.
+      if (!player.bombImmune) hits.push(laser);
       continue;
     }
     if (!graze) continue;

@@ -159,18 +159,18 @@ describe('retail demo replay gate', () => {
    * side effect (`ItemManager.cpp:269-279`), which re-times the bullet stream the
    * recorded dodge line runs into. `demorpy1` gained a death and lost none of its
    * score: ratio 0.295 -> 0.339, and the four-demo total 0.513 -> 0.574. Deaths
-   * are the noisier of the two metrics on a short run, so the total is the number
-   * that decides whether the change was worth it.
-   */
+    * are the noisier of the two metrics on a short run, so the total is the number
+    * that decides whether the change was worth it.
+    */
   const DEATH_CEILING: Record<string, number> = {
     demorpy0: 8,
-    demorpy1: 10,
+    demorpy1: 11,
     demorpy2: 8,
     demorpy3: 8,
   };
   const SCORE_FLOOR: Record<string, number> = {
     demorpy0: 0.139,
-    demorpy1: 0.339,
+    demorpy1: 0.6,
     demorpy2: 0.092,
     demorpy3: 0.042,
   };
@@ -216,10 +216,33 @@ describe('retail demo replay gate', () => {
    * different number afterwards. Measured: 0.140 / 0.340 / 0.093 / 0.043, total
    * 0.517 -> 0.616, with all four death counts still inside their ceilings. Two rows
    * rose a long way and two moved a little the other way, which is what a coupled
-   * proxy does; the total is the number that ratchets, and it went up by a fifth, so
-   * `TOTAL_SCORE_FLOOR` goes up with it rather than staying where it was.
+    * proxy does; the total is the number that ratchets, and it went up by a fifth, so
+    * `TOTAL_SCORE_FLOOR` goes up with it rather than staying where it was.
+    */
+  /*
+   * Re-baselined a sixth time for the bomb's own two halves -- the card's cancel
+   * geometry, and the immunity that `FUN_0040be30` arms with it.
+   *
+   * `playerState = PLAYER_STATE_DEAD` is set in the same call that names the card
+   * (`PlayerBomb.cpp:172`), and `Player::FUN_0044a230:335` answers an overlapping
+   * bullet in that state by returning 1 without reaching `Die()`. That is the bomb's
+   * real protection, and it runs for the card plus its red-flash tail -- 260..380
+   * frames -- which is why `demorpy1` (one 魔理沙 card, its state timer 350) now walks
+   * the whole recording instead of ending at frame 4128: 0.340 -> 0.605 on its own,
+   * and it is the first time the four-demo total has cleared 0.8.
+   *
+   * The cancel side of the same batch took away an invented shield. Every card used to
+   * erase a 96..128 px circle centred on the ship; retail has no such circle -- a card
+   * erases exactly what its `playerSlotsC` entries cover, which is a 384-wide plate
+   * above Marisa's ship, seven 96-wide strips for 未来永劫斬, a cross through
+   * レミリア, one 1→551 px burst for アリス, and nothing at all beyond its own pieces
+   * for 殺人ドール and 華胥の永眠. `demorpy1`'s 11th death is bought with that: the
+   * ship no longer walks through a bullet lake untouched, so `DEATH_CEILING.demorpy1`
+   * goes 10 -> 11 while its score floor goes 0.339 -> 0.6. Both numbers describe a
+   * run that reaches further into the stage, which is the direction the ceilings were
+   * written to be walked down from.
    */
-  const TOTAL_SCORE_FLOOR = 0.61;
+  const TOTAL_SCORE_FLOOR = 0.88;
 
   it.skipIf(!hasAssets)(
     "runs ZUN's whole stream through the sim with nothing structural left to fix",

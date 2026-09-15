@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BulletPool } from './BulletPool';
+import { BULLET_DYING, BulletPool } from './BulletPool';
 import { fireRing, fireFan, fireAimed } from './ShotDispatch';
 import { BOMB_SPECS, getBombSpec, selectBomb, tickBomb, type BombTarget } from './BombSystem';
 import { PlayerSim } from './PlayerSim';
@@ -139,7 +139,7 @@ describe('BombSystem', () => {
     expect(reimu.freeze).toBe(false);
   });
 
-  it('tickBomb advances the timer and clears bullets inside the cancel ring', () => {
+  it('tickBomb advances the timer and cancels bullets inside a piece bubble', () => {
     const gs = createGameState();
     const player = new PlayerSim(gs);
     const pool = new BulletPool();
@@ -149,19 +149,52 @@ describe('BombSystem', () => {
     const state = BOMB_SPECS[0].create(player, gs);
     tickBomb(state, player, pool);
     expect(state.timer).toBe(1);
-    expect(pool.activeCount).toBe(0);
+    // A cancelled bullet is not deleted: `FUN_00449ff0` == 2 puts it in state 5, the
+    // 点 animation, and the ship's own shots are never part of the pass at all.
+    expect(pool.collidableCount).toBe(0);
+    expect(pool.activeCount).toBe(1);
+    expect(pool.getActive()[0].state).toBe(BULLET_DYING);
   });
 
-  it('screen-wiping cards take every enemy bullet with them', () => {
-    const gs = createGameState();
-    const player = new PlayerSim(gs);
-    const spec = BOMB_SPECS.find((s) => s.id === 'reimu-2');
-    expect(spec?.clearScreen).toBe(true);
-    const pool = new BulletPool();
-    pool.spawn(20, 20, 0, 0, 0, 0, 3, 1, 'enemy');
-    const state = spec!.create(player, gs);
-    for (let i = 0; i < 8; i++) tickBomb(state, player, pool);
-    expect(pool.activeCount).toBe(0);
+  it('erases with each card\'s own retail geometry, and only that', () => {
+    // (card, probe, frames, erased). Probes are read off the slot geometry in
+    // `PlayerBomb.cpp`: the ship starts at (192, 384) in a 384x448 field.
+    const cases: Array<[string, number, number, number, boolean]> = [
+      // :998 / :1112 -- a 384-wide plate from the top of the field down to the ship.
+      ['marisa-1', 20, 20, 8, true],
+      ['marisa-1', 20, 400, 8, false],
+      ['marisa-2', 364, 20, 8, true],
+      // :1866-1968 -- 96x448 strips, one wave per ten frames from f70, seven waves
+      // wide for 未来永劫斬; :2043-2094 stops 現世斬 at four, so the corners stay.
+      ['youmu-2', 20, 20, 140, true],
+      ['youmu-1', 20, 20, 140, false],
+      ['youmu-1', 192, 20, 140, true],
+      // :1198 gives the first 60 frames a bubble on the ship, then :1234-1235 lights
+      // the cross: the whole row the ship sits on, but not the corners.
+      ['remilia-1', 20, 384, 80, true],
+      ['remilia-1', 20, 20, 80, false],
+      // :677 -- the doll's bubble grows 1 + 5/frame from the field centre for 110 frames.
+      ['alice-1', 20, 20, 160, true],
+      // 夢想妙珠's own wipe is the sixteen r96 bubbles that ride its orbs, and the
+      // spiral only carries them ~130 px out from the ship, so the far corner is the
+      // card's to keep. There is no global sweep in `FUN_0040be30`: a bomb erases
+      // exactly what its slots cover and nothing more.
+      ['reimu-1', 20, 20, 120, false],
+      // ...while everything inside 96 px of the ship is gone on frame one, because
+      // all sixteen orbs are born on it (`:205-209`).
+      ['reimu-1', 192, 300, 3, true],
+    ];
+    for (const [id, x, y, frames, erased] of cases) {
+      const gs = createGameState();
+      const player = new PlayerSim(gs);
+      const pool = new BulletPool();
+      pool.spawn(x, y, 0, 0, 0, 0, 3, 1, 'enemy');
+      const spec = BOMB_SPECS.find((s) => s.id === id);
+      expect(spec, id).toBeTruthy();
+      const state = spec!.create(player, gs);
+      for (let i = 0; i < frames; i++) tickBomb(state, player, pool);
+      expect(pool.collidableCount, `${id} at (${x}, ${y})`).toBe(erased ? 0 : 1);
+    }
   });
 
   it('every card deals damage somewhere on the field with its own shapes', () => {

@@ -68,6 +68,34 @@ export interface BombZone {
   follow: boolean;
   /** Fade in / out multiplier for the renderer. */
   alpha: number;
+  /**
+   * Retail's `PlayerBombWorkItem::points[0]`: the anchor the piece was born on.
+   *
+   * The 夢想 cards re-derive their position from it every frame
+   * (`anchor = points[0] + polar(rotation, rotationStep)`, `PlayerBomb.cpp:227`)
+   * instead of integrating a velocity, which is what keeps their sixteen pieces a
+   * rigid rosette while the reach grows.
+   */
+  originX: number;
+  originY: number;
+  /** `workItem->rotationStep`: the reach, in px, used by the anchor formula above. */
+  reach: number;
+  /**
+   * `workItem->active`: 1 while the piece flies, 2 once it has detonated and is
+   * only spending its last frames (`PlayerBomb.cpp:294`, `:322-323`).
+   */
+  pieceMode: 0 | 1 | 2;
+  /**
+   * Radius of the bullet-cancel bubble that rides with this zone, in field units.
+   *
+   * Retail hands one `PlayerUnkStruct0x40` slot to every work item a card spawns
+   * (`FUN_0044df00(&anchor, 96.0f, 0.0f, 200, 6)`, `PlayerBomb.cpp:209`), and then
+   * walks the slot's centre along with the item every frame (`:315-316`). A card's
+   * wipe is therefore the union of its pieces' bubbles, which is why 夢想妙珠's
+   * sixteen orbs clean the field on their way out instead of in one instant.
+   * `0` means the piece cancels nothing.
+   */
+  cancel: number;
 }
 
 /** Minimal view of an enemy so a card can lock on and deal damage. */
@@ -76,6 +104,62 @@ export interface BombTarget {
   readonly posY: number;
   readonly active: boolean;
   applyDamage(amount: number): void;
+}
+
+/**
+ * One entry of retail's `playerSlotsC` -- the list `Player::FUN_00449ff0` walks for
+ * every enemy bullet, and a hit on it is what "the bomb ate my bullet" is made of.
+ *
+ * Two shapes, picked by the same rule the game uses: a non-zero `radius` means a
+ * circle, otherwise `w * h` is an axis-aligned (or, with `angle`, rotated) rectangle.
+ * `PlayerBomb.cpp` reaches for the rectangle constructor `FUN_0044de60` whenever a
+ * card wants to wipe a *band* of the field -- Marisa's full-width plate above the
+ * ship, Youmu's 96-wide blades that tile the arcade region, Remilia's cross through
+ * the ship -- and for the circle constructor `FUN_0044df00` when the bubble rides a
+ * piece. `lifetime` is retail's own third/fourth argument: `0` lives this frame only,
+ * `60`/`200` live that many frames, and a negative value is immortal.
+ */
+export interface CancelSlot {
+  x: number;
+  y: number;
+  /** Circle radius, and the thing `radiusGrowth` walks. 0 selects the rectangle. */
+  radius: number;
+  radiusGrowth: number;
+  /** Rectangle extents, used when `radius` is 0. */
+  w: number;
+  h: number;
+  angle: number;
+  /** Frames left, counted the way `Player::FUN_0044c5b0` counts them. */
+  lifetime: number;
+  /** Re-centre on the ship every frame, like the slots the 夢想 orbs drag with them. */
+  follow: boolean;
+  /** Set once the slot has spent its lifetime; dropped from the list at the frame end. */
+  spent: boolean;
+}
+
+/** `Player::FUN_0044df00(center, radius, radiusGrowth, lifetime, 6)`. */
+export function circleSlot(
+  x: number,
+  y: number,
+  radius: number,
+  radiusGrowth = 0,
+  lifetime = 0,
+  follow = false,
+): CancelSlot {
+  return { x, y, radius, radiusGrowth, w: 0, h: 0, angle: 0, lifetime, follow, spent: false };
+}
+
+/** `Player::FUN_0044de60(center, w, h, 6, lifetime)`. */
+export function rectSlot(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  lifetime = 0,
+  angle = 0,
+  follow = false,
+): CancelSlot {
+  return { x, y, radius: 0, radiusGrowth: 0, w, h, angle, lifetime, follow, spent: false };
 }
 
 export interface BombCtx {
@@ -98,6 +182,12 @@ export interface BombState {
    */
   stateTimer: number;
   zones: BombZone[];
+  /**
+   * The card's live cancel slots: what it adds to `playerSlotsC` while it runs.
+   * Kept separate from `zones` because a slot is invisible -- it only erases -- and
+   * several of them belong to the card rather than to any one piece.
+   */
+  slots: CancelSlot[];
   finished: boolean;
   /** Clock stop: bullets and enemies hold still while this is set. */
   freeze: boolean;
@@ -145,10 +235,25 @@ export interface BombSpec {
   retailFn: string;
   /** Bombs spent: a normal card costs 1, a deathbomb variant costs 2 (`:1254-1270`). */
   cost: 1 | 2;
-  /** Radius the cancel sweep reaches, in px. */
+  /**
+   * Radius of the ring the card opens with, in px. Cosmetic only: it is the picture
+   * retail paints with `SpawnEffect(12, ...)`, and no part of the erase reads it.
+   */
   cancelRadius: number;
+  /**
+   * Frames the ship-anchored cancel slot stays open, counted on the card's own
+   * clock. `0` in retail's third argument means "until the card ends", which the
+   * specs spell as their `duration`.
+   */
+  cancelLife: number;
   /** The sweep eats every enemy bullet on the field, not just a circle. */
   clearScreen: boolean;
+  /**
+   * Extra cancel slots the card registers for this frame, straight from its own
+   * `FUN_0044de60` / `FUN_0044df00` calls. Called once per card frame after the
+   * timer has been advanced, so retail's `bomb->timer` is `state.timer - 1`.
+   */
+  slots?: (state: BombState, ctx: BombCtx) => CancelSlot[];
   /** Sakuya's stopped clock. */
   freezes: boolean;
   /** Tint used by the renderer for the card's glow. */
@@ -282,6 +387,11 @@ function zone(init: ZoneInit): BombZone {
     home: 0,
     follow: false,
     alpha: 0,
+    cancel: 0,
+    originX: 0,
+    originY: 0,
+    reach: 0,
+    pieceMode: 1,
     ...init,
   };
 }
@@ -429,7 +539,15 @@ interface BombOptions {
   retailFn: string;
   backdrop?: (timer: number, duration: number) => BombBackdrop;
   cancelRadius: number;
+  /**
+   * Frames the ship-anchored cancel slot stays open. Retail passes it as the third
+   * argument of `FUN_0044df00`: 200 for the two 夢想 cards (`:209`, `:401`), 40 for
+   * the first 結界 (`:1703`), and 0 — meaning "until the card ends" — for 紅符
+   * (`:1198`). Defaults to the card's own `duration`.
+   */
+  cancelLife?: number;
   clearScreen?: boolean;
+  slots?: (state: BombState, ctx: BombCtx) => CancelSlot[];
   freezes?: boolean;
   accent?: number;
   zones: (player: PlayerSim, gs: GameState) => BombZone[];
@@ -452,7 +570,9 @@ function bomb(opts: BombOptions): BombSpec {
     retailFn: opts.retailFn,
     cost: opts.slot === 2 ? 2 : 1,
     cancelRadius: opts.cancelRadius,
+    cancelLife: opts.cancelLife ?? opts.duration,
     clearScreen: opts.clearScreen ?? false,
+    slots: opts.slots,
     freezes: opts.freezes ?? false,
     accent: opts.accent ?? 0xffffff,
     backdrop: opts.backdrop ?? plainWash(0x404040),
@@ -463,6 +583,7 @@ function bomb(opts: BombOptions): BombSpec {
       duration: opts.duration,
       stateTimer: opts.stateTimer,
       zones: opts.zones(player, gs),
+      slots: [],
       finished: false,
       freeze: false,
       backdrop: { plate: null, flash: null },
@@ -497,14 +618,44 @@ export function tickBomb(
   const live = targets.filter((t) => t.active);
   const ctx: BombCtx = { player, gs: state.gs, bullets, targets: live };
 
-  // 1. Cancel sweep. The ring grows for a few frames, then the card keeps
-  //    wiping bullets inside its full radius for as long as it runs.
+  // 1. Cancel slots, i.e. retail's `playerSlotsC` as the card builds it up. Two
+  //    things feed it: one bubble per piece that carries a `cancel` radius, which
+  //    is what `FUN_0044df00(&player->position, 96.0f, 0.0f, 200, 6)`
+  //    (`PlayerBomb.cpp:209`) plus the re-centre at `:315-316` really are -- the
+  //    slot is born on the ship and then walks away on its orb -- and whatever bands
+  //    the card registers through its own `slots`. The wipe a player sees is the
+  //    union of those, which is why 現世斬, マスタースパーク and スカーレットデビル
+  //    empty the field in one go while 殺人ドール only cleans up after its knives.
+  //    `spec.cancelRadius` is deliberately not part of the hit test: the ring it
+  //    draws is the picture the card opens on, which retail paints separately with
+  //    `SpawnEffect(12, &player->position, 1, 0xFF4040FF)` (`:197`).
   const grow = Math.min(1, state.timer / CANCEL_FRAMES);
+  const ringOpen = state.timer <= state.spec.cancelLife;
   const radius = state.spec.cancelRadius * grow;
-  bullets.clearInRadius(player.x, player.y, radius);
-  state.cancelRadius = grow < 1 ? radius : 0;
+  state.cancelRadius = ringOpen && grow < 1 ? radius : 0;
+  for (const z of state.zones) {
+    if (z.cancel <= 0 || z.age < z.delay || z.hitsLeft <= 0) continue;
+    bullets.cancelInCircle(z.x, z.y, z.cancel);
+  }
+  if (state.spec.slots) state.slots.push(...state.spec.slots(state, ctx));
+  for (const s of state.slots) {
+    if (s.follow) {
+      s.x = player.x;
+      s.y = player.y;
+    }
+    if (s.radius > 0) bullets.cancelInCircle(s.x, s.y, s.radius);
+    else bullets.cancelInRect(s.x, s.y, s.w, s.h, s.angle);
+    // `Player::FUN_0044c5b0` walks the list after the collision pass, so a slot
+    // registered this frame already counts this frame and dies on the next.
+    if (s.lifetime >= 0) {
+      s.lifetime--;
+      if (s.lifetime <= 0) s.spent = true;
+    }
+    s.radius += s.radiusGrowth;
+  }
+  state.slots = state.slots.filter((s) => !s.spent);
   if (state.spec.clearScreen && state.timer === CANCEL_FRAMES) {
-    bullets.clearByTag('enemy');
+    bullets.cancelAllEnemy();
   }
 
   // 2. Sakuya's clock stop, released shortly before the card ends.
@@ -541,6 +692,7 @@ export function tickBomb(
     state.freeze = false;
     state.cancelRadius = 0;
     state.zones = [];
+    state.slots = [];
     return [];
   }
   return visible(state);
@@ -633,6 +785,10 @@ function knifeStep(every: number, count: number, speed: number, damage: number, 
             damage,
             hitsLeft: 1,
             interval: 1,
+            // `FUN_0044df00(&workItem->anchor, 32.0f, 0.0f, 500, 6)` (`PlayerBomb.cpp:1443`,
+            // `:1567`): every doll knife drags a small bubble with it, and the card's
+            // whole wipe is the union of those paths.
+            cancel: 32,
             life: 140,
             home: 2.4,
             color,
@@ -705,8 +861,252 @@ function dollStep(retire: number) {
 
 // ─── the 16 cards ───────────────────────────────────────────────────────────
 
+/** Frames a 夢想 piece spirals before it turns (`bomb->timer < 40`). */
+const DREAM_SPIRAL_FRAMES = 40;
+/** ±3° a frame, alternately with and against the clock (`0.052359879016876221f`). */
+const DREAM_SWAY = 0.052359879016876221;
+/**
+ * `g_PlayerDreamSealColors` (`PlayerBomb.cpp:370-372`), minus the `0x8F` alpha byte
+ * the renderer keeps separately. The secondary seals of 夢想封印 瞬 cycle through
+ * these seven in this order, one every 20 frames.
+ */
+const DREAM_SEAL_COLORS = [
+  0xffffff, 0x0000ff, 0xff00ff, 0xff0000, 0xffff00, 0x00ff00, 0x00ffff,
+];
+
+/**
+ * The two 夢想 cards share one machine: sixteen pieces laid out on a full circle
+ * from `-π` in `π/8` steps, each swaying ±3° a frame while its reach grows out from
+ * the anchor it was born on.
+ *
+ * `FUN_0040c010` (`PlayerBomb.cpp:218-326`) sends them back at the ship once the
+ * spiral ends and detonates them on the last thirty frames of the card;
+ * `FUN_0040c910` (`:411-501`) keeps them on their own heading and retires them one
+ * frame apart from `duration - 40`. The `damageSlot` numbers on both are retail's:
+ * 5 HP every 2 frames with a 200-hit cap per piece (`:210-213`, `:402-405`).
+ */
+function dreamOrbs(
+  player: PlayerSim,
+  count: number,
+  color: number,
+): BombZone[] {
+  const out: BombZone[] = [];
+  for (let i = 0; i < count; i++) {
+    const angle = -Math.PI + i * ((Math.PI * 2) / count);
+    out.push(
+      zone({
+        shape: 'orb',
+        x: player.x,
+        y: player.y,
+        originX: player.x,
+        originY: player.y,
+        angle,
+        radius: 26,
+        width: 26,
+        damage: 5,
+        hitsLeft: 200,
+        interval: 2,
+        color,
+        cancel: 96,
+        life: -1,
+      }),
+    );
+  }
+  return out;
+}
+
+/**
+ * One frame of the 夢想 machine. `seek === 'ship'` is 妙珠's turn-back, whose steer
+ * is retail's own (`:268-281`): close the gap in units of `reach / 8`, add it to the
+ * current velocity, then renormalise onto a reach clamped to `[1, 10]`.
+ */
+function dreamOrbStep(cfg: {
+  /** px/frame added to the reach while the piece spirals out. */
+  accel: (i: number) => number;
+  /** What happens when the spiral ends. */
+  seek: 'ship' | 'straight';
+  /** Reach the pieces hold once they turn (`rotationStep = 8.0f`). */
+  turnReach: number;
+  /** Frame the piece spends itself. */
+  retireAt: (state: BombState, i: number) => boolean;
+  /** Extra pieces the card throws while it runs, one call per frame. */
+  second?: (state: BombState, ctx: BombCtx) => BombZone[];
+}): (state: BombState, ctx: BombCtx) => void {
+  return (state, ctx) => {
+    const spiral = state.timer <= DREAM_SPIRAL_FRAMES;
+    for (let i = 0; i < state.zones.length; i++) {
+      const z = state.zones[i];
+      if (!z || z.pieceMode === 0) continue;
+
+      if (z.pieceMode === 2) {
+        // Spent: the growing cancel bubble of `df00(&anchor, 64.0f, 4.266667, 30, 6)`.
+        z.age++;
+        if (z.life > 0) z.life--;
+        z.cancel = 64 + 4.266666889190674 * (30 - Math.max(0, z.life));
+        z.alpha = Math.max(0, Math.min(1, z.life / 10));
+        if (z.life <= 0) z.pieceMode = 0;
+        continue;
+      }
+
+      z.angle = norm2pi(z.angle + ((i & 1) === 1 ? DREAM_SWAY : -DREAM_SWAY));
+      if (spiral) {
+        const prevX = z.x;
+        const prevY = z.y;
+        z.reach += cfg.accel(i);
+        z.x = z.originX + Math.cos(z.angle) * z.reach;
+        z.y = z.originY + Math.sin(z.angle) * z.reach;
+        z.vx = z.x - prevX;
+        z.vy = z.y - prevY;
+      } else if (cfg.seek === 'ship') {
+        const t = nearestTarget(ctx, ctx.player.x, ctx.player.y);
+        const tx = t ? t.posX : ctx.player.x;
+        const ty = t ? t.posY : ctx.player.y;
+        let dx = tx - z.x;
+        let dy = ty - z.y;
+        let s = Math.hypot(dx, dy) / (z.reach / 8.0);
+        if (s < 1) s = 1;
+        dx = dx / s + z.vx;
+        dy = dy / s + z.vy;
+        s = Math.hypot(dx, dy) || 1;
+        z.reach = s > 10 ? 10 : s < 1 ? 1 : s;
+        z.vx = (dx * z.reach) / s;
+        z.vy = (dy * z.reach) / s;
+        z.x += z.vx;
+        z.y += z.vy;
+      } else {
+        z.reach += cfg.accel(i);
+        z.x += z.vx;
+        z.y += z.vy;
+      }
+      z.alpha = 1;
+
+      if (cfg.retireAt(state, i)) {
+        z.pieceMode = 2;
+        z.life = 30;
+        z.interval = 0;
+        z.damage = 0;
+      }
+    }
+    if (cfg.second) state.zones.push(...cfg.second(state, ctx));
+    state.zones = state.zones.filter((z) => z.pieceMode !== 0);
+  };
+}
+
+/** 妙珠 spends a piece once it has used up its cap or the card is inside 30 frames. */
+const MIJU_RETIRE = (state: BombState, i: number): boolean => {
+  const z = state.zones[i];
+  return !!z && (z.hitsLeft <= 0 || state.timer >= state.duration - 30);
+};
+
+/**
+ * 妙珠's second bubble. From the frame the orbs turn back, every flying piece also
+ * drops a fresh `r=128` slot on its own position once per frame
+ * (`FUN_0044df00(&workItem->anchor, 128.0f, 0.0f, 0, 6)`, `PlayerBomb.cpp:283`),
+ * lifetime 0, so the sixteen of them trail a widening wake across the field.
+ */
+function dreamWipe(state: BombState): CancelSlot[] {
+  if (state.timer - 1 < DREAM_SPIRAL_FRAMES) return [];
+  const out: CancelSlot[] = [];
+  for (const z of state.zones) if (z.pieceMode === 1) out.push(circleSlot(z.x, z.y, 128, 0, 0));
+  return out;
+}
+
+/**
+ * マスタースパーク / ファイナルスパーク: three frames out of four, a rectangle the
+ * full width of the arcade region, from the top of the field down to the ship
+ * (`FUN_0044de60(&position, 384.0f, position.y * 2.0f, 6, 0)` with
+ * `position = (192, player.y / 2)`, `PlayerBomb.cpp:992-998` and the same block at
+ * `:1104-1112`). That is the bomb players remember as "the screen went clean": it
+ * really is a plate wipe, but it belongs to the beam's own clock and it stops at the
+ * ship, so bullets below the pillar are retail's to keep.
+ */
+function sparkWipe(state: BombState, ctx: BombCtx): CancelSlot[] {
+  const t = state.timer - 1;
+  if (t % 4 === 0) return [];
+  const y = ctx.player.y;
+  return [rectSlot(PLAYFIELD_W / 2, y / 2, PLAYFIELD_W, y, 0)];
+}
+
+/**
+ * 不夜城レッド / スカーレットデビル: while the four Gungnir heads travel out the ship
+ * carries a one-frame `r=96` bubble (`:1198`); once the beam is lit, the card
+ * registers a cross through the ship -- 96 wide over the whole height and 800 wide
+ * over 96 high -- on every frame (`:1234-1235`, `:1365-1366`), which is the whole
+ * field minus two corners.
+ */
+function scarletWipe(state: BombState, ctx: BombCtx): CancelSlot[] {
+  const t = state.timer - 1;
+  const p = ctx.player;
+  if (t < 60) return [circleSlot(p.x, p.y, 96, 0, 0)];
+  return [rectSlot(p.x, p.y, 96, 800, 0), rectSlot(p.x, p.y, 800, 96, 0)];
+}
+
+/**
+ * 現世斬 / 未来永劫斬: a 96-wide, full-height strip per blade wave, opened on frames
+ * 70, 80, 90 … and lasting 60 frames (`FUN_0044de60(&position, 96.0f, 448.0f, 6, 60)`
+ * at `position = (player.x ± 32 * k, 224)`, `PlayerBomb.cpp:1866-1968` for 未来永劫斬
+ * and `:2043-2094` for 現世斬). 未来永劫斬 runs seven waves and so tiles the whole
+ * 384 px of width; 現世斬 runs four and leaves the far corners alone.
+ */
+function bladeWipe(waves: number) {
+  return (state: BombState, ctx: BombCtx): CancelSlot[] => {
+    const t = state.timer - 1;
+    if (t < 70 || (t - 70) % 10 !== 0) return [];
+    const k = (t - 70) / 10;
+    if (k >= waves) return [];
+    const y = PLAYFIELD_H / 2;
+    if (k === 0) return [rectSlot(ctx.player.x, y, 96, PLAYFIELD_H, 60)];
+    return [
+      rectSlot(ctx.player.x - 32 * k, y, 96, PLAYFIELD_H, 60),
+      rectSlot(ctx.player.x + 32 * k, y, 96, PLAYFIELD_H, 60),
+    ];
+  };
+}
+
+/**
+ * 四重結界 / 永夜四重結界: an expanding bubble left behind where the ship stood, on
+ * frames 0, 10, 20 and 30 (`FUN_0044df00(&player->position, 100.0f, 1.0f, 40, 6)`,
+ * `PlayerBomb.cpp:1703/1716/1731/1746`, and `:2238-2281` for the youkai card, where
+ * three of the four waves live 100 frames instead of 40). `radiusGrowth` of 1 px per
+ * frame is what carries them past the edge of the barrier ring itself.
+ */
+function barrierWipe(lifetimes: readonly number[]) {
+  return (state: BombState, ctx: BombCtx): CancelSlot[] => {
+    const t = state.timer - 1;
+    if (t > 30 || t % 10 !== 0) return [];
+    return [circleSlot(ctx.player.x, ctx.player.y, 100, 1.0, lifetimes[t / 10])];
+  };
+}
+
+/**
+ * アーティフルサクリファイス / リターンイナニメトネス: the doll walks a cancel circle of
+ * its own to the middle of the field (`:637`, `r=32` per frame while `timer < 60`,
+ * lerped with `(timer / 60)^2` onto `(192, 224)`), and on frame 90 it detonates into
+ * a bubble that starts at `r=1` and grows 5 px per frame for 110 frames (`:677`) --
+ * 551 px, which is more than the diagonal of the field. That burst, not a scripted
+ * wipe, is why the two Alice cards empty the screen.
+ */
+function dollWipe(state: BombState, ctx: BombCtx): CancelSlot[] {
+  const t = state.timer - 1;
+  const cx = PLAYFIELD_W / 2;
+  const cy = PLAYFIELD_H / 2;
+  if (t < 60) {
+    const interp = (t / 60) * (t / 60);
+    return [
+      circleSlot(
+        (cx - ctx.player.x) * interp + ctx.player.x,
+        (cy - ctx.player.y) * interp + ctx.player.y,
+        32,
+        0,
+        0,
+      ),
+    ];
+  }
+  if (t === 90) return [circleSlot(cx, cy, 1, 5, 110)];
+  return [];
+}
+
 export const BOMB_SPECS: BombSpec[] = [
-  // 霊夢 — card 1: eight yin-yang orbs that chase the enemy down.
   bomb({
     id: 'reimu-1',
     name: 'Spirit Sign "Fantasy Seal"',
@@ -718,27 +1118,16 @@ export const BOMB_SPECS: BombSpec[] = [
     face: 0 as 0 | 1,
     retailFn: '0040c010',
     cancelRadius: 96,
+    slots: dreamWipe,
     accent: 0xffd8ec,
-    zones: (p) =>
-      ringOf(
-        p,
-        8,
-        {
-          shape: 'orb',
-          radius: 26,
-          width: 26,
-          damage: 24,
-          hitsLeft: 4,
-          interval: 5,
-          color: 0xffd8ec,
-          home: 1.1,
-          life: 200,
-        },
-        { speed: 3.2, spacing: 4, radius: 14 },
-      ),
-    step: integrate,
+    zones: (p) => dreamOrbs(p, 16, 0xffd8ec),
+    step: dreamOrbStep({
+      accel: () => 3.2,
+      seek: 'ship',
+      turnReach: 8,
+      retireAt: MIJU_RETIRE,
+    }),
   }),
-  // 霊夢 — card 2: twelve fast seals up the middle, wipes the screen.
   bomb({
     id: 'reimu-2',
     name: 'Divine Spirit "Fantasy Seal: Blink"',
@@ -751,25 +1140,44 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '0040c910',
     backdrop: plainWash(0x2020d0),
     cancelRadius: 128,
-    clearScreen: true,
     accent: 0xfff4c0,
-    zones: (p) =>
-      ringOf(
-        p,
-        12,
-        {
-          shape: 'orb',
-          radius: 22,
-          width: 22,
-          damage: 30,
-          hitsLeft: 3,
-          interval: 4,
-          color: 0xfff4c0,
-          home: 0.35,
-          life: 240,
-        },
-        { speed: 9.5, spread: 0.075, spacing: 6 },
-      ),
+    zones: (p) => dreamOrbs(p, 16, 0xfff4c0),
+    step: dreamOrbStep({
+      // Odd pieces accelerate at half the rate of even ones, so the rosette
+      // shears into a fan (`:422-428`).
+      accel: (i) => ((i & 1) === 1 ? 1.2 : 2.4),
+      seek: 'straight',
+      turnReach: 8,
+      // One piece spends itself per frame, oldest first (`:431`).
+      retireAt: (state, i) => state.timer >= state.duration - 40 - i,
+      // `:462-487`: a coloured seal every 20 frames from 40, on the aim point or a
+      // random field spot, cycling the seven `g_PlayerDreamSealColors`.
+      second: (state, ctx) => {
+        if (state.timer < DREAM_SPIRAL_FRAMES || state.timer % 20 !== 0) return [];
+        const color = DREAM_SEAL_COLORS[Math.floor(state.timer / 20) % 7];
+        const t = nearestTarget(ctx, ctx.player.x, ctx.player.y);
+        const x = t ? t.posX : ctx.gs.rng.randomF32InRange(PLAYFIELD_W - 64) + 32;
+        const y = t ? t.posY : ctx.gs.rng.randomF32InRange(PLAYFIELD_H - 64) + 32;
+        return [
+          zone({
+            shape: 'orb',
+            x,
+            y,
+            originX: x,
+            originY: y,
+            radius: 64,
+            width: 64,
+            color,
+            damage: 400,
+            hitsLeft: 7,
+            interval: 2,
+            cancel: 64,
+            life: 30,
+            pieceMode: 2,
+          }),
+        ];
+      },
+    }),
   }),
   // 紫 — card 1: four barriers walk across the field from the edges.
   bomb({
@@ -783,6 +1191,7 @@ export const BOMB_SPECS: BombSpec[] = [
     face: 1 as 0 | 1,
     retailFn: '00410c40',
     cancelRadius: 96,
+    slots: barrierWipe([40, 40, 40, 40]),
     accent: 0xff9ad2,
     zones: () => edgeBarriers(4, { damage: 16, interval: 5, color: 0xff9ad2 }),
     step: barrierStep,
@@ -800,7 +1209,7 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '00410fe0',
     backdrop: plainWash(0x2020d0),
     cancelRadius: 128,
-    clearScreen: true,
+    slots: barrierWipe([100, 40, 100, 100]),
     accent: 0xd9a6ff,
     zones: () => edgeBarriers(8, { damage: 10, interval: 5, color: 0xd9a6ff }),
     step: barrierStep,
@@ -817,6 +1226,7 @@ export const BOMB_SPECS: BombSpec[] = [
     face: 0 as 0 | 1,
     retailFn: '0040e3b0',
     cancelRadius: 64,
+    slots: sparkWipe,
     accent: 0xfff08a,
     zones: (p) => [sparkBeam(p, 20, 9, 0xfff08a)],
     step: beamStep(14, 34, 44, 150),
@@ -833,7 +1243,7 @@ export const BOMB_SPECS: BombSpec[] = [
     face: 0 as 0 | 1,
     retailFn: '0040e780',
     cancelRadius: 96,
-    clearScreen: true,
+    slots: sparkWipe,
     accent: 0xbfe3ff,
     zones: (p) => [sparkBeam(p, 30, 13, 0xbfe3ff)],
     step: beamStep(26, 54, 55, 190),
@@ -850,6 +1260,7 @@ export const BOMB_SPECS: BombSpec[] = [
     face: 1 as 0 | 1,
     retailFn: '0040d430',
     cancelRadius: 96,
+    slots: dollWipe,
     accent: 0x9be8ff,
     zones: (p) =>
       ringOf(
@@ -884,7 +1295,7 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '0040d970',
     backdrop: dollWash,
     cancelRadius: 128,
-    clearScreen: true,
+    slots: dollWipe,
     accent: 0xffd0f0,
     zones: (p) =>
       ringOf(
@@ -936,7 +1347,6 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '004103f0',
     backdrop: plainWash(0x202080),
     cancelRadius: 128,
-    clearScreen: true,
     freezes: true,
     accent: 0x9fd2ff,
     zones: () => [],
@@ -955,6 +1365,7 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '0040ee10',
     backdrop: plainWash(0xd02020),
     cancelRadius: 96,
+    slots: scarletWipe,
     accent: 0xff7a8c,
     zones: (p) => [sparkBeam(p, 22, 8, 0xff7a8c), ...waves(p)],
     step: waveStep(34, 9, 6, { damage: 12, width: 26, color: 0xff7a8c, rise: 1.1 }),
@@ -972,7 +1383,7 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '0040f570',
     backdrop: plainWash(0xf00000),
     cancelRadius: 128,
-    clearScreen: true,
+    slots: scarletWipe,
     accent: 0xff4d6a,
     zones: (p) => [sparkBeam(p, 34, 10, 0xff4d6a), ...waves(p)],
     step: waveStep(26, 11, 9, { damage: 15, width: 32, color: 0xff4d6a, rise: 1.4 }),
@@ -990,6 +1401,7 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '00411b10',
     backdrop: bladeWash,
     cancelRadius: 96,
+    slots: bladeWipe(4),
     accent: 0xa9ffd0,
     zones: (p) =>
       ringOf(
@@ -1023,7 +1435,7 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '004123d0',
     backdrop: bladeWash,
     cancelRadius: 128,
-    clearScreen: true,
+    slots: bladeWipe(7),
     accent: 0xd6fff0,
     zones: (p) =>
       ringOf(
@@ -1066,6 +1478,7 @@ export const BOMB_SPECS: BombSpec[] = [
         hitsLeft: 999,
         interval: 8,
         color: 0x9fd8c8,
+        cancel: 24,
         life: 200,
         spinRate: 0.1,
       }),
@@ -1084,7 +1497,6 @@ export const BOMB_SPECS: BombSpec[] = [
     retailFn: '00413990',
     backdrop: plainWash(0x802020),
     cancelRadius: 128,
-    clearScreen: true,
     accent: 0xbfe8d8,
     zones: (_p, gs) =>
       scatterZones(gs, 22, {
@@ -1095,6 +1507,7 @@ export const BOMB_SPECS: BombSpec[] = [
         hitsLeft: 999,
         interval: 7,
         color: 0xbfe8d8,
+        cancel: 24,
         life: 250,
         spinRate: 0.12,
       }),
