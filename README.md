@@ -306,7 +306,9 @@ checked instead of argued: `pbf` lists every live player shot with the option sl
 out of (`@o1`) and a `*` once it has retired into a hit, `opt` prints each 式神 as
 `slot:state.substate x,y:sprite/alpha` plus the homing target it locked, and `tl` / `en` are
 the timeline's script clock and the live enemy count — the pair that shows a stage waiting
-on a boss that will never die.
+on a boss that will never die. `aim` is the point 霊夢's charms bend toward, suffixed `b`
+when a boss owns it and `w` when the ship is hunting the lowest enemy instead: an aim that
+sits still while the waves below it move is a lock that outlived its enemy.
 
 ---
 
