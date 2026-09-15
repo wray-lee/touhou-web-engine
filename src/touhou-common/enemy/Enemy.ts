@@ -2,6 +2,7 @@ import { Entity } from '../../engine/core/Entity';
 import { Vector2 } from '../../engine/core/Vector2';
 import { Bullet } from '../../engine/core/Bullet';
 import { BulletPattern, BulletFactory } from '../bullet-patterns/BulletPattern';
+import { DropTier } from '../item/ItemSystem';
 
 export interface EnemyMovementWayPoint {
   time: number;
@@ -18,6 +19,10 @@ export interface EnemyConfig {
   shootPattern?: BulletPattern;
   movementWayPoints?: EnemyMovementWayPoint[];
   bulletFactory?: BulletFactory;
+  /** Texture lookup name, e.g. "fairy" -> enemy:fairy. */
+  spriteKey?: string;
+  /** Drop generosity; defaults from HP when unset. */
+  dropTier?: DropTier;
 }
 
 export class Enemy extends Entity {
@@ -29,6 +34,17 @@ export class Enemy extends Entity {
   public shootPattern?: BulletPattern;
   public timer = 0;
   public waypoints: EnemyMovementWayPoint[] = [];
+  /** Art key resolved by the renderer; defaults to the palette-derived kind. */
+  public spriteKey?: string;
+  /** Drop tier used when this enemy dies; see `dropTierFor`. */
+  public dropTier?: DropTier;
+  public alpha = 1;
+  /**
+   * Extra magnification the renderer applies on top of the art's native size.
+   * TH08 keeps this on the enemy's ANM script, which scales sprites in on
+   * entry and out on death; 1 leaves the original cell untouched.
+   */
+  public drawScale = 1;
 
   constructor(position: Partial<Vector2> = {}, velocity: Partial<Vector2> = {}, config: EnemyConfig = {}) {
     super(position, velocity, { radius: config.radius ?? 14 }, 'enemy');
@@ -42,6 +58,16 @@ export class Enemy extends Entity {
       this.shootPattern = this.shootPattern.withFactory(config.bulletFactory);
     }
     this.waypoints = config.movementWayPoints ?? [];
+    this.spriteKey = config.spriteKey;
+    this.dropTier = config.dropTier;
+  }
+
+  /**
+   * Tier of loot this enemy yields. Explicit config wins; otherwise a tough
+   * enemy is treated as an elite and drops the large power item.
+   */
+  dropTierFor(): DropTier {
+    return this.dropTier ?? (this.maxHp > 100 ? 'elite' : 'fairy');
   }
 
   takeDamage(amount: number): boolean {

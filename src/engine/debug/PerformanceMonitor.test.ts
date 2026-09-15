@@ -54,8 +54,8 @@ describe('PerformanceMonitor', () => {
 
   it('shows entity category breakdown when categories are provided', () => {
     const monitor = new PerformanceMonitor();
-    monitor.updateMetrics(100, 42, { bullets: 90, enemies: 9, player: 1 });
-    expect(monitor.getMetricsText()).toContain('  bullets:90 enemies:9 player:1');
+    monitor.updateMetrics(100, 42, { bullets: 90, enemies: 9, items: 4, player: 1 });
+    expect(monitor.getMetricsText()).toContain('  bullets:90 enemies:9 items:4 player:1');
   });
 
   it('omits category line and keeps legacy behavior when categories are absent', () => {
@@ -69,8 +69,8 @@ describe('PerformanceMonitor', () => {
 
   it('retains the last known categories on legacy two-arg calls', () => {
     const monitor = new PerformanceMonitor();
-    monitor.updateMetrics(100, 42, { bullets: 5, enemies: 2, player: 1 });
+    monitor.updateMetrics(100, 42, { bullets: 5, enemies: 2, items: 1, player: 1 });
     monitor.updateMetrics(120, 60);
-    expect(monitor.getMetricsText()).toContain('  bullets:5 enemies:2 player:1');
+    expect(monitor.getMetricsText()).toContain('  bullets:5 enemies:2 items:1 player:1');
   });
 });

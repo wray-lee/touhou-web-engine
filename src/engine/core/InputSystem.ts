@@ -1,6 +1,27 @@
 import { Vector2, createVector2 } from './Vector2';
+import { MOVE_BITS } from './Movement';
 
-export type InputAction = 'up' | 'down' | 'left' | 'right' | 'shoot' | 'bomb' | 'slow' | 'pause' | 'debug' | 'debug-collision';
+export type InputAction =
+  | 'up'
+  | 'down'
+  | 'left'
+  | 'right'
+  | 'shoot'
+  | 'bomb'
+  | 'slow'
+  | 'pause'
+  // Retail `TH_BUTTON_SKIP` (`Global.hpp:107`), bound to VK_CONTROL
+  // (`Global.cpp:742`). The message box consumes it to fast-forward dialogue
+  // waits (`Gui.cpp:373-379`, `:732`, `:917-920`).
+  | 'skip'
+  | 'debug'
+  | 'debug-collision';
+
+export interface InputSnapshot {
+  actions: InputAction[];
+  pointerPos: Vector2;
+  isDragging: boolean;
+}
 
 export interface KeyBindings {
   [action: string]: string[];
@@ -15,6 +36,7 @@ export const DEFAULT_KEY_BINDINGS: Record<InputAction, string[]> = {
   bomb: ['KeyX'],
   slow: ['ShiftLeft', 'ShiftRight'],
   pause: ['Escape'],
+  skip: ['ControlLeft', 'ControlRight'],
   debug: ['F12', 'KeyP'],
   /** 碰撞网格可视化开关（票据 04 的 "D" 与 WASD 右移冲突，改用 G） */
   'debug-collision': ['KeyG'],
@@ -71,9 +93,19 @@ export class InputSystem {
   private boundPointerDownHandler?: (e: PointerEvent) => void;
   private boundPointerMoveHandler?: (e: PointerEvent) => void;
   private boundPointerUpHandler?: (e: PointerEvent) => void;
+  private boundPointerEnterHandler?: (e: PointerEvent) => void;
+  private boundPointerLeaveHandler?: (e: PointerEvent) => void;
 
   /** True while a touch/pointer is dragging the player ship. */
   public isDragging = false;
+  /**
+   * Opt-in mouse steering (US: 鼠标操作可通过选项开启). When enabled the ship
+   * tracks the cursor without holding a button; when disabled only touch drag
+   * steers, which is the default so desktop keyboard play is never hijacked.
+   */
+  public mouseControl = false;
+  /** True while the cursor is over the game element (only meaningful with mouseControl). */
+  public pointerInside = false;
   /** Pointer position in game coordinates (canvas-local, CSS-scale corrected). */
   public pointerPos: Vector2 = { x: 0, y: 0 };
   /** Element used to map screen pointer coords -> canvas coords. */
@@ -171,7 +203,18 @@ export class InputSystem {
       this.boundPointerUpHandler = () => {
         this.pointerUp();
       };
+      this.boundPointerEnterHandler = (e: PointerEvent) => {
+        if (this.mouseControl) {
+          this.pointerInside = true;
+          this.pointerMove(e.clientX, e.clientY);
+        }
+      };
+      this.boundPointerLeaveHandler = () => {
+        this.pointerInside = false;
+      };
       this.attachTarget.addEventListener('pointerdown', this.boundPointerDownHandler as EventListener);
+      this.attachTarget.addEventListener('pointerenter', this.boundPointerEnterHandler as EventListener);
+      this.attachTarget.addEventListener('pointerleave', this.boundPointerLeaveHandler as EventListener);
       viewport?.addEventListener('pointermove', this.boundPointerMoveHandler as EventListener);
       viewport?.addEventListener('pointerup', this.boundPointerUpHandler as EventListener);
     }
@@ -197,6 +240,13 @@ export class InputSystem {
     if (this.boundPointerUpHandler) {
       viewport?.removeEventListener('pointerup', this.boundPointerUpHandler as EventListener);
     }
+    if (this.boundPointerEnterHandler && this.attachTarget) {
+      this.attachTarget.removeEventListener('pointerenter', this.boundPointerEnterHandler as EventListener);
+    }
+    if (this.boundPointerLeaveHandler && this.attachTarget) {
+      this.attachTarget.removeEventListener('pointerleave', this.boundPointerLeaveHandler as EventListener);
+    }
+    this.pointerInside = false;
     this.attachTarget = undefined;
   }
 
@@ -216,8 +266,14 @@ export class InputSystem {
     this.pointerMove(clientX, clientY);
   }
 
+  /** Toggle cursor steering on/off (driven by the in-game options menu). */
+  setMouseControl(enabled: boolean): void {
+    this.mouseControl = enabled;
+    if (!enabled) this.pointerInside = false;
+  }
+
   pointerMove(clientX: number, clientY: number): void {
-    if (!this.isDragging) return;
+    if (!this.isDragging && !this.mouseControl) return;
     const target = this.attachTarget;
     if (target) {
       const rect = target.getBoundingClientRect();
@@ -237,9 +293,14 @@ export class InputSystem {
     this.isDragging = false;
   }
 
-  /** Current drag target in game coordinates, or null when not dragging. */
+  /** True when a pointer device (touch drag or opt-in mouse) is steering the ship. */
+  get isSteering(): boolean {
+    return this.isDragging || (this.mouseControl && this.pointerInside);
+  }
+
+  /** Current steering target in game coordinates, or null when no pointer is driving. */
   getPointerTarget(): Vector2 | null {
-    return this.isDragging ? { ...this.pointerPos } : null;
+    return this.isSteering ? { ...this.pointerPos } : null;
   }
 
   private refreshCurrentActions(): void {
@@ -307,6 +368,23 @@ export class InputSystem {
     return [...this.currentFrameDown];
   }
 
+  getSnapshot(): InputSnapshot {
+    return {
+      actions: this.getActiveActions(),
+      pointerPos: { ...this.pointerPos },
+      isDragging: this.isDragging,
+    };
+  }
+
+  applySnapshot(snapshot: InputSnapshot): void {
+    this.prevFrameDown = new Set(this.currentFrameDown);
+    this.currentFrameDown = new Set(snapshot.actions);
+    this.pointerPos = { ...snapshot.pointerPos };
+    this.isDragging = snapshot.isDragging;
+    this.bufferedPresses.clear();
+    this.frame++;
+  }
+
   wasKeyPressed(action: InputAction): boolean {
     // A buffered tap (pressed & released between samples) counts as a press.
     if (this.bufferedPresses.has(action)) return true;
@@ -332,5 +410,22 @@ export class InputSystem {
     }
 
     return createVector2(dx, dy);
+  }
+
+  /**
+   * The four direction actions as the bit set `core/Movement` resolves.
+   *
+   * `getMovementVector` cancels opposite keys, which is the right answer for an
+   * analogue stick and the wrong one for a keyboard: a player pinched against a
+   * wall holds both horizontals, and a game that reads a grid wants a decision,
+   * not a zero. This keeps the four keys visible.
+   */
+  get movementBits(): number {
+    return (
+      (this.isKeyDown('up') ? MOVE_BITS.up : 0) |
+      (this.isKeyDown('down') ? MOVE_BITS.down : 0) |
+      (this.isKeyDown('left') ? MOVE_BITS.left : 0) |
+      (this.isKeyDown('right') ? MOVE_BITS.right : 0)
+    );
   }
 }

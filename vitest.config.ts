@@ -14,5 +14,16 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
+    /**
+     * `.scratch` is the working surface: one-off probes, translation patch
+     * scripts, dumps and screenshots. Left to the default glob it gets picked up
+     * by `npm test`, so a stale probe that a real suite already superseded still
+     * counts as a red build -- one session lost seven such failures before the
+     * actual suite could be read.
+     *
+     * This list replaces the vitest defaults, so they are restated. To run a
+     * probe deliberately, pass its path with the same two default excludes.
+     */
+    exclude: ['**/node_modules/**', '**/dist/**', '**/.scratch/**'],
   },
 });

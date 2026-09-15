@@ -7,7 +7,7 @@ export interface Hitbox {
 }
 
 /** Discriminates entity kinds for collision & rendering logic. */
-export type EntityTag = 'default' | 'player' | 'enemy' | 'boss' | 'player-bullet' | 'enemy-bullet';
+export type EntityTag = 'default' | 'player' | 'enemy' | 'boss' | 'player-bullet' | 'enemy-bullet' | 'item';
 
 /** Live motion state of an entity; `position`/`velocity` alias the entity's own vectors. */
 export interface Transform {

@@ -310,4 +310,94 @@ describe('InputSystem', () => {
       expect(input.getBindings().bomb).toEqual(['KeyC']);
     });
   });
+  describe('Mouse steering (opt-in)', () => {
+    /** Attach to a fake canvas at the unscaled 640x480 size the port renders at. */
+    function steerEnv(): {
+      env: ReturnType<typeof makePointerEnv>;
+      input: InputSystem;
+      restore: () => void;
+    } {
+      const env = makePointerEnv({ left: 0, top: 0, width: 640, height: 480 });
+      const g = globalThis as { window?: unknown };
+      const had = 'window' in g;
+      const previous = g.window;
+      g.window = env.fakeWindow;
+      const input = new InputSystem();
+      input.attach(env.element, { width: 640, height: 480 });
+      return {
+        env,
+        input,
+        restore: () => {
+          if (had) g.window = previous;
+          else delete g.window;
+        },
+      };
+    }
+
+    it('leaves desktop keyboard play alone while the option is off', () => {
+      const { env, input, restore } = steerEnv();
+      try {
+        expect(input.mouseControl).toBe(false);
+        env.emitOnElement('pointerenter', { clientX: 200, clientY: 300 });
+        env.emitOnWindow('pointermove', { clientX: 220, clientY: 320 });
+        expect(input.isSteering).toBe(false);
+        expect(input.getPointerTarget()).toBeNull();
+        expect(input.pointerPos).toEqual({ x: 0, y: 0 });
+      } finally {
+        restore();
+      }
+    });
+
+    it('tracks the cursor without holding a button once the option is on', () => {
+      const { env, input, restore } = steerEnv();
+      try {
+        input.setMouseControl(true);
+        env.emitOnElement('pointerenter', { clientX: 200, clientY: 300 });
+        expect(input.isSteering).toBe(true);
+        expect(input.getPointerTarget()).toEqual({ x: 200, y: 300 });
+
+        // A plain move — no button anywhere in the sequence — keeps steering.
+        env.emitOnWindow('pointermove', { clientX: 140, clientY: 300 });
+        expect(input.getPointerTarget()).toEqual({ x: 140, y: 300 });
+
+        // Walking off the canvas hands control back, mid-option, no toggle needed.
+        env.emitOnElement('pointerleave', {});
+        expect(input.isSteering).toBe(false);
+        expect(input.getPointerTarget()).toBeNull();
+      } finally {
+        restore();
+      }
+    });
+
+    it('drops a hovering cursor the moment the option is turned back off', () => {
+      const { env, input, restore } = steerEnv();
+      try {
+        input.setMouseControl(true);
+        env.emitOnElement('pointerenter', { clientX: 200, clientY: 300 });
+        expect(input.isSteering).toBe(true);
+        input.setMouseControl(false);
+        expect(input.isSteering).toBe(false);
+        expect(input.getPointerTarget()).toBeNull();
+      } finally {
+        restore();
+      }
+    });
+
+    it('undoes the CSS scale so a letterboxed canvas still aims at the ship', () => {
+      const env = makePointerEnv({ left: 100, top: 20, width: 320, height: 240 });
+      const g = globalThis as { window?: unknown };
+      const previous = g.window;
+      g.window = env.fakeWindow;
+      try {
+        const input = new InputSystem();
+        input.attach(env.element, { width: 640, height: 480 });
+        input.setMouseControl(true);
+        // Halfway across a 320px-wide box for a 640px game = game x 320.
+        env.emitOnElement('pointerenter', { clientX: 260, clientY: 140 });
+        expect(input.getPointerTarget()).toEqual({ x: 320, y: 240 });
+      } finally {
+        g.window = previous;
+      }
+    });
+  });
 });

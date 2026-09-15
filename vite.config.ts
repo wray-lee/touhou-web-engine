@@ -32,5 +32,8 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    // D: is a `subst` drive (-> C:\disk): Vite resolves modules to their real
+    // paths, which then fall outside the server root and get served untransformed.
+    fs: { strict: false },
   },
 });

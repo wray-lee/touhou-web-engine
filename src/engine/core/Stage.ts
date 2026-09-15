@@ -31,6 +31,8 @@ export class Stage extends EventEmitter {
   public currentFrame = 0;
   public isPaused = false;
   public isCompleted = false;
+  /** How many timeline events have fired so far - lets tests and the HUD prove a chart ran. */
+  public executedEvents = 0;
 
   /** StageContext API (ticket 08): timeline-produced entities, drained by the host game. */
   public readonly spawnedEntities: Entity[] = [];
@@ -57,6 +59,7 @@ export class Stage extends EventEmitter {
     for (const event of this.timeline) {
       if (!event.executed && event.frame > previousFrame && event.frame <= this.currentFrame) {
         event.executed = true;
+        this.executedEvents += 1;
         event.action(this);
       }
     }
@@ -89,6 +92,7 @@ export class Stage extends EventEmitter {
     this.spawnedEntities.length = 0;
     this.bossPhaseRequests.length = 0;
     this.dialogueQueue.length = 0;
+    this.executedEvents = 0;
     for (const event of this.timeline) {
       event.executed = false;
     }

@@ -48,7 +48,18 @@ class FakeAudioElement {
   currentTime = 0;
   preload = '';
   loadCalls = 0;
+  duration = Number.NaN;
+  /** Registered listeners by type, so tests can fire `ended` by hand. */
+  handlers = new Map<string, Array<() => void>>();
   constructor(public src: string) {}
+  addEventListener(type: string, cb: () => void): void {
+    const list = this.handlers.get(type) ?? [];
+    list.push(cb);
+    this.handlers.set(type, list);
+  }
+  emit(type: string): void {
+    for (const cb of this.handlers.get(type) ?? []) cb();
+  }
   play() {
     this.paused = false;
     return Promise.resolve();
@@ -140,6 +151,75 @@ describe('AudioManager', () => {
         expect(el.volume).toBeCloseTo(0.25, 5); // halfway through 20 steps
         for (let i = 0; i < 10; i++) ramp();
         expect(el.volume).toBeCloseTo(0.5, 5); // full target
+      });
+    });
+
+    describe('loop point', () => {
+      /**
+       * Play a 100 s track whose first 20 s (`loopFromSeconds`) is a baked-on
+       * fanfare, and hand back the element plus its playhead state.
+       */
+      function playLooped(env: BrowserEnv, loopFromSeconds?: number): FakeAudioElement {
+        env.audioCtor.mockImplementation((src: string) => new FakeAudioElement(src));
+        const audio = new AudioManager();
+        audio.playBGM('bgm/stage1.ogg', { loop: true, loopFromSeconds });
+        const el = env.audioCtor.mock.results[0].value as FakeAudioElement;
+        el.duration = 100;
+        return el;
+      }
+
+      it('takes over the rewind instead of looping to 0', () => {
+        withBrowserGlobals((env) => {
+          const el = playLooped(env, 20);
+          // The element's own loop would restart the fanfare, so it stays off.
+          expect(el.loop).toBe(false);
+          const watch = [...env.intervals.values()][env.intervals.size - 1];
+          expect(watch).toBeDefined();
+
+          el.currentTime = 99.99;
+          watch();
+          expect(el.currentTime).toBe(20);
+        });
+      });
+
+      it('rewinds on `ended` as well, for a throttled tab', () => {
+        withBrowserGlobals((env) => {
+          const el = playLooped(env, 20);
+          el.currentTime = 100;
+          el.emit('ended');
+          expect(el.currentTime).toBe(20);
+          expect(el.paused).toBe(false);
+        });
+      });
+
+      it('leaves a paused track where the player left it', () => {
+        withBrowserGlobals((env) => {
+          const el = playLooped(env, 20);
+          const watch = [...env.intervals.values()][env.intervals.size - 1];
+          el.paused = true;
+          el.currentTime = 99.99;
+          watch();
+          expect(el.currentTime).toBe(99.99);
+        });
+      });
+
+      it('keeps the native loop when no loop point is given', () => {
+        withBrowserGlobals((env) => {
+          const el = playLooped(env);
+          expect(el.loop).toBe(true);
+          expect(env.intervals.size).toBe(0);
+        });
+      });
+
+      it('drops the watcher with the track', () => {
+        withBrowserGlobals((env) => {
+          env.audioCtor.mockImplementation((src: string) => new FakeAudioElement(src));
+          const audio = new AudioManager();
+          audio.playBGM('bgm/stage1.ogg', { loop: true, loopFromSeconds: 20 });
+          expect(env.intervals.size).toBe(1);
+          audio.stopBGM();
+          expect(env.intervals.size).toBe(0);
+        });
       });
     });
 

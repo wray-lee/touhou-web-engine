@@ -4,6 +4,8 @@ coverage/
 .scratch/
 image/
 *.txt
+# ...but licence notices and pipeline notes under the asset tree must ship.
+!public/assets/**/*.txt
 
 # Editor directories and files
 .vscode/
@@ -33,6 +35,28 @@ pnpm-debug.log*
 # Test coverage
 .nyc_output/
 
+# One-off scratch from asset/tooling sessions (tools/_*, docs/screenshots/_*)
+tools/_*
+docs/screenshots/_*
+
 # Browser verification artifacts (Playwright MCP)
 .playwright-mcp/
 demo-latest.png
+
+# Local dev server log
+dev-server.log
+
+# Decoded Touhou 8 retail assets (tools/th08/extract.mjs). Never committed.
+public/assets/th08/
+
+# Temp scratch files
+_*.mjs
+_*.cjs
+_ref_*
+_fix*
+_gen*
+_wire*
+
+# Browser evidence shots for docs/REQUIREMENTS.md. They are photographs of retail
+# pixels, so they follow the same rule as public/assets/th08/: local only, never committed.
+docs/screenshots/evidence-*.jpg

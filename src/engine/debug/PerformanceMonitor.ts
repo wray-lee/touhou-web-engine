@@ -2,6 +2,8 @@
 export interface EntityCategoryCounts {
   bullets: number;
   enemies: number;
+  /** Collectible drops currently on the playfield. */
+  items: number;
   player: number;
 }
 
@@ -28,11 +30,7 @@ export class PerformanceMonitor {
     }
   }
 
-  updateMetrics(
-    entityCount: number,
-    collisionChecks: number,
-    categories?: EntityCategoryCounts,
-  ): void {
+  updateMetrics(entityCount: number, collisionChecks: number, categories?: EntityCategoryCounts): void {
     this.entityCount = entityCount;
     this.collisionChecks = collisionChecks;
     if (categories) this.categories = categories;
@@ -50,14 +48,10 @@ export class PerformanceMonitor {
   }
 
   getMetricsText(): string[] {
-    const lines = [
-      `FPS: ${this.fps}`,
-      this.getMemoryText(),
-      `Entities: ${this.entityCount}`,
-    ];
+    const lines = [`FPS: ${this.fps}`, this.getMemoryText(), `Entities: ${this.entityCount}`];
     if (this.categories) {
       const c = this.categories;
-      lines.push(`  bullets:${c.bullets} enemies:${c.enemies} player:${c.player}`);
+      lines.push(`  bullets:${c.bullets} enemies:${c.enemies} items:${c.items} player:${c.player}`);
     }
     lines.push(`Collision Checks: ${this.collisionChecks}`, `Engine: PixiJS 8 + TS`);
     return lines;

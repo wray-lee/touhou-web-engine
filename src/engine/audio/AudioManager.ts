@@ -1,4 +1,28 @@
-export type SoundEffectType = 'shoot' | 'enemy-hit' | 'bomb' | 'spellcard' | 'pldead' | 'graze' | 'item';
+import { SeBus, type SeBusSource } from './SeBus';
+
+/**
+ * Every sound the shipped game can ask for. The first seven are gameplay;
+ * the rest are the menu blips, whose `SoundIdx` names come from
+ * `SoundPlayer.hpp:17-66` and whose files are in `th08.dat`.
+ */
+export type SoundEffectType =
+  | 'shoot'
+  | 'enemy-hit'
+  | 'bomb'
+  | 'spellcard'
+  | 'pldead'
+  | 'graze'
+  | 'item'
+  | 'select'
+  | 'ok'
+  | 'cancel'
+  | 'pause'
+  | 'bonus'
+  | 'cardget'
+  | 'border'
+  | 'timeout'
+  | 'powerup'
+  | 'extend';
 
 export interface BgmOptions {
   loop?: boolean;
@@ -7,16 +31,42 @@ export interface BgmOptions {
   fadeIn?: boolean | number;
   /** Alias for `fadeIn` as a plain number (ticket 13 API). */
   fadeInMs?: number;
+  /**
+   * Where a looping track rewinds to, in seconds from the start of the file.
+   *
+   * 永夜抄 ships one recording per song with the fanfare baked on the front:
+   * `thbgm.fmt` gives an intro length and a separate loop length, and the file is
+   * the two concatenated. `HTMLAudioElement.loop` only ever rewinds to 0, so
+   * leaving it on replays the fanfare once a minute -- the single most obvious
+   * "this is not the real game" tell in the whole soundtrack. Pass the track's
+   * `introSeconds` here and the player winds back there instead.
+   */
+  loopFromSeconds?: number;
 }
 
 export interface SeOptions {
-  /** Per-play volume (0-1), multiplied on top of the global SE volume. */
+  /**
+   * Per-play volume (0-1), multiplied on top of the global SE volume.
+   *
+   * Only the synthesised fallback can honour this: a configured bank takes its level
+   * from the table, which is how the shipped game does it.
+   */
   volume?: number;
+  /** -1..1, for banks that pan by playfield position. */
+  pan?: number;
 }
 
 /** 东方风格合成 BGM 回退：无外部素材时用 Web Audio 琶音循环（Phase 1 程序生成）。 */
 const SYNTH_BGM_NOTES = [220, 261.63, 329.63, 440, 329.63, 261.63, 440, 523.25]; // A3 C4 E4 A4 E4 C4 A4 C5
 const SYNTH_BGM_STEP = 0.35; // 每音符时长（秒）
+
+/**
+ * A game's sound bank, injected: the recordings, the per-index levels, and which
+ * index answers to each of the engine's `SoundEffectType` names.
+ */
+export interface SeSource extends SeBusSource {
+  names?: Partial<Record<SoundEffectType, number>>;
+}
 
 export class AudioManager {
   public bgmVolume = 0.7;
@@ -31,9 +81,14 @@ export class AudioManager {
   private bgmGainNode?: GainNode;
   private bgmScheduler?: number;
   private bgmFadeInterval?: number;
+  /** Rewind-to-intro-end watcher, and the point it rewinds to. See `BgmOptions`. */
+  private bgmLoopWatcher?: number;
+  private bgmLoopFrom?: number;
   private lastBgmUrl?: string;
   private lastBgmOptions: BgmOptions = {};
   private preloaded = new Set<HTMLAudioElement>();
+  private seSource?: SeSource;
+  private seBus?: SeBus;
 
   private getContext(): AudioContext | undefined {
     if (typeof window === 'undefined') return undefined;
@@ -67,10 +122,50 @@ export class AudioManager {
 
   setSeVolume(volume: number): void {
     this.seVolume = Math.max(0, Math.min(1, volume));
+    this.seBus?.setVolume(this.seVolume);
+  }
+
+  /**
+   * Hand the manager the game's sound bank, and start fetching it.
+   *
+   * Until this is called - and in any environment where the recordings cannot be
+   * loaded - `playSE` falls back to synthesised blips, which keeps every test
+   * environment and every machine without the assets audible.
+   */
+  configureSe(source: SeSource): void {
+    this.seSource = source;
+    this.seBus = new SeBus(source, () => this.getContext());
+    this.seBus.setVolume(this.seVolume);
+    this.seBus.preload();
+  }
+
+  /** Waiting requests, and how many recordings are in hand. Debug aid. */
+  get sePending(): number {
+    return this.seBus?.pending ?? 0;
+  }
+
+  get seLoaded(): number {
+    return this.seBus?.loaded ?? 0;
+  }
+
+  /**
+   * Ask for a bank sound by its index, panned by `pan`.
+   *
+   * This is the call sites' replacement for naming files: the ECL scripts, the
+   * message VM, and the player all already speak in `SoundIdx` numbers.
+   */
+  queueSe(idx: number, pan = 0): void {
+    if (this.isMuted || this.seVolume <= 0 || !this.seBus) return;
+    this.seBus.queue(idx, pan);
   }
 
   playSE(type: SoundEffectType, options: SeOptions = {}): void {
     if (this.isMuted || this.seVolume <= 0) return;
+    const idx = this.seSource?.names?.[type];
+    if (idx !== undefined && this.seBus) {
+      this.queueSe(idx, options.pan ?? 0);
+      return;
+    }
     const ctx = this.getContext();
     if (!ctx) return;
 
@@ -135,6 +230,17 @@ export class AudioManager {
           osc.stop(now + 0.8);
           break;
         }
+        case 'item': {
+          // TH08 pickup blip: a bright two-tone chirp.
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1046, now);
+          osc.frequency.setValueAtTime(1568, now + 0.045);
+          gain.gain.setValueAtTime(vol * 0.45, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+          break;
+        }
         case 'pldead': {
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(400, now);
@@ -149,6 +255,17 @@ export class AudioManager {
     } catch {
       // Audio context might be restricted before user interaction
     }
+  }
+
+  /**
+   * 当前音轨的实际文件名（如 `th08_00.ogg`）。
+   * 未播放时 `null`；用内置合成器占位时 `'synth'`。
+   * 供 QA 读取，以区分关卡开场曲与 op 7 触发的 BOSS 曲。
+   */
+  get bgmName(): string | null {
+    if (!this.isBgmPlaying) return null;
+    if (!this.lastBgmUrl) return 'synth';
+    return this.lastBgmUrl.split('/').pop() ?? this.lastBgmUrl;
   }
 
   /**
@@ -176,7 +293,16 @@ export class AudioManager {
 
     if (url) {
       this.bgmAudio = new Audio(url);
-      this.bgmAudio.loop = loop;
+      /*
+       * A shipped recording with the fanfare baked on cannot use the element's own
+       * loop, which only ever rewinds to 0. Hand the rewinding to `startLoopWatch`
+       * instead so the intro plays once and the body repeats.
+       */
+      this.bgmLoopFrom =
+        loop && options.loopFromSeconds !== undefined && options.loopFromSeconds > 0
+          ? options.loopFromSeconds
+          : undefined;
+      this.bgmAudio.loop = loop && this.bgmLoopFrom === undefined;
       this.bgmAudio.muted = this.isMuted;
       this.bgmAudio.volume = this.isMuted ? 0 : targetVolume;
       if (this.fadeInMs > 0 && !this.isMuted) {
@@ -195,9 +321,52 @@ export class AudioManager {
       this.bgmAudio.play().catch(() => {
         // Autoplay policy — will be handled on user gesture
       });
+      if (this.bgmLoopFrom !== undefined) this.startLoopWatch();
     } else {
       this.playSynthesizedBgm(targetVolume);
     }
+  }
+
+  /**
+   * Wind a looping track back to its loop point rather than to the start.
+   *
+   * HTML has no loop-range primitive for `<audio>`, so this polls the playhead.
+   * The look-ahead is deliberately small: at 25 ms a tick is 40x finer than a
+   * 140-second track, and the `ended` listener catches the case where a
+   * backgrounded tab was throttled straight past the window.
+   */
+  private startLoopWatch(): void {
+    const audio = this.bgmAudio;
+    if (!audio) return;
+    audio.addEventListener('ended', () => {
+      const live = this.bgmAudio;
+      const start = this.bgmLoopFrom;
+      if (!live || start === undefined) return;
+      live.currentTime = start;
+      void live.play().catch(() => {
+        // Same autoplay gate as the first start; the unlock handler retries.
+      });
+    });
+    this.bgmLoopWatcher = window.setInterval(() => {
+      const live = this.bgmAudio;
+      const start = this.bgmLoopFrom;
+      // A paused track must stay where the player left it: rewinding here would
+      // put the fanfare back on resume.
+      if (!live || live.paused || start === undefined) return;
+      const end = live.duration;
+      if (Number.isFinite(end) && end > start && live.currentTime >= end - 0.06) {
+        live.currentTime = start;
+      }
+    }, 25);
+  }
+
+  /** Cancel the loop-point watcher (the element itself is dropped by `stopBGM`). */
+  private stopLoopWatch(): void {
+    if (this.bgmLoopWatcher !== undefined) {
+      window.clearInterval(this.bgmLoopWatcher);
+      this.bgmLoopWatcher = undefined;
+    }
+    this.bgmLoopFrom = undefined;
   }
 
   /** 内置合成 BGM：三角波琶音循环（东方风格小调），无外部素材。 */
@@ -256,6 +425,38 @@ export class AudioManager {
     }
   }
 
+  /**
+   * Ramp the BGM to silence over `seconds` and stop it there.
+   *
+   * This is retail `Supervisor::FadeOutMusic(float)` (`Supervisor.cpp:1695`), which
+   * the message VM asks for with 4.0 seconds at a stage's last line
+   * (`Gui.cpp:873-874`, `op 12`). Abruptly stopping instead would be heard.
+   */
+  fadeBGM(seconds = 4): void {
+    this.stopFadeIn();
+    const duration = Math.max(0.05, seconds);
+    // Non-browser environment (Node tests): the track is state-only, so stop.
+    if (typeof window === 'undefined' || !this.bgmAudio) {
+      this.stopBGM();
+      return;
+    }
+    const start = this.bgmAudio.volume;
+    const steps = 20;
+    let step = 0;
+    this.bgmFadeInterval = window.setInterval(
+      () => {
+        step++;
+        if (this.bgmAudio && step < steps) {
+          this.bgmAudio.volume = Math.max(0, start * (1 - step / steps));
+        } else {
+          this.stopFadeIn();
+          this.stopBGM();
+        }
+      },
+      (duration * 1000) / steps,
+    );
+  }
+
   /** 预加载音频资源（Ticket 13）。非浏览器环境为 noop。 */
   preload(urls: string[]): void {
     if (typeof window === 'undefined' || typeof Audio === 'undefined') return;
@@ -299,6 +500,7 @@ export class AudioManager {
     this.lastBgmUrl = undefined;
     this.lastBgmOptions = {};
     this.stopFadeIn();
+    this.stopLoopWatch();
     if (this.bgmAudio) {
       this.bgmAudio.pause();
       this.bgmAudio.currentTime = 0;
@@ -324,6 +526,7 @@ export class AudioManager {
   /** Release all audio resources (close AudioContext, drop preloads). */
   destroy(): void {
     this.stopBGM();
+    this.seBus?.stopAll();
     this.preloaded.clear();
     if (this.audioCtx) {
       try {

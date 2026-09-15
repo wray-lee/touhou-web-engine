@@ -16,6 +16,9 @@ export * from './engine/renderer/PixiRenderer';
 export * from './engine/renderer/SpriteManager';
 export * from './engine/audio/AudioManager';
 export * from './engine/debug/PerformanceMonitor';
+export * from './engine/renderer/AssetManager';
+export * from './engine/replay/ReplaySystem';
+export * from './engine/score/Leaderboard';
 
 // Touhou Common Layer
 export * from './touhou-common/bullet-patterns/BulletPattern';
@@ -25,6 +28,8 @@ export * from './touhou-common/bullet-patterns/AimingPattern';
 export * from './touhou-common/bullet-patterns/CompositePattern';
 export * from './touhou-common/player/Player';
 export * from './touhou-common/enemy/Enemy';
+export * from './touhou-common/item/Item';
+export * from './touhou-common/item/ItemSystem';
 export * from './touhou-common/boss/Boss';
 export * from './touhou-common/boss/SpellCard';
 export * from './touhou-common/ui/HUD';

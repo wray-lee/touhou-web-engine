@@ -1,151 +1,99 @@
-# Touhou Web Engine - 项目计划总结
+# 永夜抄 Web Engine — Implementation Status
 
-## 📋 已完成
+> Updated: 2026-09-12
+> TSC: CLEAN | Lint: 0 errors | Tests: 688/688 (76 files) | Build: OK | Source: `npm run ci`
+> Dev server: `npx vite --port 5180 --strictPort --no-open` → `http://localhost:5180/`
 
-✅ **新仓库创建**: https://github.com/wray-lee/touhou-web-engine  
-✅ **技术规格文档**: `docs/SPEC.md` (详细的问题陈述、解决方案、用户故事、实现决策)  
-✅ **任务分解**: `.scratch/touhou-web-engine-mvp/` 包含 16 个垂直切片任务票据  
-✅ **Git 配置**: `.gitignore` 排除 `.scratch/` 等开发文件  
+The authoritative requirement ledger is `docs/REQUIREMENTS.md` (R-0 … R-11, every row with
+runtime evidence or an explicit 🟡). This file only tracks phase progress.
 
-## 🎯 项目目标
+## Phase Status
 
-构建一个**现代化、可扩展的 STG 引擎**，最终支持东方 Project TH06-TH18 全系列 Web 复刻。
+| Phase | Content | Status | Completion |
+|-------|---------|--------|------------|
+| **P0** | Fix half-finished code + asset pipeline | ✅ Done | 100% |
+| **P1** | ECL translator (disasm + codegen) | ✅ Done | 100% |
+| **P2** | Runtime sim layer | ✅ Done | 95% |
+| **P3** | Hand refactor layer | ✅ Done | 100% |
+| **P4** | Presentation layer | ✅ Done | 90% |
+| **P5** | Flow, docs, cleanup | ✅ Done | 95% |
 
-**Phase 1 (MVP)**: 完整的 TH08 Stage 1（露米娅面）+ 可复用引擎框架
+## Completed
 
-## 🏗️ 架构设计（三层）
+### P0 — Foundation
+- [x] th08.dat extraction: 317 entries (anm/ecl/std/msg/sht/wav/mid), 113 ANM packs decoded to PNG pages
+- [x] thbgm.dat extraction: 21 BGM tracks as ogg with intro/loop points
+- [x] Asset manifest with sprite rectangles for all anm files
+- [x] Placeholder ladder so a checkout without the data files still plays end to end
 
-```
-src/
-├── engine/              # 核心引擎层（游戏无关，可复用）
-│   ├── core/           # Entity, Stage, BulletSystem, CollisionSystem
-│   ├── renderer/       # PixiJS 渲染封装
-│   └── audio/          # Web Audio API 封装
-├── touhou-common/      # 东方通用层（TH06-TH18 可复用）
-│   ├── bullet-patterns/  # CircularPattern, AimingPattern, etc.
-│   ├── player/         # PlayerController, BombSystem
-│   ├── boss/           # BossController, SpellCard
-│   └── ui/             # HUD, 符卡名牌, 对话系统
-└── games/th08/         # TH08 具体实现
-    ├── stages/         # Stage1.ts ~ Stage6.ts
-    ├── bosses/         # Rumia.ts, Cirno.ts, etc.
-    └── data/           # 弹幕配置（从 th08-web 翻译）
-```
+### P1 — ECL Translator
+- [x] EclFile parser: 9 ecl files (53–156 subs each), 2–4 timelines
+- [x] EclDisasm: 185 opcodes (93 low + 92 high), variable resolution
+- [x] EclEmitTs: generator coroutine code generation with difficulty masks
+- [x] ReplayFile parser: demorpy0–3 decoded, input = one packed u16 per frame at `stage + 0x24`
+- [x] Rng: 16-bit LCG matching ZUN's implementation
+- [x] MsgFile, ShtFile, StdFile parsers
+- [x] Snapshot tests for all 9 ecl files; `npm run ecl:check` green
 
-## 📦 技术栈
+### P2 — Runtime Sim
+- [x] ECL-generated coroutines drive the real game loop (`StageRunner` + `EnemySlot` + lane scheduler)
+- [x] Bullet / laser / item / enemy / player / spellcard subsystems ported from the decompile
+- [x] Authentic bullet speeds, counts and angles straight out of the translated ECL
+- [x] Difficulty branching is a live `difficultyMask` per instruction, not a reskin
+- [x] **Replay gate**: `RetailReplay.test.ts` runs ZUN's four whole input streams through the sim and
+  scores them against his own results (`TOTAL_SCORE_FLOOR = 0.51`, per-route floors 0.105 / 0.28 /
+  0.073 / 0.034). Byte-identical scoreboard across the P3 refactor is the proof that refactoring
+  changed no behaviour.
+- [x] `AllRoutes.test.ts` runs all eight routes hands-off to the end of their timelines (7 `CLEARED`;
+  stage 5 waits on a boss that cannot die without firing, which is retail behaviour)
 
-- **渲染**: PixiJS 8.x (WebGL)
-- **语言**: TypeScript 5.7 (严格模式)
-- **构建**: Vite 6.x
-- **测试**: Vitest 2.x
-- **工具链**: **Bun**（`bun install` / `bun run ci`，`bun.lock` 锁文件；npm 兼容）
-- **素材**: Taisei Project (MIT 许可)（Phase 1 程序生成占位 + 合成 WAV 音频）
+### P3 — Hand Refactor
+- [x] Launch parameters lifted from 16 positional arguments into named `ShotDescriptor` /
+      `LaserDescriptor` records; `ShotDescriptor.test.ts` proves pack/unpack are exact inverses over
+      every real tuple in the game
+- [x] Register numbers rendered as `reg(0x2755) /* moveAngle */` from `EclRegisters.ts`
+- [x] All 18 generated files regenerated and behaviour-checked against the replay gate
+- [x] Dead hand-written layer deleted: `stages/Stage1..6.ts`, `CampaignStage.ts`,
+      `bosses/{Rumia,StageBosses,bossBalance}.ts` and their tests (14 files)
 
-## 🎮 代码参考来源
+### P4 — Presentation
+- [x] PixiJS 8 renderer, 640×480 canvas, 384×448 playfield at (32,16), right HUD panel from `front.anm`
+- [x] `.std` 3D backdrop: nine routes projected to quads, camera-space linear fog like the hardware path
+- [x] Original sprites everywhere they resolve: 8 members from `player00..03.anm` with retail pose
+      scripts, per-stage boss art from `stgNNenm.anm` (op 58–61 bank switch), `enemy.anm` grunts,
+      338 bullet sprites from `etama.anm`, HUD digits from `ascii.anm`
+- [x] Boss gauge with SETLIVES + multi-bar easing, spell banner, card cut-in with boss portrait
+- [x] Dialogue VM: retail `msg*.dat` scripts, original portraits, ANM interrupt codes 3/4/6,
+      width-tiered portrait offsets, night clock routed into the 6B branch
+- [x] **Stage-title card** (`stgNNtxt`): four ANM VM slots at retail positions and alpha ramps
+- [x] **ScreenEffect chain 4** (msg op 14): 442-frame full-screen fade-out
+- [x] Per-ship bomb art, 16 cards, human/youkai variants
+- [x] Focus hitbox drawn with the retail additive `etama` 4-cell orb
+- [x] Responsive: playfield fills window height at 1920×1080 / 1366×768, aspect-preserved at 390×844
+- [x] 21 BGM with intro/loop points + 17 SE from the real wav files
 
-- **th08-web**: 游戏逻辑（弹幕公式、碰撞算法、时间系统）
-- **toho-like-js**: 配置格式（关卡脚本、弹幕 pattern）
-- **Taisei Project**: 美术资源（精灵图、音频）
+### P5 — Flow, docs, cleanup
+- [x] Title → Character → Difficulty → stage 1, campaign runs 1→6 without stage select
+- [x] Practice mode owns stage selection; `THANKS FOR PLAYING` only appears there
+- [x] Pause menu, game over → results, arcade-style continue, leaderboard, replay export
+- [x] Touch controls, keyboard + gamepad, opt-in mouse steering
+- [x] `docs/REQUIREMENTS.md` rewritten as an evidence ledger; README documents the extraction
+      commands, the translation pipeline and the copyright boundary
+- [x] Temp-file cleanup; `npm run format && npm run ci && npm run build` green
 
-## 📋 任务清单（16 个任务）—— 全部完成 ✅
+## Remaining for 90%
 
-### 基础设施 (Week 1)
-1. [x] **01-foundation** - 项目脚手架 + CI/CD（工具链已迁移至 **bun**：`packageManager: bun@1.4.0` + `bun.lock`，CI 用 `setup-bun` + `--frozen-lockfile`；npm 仍兼容）
-2. [x] **02-entity-system** - 核心实体抽象（含 Transform 视图 + 泛型类型化 EventEmitter）
-3. [x] **03-pixi-renderer** - PixiJS 渲染层（`demo/renderer-test.html` 100 圆 60FPS 基准页）
-4. [x] **04-collision-system** - 空间哈希碰撞检测（`demo/collision-test.html` 1000 弹 + D 键调试浮层）
-5. [x] **05-input-system** - 键盘输入管理（扩展：手柄 + 运行时重绑定 + 3 帧缓冲 + `demo/input-test.html` 输入映射可视化页）
-
-### 游戏系统 (Week 2)
-6. [x] **06-bullet-system** - 弹幕系统 + Pattern 抽象（对象池全链路）
-7. [x] **07-player-controller** - 玩家控制器（4.5/2.0 px/f、2px 判定点、触摸跟随）
-8. [x] **08-stage-system** - 关卡时间轴管理器（帧制 `{ frame, action }`）
-9. [x] **09-boss-spellcard** - Boss 系统 + 符卡机制（多阶段 HP、名牌居中弹出）
-10. [x] **10-hud** - HUD 界面（分数/残机/Bomb/Power/擦弹/符卡计时）
-
-### Stage 1 实现 (Week 3)
-11. [x] **11-rumia-boss** - 露米娅 Boss AI（3 阶段：非符 + 夜符「Night Bird」+ 闇符「Demarcation」）
-12. [x] **12-stage1-timeline** - Stage 1 完整时间轴（妖精波次 + 中 Boss + Boss 登场，可全程游玩）
-13. [x] **13-audio-system** - 音频管理器（合成 SE + BGM loop/fadeIn/preload；占位素材为 **WAV** 代 MP3：`public/audio/bgm/stage1.wav`、`public/audio/se/shoot.wav`）
-14. [x] **14-performance-monitor** - 性能监控面板（F12：FPS/实体分类/真实碰撞比较计数/内存）
-
-### 打包发布 (Week 4)
-15. [x] **15-library-build** - 库构建配置（`dist/index.js` + `dist/games/th08/index.js` + d.ts；`example/index.html` 库用法示例）
-16. [x] **16-documentation** - README + API 文档（README 三层架构图/Demo 页/React 集成/扩展指南 + CONTRIBUTING.md 贡献规范）
-
-## 🔗 依赖关系
-
-- **无依赖**: 01-foundation ← 立即可开始
-- **第二层**: 02-entity-system, 05-input-system, 13-audio-system
-- **第三层**: 03, 04, 07, 08 (依赖第二层)
-- **第四层**: 06, 10 (依赖第三层)
-- **第五层**: 09, 11, 14 (依赖第四层)
-- **第六层**: 12 (依赖第五层)
-- **最终层**: 15, 16 (依赖第六层)
-
-详细依赖图见 `.scratch/touhou-web-engine-mvp/README.md`
-
-## ✅ 验收标准（Phase 1）
-
-- [x] Stage 1 可完整游玩（击败露米娅）
-- [x] 60 FPS 稳定，1000+ 弹幕不掉帧（性能目标：同屏 2000+ 不掉帧，见 SPEC「性能目标」）
-      —— `src/engine/perf/performance.bench.test.ts` 锁定：2051 弹 × 300 帧全管线模拟，
-      逻辑 avg 0.55ms / p95 0.94ms（预算 16.6ms），空间哈希峰值 14k 次比较 ≪ O(n²) 420 万
-- [x] 所有测试通过（`bun run ci` —— 当前 136 项 / 19 文件）
-- [x] 编译成 npm 包可导入（`@uestc-touhou/touhou-web-engine/th08` 路径已验证）
-- [x] 性能监控显示 FPS/实体数/碰撞检测次数（碰撞次数为空间哈希真实距离比较计数）
-- [x] README 包含使用示例和架构说明
-
-### 评审修复记录（2026-09-07）
-
-对照「代码评审」修复项：
-
-- [x] US#7 ESC 暂停 + 暂停菜单（含 BGM 暂停/续播）
-- [x] US#9 移动端：触摸拖动自机 + 自动射击（替换"仅在桌面游玩"提示）
-- [x] SPEC L181 弹幕对象池（BulletSystem 内置池 + 全链路注入）
-- [x] SPEC L127-130 碰撞全量迁移空间哈希网格 + F12 真实计数
-- [x] US#6 符卡名牌居中弹出动画
-- [x] Ticket 13 BGM fadeIn/loop/preload + 内置合成回退
-- [x] npm 包 `./th08` 导出路径对齐（vite entry `games/th08/index`）
-- [x] 标准层：EntityTag 联合类型 + AimingPattern 委托共享 spread 生成器
-- [x] Bullet.sprite / CompositePattern 已接入渲染与实战：
-      `SpriteManager` 程序化精灵注册表（ball/ring/needle/star，零外部素材），
-      PixiRenderer 按 `Bullet.sprite` 键查找绘制（未知键回退默认）；
-      Demarcation 符卡改用 `CompositePattern` 反向双环齐射（36 弹/轮，ring 精灵）
-
-### 工具链与框架接口完备性（2026-09-07）
-
-- [x] **Bun 迁移**：`packageManager: bun@1.4.0` + `bun.lock`（移除 package-lock.json）；
-      `bun run ci/build/dev/preview` 全链路验证通过（npm 仍兼容）
-- [x] **CircularPattern 对象池修复**：环形弹幕此前直接 `new Bullet` 绕过池，
-      现统一走 `this.factory`（框架级缺陷，符卡/精英怪弹幕此前未真正复用）
-- [x] **InputSystem API 兼容**：`attach/detach` 恢复接受 `Window | HTMLElement`，
-      旧调用 `attach(window)` 不再静默失效
-- [x] **生命周期接口**：`TH08Game.destroy()` 完整清理（loop + input + audio +
-      renderer + 解锁监听）；`AudioManager.destroy()` 关闭 AudioContext
-- [x] **README 扩展指南**：新增 API 速查表 + 自定义弹幕/Boss/关卡/游戏装配四段
-      端到端示例（全部池感知）
-
-## 📊 预估工作量
-
-- **Week 1-2**: 基础引擎框架 (Tasks 01-10)
-- **Week 3**: Stage 1 实现 (Tasks 11-14)
-- **Week 4**: 打包发布 (Tasks 15-16)
-
-**总计**: 约 3-4 周全职开发
-
-## 🚀 下一步
-
-Phase 1（16 个任务）已全部交付，`bun run ci` 全绿。后续迭代方向：
-
-1. **Phase 2**: TH08 Stage 2-6、4 组人物差异化、Taisei 素材集成、完整 UI（标题/难度/结算）
-2. **截图补全**: README「Screenshots」小节留有无头环境 TODO，待有 GUI 环境补图
-3. **主站集成**: 编译产物发布 npm 包，接入 UESTCGensokyo-Frontend `/games` 页面
-
-贡献流程见 [CONTRIBUTING.md](../CONTRIBUTING.md)（分支 → PR → CI 绿 → review）。
-
-## 📚 文档位置
-
-- **完整规格**: `docs/SPEC.md`
-- **任务票据**: `.scratch/touhou-web-engine-mvp/issues/*.md`
-- **任务总览**: `.scratch/touhou-web-engine-mvp/README.md`
+- [ ] One uninterrupted 1→6 browser playthrough (every stage is reachable via `?warp`; the
+      continuous recording has not been done)
+- [ ] Stage 5's final segment needs a kill to advance — covered in sim, not yet in browser
+- [ ] Retail title screen (`title01.anm`) and result screen (`result00.anm`) art: the packs are
+      extracted, but the reference decompile `#include`s a `Title.hpp` that is not on disk, so the
+      script→sprite assignment has no citable source. Shipping a guessed layout would violate the
+      "original art only" rule, so the DOM menu stays until that data is recovered.
+- [ ] `eff01..eff09*` effect packs: the retail template table lives at raw address `0x004c6d30`
+      (`EffectManager.cpp:92-93`) and `th08.exe` is not on disk, so template→scriptIdx is
+      unreadable; the player death burst still uses a placeholder sheet.
+- [ ] Per-vertex alpha on `QuadLayer` to erase the last `.std` overlap seams (needs a custom
+      Pixi v8 shader, GLSL + WGSL)
+- [ ] A second game on the engine, to prove the ECL/ANM translation layer is generic rather than
+      TH08-shaped

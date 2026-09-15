@@ -34,12 +34,22 @@ export default [
       ...tsPlugin.configs.recommended.rules,
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'off',
+      // The `BulletWorld` bridges hand the transform handlers live getters over the
+      // player, the RNG and the etama tables, so they capture `this` as `self` inside
+      // an object literal: those getters would read the world object itself otherwise.
+      '@typescript-eslint/no-this-alias': ['error', { allowedNames: ['self'] }],
       // TypeScript already resolves identifiers; no-undef false-positives on DOM lib types
       'no-undef': 'off',
       'no-console': ['warn', { allow: ['warn', 'error', 'log'] }],
     },
   },
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.ts', '*.config.js', 'src/**/*.test.ts'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '*.config.ts',
+      '*.config.js',
+      'src/**/*.test.ts',
+    ],
   },
 ];

@@ -1,0 +1,137 @@
+// Auto-generated facade for ecldata1.ecl by tools/th08/ecl.
+// Do not edit directly; change the translator and run `npm run ecl:th08`.
+//
+// 53 subs, 2 timeline(s), 13 spell cards
+// declared by op 122, 3 of them final spells per g_LastSpellNumbers.
+
+import type { StageScript } from '../StageScript';
+import * as SCRIPTS from './scripts';
+import { ECL_FILE } from './waves';
+
+export const STAGE1_SCRIPT: StageScript = {
+  route: 'stage1',
+  source: 'ecldata1.ecl',
+  subCount: 53,
+  timelineCount: 2,
+  cards: [
+    {
+      sub: 22,
+      id: 0,
+      name: '蛍符「地上の流星」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 22,
+      id: 1,
+      name: '蛍符「地上の彗星」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 38,
+      id: 2,
+      name: '灯符「ファイヤフライフェノメノン」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 38,
+      id: 3,
+      name: '灯符「ファイヤフライフェノメノン」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 38,
+      id: 4,
+      name: '灯符「ファイヤフライフェノメノン」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 38,
+      id: 5,
+      name: '灯符「ファイヤフライフェノメノン」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 44,
+      id: 6,
+      name: '蠢符「リトルバグ」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 44,
+      id: 7,
+      name: '蠢符「リトルバグストーム」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 44,
+      id: 8,
+      name: '蠢符「ナイトバグストーム」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 44,
+      id: 9,
+      name: '蠢符「ナイトバグトルネード」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: false,
+    },
+    {
+      sub: 48,
+      id: 10,
+      name: '隠蟲「永夜蟄居」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: true,
+    },
+    {
+      sub: 48,
+      id: 11,
+      name: '隠蟲「永夜蟄居」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: true,
+    },
+    {
+      sub: 48,
+      id: 12,
+      name: '隠蟲「永夜蟄居」',
+      owner: 'リグル・ナイトバグ',
+      face: 0,
+      bonus: 10000000,
+      lastSpell: true,
+    },
+  ],
+  scripts: SCRIPTS,
+  waves: ECL_FILE,
+};
