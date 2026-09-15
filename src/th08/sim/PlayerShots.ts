@@ -189,11 +189,22 @@ export function shotTablesFor(world: PlayerShotWorld): ShtPowerTable | null {
  * `valid` flag is what makes the two rules exclusive, and `-999` is retail's
  * own sentinel (`Player.cpp:1496`), which every consumer tests as `< -100`.
  */
+/** The shape of `Player.tailPosition0` plus its valid bit, as the aim rules see it. */
+export type AimPoint = { x: number; y: number; valid: boolean };
+
+/**
+ * What that sentinel looks like between frames. `Player::Update` writes it back over the
+ * aim point every frame after the firing chain has read it (`Player.cpp:1100`,
+ * `FUN_0044d420:1493-1497`), so each frame chooses its target from scratch. Frozen so a
+ * caller cannot write through the constant it hands {@link trackedAimPoint}.
+ */
+export const UNTRACKED_AIM: AimPoint = Object.freeze({ x: -999, y: -999, valid: false });
+
 export function trackedAimPoint(
-  current: { x: number; y: number; valid: boolean },
+  current: AimPoint,
   muzzleX: number,
   enemies: ReadonlyArray<{ x: number; y: number; boss: boolean }>,
-): { x: number; y: number; valid: boolean } {
+): AimPoint {
   const next = { ...current };
   for (const enemy of enemies) {
     if (enemy.boss) {

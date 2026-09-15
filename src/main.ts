@@ -328,6 +328,15 @@ class TH08Shell {
         /** The partner's option slots and the field's aim target, which together are
          *  the difference between a 式神 that hovers and one that attacks. */
         opt: r ? optionDebug(r) : null,
+        /** `Player.tailPosition0`, the point 霊夢's charms bend toward. Retail rebuilds it
+         *  from this frame's enemies (`Player.cpp:1100`), and the suffix says which rule owns
+         *  it: `b` = a boss is up, `w` = hunting the lowest enemy. An aim that sits still
+         *  while the waves below move is the carry-forward bug this field was added for. */
+        aim: r
+          ? `${Math.round(r.tailPosition.x)},${Math.round(r.tailPosition.y)}${
+              r.tailPosition.valid ? 'b' : 'w'
+            }`
+          : null,
         /** The live enemy slots, nearest the ship first: where danmaku comes from. */
         enm: enemyDebug(game),
       });

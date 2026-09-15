@@ -169,7 +169,7 @@ describe('retail demo replay gate', () => {
     demorpy3: 9,
   };
   const SCORE_FLOOR: Record<string, number> = {
-    demorpy0: 0.19,
+    demorpy0: 0.14,
     demorpy1: 0.587,
     demorpy2: 0.115,
     demorpy3: 0.095,
@@ -289,14 +289,43 @@ describe('retail demo replay gate', () => {
    * when the slot dies (`EnemyManagerUpdate.cpp:448-452`), so a re-pick now revalidates the
    * slot before trusting the cached position.
    *
-   * Measured on `demorpy0`, the reimu & ゆっくり row the fix actually touches: 8 deaths in
+   * Measured on `demorpy0`, the 霊夢 & 紫 row the fix actually touches: 8 deaths in
    * 5047 frames -> 9 deaths in 6063, score ratio 0.154 -> 0.193. The death *rate* goes down
    * (1.59 -> 1.48 per thousand frames) and the run reaches 1016 frames further; the ceiling
    * is a count, not a rate, so it moves with the extra life spent at the far end of a longer
    * run. Same trade as the sixth and seventh notes, and the floors go up with it:
    * `demorpy0` 0.154 -> 0.19, `TOTAL_SCORE_FLOOR` 0.95 -> 0.99.
    */
-  const TOTAL_SCORE_FLOOR = 0.99;
+  /*
+   * Re-baselined a ninth time, and this one moves the total *down* — 0.99 -> 0.94. It is
+   * written down in full because it is the case this file's own note warns about: the score
+   * of a chaotic run is not a monotone function of fidelity.
+   *
+   * The change is `tailPosition0`, the point 霊夢's charms bend toward. The port carried it
+   * from frame to frame; retail does not — `Player::OnUpdate` calls `FUN_0044d420` on its
+   * common path right after the firing chain (`Player.cpp:1100`, body at `:1493-1497`), and
+   * that writes `-999` back over both aim vectors (`0xE2AA4`, `0xE2AB0`) and clears the valid
+   * bit (`0xE2AC0`). With a per-frame wipe the rule reads "aim at the boss closest to the
+   * muzzle if a boss is up, otherwise hunt the lowest enemy"; with the port's carry-forward
+   * it read "the first boss-flagged thing to appear in this stage owns the aim forever
+   * afterwards", so 霊夢 stopped tracking fairy waves after her first mid-boss and her
+   * charms flew straight up. That is the difference the eighth note's number was buying back.
+   *
+   * Measured: only `demorpy0` moves — it is the only 霊夢 row — and the other three are
+   * bit-identical (0.588 / 0.116 / 0.096, same 11 / 9 / 9 deaths). Her run is 5453 frames
+   * with 9 deaths (6063 with 9 before), 109 point items instead of 173, ratio 0.193 -> 0.143.
+   * The charm hunt trades column DPS for sweeping the lowest threat, which on a fixed
+   * recorded dodge line buys fewer kills *here*; whether that is right is not something this
+   * metric can decide, because the recording was made against ZUN's timings and every row
+   * moves whenever an enemy's death frame moves. What decides it is the byte-level evidence
+   * above, which is unambiguous, plus the qualitative check on a live page: hold fire with no
+   * boss up and watch the charms go looking for something.
+   *
+   * `SCORE_FLOOR.demorpy0` therefore goes 0.19 -> 0.14 — still above the 0.139 and 0.154 that
+   * the sixth and seventh notes measured — and `TOTAL_SCORE_FLOOR` 0.99 -> 0.94, both with
+   * this note attached rather than a quiet edit.
+   */
+  const TOTAL_SCORE_FLOOR = 0.94;
 
   it.skipIf(!hasAssets)(
     "runs ZUN's whole stream through the sim with nothing structural left to fix",

@@ -163,6 +163,27 @@ describe('the 式神 route, from the ship that arms it to the shot that lands', 
     expect(target === null || target.id !== head!.slotIndex).toBe(true);
   });
 
+  it('rebuilds the charm aim point from this frame, so a lock never outlives its enemy', () => {
+    // The aim half of the same machinery: `Player::Update` calls `FUN_0044d420` right
+    // after the firing chain (`Player.cpp:1100`, `:1493-1497`), which writes `-999` back
+    // over `tailPosition0` and clears the valid bit. Carrying the point forward instead
+    // left 霊夢's charms bending at the spot where the last boss stood for the rest of the
+    // stage, which is the "追踪不对" the browser showed after a phase ended.
+    const runner = runnerFor(0);
+    const boss = runner.enemies.spawn(0, 120, 160, 100000)!;
+    boss.setBossPresent(0);
+    const locked = runUntil(runner, 30, FOCUS_FIRE, () => runner.tailPosition.valid);
+    expect(locked, 'the charms never found the boss').toBeGreaterThanOrEqual(0);
+    expect(runner.tailPosition.x).toBeCloseTo(120, 0);
+    boss.applyDamage(999999);
+    let guard = 0;
+    while (runner.enemies.activeCount > 0 && guard++ < 900) runner.tick(FOCUS_FIRE);
+    runner.tick(FOCUS_FIRE);
+    expect(runner.tailPosition.x).toBe(-999);
+    expect(runner.tailPosition.valid).toBe(false);
+    expect(runner.options.homingTarget).toBeNull();
+  });
+
   it('keeps the 式神 home when the fire button is let go', () => {
     const runner = runnerFor(0);
     runner.enemies.spawn(0, 180, 200, 100000);

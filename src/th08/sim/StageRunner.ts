@@ -36,6 +36,7 @@ import {
   SHOT_FREE,
   SHOT_LIVE,
   SHOT_SPENT,
+  UNTRACKED_AIM,
   trackedAimPoint,
   type PlayerShotWorld,
 } from './PlayerShots';
@@ -229,7 +230,7 @@ export class StageRunner {
   /** The `playerNN.anm` pack whose scripts the shot VMs run. */
   readonly anm: PlayerAnmRuntime | null;
   /** `Player.tailPosition0`, the point 霊夢's charms bend toward (`FUN_00450320`). */
-  tailPosition = { x: -999, y: -999, valid: false };
+  tailPosition = { ...UNTRACKED_AIM };
   /** Shot sounds the firing layer asked for this frame, in `entry+0x28` order. */
   lastShotSounds: Array<{ index: number; x: number }> = [];
 
@@ -609,7 +610,14 @@ export class StageRunner {
     }
     aim.length = active.length;
     candidates.length = active.length;
-    this.tailPosition = trackedAimPoint(this.tailPosition, this.player.x, aim);
+    // `Player::Update` wipes the aim point at `:1100` — `FUN_0044d420` (`:1493-1497`)
+    // writes `-999` into both vectors and clears the valid bit — and that reset runs
+    // *after* the firing chain at `:1099`. So the point the charms steer to is rebuilt
+    // from this frame's enemies every frame, and a lock never survives the enemy that
+    // earned it. Carrying it forward instead — which is what this line used to do — leaves
+    // 霊夢's charms bending toward wherever the last boss stood for the rest of the stage,
+    // and it is why the tracking reads as broken once a phase ends.
+    this.tailPosition = trackedAimPoint(UNTRACKED_AIM, this.player.x, aim);
 
     // The options first: a shot's origin is whichever slot the partner is riding.
     const optionWorld = this.optionWorld();

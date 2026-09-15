@@ -26,16 +26,7 @@ import type { AnmPack } from '../../engine/anm/AnmPack';
 import { TH08_PLAYER_ANM_PACKS } from '../data/th08-player-anm';
 
 const RAW_DIR = join(process.cwd(), 'public', 'assets', 'th08', 'raw');
-const SHT_FILES = [
-  'ply00a',
-  'ply00as',
-  'ply01a',
-  'ply01as',
-  'ply02a',
-  'ply02as',
-  'ply03a',
-  'ply03as',
-];
+const SHT_FILES = ['ply00a', 'ply00as', 'ply01a', 'ply01as', 'ply02a', 'ply02as', 'ply03a', 'ply03as'];
 const hasAssets = SHT_FILES.every((f) => existsSync(join(RAW_DIR, `${f}.sht`)));
 
 /** `g_PlayerAnmFilenames` (`Player.cpp:44-47`), which pack each shot type animates from. */
@@ -131,7 +122,10 @@ function volley(pool: PlayerShotPool) {
     .sort((a, b) => a.x - b.x);
 }
 
-const damages = (pool: PlayerShotPool) => volley(pool).map((s) => s.damage).sort((a, b) => a - b);
+const damages = (pool: PlayerShotPool) =>
+  volley(pool)
+    .map((s) => s.damage)
+    .sort((a, b) => a - b);
 
 describe.skipIf(!hasAssets)('the top power tier of 霊夢&紫', () => {
   it('reproduces the seven-entry max-power volley from the shipped bytes', () => {
@@ -234,7 +228,7 @@ describe.skipIf(!hasAssets)('the rest of the eight files', () => {
     ['ply03as', 11, 128],
   ];
 
-  it('fires something for every character, on that team\'s own animation pack', () => {
+  it("fires something for every character, on that team's own animation pack", () => {
     for (const [file, shotType, power] of cases) {
       const pool = new PlayerShotPool(rng);
       pool.fire(
@@ -278,18 +272,16 @@ describe.skipIf(!hasAssets)('the rest of the eight files', () => {
 describe('the frame rules around the volley', () => {
   it('silences 魔理沙 and 爱丽丝 under a stopped clock, and nobody else', () => {
     for (const shotType of [1, 6, 7]) {
-      expect(canAttemptShot(world({ shotType, frameStop: true, shotWindowAdvanced: true }) as PlayerShotWorld)).toBe(false);
+      expect(
+        canAttemptShot(world({ shotType, frameStop: true, shotWindowAdvanced: true }) as PlayerShotWorld),
+      ).toBe(false);
     }
     expect(canAttemptShot(world({ shotType: 0, frameStop: true, shotWindowAdvanced: true }))).toBe(true);
   });
 
   it('holds fire while a card whose variant is 4 is opening', () => {
-    expect(
-      canAttemptShot(world({ cardRunning: true, cardPhase: 4, shotWindowAdvanced: true })),
-    ).toBe(false);
-    expect(
-      canAttemptShot(world({ cardRunning: true, cardPhase: 1, shotWindowAdvanced: true })),
-    ).toBe(true);
+    expect(canAttemptShot(world({ cardRunning: true, cardPhase: 4, shotWindowAdvanced: true }))).toBe(false);
+    expect(canAttemptShot(world({ cardRunning: true, cardPhase: 1, shotWindowAdvanced: true }))).toBe(true);
   });
 
   it('culls a shot that leaves the field, but not the kinds retail exempts', () => {
@@ -331,17 +323,27 @@ describe('the aim point the charms steer to', () => {
   });
 
   it('prefers the boss closest to the muzzle once a boss is on screen', () => {
-    const first = trackedAimPoint(open, 192, [
+    // One call is one frame: `Player::Update` wipes the point after the firing chain
+    // reads it (`Player.cpp:1100`), so every frame starts from {@link UNTRACKED_AIM} and
+    // the two bosses below are competitors inside a single pass, not locks handed down.
+    const picked = trackedAimPoint(open, 192, [
       { x: 60, y: 200, boss: false },
       { x: 250, y: 120, boss: true },
     ]);
-    expect(first.valid).toBe(true);
-    expect(first.x).toBe(250);
-    const second = trackedAimPoint(first, 192, [{ x: 200, y: 300, boss: true }]);
-    expect(second.x).toBe(200);
-    // A farther boss does not steal the lock.
-    const third = trackedAimPoint(second, 192, [{ x: 20, y: 310, boss: true }]);
-    expect(third.x).toBe(200);
+    expect(picked.valid).toBe(true);
+    expect(picked.x).toBe(250);
+    const nearer = trackedAimPoint(open, 192, [
+      { x: 250, y: 120, boss: true },
+      { x: 200, y: 300, boss: true },
+    ]);
+    expect(nearer.x).toBe(200);
+    // A farther boss does not steal it, and a plain enemy cannot outbid a boss.
+    const held = trackedAimPoint(open, 192, [
+      { x: 200, y: 300, boss: true },
+      { x: 20, y: 310, boss: true },
+      { x: 192, y: 400, boss: false },
+    ]);
+    expect(held.x).toBe(200);
   });
 
   it('leaves the marker alone with nothing on the field', () => {
