@@ -301,6 +301,13 @@ and `?autobomb` drops a spell card every four seconds so a card's own backdrop p
 white square can be watched on a live page; `?dbgscene` flattens the live scene graph into
 `#game-root[data-dbg]`.
 
+The same attribute carries the sim's own read-outs, which is how a claim about a frame gets
+checked instead of argued: `pbf` lists every live player shot with the option slot it came
+out of (`@o1`) and a `*` once it has retired into a hit, `opt` prints each 式神 as
+`slot:state.substate x,y:sprite/alpha` plus the homing target it locked, and `tl` / `en` are
+the timeline's script clock and the live enemy count — the pair that shows a stage waiting
+on a boss that will never die.
+
 ---
 
 ## 🏛️ Architecture & Extension

@@ -560,3 +560,16 @@ case 148:
   连带量了一件真实的事：`EclRun.cpp:78-88` 会把 `enemy+0x3330` 或进难度掩码一起要求，扫 9 份 `ecldata*` 的 17414 条敌机指令，确有 **55 条**掩码缺 0x20 或 0x40（三面 32、Extra 16、一面 3、6A/6B 各 2）。但因为 `+0x3330` 恒 0，这 55 条对任何自机都执行——我们翻译器「只把 `0x01..0x10` 提进 `e.isDiff(...)`、丢掉高位」的做法与零售**等价**，登记为已判定而不是缺陷。扫描脚本进仓库：`tools/th08/ecl/stance-probe.mjs`。
 
 - **台账**：状态列口径 **128 行 → ✅120 / 🟡4 / ❌4**（R-5 新增道具三态、死亡散开、开火窗口、时符来源守恒四行，R-3 新增阵营位判定时；死亡掉落那行的旧计数一并改正）。
+
+### 15. 本轮（09-16：式神真的开始打人，五面的收尾门回到零售语义）
+
+- **症状**：灵梦 shift 切到紫之后，蓝式神只是跟着飞，不出手；实时页上 `opt` 读到的是 `0:2.3 7,32 s24/255 tgt 7,-127`——式神钉在左上角，追一个画外目标。四个原因都在式神那条路上，每一个都有零售出处：
+  1. **攻击标签从来没发过。** `Player::OptionHomingToPlayer`（`Player.cpp:2123-2129`）在接管追击的那一帧发 `SetInterrupt(3)`，而 `player00.anm` 脚本 18 的中断标签表确实声明了 `[1,2,3,4,5]`——3 就是「出手」。port 只发 1/2，式神自然只有飞行格。已加 `CHASER_ATTACK_INTERRUPT = 3`。
+  2. **转向标签是猜的。** `:2016-2069` 六个分支的规则是「开始转身→Int(2) 并记下方向，转身结束→Int(1) 归位」，port 用 `scaleSign === 1 ? 1 : 2` 近似。已重写为 `faceAlongTravel` / `turnChaser`，并且**按零售顺序**在接管分支之后仍跑一次 dispatched 分支的转向测试——零售就是这个顺序，它会把刚抢到的追击拉回去，所以追击只在自机已经侧倾到位时才粘得住。
+  3. **`HasAttachedEnemy()` 判反。** `EclManager.cpp:129-132` 读的是 `enemy+0x2DA4`，而 `EclRunLow.inl:1069` 是在**被 90..92 放出来的子机**上写这个回指指针：该位表示「我是子机」，被排除的是子机。port 写成 `slot.childCount > 0`，等于把主机筛掉了，式神于是永远只盯着僚机。改为 `slot.linkedChild`。
+  4. **追击目标不会死。** 零售持的是指针，并在槽位失活那一帧清空（`EnemyManagerUpdate.cpp:448-452`、`EnemyManager.cpp:803-804`）。候选项现在带 `id`（= `slot.slotIndex`），`pickHomingTarget` 先复验旧目标还活着，再决定沿用还是重选。
+- **改完的取证**：同一入口、同一 QA 参数，`opt` 变成 `0:2.3 94,49 s30/255 tgt 155,61`——sprite 30 正是攻击标签那一格，目标在画面内的可见敌机上。QA 镜像顺带修了两处：`pbf` 之前读的是已经删掉的 presentation 池（永远输出空串，等于没有这条通道），现在读 `runner.shots.shots` 并给式神出弹标 `@o<n>`、给已命中退休的标 `*`；新增 `opt` 字段，格式 `i:state.substate x,y:sprite/alpha`，尾部 `tgt x,y`。
+- **五面卡死（战役跑到 211615 帧仍不收尾）根因是关卡收尾门的口径，不是弹道。** 零售 `EnemyTimeline.cpp:259-261` 的 op 10 一次只看 `table[args[0]]` **一个**表项；`EclRunHigh.inl:636-647` 是按 marker 号登记，`EnemyManagerUpdate.cpp:857-861` 任一 boss 死亡就把 `SetBossPresent` 这颗**全局单比特**清掉。port 拿「场上还存在 `isBoss` 的槽」近似它，而五面那只隐形弹道层 sub49 占着 1 号位、60000 血、`moveRelative(60,0,128,-32)` 之后永久停在 (128,-32)：主机 sub48 一死，它就是那个「永远杀不掉的第二个 boss」，于是 `isFinished` 永远为假。现在门改成 `!gs.isBossPresent`，op 10 走新的 `bossAtMarker(marker)`，只认脚本点名的那一号。`StageCompletion.test.ts` 里那条新用例把语义钉住：marker 1 的隐形层活着也允许收尾，marker 0 倒下才放行。
+- **一次自伤与恢复**：为撤销自己刚加的字段执行了 `git checkout -- src/th08/sim/GameState.ts`，把上一轮**未提交**的 11 行一起抹掉了，其中就有 `bombStatePhase`（整颗符卡 variant 字；`FUN_00451d50` 与 `FUN_00450f60:3103-3112` 比的是这个字而不是它的低位）。该字段从未提交、stash 也已 drop，只能按 `StageRunner.ts:702` / `:844` 两处使用点连同零售出处重建。教训写死一条：**撤自己的改动只用 `apply_patch` 反向 hunk，绝不 `git checkout --` 整个文件**；确需 checkout 时先看 `git diff --stat` 里该文件有没有别人的未提交行。
+- **门禁**：`vitest run` **103 文件 / 935 测试**全绿（本轮新增 `OptionHoming.test.ts` 7 条、关卡收尾门 1 条），`tsc --noEmit` 0 错、`eslint src` 0 错、`prettier --check` 干净、`npm run build` 通过。回放门第八次基线：`demorpy0` 天花板 8→9——它是多活了 1016 帧才多死那一次（5047→6063 帧，比值 0.154→0.193，死亡率 1.59→1.48 每千帧），`demorpy0` 地板 0.154→0.19、`TOTAL_SCORE_FLOOR` 0.95→0.99 一并**上调**；完整理由写在 `RetailReplay.test.ts` 的注释里，表格里也加了「逐次死亡帧」一行，方便下次直接看是哪一段弹幕窗 moved 它。顺带把 `PlayerOptions.ts:641,646` 两个会丢精度的弧度字面量写成 `Math.PI/120`、`Math.PI/90`（1.5°/2°），eslint 清零。
+- **仍未闭合**（下一轮的门）：`trackedAimPoint` 仍可能选到画外敌机，这是「灵梦自机弹道追踪」剩下的另一半；式神路由 `f930`（妖妖）与 `ee70`（蕾米莉亚 solo）尚未翻译，`optionRoutes` 表里已就地标注为「不许假装在动」。
