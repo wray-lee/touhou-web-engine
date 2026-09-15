@@ -17,7 +17,14 @@
  */
 import { describe, expect, it } from 'vitest';
 import { BulletPool, type Bullet } from './BulletPool';
-import { REC, launchPattern, simplePattern, blankShotRecords, type BulletWorld, type ShotRecord } from './BulletTransform';
+import {
+  REC,
+  launchPattern,
+  simplePattern,
+  blankShotRecords,
+  type BulletWorld,
+  type ShotRecord,
+} from './BulletTransform';
 import { EnemySlot } from './EnemySlot';
 import { createGameState } from './GameState';
 import { LaserPool } from './LaserPool';
@@ -52,7 +59,17 @@ function fire(records: ShotRecord[], flags: number, ts: number, speed: number) {
   launchPattern(
     pool,
     w,
-    simplePattern({ aimMode: 1, count1: 1, count2: 1, angle: 0, speed1: speed, radius: 4, halfSize: 8, transformFlags: flags, records }),
+    simplePattern({
+      aimMode: 1,
+      count1: 1,
+      count2: 1,
+      angle: 0,
+      speed1: speed,
+      radius: 4,
+      halfSize: 8,
+      transformFlags: flags,
+      records,
+    }),
     192,
     200,
   );
@@ -103,7 +120,12 @@ describe('bullets', () => {
   });
 
   it('restore their original speed when the scale goes back to 1', () => {
-    const { pool, w, b } = fire(chain({ kind: REC.CURL, allowWhileActive: 1, int0: 60, float0: 0.5, float1: 0.1 }), REC.CURL, 1, 2);
+    const { pool, w, b } = fire(
+      chain({ kind: REC.CURL, allowWhileActive: 1, int0: 60, float0: 0.5, float1: 0.1 }),
+      REC.CURL,
+      1,
+      2,
+    );
     pool.tick(false, w);
     const afterOneFrame = b.speed;
     w.timeScale = 0.25;

@@ -56,10 +56,14 @@ describe('retail sound bank', () => {
   });
 
   it('names the indices the gameplay call sites prove', () => {
-    // The player's shot is index 15 (`Player.cpp:1327`), whose recording is se_tan00 -
-    // not index 0, which the pause menu reuses as a cursor tick.
-    expect(RETAIL_SE_FILES[RETAIL_SE_VOL[SE_IDX.playerShot].buffer]).toMatch(/se_tan00/);
-    expect(SE_IDX.playerShot).toBe(15);
+    // The firing sound is not inferred from a call site at all: every shooting entry
+    // in all eight shipped `.sht` files carries id 0, and `FUN_0044fb70:2666` plays
+    // whatever is there. Its recording is se_plst00 - player, shoot.
+    expect(RETAIL_SE_FILES[RETAIL_SE_VOL[SE_IDX.shot].buffer]).toMatch(/se_plst00/);
+    expect(SE_IDX.shot).toBe(0);
+    // Index 15 is the card's own tail (`FUN_0044cbf0`), which the port used to
+    // believe was the shot because it is `se_tan00` and is panned by the ship.
+    expect(RETAIL_SE_FILES[RETAIL_SE_VOL[SE_IDX.cardEnd].buffer]).toMatch(/se_tan00/);
     // Every team's bomb opens with `SOUND_D` -> se_gun00 (`PlayerBomb.cpp:215`).
     expect(RETAIL_SE_FILES[RETAIL_SE_VOL[SE_IDX.bomb].buffer]).toMatch(/se_gun00/);
     // Confirm, back and cursor move are the three the port used to guess.
@@ -75,7 +79,7 @@ describe('retail sound bank', () => {
     for (const [name, idx] of Object.entries(SE_BY_NAME)) {
       expect(RETAIL_SE_VOL[idx], name).toBeTruthy();
     }
-    expect(SE_BY_NAME.shoot).toBe(SE_IDX.playerShot);
+    expect(SE_BY_NAME.shoot).toBe(SE_IDX.shot);
     expect(SE_BY_NAME.bomb).toBe(SE_IDX.bomb);
   });
 

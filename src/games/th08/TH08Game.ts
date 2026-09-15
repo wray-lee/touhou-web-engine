@@ -31,6 +31,10 @@ import { registerGame } from '../../touhou-common/game/registry';
 import type { GameProfile, GameStageCallbacks } from '../../touhou-common/game/GameProfile';
 import { registerTaiseiSheets } from './data/taisei-sheets';
 import { registerTH08PlayerSprites } from './data/th08-player-registration';
+import { registerTH08PlayerCells, th08PlayerCellKey } from './data/th08-player-shot-registration';
+import { th08PlayerAnmTeam } from './data/th08-player-shot-registration';
+import { TH08_PLAYER_ANM_PACKS } from '../../th08/data/th08-player-anm';
+import { SHOT_LIVE, SHOT_SPENT } from '../../th08/sim/PlayerShots';
 import { registerTH08EnemySprites } from './data/th08-enemy-registration';
 import { registerTH08BulletSprites } from './data/th08-bullet-registration';
 import { TH08_ETAMA_CELLS } from './data/th08-etama-anm';
@@ -916,7 +920,11 @@ export class TH08Game {
         (this.input.isKeyDown('down') ? MOVE_BITS.down : 0) |
         (this.input.isKeyDown('left') ? MOVE_BITS.left : 0) |
         (this.input.isKeyDown('right') ? MOVE_BITS.right : 0),
-      shoot: this.input.isKeyDown('shoot') || this.debugAutoShoot,
+      // Pointer steering pulls the trigger, which is the touch compromise the engine
+      // has always made: a finger on the field is doing two jobs at once. The
+      // steering case used to be handled by the presentation-layer fire block that
+      // stood here, and the sim's shot clock is the only one now.
+      shoot: this.input.isKeyDown('shoot') || this.input.isSteering || this.debugAutoShoot,
       bomb: this.input.wasKeyPressed('bomb') || this.autoBombPress(),
       slow: this.input.isKeyDown('slow') || this.debugSlowMode,
       // Pointer steering (touch drag, or the opt-in mouse mode) drives the sim
@@ -997,45 +1005,19 @@ export class TH08Game {
     // renderer-facing item entities so drops are visible and collectible.
     this.syncEclItems();
 
-    // Homing weapons need an aim point and the fire-rate gate needs decaying. The
-    // legacy path gets both from `Player.update()`, which ECL mode never calls.
-    const aim = this.findAimTarget();
-    this.aimPoint = aim ? { x: aim.position.x, y: aim.position.y } : null;
-    this.player.setAimTarget(aim);
-    this.player.tickShootCooldown(1);
-
-    // Auto-fire
-    if (this.input.isKeyDown('shoot') || this.input.isSteering || this.debugAutoShoot) {
-      const newShots = this.player.shoot(runner.gs.frame);
-      if (newShots.length > 0) {
-        this.audio.queueSe(SE_IDX.playerShot, panFromPlayfieldX(runner.player.x));
-        this.bulletSystem.add(...newShots);
-      }
+    // The weapon is the sim's now. `StageRunner.tickShipWeapon` pulled the trigger
+    // out of the retail `.sht` chains and `damageEnemiesAt` already scored those
+    // shots inside the same tick, so the presentation layer neither fires nor
+    // reports a hit - which is the whole point of moving the layer down there: what
+    // shoots, how wide it hits, and what it costs in power are ZUN's numbers now.
+    // What the layer still owes is the sound each entry asked for, panned from the
+    // muzzle exactly as `PlaySoundPositionedByIdx` hears it (`:2670`).
+    for (const sound of runner.lastShotSounds) {
+      this.audio.queueSe(sound.index, panFromPlayfieldX(sound.x));
     }
-
-    // ECL owns enemy bullets and their physics; the presentation-layer player
-    // shots still need one normal engine tick and a collision pass.
+    // The enemy bullets still need the mirror update; the player shots that used to
+    // ride this pool are gone with the block above.
     this.bulletSystem.update(1);
-    runner.damageEnemiesAt(
-      this.bulletSystem
-        .getBullets()
-        .filter((bullet) => bullet.tag === 'player-bullet')
-        .map((bullet) => ({
-          get x() {
-            return bullet.position.x;
-          },
-          get y() {
-            return bullet.position.y;
-          },
-          damage: bullet.damage,
-          get active() {
-            return bullet.isAlive;
-          },
-          set active(value: boolean) {
-            if (!value) bullet.destroy();
-          },
-        })),
-    );
 
     // Sync ECL enemies to the renderer
     this.syncEclEnemies();
@@ -1050,6 +1032,7 @@ export class TH08Game {
     // already one step into its slide, exactly like `Gui`'s own calc order.
     this.tickHudBanners();
     this.tickRetailEffects();
+    this.tickPlayerShots();
     this.updateEclGauge();
 
     // Update HUD
@@ -1313,6 +1296,78 @@ export class TH08Game {
         view.tint,
         view.additive,
       );
+    }
+  }
+
+  /**
+   * Draw the ship's own weapon out of the pack `g_PlayerAnmFilenames` names.
+   *
+   * `Player::FUN_004512f0` (`:3220`) and `FUN_00451400` (`:3260`) are two passes over
+   * the same 128 slots: a live shot goes through `Draw2D` at `z = 0.4` and a spent one
+   * through `DrawPlayerBullet` at `z = 0.2`, which is why 霊夢's charm keeps being
+   * drawn after it lands and stops scoring at the same moment. The options come last
+   * because `PlayerRoute2OptionRender` (`:2160`) puts them at `z = 0.49`, in front of
+   * everything the ship fires.
+   *
+   * The rotation rule is retail's own: `:3232` only overrides the script's angle when
+   * the VM carries a non-zero `type` - the port's `renderType` - so a shot whose
+   * script never asks to be billboarded keeps the pose its script authored.
+   */
+  private tickPlayerShots(): void {
+    const runner = this.eclRunner;
+    const renderer = this.renderer;
+    if (!runner || !renderer) return;
+    const team = th08PlayerAnmTeam(runner.gs.shotType);
+    const pack = TH08_PLAYER_ANM_PACKS[team];
+    if (!pack) return;
+
+    const cell = (sprite: number) => pack.rects[sprite] ?? null;
+    const draw = (
+      x: number,
+      y: number,
+      vm: {
+        sprite: number;
+        scale: { x: number; y: number };
+        rotation: { z: number };
+        color1: { r: number; g: number; b: number; a: number };
+        blendMode: number;
+        visible: boolean;
+      },
+      rotation: number,
+      flipX: boolean,
+      tint?: number,
+    ) => {
+      if (!vm.visible) return;
+      const rect = cell(vm.sprite);
+      if (!rect) return;
+      const alpha = vm.color1.a / 255;
+      if (alpha <= 0) return;
+      renderer.spawnEffectRect(
+        th08PlayerCellKey(team, rect.tex, vm.sprite),
+        x,
+        y,
+        rect.w * Math.abs(vm.scale.x),
+        rect.h * vm.scale.y,
+        Math.min(1, alpha),
+        rotation,
+        tint ?? ((vm.color1.r & 0xff) << 16) | ((vm.color1.g & 0xff) << 8) | (vm.color1.b & 0xff),
+        vm.blendMode !== 0,
+        flipX,
+      );
+    };
+
+    for (const pass of [SHOT_SPENT, SHOT_LIVE]) {
+      for (const shot of runner.shots.shots) {
+        if (shot.state !== pass) continue;
+        const rotation = shot.vm.renderType !== 0 ? shot.angle : shot.vm.rotation.z;
+        // `:3239-3244`: a shot fired while the meter sits on 极度妖怪 is repainted
+        // 0x4040ff, which is the blue half of 妖化's visual signature.
+        draw(shot.x, shot.y, shot.vm, rotation, false, shot.youkaiMark !== 0 ? 0x4040ff : undefined);
+      }
+    }
+    for (const option of runner.options.options) {
+      if (option.state === 0) continue;
+      draw(option.x, option.y, option.vm, option.vm.rotation.z, option.scaleSign < 0);
     }
   }
 
@@ -1699,6 +1754,9 @@ export class TH08Game {
     // Original TH08 sprites override Taisei placeholders when atlas PNGs are present
     void registerTH08PlayerSprites(this.renderer).then((n) => {
       if (n > 0) console.log('[th08] Registered', n, 'original player sprites');
+    });
+    void registerTH08PlayerCells(this.renderer).then((n) => {
+      if (n > 0) console.log('[th08] Registered', n, 'ship-weapon cells');
     });
     void registerTH08EnemySprites(this.renderer!).then((n) => {
       if (n > 0) console.log('[th08]', n, 'enemy/boss sprites');

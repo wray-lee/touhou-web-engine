@@ -30,6 +30,23 @@ import {
 } from './ShotDamage';
 import { ItemPool, type CollectResult } from './ItemPool';
 import { checkPlayerCollisions, checkLaserCollisions, type CollisionStats } from './Collision';
+import { OPTION_SLOTS, OptionSystem, type OptionCandidate, type OptionWorld } from './PlayerOptions';
+import {
+  PlayerShotPool,
+  SHOT_FREE,
+  SHOT_LIVE,
+  SHOT_SPENT,
+  trackedAimPoint,
+  type PlayerShotWorld,
+} from './PlayerShots';
+import {
+  PLAYER_ANM_TEAM_BY_SHOT_TYPE,
+  playerAnmRuntime,
+  weaponTablesFor,
+  type PlayerAnmRuntime,
+  type PlayerWeaponTables,
+} from '../data/playerWeaponData';
+import { PLAYFIELD_H, PLAYFIELD_W } from './Playfield';
 import {
   selectBomb,
   tickBomb,
@@ -121,8 +138,9 @@ export interface EclBossGauge {
  * and retire each hit the way retail sets `bullet->state = 2`.
  *
  * The box is axis-aligned and centred, exactly like `PlayerBuildAabb` builds it
- * (`Player.cpp:3501-3507`), and a straight shot arrives with a zero-size box, which
- * is why `radius` is optional on the view.
+ * (`Player.cpp:3501-3507`): the enemy's own half size plus the shot's, which for a
+ * `.sht` shot comes from `entry+0x0C`/`entry+0x10` and is why 霊夢's shots reach a
+ * fairy four times wider than they are tall.
  */
 function sumShotHits(
   shots: ReadonlyArray<ShotView>,
@@ -137,10 +155,12 @@ function sumShotHits(
   for (const shot of shots) {
     if (!shot.active) continue;
     if (ctx.stats) ctx.stats.checks++;
-    const reach = halfWidth + (shot.radius ?? 0);
-    const reachY = halfHeight + (shot.radius ?? 0);
-    if (Math.abs(shot.x - enemy.posX) >= reach) continue;
-    if (Math.abs(shot.y - enemy.posY) >= reachY) continue;
+    const reachX = halfWidth + (shot.halfWidth ?? shot.radius ?? 0);
+    const reachY = halfHeight + (shot.halfHeight ?? shot.radius ?? 0);
+    // `:3392` rejects with `>`, so two boxes that only touch do overlap; the earlier
+    // `<` here cost a shot its hit on exactly-aligned frames.
+    if (Math.abs(shot.x - enemy.posX) > reachX) continue;
+    if (Math.abs(shot.y - enemy.posY) > reachY) continue;
     raw += shotContribution(shot.damage, ctx.frameStop);
     x = shot.x;
     y = shot.y;
@@ -193,6 +213,25 @@ export class StageRunner {
    * with the frame, so the number is a per-frame cost and not a running total.
    */
   readonly collisionStats: CollisionStats = { checks: 0 };
+  /**
+   * `Player.optionStates[4]`: the 式神, blades and familiars the partner flies.
+   *
+   * They are the origins half of the weapon lives at (`entry+0x20` picks which of
+   * the four slots a shot starts from), so the firing layer below cannot exist
+   * without them, and 紫's homing 式神 - the effect the Shift key is famous for -
+   * is exactly one armed slot plus the ten `.sht` entries that read it.
+   */
+  readonly options: OptionSystem;
+  /** `Player.shots[128]`, fired from the retail `.sht` chains. */
+  readonly shots: PlayerShotPool;
+  /** The two `.sht` files `g_GameManager.shotType` loads, per `g_Player1ShtFiles`. */
+  readonly weapon: PlayerWeaponTables;
+  /** The `playerNN.anm` pack whose scripts the shot VMs run. */
+  readonly anm: PlayerAnmRuntime | null;
+  /** `Player.tailPosition0`, the point 霊夢's charms bend toward (`FUN_00450320`). */
+  tailPosition = { x: -999, y: -999, valid: false };
+  /** Shot sounds the firing layer asked for this frame, in `entry+0x28` order. */
+  lastShotSounds: Array<{ index: number; x: number }> = [];
 
   private pointItemValueLine: number;
   private itemPickupHalfExtent: number;
@@ -452,6 +491,14 @@ export class StageRunner {
     this.lasers = new LaserPool();
     this.player = new PlayerSim(config.gs);
     this.items = new ItemPool(config.gs);
+    const shotType = Math.max(0, Math.min(11, config.gs.shotType | 0));
+    this.weapon = weaponTablesFor(shotType);
+    this.anm = playerAnmRuntime(PLAYER_ANM_TEAM_BY_SHOT_TYPE[shotType]);
+    this.shots = new PlayerShotPool(config.gs.rng);
+    // `Player.cpp:1705-1727`: a solo's options are installed once here and never
+    // leave; a pair's wait for the focus edge in `setFocus`.
+    this.options = new OptionSystem(config.gs.rng);
+    this.options.initShotType(shotType);
     this.timeline = new TimelineRunner(
       config.ecl.timelines[config.timelineIndex ?? 0],
       config.gs,
@@ -504,6 +551,258 @@ export class StageRunner {
     return this.enemies.slots.filter((slot) => slot.active);
   }
 
+  /** The cached `PlayerShotWorld`: every field is a getter onto live sim state. */
+  private shipWorldValue: PlayerShotWorld | null = null;
+  /** The cached `OptionWorld`, same shape. */
+  private optionWorldValue: OptionWorld | null = null;
+  /** Reused views so the aim/homing passes allocate nothing on a firing frame. */
+  private aimViews: Array<{ x: number; y: number; boss: boolean }> = [];
+  private candidateViews: OptionCandidate[] = [];
+  private optionPositionsView: Array<{ x: number; y: number } | null> = [
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+  ];
+  /** `g_GuiMessageInputCurrent & 1`, kept for the option chase test. */
+  private shootHeld = false;
+  /** `g_Player.bombState.frameStop`, the strict stopped-clock flag. */
+  private frameStopClock = false;
+
+  /**
+   * The ship's own weapon for one frame: aim tracking, the partner's options, the
+   * `.sht` firing walk, and the integrator that moves the result.
+   *
+   * The order is retail's own calc chain, read off the four functions rather than
+   * guessed: `Player::Update` resolves the focus byte and arms or releases the
+   * options (`Player.cpp:665-781`), the option pass walks them, `FUN_00451500`
+   * decides whether this frame is a firing frame and hands the chain to
+   * `FUN_00450f60`, and `FUN_00451150` then moves what is live. Damage is a later
+   * pass, and the two passes disagree by design: retail asks the enemies, not the
+   * shots, whether anything was hit.
+   */
+  private tickShipWeapon(): void {
+    const shotType = this.gs.shotType;
+    // `EnemyManagerUpdate.cpp:724-746` refills `tailPosition0` from the enemies that
+    // were just walked, and `:747-758` picks `optionHomingTarget` in the same pass.
+    const active = this.enemies.getActive();
+    const aim = this.aimViews;
+    const candidates = this.candidateViews;
+    for (let i = 0; i < active.length; i++) {
+      const slot = active[i];
+      let view = aim[i];
+      if (!view) view = aim[i] = { x: 0, y: 0, boss: false };
+      view.x = slot.posX;
+      view.y = slot.posY;
+      view.boss = slot.isBoss;
+      let candidate = candidates[i];
+      if (!candidate) candidate = candidates[i] = { x: 0, y: 0, hasAttached: false };
+      candidate.x = slot.posX;
+      candidate.y = slot.posY;
+      // `HasAttachedEnemy()` is the launcher pointer at `enemy+0x2DA4`, not a child
+      // count: the pass excludes the familiars that ops 90..92 launched and keeps the
+      // bodies that launched them. Reading it the other way round sent every 式神
+      // after a limb instead of the body, which is how it ended up parked at the top
+      // edge of the screen chasing something that had already left the field.
+      candidate.hasAttached = slot.linkedChild;
+      candidate.id = slot.slotIndex;
+    }
+    aim.length = active.length;
+    candidates.length = active.length;
+    this.tailPosition = trackedAimPoint(this.tailPosition, this.player.x, aim);
+
+    // The options first: a shot's origin is whichever slot the partner is riding.
+    const optionWorld = this.optionWorld();
+    this.options.setFocus(this.player.isSlow, shotType);
+    this.options.tick(optionWorld, shotType);
+
+    const world = this.shipWorld();
+    // `Player::Update` runs these two at `:1098`/`:1099` in the order below: move
+    // what is already flying, then ask the firing chain for more. A shot therefore
+    // spends one frame at the muzzle before it travels.
+    this.shots.update(world);
+    this.shots.fire(world);
+  }
+
+  /** The four option positions, nulled out for slots retail leaves inactive. */
+  private optionPositions(): ReadonlyArray<{ x: number; y: number } | null> {
+    for (let i = 0; i < OPTION_SLOTS; i++) {
+      const o = this.options.options[i];
+      const slot = this.optionPositionsView[i];
+      if (o.state === 0) {
+        this.optionPositionsView[i] = null;
+        continue;
+      }
+      if (!slot) {
+        this.optionPositionsView[i] = { x: o.x, y: o.y };
+      } else {
+        slot.x = o.x;
+        slot.y = o.y;
+      }
+    }
+    return this.optionPositionsView;
+  }
+
+  private optionWorld(): OptionWorld {
+    const self = this;
+    if (!this.optionWorldValue) {
+      this.optionWorldValue = {
+        get playerX() {
+          return self.player.x;
+        },
+        get playerY() {
+          return self.player.y;
+        },
+        get shotWindowOpen() {
+          return self.player.shotWindowOpen;
+        },
+        get fireHeld() {
+          return self.shootHeld;
+        },
+        get frameStop() {
+          return self.frameStopClock;
+        },
+        homingCandidates: () => self.candidateViews,
+        get anmPack() {
+          return self.anm ? self.anm.pack : null;
+        },
+        get timeScale() {
+          return self.gs.timeScale;
+        },
+      };
+    }
+    return this.optionWorldValue;
+  }
+
+  private shipWorld(): PlayerShotWorld {
+    const self = this;
+    if (!this.shipWorldValue) {
+      this.shipWorldValue = {
+        get primary() {
+          return self.weapon.primary;
+        },
+        get secondary() {
+          return self.weapon.secondary;
+        },
+        // `Player+3`: the focus byte, not the settled 妖怪 flag. The table swap it
+        // performs is the whole of what Shift does to a pair's weapon.
+        get focusByte() {
+          return self.player.isSlow ? 1 : 0;
+        },
+        get power() {
+          return self.player.power;
+        },
+        get shotType() {
+          return self.gs.shotType;
+        },
+        get cardRunning() {
+          return self.gs.bombRunning;
+        },
+        get cardPhase() {
+          return self.gs.bombStatePhase;
+        },
+        get cardFrames() {
+          return self.gs.spellFrames;
+        },
+        get shotWindow() {
+          return self.player.shotWindowTimer;
+        },
+        // The pool re-derives this by comparing the window against last frame's
+        // value, which is what `ZunTimer::FUN_0040d3d0` reports.
+        shotWindowAdvanced: true,
+        get shootHeld() {
+          return self.shootHeld;
+        },
+        get dialogPresent() {
+          return self.worldFreeze;
+        },
+        get frameStop() {
+          return self.frameStopClock;
+        },
+        get extremelyYoukai() {
+          return self.player.gauge.isExtremelyYoukai();
+        },
+        get aimX() {
+          return self.player.x;
+        },
+        get aimY() {
+          return self.player.y;
+        },
+        optionPositions: () => self.optionPositions(),
+        get homingTarget() {
+          const target = self.options.homingTarget;
+          return target ? { x: target.x, y: target.y } : null;
+        },
+        get tailX() {
+          return self.tailPosition.x;
+        },
+        get tailY() {
+          return self.tailPosition.y;
+        },
+        get bladeAngle() {
+          return self.options.options[2].facingAngle;
+        },
+        bounds: { left: 0, right: PLAYFIELD_W, top: 0, bottom: PLAYFIELD_H },
+        get timeScale() {
+          return self.gs.timeScale;
+        },
+        get anmPack() {
+          return self.anm ? self.anm.pack : null;
+        },
+        spriteSize: (sprite: number) => (self.anm ? self.anm.spriteSize(sprite) : null),
+        onSound: (index: number, x: number) => {
+          self.lastShotSounds.push({ index, x });
+        },
+        get rng() {
+          return self.gs.rng;
+        },
+      };
+    }
+    return this.shipWorldValue;
+  }
+
+  /**
+   * The live shots as the damage pass wants them, one view per slot that can still
+   * land a hit (`FUN_00451670:3388`) with the shot's own `.sht` box.
+   */
+  shotViews(): ShotView[] {
+    const self = this;
+    const views: ShotView[] = [];
+    for (const shot of this.shots.shots) {
+      if (shot.state === SHOT_FREE) continue;
+      const type = shot.type;
+      views.push({
+        get x() {
+          return shot.x;
+        },
+        get y() {
+          return shot.y;
+        },
+        damage: shot.damage,
+        get active() {
+          // `:3388`: a spent slot only still scores for the one type that pierces.
+          if (shot.state !== SHOT_LIVE) return type === 3 && shot.state === SHOT_SPENT;
+          // `:3396`: the blade and beam types test every other frame of their clock.
+          if ((type === 4 || type === 5) && shot.timer % 2 !== 0) return false;
+          return true;
+        },
+        set active(value: boolean) {
+          if (value) return;
+          if (self.shots.markHit(shot, self.shipWorld())) {
+            self.effectPool?.spawn(5, shot.x, shot.y, { count: 1, color: -1 });
+          }
+        },
+        get halfWidth() {
+          return shot.hitboxWidth / 2;
+        },
+        get halfHeight() {
+          return shot.hitboxHeight / 2;
+        },
+      });
+    }
+    return views;
+  }
+
   /** Run one game frame. */
   tick(input: PlayerInput): void {
     // A frozen field is a cutscene: the shot clock never starts (`Player.cpp:921`),
@@ -512,6 +811,9 @@ export class StageRunner {
     // the same flag here.
     const freeze = this.worldFreeze;
     if (freeze) input = { ...input, shoot: false, bomb: false };
+    // `g_GuiMessageInputCurrent & 1`: the option chase reads the button itself, not
+    // the conversation-masked version the shot clock is gated on (`:3332`).
+    this.shootHeld = input.shoot;
 
     this.gs.frame++;
     this.lastCollected = [];
@@ -527,6 +829,7 @@ export class StageRunner {
     this.fullPowerTriggered = false;
     this.fullPowerSparkles = 0;
     this.collisionStats.checks = 0;
+    this.lastShotSounds.length = 0;
 
     // `Player+0xFDC` as retail defines it: raised by `acceptBomb` (`Player.cpp:1277`)
     // and dropped when the card's own clock runs out (`:1165-1168`), so it is true for
@@ -536,6 +839,9 @@ export class StageRunner {
     // it too: `Player::Update` tests the flag before the code that plays a card.
     this.gs.bombRunning = this.activeBomb !== null;
     this.gs.bombForcedFocus = this.activeBomb ? (this.activeBomb.spec.phase & 1) === 1 : false;
+    // The whole variant word, because two firing-layer rules compare it instead of
+    // masking a bit out of it (`FUN_00451d50`, `FUN_00450f60:3103-3112`).
+    this.gs.bombStatePhase = this.activeBomb?.spec.phase ?? 0;
     const frameStop = this.gs.bombRunning;
     // Sakuya's stopped clock proper: her cards hang the bullets, the lasers and the
     // sparks in the air for their own window, which is presentation on top of the card
@@ -544,6 +850,7 @@ export class StageRunner {
     // hangs the same three consumers off it (`BulletManager.cpp:853`,
     // `EnemyManagerUpdate.cpp:980`, and the effect chain at `EffectManager.cpp:1063`).
     const frozen = this.activeBomb?.freeze === true || freeze;
+    this.frameStopClock = frozen;
 
     // The card's own clock, which the cut-in uses to time its own slide.
     if (this.gs.spellName && !frozen) this.gs.spellFrames++;
@@ -622,6 +929,13 @@ export class StageRunner {
     if (this.player.cancelTimer > 0) {
       this.bullets.clearInRadius(this.player.x, this.player.y, FULL_FIELD_CANCEL);
     }
+
+    // 5b. The ship's weapon: focus arming, the partner's options, the `.sht` firing
+    //     chain, and the integrator. It sits here because the two things it reads -
+    //     `Player+3` and the twenty-frame shot window - are both resolved by the
+    //     player tick above, and the damage pass below is a separate retail function
+    //     that only ever looks at what this one left alive.
+    this.tickShipWeapon();
 
     // 6. Player vs enemy bullets
     const { hits, grazes } = checkPlayerCollisions(
@@ -703,11 +1017,11 @@ export class StageRunner {
       this.player.powerLost = 0;
     }
 
-    // 7. Player shots that live in the sim's own pool. ECL never tags a bullet
-    // 'player', so this is the seam a non-ECL host uses; it runs through the same
-    // `damageEnemiesAt` as the presentation layer's shots so that there is exactly
-    // one damage model in the building.
-    this.damageEnemiesAt(simShotViews(this.bullets.bullets));
+    // 7. Damage. The `.sht` shots are the ship's weapon proper; the sim's own
+    //    player-tagged pool entries are the seam a non-ECL host still uses, and both
+    //    run through the same `damageEnemiesAt` so that there is exactly one damage
+    //    model in the building.
+    this.damageEnemiesAt([...this.shotViews(), ...simShotViews(this.bullets.bullets)]);
 
     // Card damage is resolved inside `tickBomb`, on each zone's own clock.
     if (this.activeBomb?.finished) this.activeBomb = null;
@@ -797,13 +1111,17 @@ export class StageRunner {
 
   get isFinished(): boolean {
     if (!this.timeline.finished) return false;
-    // Running out of timeline instructions is not the same as finishing a stage.
-    // Retail's last instruction is a boss wait, so the clear sequence cannot start
-    // while a slot still holds the marker; a script that retires early — a bounds
-    // cull, or a spawn nobody waited on — used to read as "thanks for playing" in
-    // the middle of a boss fight. A fleeing boss clears its own marker, so this
-    // still lets the stage end when the boss walks off alive.
-    return !this.enemies.hasBossMarker();
+    // Running out of timeline instructions is not the same as finishing a stage. Retail's
+    // last instruction is a boss wait, so the clear sequence cannot start while the marker
+    // the script waits on is still claimed; a script that retires early — a bounds cull, or
+    // a spawn nobody waited on — used to read as "thanks for playing" in the middle of a
+    // boss fight. A fleeing boss clears its own marker, so this still lets the stage end
+    // when the boss walks off alive. The watch is on marker 0, not on "any boss":
+    // `SetBossPresent` is one global flag raised by the marker 0 claim and dropped by any
+    // boss death (`EclRunHigh.inl:641-645`, `EnemyManagerUpdate.cpp:857-861`), and 五面的
+    // sub49 是只占 1 号位的隐形弹道层（60000 血，停在画外）， retail 从来不等它，
+    // 拿"场上还有 boss"当关卡通关条件就会把五面永远卡住。
+    return !this.gs.isBossPresent;
   }
 
   /** 0 = pinned human, 0.5 = neutral, 1 = pinned youkai. Drives the HUD meter. */

@@ -183,12 +183,7 @@ export class TimelineRunner {
       // Wait while the enemy that claimed marker slot `args[0]` is still alive
       // (`EnemyTimeline.cpp:258-266`). This is the real "wait for the boss".
       case 10: {
-        const marker = args[0];
-        for (const slot of this.enemies.slots) {
-          if (!slot.active || !slot.isBoss || slot.bossMarker !== marker) continue;
-          return false;
-        }
-        return true;
+        return this.enemies.bossAtMarker(args[0]) === null;
       }
 
       // Consume a message token: every slot that already holds `args[0]` is cleared,

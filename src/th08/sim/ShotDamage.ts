@@ -67,12 +67,16 @@ export interface ShotDamageContext {
 /**
  * One live player shot, seen from the sim side.
  *
- * The host owns the shot's real storage -- the presentation `BulletSystem` in the
- * browser, the same thing under replay -- and hands over a view whose `active`
- * setter can retire it. `radius` is optional because retail never writes
- * `PlayerShot::hitboxSize` for a straight shot (`Player.cpp` only touches it for the
- * homing options at `:2940`, `:2994` and `:3063-3067`), so the default is the point
- * test that a zero-size box reduces to.
+ * The host owns the shot's real storage and hands over a view whose `active` setter
+ * can retire it. `radius` rounds the box out to a square, which is what a
+ * presentation-layer pellet wants.
+ *
+ * `halfWidth`/`halfHeight` are the shot's own box. `FUN_00451670:3391` builds it
+ * from `PlayerShot::hitboxSize` through `PlayerBuildAabb`, which halves it, and
+ * `FUN_0044fb70:2648-2649` fills that from `entry+0x0C`/`entry+0x10` for *every*
+ * shot - so a 霊夢 shot carries the 18x48 box its `.sht` says, and the "only the
+ * homing options write a hitbox" reading was wrong. A view that omits both falls
+ * back to `radius`, which is how the pre-`.sht` paths keep working.
  */
 export interface ShotView {
   readonly x: number;
@@ -80,6 +84,8 @@ export interface ShotView {
   readonly damage: number;
   active: boolean;
   radius?: number;
+  halfWidth?: number;
+  halfHeight?: number;
 }
 
 /** The enemy-side conditions the pipeline reads. */

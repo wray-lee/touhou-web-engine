@@ -325,6 +325,9 @@ class TH08Shell {
         /** Where the player's own shots actually are. A ring that never leaves the
          *  ship is the signature of shots that stopped integrating. */
         pbf: playerShotDebug(game),
+        /** The partner's option slots and the field's aim target, which together are
+         *  the difference between a 式神 that hovers and one that attacks. */
+        opt: r ? optionDebug(r) : null,
         /** The live enemy slots, nearest the ship first: where danmaku comes from. */
         enm: enemyDebug(game),
       });
@@ -574,28 +577,53 @@ function enemyDebug(game: TH08Game): string {
 /**
  * A short text dump of the live player shots, for QA.
  *
- * The presentation pool owns the ship's own weapon, so a weapon that stops
- * integrating looks identical to one that never existed: `pb` counts high, nothing
- * ever reaches an enemy. Three rows is enough to see a stalled ring, and the string
- * form keeps `data-dbg` small enough to read in one devtools line.
+ * The `.sht` pool owns the ship's weapon now - `Player::FUN_004512f0` walks those
+ * 128 slots and the presentation pool has nothing left to report - so a weapon that
+ * stops integrating looks identical to one that never existed. Three rows is enough
+ * to see a stalled ring, and `@o2` names the shots that left from an option rather
+ * than from the ship, which is how 紫's 式神 becomes visible from outside the page's
+ * own world. A trailing `*` marks a slot that has already spent itself on a hit.
  */
 function playerShotDebug(game: TH08Game): string {
+  const runner = game.eclRunner;
+  if (!runner) return '-';
   const shots: string[] = [];
-  for (const b of game.bulletSystem.getBullets()) {
-    if (!b.isAlive || b.tag !== 'player-bullet') continue;
-    const rot = (b as unknown as { rotation?: number }).rotation ?? 0;
+  for (const shot of runner.shots.shots) {
+    if (shot.state === 0) continue;
     shots.push(
-      b.position.x.toFixed(0) +
+      shot.x.toFixed(0) +
         ',' +
-        b.position.y.toFixed(0) +
+        shot.y.toFixed(0) +
         ' v' +
-        Math.hypot(b.velocity.x, b.velocity.y).toFixed(2) +
+        Math.hypot(shot.vx, shot.vy).toFixed(2) +
         ' h' +
-        rot.toFixed(2),
+        shot.angle.toFixed(2) +
+        (shot.entry && shot.entry.option > 0 ? '@o' + shot.entry.option : '') +
+        (shot.state === 2 ? '*' : ''),
     );
     if (shots.length >= 3) break;
   }
   return shots.join(' | ');
+}
+
+/**
+ * The four option slots - 僚机 / 式神 / 分身 - as `state.substate x,y:sprite/alpha`.
+ *
+ * Every partner weapon lives here: 紫's 式神, 爱丽丝's doll, 蕾米莉亚's four
+ * familiars, 妖梦's blades. A slot that never leaves state 0 is the whole of a
+ * missing weapon, and the trailing target is `g_Player.optionHomingTarget`, which
+ * is what turns a hovering 式神 into a chasing one.
+ */
+function optionDebug(runner: StageRunner): string {
+  const slots = runner.options.options
+    .map(
+      (o, i) =>
+        `${i}:${o.state}.${o.substate} ${Math.round(o.x)},${Math.round(o.y)}` +
+        ` s${o.vm.sprite}/${Math.round(o.vm.color1.a)}${o.vm.visible ? '' : '!'}`,
+    )
+    .join(' ');
+  const target = runner.options.homingTarget;
+  return slots + (target ? ` tgt ${Math.round(target.x)},${Math.round(target.y)}` : ' tgt -');
 }
 
 /**

@@ -73,7 +73,11 @@ describe('ECL sound requests reach the bank', () => {
     runner!.player.x = 60;
     const queue = vi.spyOn(game.audio, 'queueSe');
     game.stepFrame(1);
-    const shot = queue.mock.calls.find(([idx]) => idx === SE_IDX.playerShot);
+    // The id now comes out of the `.sht` entry that fired, not out of a constant the
+    // host chose, and it is panned from the muzzle as `FUN_0044fb70:2668` does.
+    const shot = queue.mock.calls.find(([idx]) => idx === SE_IDX.shot);
+    expect(shot?.[0]).toBe(0);
     expect(shot?.[1]).toBeCloseTo(panFromPlayfieldX(60), 1);
+    expect(runner!.lastShotSounds.length).toBeGreaterThan(0);
   });
 });

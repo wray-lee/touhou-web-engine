@@ -313,11 +313,30 @@ export class EnemyManager {
       slot.drainSfx(this.frameSfx);
       slot.drainSpellResults(this.frameSpellResults);
     }
-    // A boss that leaves the playfield is culled by its bounds check, which
-    // would otherwise leave the timeline waiting for a boss that no longer
-    // exists. The marker is the single source of truth for "boss up".
-    if (this.gs.isBossPresent && !this.hasBossMarker()) this.gs.isBossPresent = false;
+    // A boss that leaves the playfield is culled by its bounds check, which would
+    // otherwise leave the timeline waiting for a boss that no longer exists. Retail
+    // raises the flag only when marker 0 is claimed (`EclRunHigh.inl:641-645`) and drops
+    // it on any boss death (`EnemyManagerUpdate.cpp:857-861`), so the net watches marker
+    // 0: a marker 1 co-spawn — 五面那只隐形弹道层 — must not keep it up.
+    if (this.gs.isBossPresent && this.bossAtMarker(0) === null) this.gs.isBossPresent = false;
     this.recountLinkedChildren();
+  }
+
+  /**
+   * The live enemy holding `g_EclEnemyTableF54CC0[marker]`, i.e. the slot that claimed
+   * this marker with op 127 (`EclRunHigh.inl:636-647`) and has not died or released it
+   * (`EnemyManager.cpp:769-780`). Retail reads one entry of that table per op 10
+   * (`EnemyTimeline.cpp:259-261`), so "who is the boss this wait is about" is answered
+   * per marker, never by scanning for any boss at all. The marker lives on the slot, so
+   * the slot scan is the table; a stored pointer per marker would be a second copy of
+   * the same fact, and the one that forgets a bounds cull.
+   */
+  bossAtMarker(marker: number): EnemySlot | null {
+    for (const slot of this.slots) {
+      if (!slot.active || !slot.isBoss || slot.bossMarker !== marker) continue;
+      return slot;
+    }
+    return null;
   }
 
   /**

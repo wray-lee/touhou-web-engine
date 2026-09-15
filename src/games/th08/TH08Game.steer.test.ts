@@ -33,8 +33,20 @@ function hover(game: TH08Game, canvasX: number, canvasY: number): void {
   game.input.pointerMove(canvasX, canvasY);
 }
 
+/**
+ * How many shots the ship has in the air.
+ *
+ * Once the translated script owns the field the weapon lives in retail's own
+ * `Player.shots[128]`, fired out of the `.sht` chains, and the presentation pool is
+ * empty by design. Both branches answer the same question - did the ship shoot - so
+ * the steering tests do not care which layer is holding the answer.
+ */
 function playerShots(game: TH08Game): number {
-  return game.bulletSystem.getBullets().filter((b) => b.isAlive && b.tag === 'player-bullet').length;
+  const runner = game.eclRunner;
+  if (runner) return runner.shots.shots.filter((shot) => shot.state !== 0).length;
+  return game.bulletSystem
+    .getBullets()
+    .filter((b) => b.isAlive && b.tag === 'player-bullet').length;
 }
 
 /** Canvas space -> the world point the field is asked to put the ship at. */

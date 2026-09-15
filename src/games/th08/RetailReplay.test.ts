@@ -159,20 +159,20 @@ describe('retail demo replay gate', () => {
    * side effect (`ItemManager.cpp:269-279`), which re-times the bullet stream the
    * recorded dodge line runs into. `demorpy1` gained a death and lost none of its
    * score: ratio 0.295 -> 0.339, and the four-demo total 0.513 -> 0.574. Deaths
-    * are the noisier of the two metrics on a short run, so the total is the number
-    * that decides whether the change was worth it.
-    */
+   * are the noisier of the two metrics on a short run, so the total is the number
+   * that decides whether the change was worth it.
+   */
   const DEATH_CEILING: Record<string, number> = {
-    demorpy0: 8,
+    demorpy0: 9,
     demorpy1: 11,
-    demorpy2: 8,
-    demorpy3: 8,
+    demorpy2: 9,
+    demorpy3: 9,
   };
   const SCORE_FLOOR: Record<string, number> = {
-    demorpy0: 0.139,
-    demorpy1: 0.6,
-    demorpy2: 0.092,
-    demorpy3: 0.042,
+    demorpy0: 0.19,
+    demorpy1: 0.587,
+    demorpy2: 0.115,
+    demorpy3: 0.095,
   };
   /**
    * Sum of the four ratios: 0.480 before the anti-tamper draw, 0.513 after it,
@@ -216,9 +216,9 @@ describe('retail demo replay gate', () => {
    * different number afterwards. Measured: 0.140 / 0.340 / 0.093 / 0.043, total
    * 0.517 -> 0.616, with all four death counts still inside their ceilings. Two rows
    * rose a long way and two moved a little the other way, which is what a coupled
-    * proxy does; the total is the number that ratchets, and it went up by a fifth, so
-    * `TOTAL_SCORE_FLOOR` goes up with it rather than staying where it was.
-    */
+   * proxy does; the total is the number that ratchets, and it went up by a fifth, so
+   * `TOTAL_SCORE_FLOOR` goes up with it rather than staying where it was.
+   */
   /*
    * Re-baselined a sixth time for the bomb's own two halves -- the card's cancel
    * geometry, and the immunity that `FUN_0040be30` arms with it.
@@ -242,7 +242,61 @@ describe('retail demo replay gate', () => {
    * run that reaches further into the stage, which is the direction the ceilings were
    * written to be walked down from.
    */
-  const TOTAL_SCORE_FLOOR = 0.88;
+  /*
+   * Re-baselined a seventh time for the ship's own weapon: `Player.shots[128]`, the
+   * `.sht` firing walk, and the option slots it fires from.
+   *
+   * Until this change the four demos were scored by a weapon the port had written for
+   * itself - one invented rate, invented damage, one hitbox for every shot type, and
+   * no partner at all. They are now scored by ZUN's numbers: `FUN_00450f60` picks the
+   * power tier off `GetPower()` against the eight files' own gates, `FUN_0044fb70`
+   * fills damage, cadence, speed, the 18x48 box 霊夢's third charm carries, and which
+   * of the four option slots a shot starts from, and `FUN_00451670` retires a hit into
+   * `state = 2` instead of deleting it. 98 of the 227 shipped entries fire from an
+   * option, and every one of them had been coming out of the ship.
+   *
+   * Measured: 0.139 / 0.605 / 0.092 / 0.042 -> 0.155 / 0.588 / 0.116 / 0.096, total
+   * 0.881 -> 0.955. Two of the four rows moved a long way, and the biggest is the one
+   * that was furthest from the data: `demorpy3` is 咲夜&蕾米莉亚, whose focused table
+   * `ply02as` spends 20 of its 61 entries on the four familiars that route `eb70`
+   * arms, so a fifth of her weapon simply did not exist before.
+   *
+   * `demorpy1` is the row that went down, by 2.8%, and it went down for a reason that
+   * counts as fidelity: every entry in `ply01a` carries fire callback 2 or 3, which is
+   * `PlayerShotUpdateFdd0` - and that callback refuses to shoot while `Player+0xFDC`
+   * says a card is playing (`:2696-2706`). 魔理沙's weapon is silent during her own
+   * 恋符「ミサイルスパーク」 in the original, and now it is here too, so the run banks
+   * less damage across the card it uses.
+   *
+   * `DEATH_CEILING.demorpy2` and `.demorpy3` each go up by one, which is the same
+   * trade the sixth note describes and for the same reason: enemies now die on
+   * different frames, and the ECL spawn chains key off those frames, so the recorded
+   * dodge line meets patterns that had not been released yet. Both runs also score
+   * 25% and 123% more, and the total is what ratchets: `TOTAL_SCORE_FLOOR` 0.88 -> 0.95.
+   */
+  /*
+   * Re-baselined an eighth time for one row, one death: 灵梦的式神开始打了.
+   *
+   * `Player::OptionHomingToPlayer` (`Player.cpp:2123-2129`) sends `SetInterrupt(3)` the
+   * moment it takes a chaser over, and `player00.anm` script 18 really does ship an
+   * interrupt label for it; without that tag the 式神 flies onto its host and never
+   * attacks. The port had three wrong turns there, all from the same decompile: the turn
+   * tag was guessed from `scaleSign` instead of read off the six branches at `:2016-2069`,
+   * the takeover never fired the attack tag, and the "is this an attached enemy" test
+   * excluded the wrong half of the pair — `EclManager.cpp:129-132` reads `+0x2DA4`, which
+   * `EclRunLow.inl:1069` writes on the *child*, so the guard is about sub-机 and the port
+   * had it on the host. 追击目标 also used to go stale: retail holds a pointer and drops it
+   * when the slot dies (`EnemyManagerUpdate.cpp:448-452`), so a re-pick now revalidates the
+   * slot before trusting the cached position.
+   *
+   * Measured on `demorpy0`, the reimu & ゆっくり row the fix actually touches: 8 deaths in
+   * 5047 frames -> 9 deaths in 6063, score ratio 0.154 -> 0.193. The death *rate* goes down
+   * (1.59 -> 1.48 per thousand frames) and the run reaches 1016 frames further; the ceiling
+   * is a count, not a rate, so it moves with the extra life spent at the far end of a longer
+   * run. Same trade as the sixth and seventh notes, and the floors go up with it:
+   * `demorpy0` 0.154 -> 0.19, `TOTAL_SCORE_FLOOR` 0.95 -> 0.99.
+   */
+  const TOTAL_SCORE_FLOOR = 0.99;
 
   it.skipIf(!hasAssets)(
     "runs ZUN's whole stream through the sim with nothing structural left to fix",
@@ -298,6 +352,9 @@ describe('retail demo replay gate', () => {
               String(r.recordedScore).padStart(10) +
               String(r.scoreRatio.toFixed(3)).padStart(8),
           ),
+          // Which frames the run bled on matters more than the count: the count only
+          // says the ladder moved, the frames say which pattern window moved it.
+          ...rows.map((r) => `  ${r.demo} deaths @ ${r.deathFrames.join(' ') || '-'}`),
         ].join('\n'),
       );
 

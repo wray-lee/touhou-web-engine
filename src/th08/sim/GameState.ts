@@ -188,6 +188,13 @@ export interface GameState {
    * ship to the partner who owns that card.
    */
   bombForcedFocus: boolean;
+  /**
+   * The whole card variant word — {@link bombForcedFocus} is only its low bit. The firing
+   * layer needs the word itself, because two of its rules compare it instead of masking a
+   * bit out of it (`FUN_00451d50`, `FUN_00450f60:3103-3112`), and it reads 0 whenever no
+   * card is up.
+   */
+  bombStatePhase: number;
   timeOrbs: number;
   /** `globals->totalTimeOrbs`, the parity source for the point-value bump. */
   totalTimeOrbs: number;
@@ -326,6 +333,7 @@ export function createGameState(difficulty: Difficulty = 'normal', seed = 0): Ga
     timeScale: 1,
     bombRunning: false,
     bombForcedFocus: false,
+    bombStatePhase: 0,
     timeOrbs: 0,
     totalTimeOrbs: 0,
     lastSpellTimeOrbThreshold: Number.POSITIVE_INFINITY,

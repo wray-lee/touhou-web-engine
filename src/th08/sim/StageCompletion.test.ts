@@ -206,6 +206,36 @@ describe('stage completion gate', () => {
     boss.setBossPresent(-1);
     expect(runner.isFinished).toBe(true);
   });
+
+  it('holds the clear to the marker the script waits on, not to every boss on screen', () => {
+    // 永夜抄五面就是这么收尾的: レイセン那只隐形弹道层占着 1 号位、60000 血、停在画外
+    // (128,-32)，零售的 op 10 一次只看脚本点名的那一个表项
+    // (`EnemyTimeline.cpp:259-261`), 所以 marker 0 的主机一死关卡就结束。把门设在
+    // "场上还有 isBoss 的槽"上，五面会永远跑不完。
+    const runner = harness({ 0: idle });
+    runner.tick(noInput);
+    expect(runner.timeline.finished).toBe(true);
+
+    const anchor = runner.enemies.spawn(0, 128, -32, 60000)!;
+    anchor.setBossPresent(1);
+    expect(runner.isFinished).toBe(true);
+
+    const host = runner.enemies.spawn(0, 192, 96, 51000)!;
+    host.setBossPresent(0);
+    expect(runner.isFinished).toBe(false);
+
+    // A boss only loses one damage slice per frame, so the host goes down over a few
+    // hundred frames of sustained fire — the same cap the stage-1 case whittles through
+    // at 6 a tick. What matters here is which slot is allowed to hold the clear open.
+    for (let f = 0; f < 1500 && host.active; f++) {
+      runner.damageEnemiesAt([{ x: host.posX, y: host.posY, damage: 60000, active: true }]);
+      runner.tick(noInput);
+    }
+    expect(host.active, 'the marker 0 host never went down').toBe(false);
+    expect(runner.isFinished).toBe(true);
+    // The anchor is still walking around up there, exactly as retail leaves it.
+    expect(anchor.active).toBe(true);
+  });
 });
 
 // A full stage 1 is ~14k simulated frames, which costs about a second. Cheap

@@ -233,6 +233,12 @@ interface FxRequest {
    */
   width?: number;
   height?: number;
+  /**
+   * Mirror the quad about its own vertical axis, in local (pre-rotation) space.
+   * Retail's `AnmVmBase::flags.flip` bits do the same to the sprite's uvs, which is
+   * how a 式神 turns to face the way it is travelling without the script knowing.
+   */
+  flipX?: boolean;
 }
 
 /**
@@ -1135,7 +1141,10 @@ export class PixiRenderer {
       s.blendMode = fx.additive ? 'add' : 'normal';
       const w = fx.width ?? fx.size;
       const h = fx.height ?? fx.size;
-      s.scale.set(w / Math.max(1, texture.width), h / Math.max(1, texture.height));
+      s.scale.set(
+        (fx.flipX ? -w : w) / Math.max(1, texture.width),
+        h / Math.max(1, texture.height),
+      );
     }
     this.fx.end();
 
@@ -1941,8 +1950,21 @@ export class PixiRenderer {
     rotation = 0,
     tint?: number,
     additive = false,
+    flipX = false,
   ): void {
-    this.pendingFx.push({ texture, x, y, size: width, width, height, alpha, rotation, tint, additive });
+    this.pendingFx.push({
+      texture,
+      x,
+      y,
+      size: width,
+      width,
+      height,
+      alpha,
+      rotation,
+      tint,
+      additive,
+      flipX,
+    });
   }
 
   /**
