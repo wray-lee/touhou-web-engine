@@ -31,6 +31,16 @@ export interface PlayerOptionState {
   targetY: number;
   /** `+0x2C8` `state2C8`: 0 inactive, 1 starting, 2 running, 3 leaving. */
   state: number;
+  /**
+   * `+0x2EC`, the installed update route.
+   *
+   * Retail keeps this as a function pointer per slot, and that matters because the
+   * pointer is not always the table's: `Player.cpp:749-750` overwrites slot 2 with
+   * `g_PlayerRoute3ExitUpdateCallbacks` when 妖梦&妖妖 let go of focus. A port that
+   * re-reads {@link optionRoutes} every frame cannot express that, which is how the
+   * trailing blade went missing.
+   */
+  route: OptionRoute;
   /** `+0x2CC` `substate2CC`: which of {@link PlayerOptionState}'s modes is driving. */
   substate: number;
   /** `+0x2E0`, the option's own frame counter. */
@@ -55,6 +65,9 @@ export interface PlayerOptionState {
 /** Four slots, matching retail's fixed array. */
 export const OPTION_SLOTS = 4;
 
+/** `Player.vectors2CC[16]`, the position history 妖梦's blade rides. */
+const TRAIL_HISTORY = 16;
+
 /**
  * What a slot looks like after retail arms it: `Player.cpp:678` `memset`s the
  * whole `0x2F4` bytes to zero and then writes only the two callbacks, so every
@@ -71,6 +84,7 @@ export function blankOption(rng: AnmRng): PlayerOptionState {
     targetY: 0,
     state: 0,
     substate: 0,
+    route: 'none',
     timer: 0,
     orbitAngle: 0,
     facingAngle: 0,
@@ -99,9 +113,41 @@ export interface OptionWorld {
   fireHeld: boolean;
   /** `Player.bombState.frameStop`: under a stopped clock the option holds station. */
   frameStop: boolean;
+  /**
+   * `Player+3`, `optionModeFlag`: 1 while the ship is held in focus.
+   *
+   * Only two routes read it - `FUN_0044ee70:2338` and `FUN_0044f5e0:2498` - and both
+   * use it for the same two things: which colour to paint the body, and whether to
+   * keep chasing the ship's recent path or hold the swing it already has.
+   */
+  modeFlag: number;
+  /**
+   * `Player+0xE2A98`, `movementDirection`: one of the nine states
+   * {@link module:../../engine/core/Movement.movementDirectionIndex} returns.
+   *
+   * 妖梦's blade turns to face the way the ship is going (`:2410`, `:2501`), and the
+   * nine-way index the port already keeps for the walk animation is the same enum:
+   * the retail chain at `:646-663` tests the four diagonals as exact bit pairs and
+   * then down, up, left, right, in that order.
+   */
+  movementDirection: number;
+  /**
+   * Whether the ship's own velocity is non-zero this frame.
+   *
+   * `Player.cpp:985` only walks the sixteen-frame position history when it is, so a
+   * ship that stops flying leaves the trail where it was - which is what lets 妖梦's
+   * blade keep circling the spot she stopped at.
+   */
+  moving: boolean;
   /** A frame's worth of candidate targets, in retail's own terms. */
   homingCandidates(): OptionCandidate[];
-  /** Spawn a spark at an option's position, for the routes that leave a trail. */
+  /**
+   * `g_EffectManager.SpawnEffect(47, position, 1, colour)`, the spark the 妖梦 and
+   * 蕾米莉亚 routes throw every frame behind themselves (`:2407`, `:2549`, `:2554`,
+   * `:2616`). The colour is retail's own `0xAARRGGBB` literal and is not optional:
+   * two of the four spellings are half-transparent, so a route that skips the call
+   * loses the trail entirely rather than drawing it faintly.
+   */
   onTrail?(x: number, y: number, color: number): void;
   /**
    * `player->anmFile`, the pack the route's `SetAndExecuteScriptIdx` reads. A null
@@ -137,9 +183,9 @@ export interface OptionCandidate {
  *
  * `none` marks a slot retail leaves NULL. The other names are the retail function
  * number that drives the slot, so "which route" always resolves to a citation.
- * `f930`, `ee70` and `f2d0` are named-but-unmodelled rather than quietly dropped:
- * their steering bodies (`Player.cpp:2286-2396`, `:2399-2465` and the route-3 exit
- * table at `:203-206`) are not translated yet.
+ * `ee70` is the one name here that has no steering body yet (`:2277-2382`): it sits on
+ * row 9, which is solo 蕾米莉亚, and no shot type this build can select reaches row 9.
+ * See {@link optionRoutes} for that limit and for why the row is still listed.
  *
  * `f2d0` deserves a word, because it is the one slot the twelve-row table cannot
  * express. 妖梦's blade (`ply03a`'s option 3 entries) is not armed by the main
@@ -184,6 +230,13 @@ export function route3ExitSlot(shotType: number): number | null {
  * That agreement is not something the table could be fitted to after the fact:
  * row 10 arms only slot index 2, and `ply03a` - the table shot type 10 loads -
  * is the only file that ever uses option 3.
+ *
+ * Rows 4..11 are the eight solos, and no build of this port can currently select one:
+ * retail's screen indexes all twelve (`TitleScreen.cpp:1765` writes
+ * `shotType = this->cursor` straight off the cursor), while the character list here
+ * offers the four pairs. The limit is the menu rather than the model, so those rows
+ * are listed and cited but not claimed as shipped behaviour until solo selection
+ * exists.
  */
 export const OPTION_ROUTES: readonly (readonly OptionRoute[])[] = [
   /* 0  霊夢&紫     */ ['e3a0', 'none', 'none', 'none'],
@@ -255,6 +308,67 @@ const CHASER_TAKEOVER_FRAMES = 10;
 const CHASER_ATTACK_INTERRUPT = 3;
 /** `fabsf(vel.x) < 0.05 -> 0`, the only component retail snaps. */
 const VELOCITY_SNAP = 0.05;
+
+/**
+ * `0.052359879016876221f`, the swing both 妖梦 blades advance every frame.
+ *
+ * Three degrees, written as `Math.PI / 60` so the float64 lands on the same value the
+ * binary carries; copying ZUN's decimal digits would not.
+ */
+const BLADE_SWING = Math.PI / 60;
+/** The radius of the 妖妖 pair's circle (`:2612`) and of the trailing blade's (`:2403`). */
+const BLADE_RADIUS = 6;
+const RELEASE_BLADE_RADIUS = 8;
+/** How fast each anchor chases: `:2404` for the blade that trails, `:2613` for the pair. */
+const RELEASE_ANCHOR_EASE = 0.05;
+const BLADE_ANCHOR_EASE = 0.09;
+/** `:2601`/`:2605`: the two blades hang thirty-two pixels either side of the ship. */
+const BLADE_STRAFE = 32;
+/**
+ * `g_EffectManager.SpawnEffect(47, position, 1, colour)`, the spark each route throws
+ * behind itself. The three spellings are retail's own: `:2617` and `:2331` share
+ * 0x80602050, the trailing blade at `:2408` and the unfocused solo blade at `:2550`
+ * use 0x80405080, and the focused solo blade at `:2555` burns 0xFFF05080.
+ */
+export const TRAIL_SPARK = 47;
+const TRAIL_COLOUR_BLADES = 0x80602050;
+const TRAIL_COLOUR_RELEASE = 0x80405080;
+const TRAIL_COLOUR_FOCUSED = 0xfff05080;
+
+/**
+ * `:2410-2440` and `:2501-2531`, the same eight-way table in both routes: the angle
+ * the blade turns to for each movement state.
+ *
+ * The cardinals read as the ship's own axes - up is `+pi/2`, left is `0` - which is
+ * why the blade points *along* the travel rather than at an angle copied from the
+ * screen. Index 0 is the idle state, and both routes leave by `goto optionUpdateDone`
+ * before reaching this table.
+ */
+const MOVE_FACING: readonly number[] = [
+  0,
+  Math.PI / 2,
+  -Math.PI / 2,
+  0,
+  Math.PI,
+  Math.PI / 4,
+  (3 * Math.PI) / 4,
+  -Math.PI / 4,
+  (-3 * Math.PI) / 4,
+];
+
+/**
+ * Write one of retail's `0xAARRGGBB` literals onto a VM's `color1`.
+ *
+ * The routes assign to `vm.color1.d3dColor` whole, so a colour that leaves alpha at
+ * zero really is invisible - `0x80405080` is a half-transparent violet, not a violet
+ * on whatever alpha the body script happened to set.
+ */
+export function setD3dColor(vm: AnmVm, color: number): void {
+  vm.color1.a = (color >>> 24) & 0xff;
+  vm.color1.r = (color >> 16) & 0xff;
+  vm.color1.g = (color >> 8) & 0xff;
+  vm.color1.b = color & 0xff;
+}
 
 /**
  * The shared shape of both `e3a0` integrators: chase a point at one sixteenth
@@ -342,6 +456,33 @@ export class OptionSystem {
   /** `Player+0x08`, counted up while focused; seven makes the ship a 妖怪. */
   focusFrames = 0;
 
+  /**
+   * `Player.vectors2CC`, the sixteen newest ship positions, newest first.
+   *
+   * `Player.cpp:987-990` shifts the array up and writes the live position into slot 0
+   * every frame the ship actually moves, so `[15]` is sixteen frames of flight behind
+   * her. 妖梦's blade swings around exactly that point (`:2397`, `:2486`), which is why
+   * it draws the arc she just flew rather than orbiting her.
+   */
+  private readonly trail: number[] = [];
+
+  /**
+   * `:756-757` / `:1702`: the next tick seeds the whole history at the ship.
+   *
+   * True from construction, because `:1702` fills all sixteen entries with the spawn
+   * position before the first frame runs - a blade armed on frame one starts at the
+   * ship rather than at the origin.
+   */
+  private trailSeed = true;
+
+  /** `vectors2CC[15]`, the oldest sample. Zeroed until the first tick fills it. */
+  get trailAnchorX(): number {
+    return this.trail.length ? this.trail[(TRAIL_HISTORY - 1) * 2] : 0;
+  }
+  get trailAnchorY(): number {
+    return this.trail.length ? this.trail[(TRAIL_HISTORY - 1) * 2 + 1] : 0;
+  }
+
   constructor(rng: AnmRng) {
     this.rng = rng;
     this.options = Array.from({ length: OPTION_SLOTS }, () => blankOption(rng));
@@ -353,6 +494,8 @@ export class OptionSystem {
     this.homingTarget = null;
     this.focused = false;
     this.focusFrames = 0;
+    this.trail.length = 0;
+    this.trailSeed = true;
   }
 
   /**
@@ -405,6 +548,7 @@ export class OptionSystem {
       const o = this.options[i];
       Object.assign(o, blankOption(this.rng));
       o.substate = 0;
+      o.route = routes[i];
       if (routes[i] !== 'none') {
         o.state = 1;
         o.timer = 0;
@@ -414,8 +558,14 @@ export class OptionSystem {
   }
 
   /**
-   * `:725-753` - every live slot walks out through its sixteen-frame exit, and
-   * shot type 3 hands slot 2 to the route-3 exit blade on its way past.
+   * `:724-757` - every live slot walks out through its sixteen-frame exit, and shot
+   * type 3 hands slot 2 to `g_PlayerRoute3ExitUpdateCallbacks` on its way past.
+   *
+   * That hand-over is the only place the twelve-row table is overridden, and it is
+   * the whole of 妖梦's trailing blade: `:748` memsets the slot, `:749-752` install
+   * `f2d0` and its renderer, and `:756-757` then fill all sixteen history entries
+   * with where she stands, so the blade starts at the ship instead of snapping to
+   * wherever she was a second ago.
    */
   private release(shotType: number): void {
     // `:726`/`:737`: only the four pair shot types have a focus release at all.
@@ -433,24 +583,31 @@ export class OptionSystem {
     if (exit !== null) {
       const o = this.options[exit];
       Object.assign(o, blankOption(this.rng));
+      o.route = 'f2d0';
       o.state = 1;
       o.timer = 0;
+      this.trailSeed = true;
     }
   }
 
-  /** One frame of every slot, in retail's slot order. */
-  tick(world: OptionWorld, shotType: number): void {
+  /**
+   * One frame of every slot, in retail's slot order.
+   *
+   * The shot type is not an argument: which route a slot walks is its own installed
+   * callback (`option+0x2EC`), because `:749-750` can replace it without the table
+   * saying so. {@link install} is what copies the table into the slots.
+   */
+  tick(world: OptionWorld): void {
     this.aimX = world.playerX;
-    const routes = optionRoutes(shotType);
+    if (this.trailSeed) this.seedTrail(world);
     const candidates = world.homingCandidates();
     // The target is chosen in the enemy pass, before the ship reads it.
     this.homingTarget = pickHomingTarget(this.homingTarget, candidates, this.aimX);
     for (let i = 0; i < OPTION_SLOTS; i++) {
-      const route = routes[i];
-      if (route === 'none') continue;
       const o = this.options[i];
+      if (o.route === 'none') continue;
       if (o.state === 0) continue;
-      switch (route) {
+      switch (o.route) {
         case 'e3a0':
           this.stepChaser(o, world);
           break;
@@ -460,12 +617,19 @@ export class OptionSystem {
         case 'eb70':
           this.stepOrbit(o, i, world);
           break;
+        case 'f930':
+          this.stepBlades(o, i, world);
+          break;
+        case 'f2d0':
+          this.stepReleaseBlade(o, world);
+          break;
         case 'f5e0':
           this.stepFacing(o, world);
           break;
         default:
-          // `f930` and `ee70` are named in {@link optionRoutes} but not translated
-          // yet, and a slot whose route is unknown must not pretend to move.
+          // `ee70` is the solo-蕾米莉亚 row of {@link OPTION_ROUTES}, and a slot whose
+          // route is unknown must not pretend to move. No shot type this build can
+          // select reaches it: see the note under {@link optionRoutes}.
           break;
       }
       // `option+0x2E0` is zeroed at arming (`Player.cpp:686`) and the retail
@@ -478,6 +642,10 @@ export class OptionSystem {
       o.vm.step(world.timeScale);
       o.timer++;
     }
+    // `:985-991` walks the history *after* the option pass, so a blade armed this
+    // frame still reads the position from before it, and the first thing it reads is
+    // what `:756-757` just seeded.
+    this.rollTrail(world);
   }
 
   /**
@@ -649,15 +817,99 @@ export class OptionSystem {
   }
 
   /**
-   * `FUN_0044f5e0` (`:2473-2560`), 妖梦 solo's route: one blade on a slow circle
-   * that turns to face the way the ship is moving, tinted by the meter.
+   * `FUN_0044f930` (`:2574-2632`), 妖妖's route: two blades, one on each side of the
+   * ship, swinging in opposite directions on a radius of six.
+   *
+   * This is the whole of what holding Shift does to 妖梦&妖妖's weapon: `ply03as` fires
+   * five of its nine max-power entries out of option 1 and option 2, so a port that
+   * leaves these two slots still leaves the pair with a weapon whose bullets have no
+   * muzzles. Unlike 紫's 式神 the route never chases an enemy and never writes a
+   * colour - it just orbits, and throws sparks.
+   */
+  private stepBlades(o: PlayerOptionState, index: number, world: OptionWorld): void {
+    if (o.state === 1) {
+      this.startBody(o, 'f930', world);
+      o.state = 2;
+      o.targetX = world.playerX;
+      o.targetY = world.playerY;
+      // `:2585-2595`: the second blade starts half a turn behind the first, which is
+      // what puts the two of them on opposite sides of the ship from the first frame.
+      o.orbitAngle = index === 1 ? -Math.PI : 0;
+      // `:2596` falls through, so the frame that arms a blade already swings it.
+    }
+    if (o.state === 3) {
+      this.leaveBody(o);
+      if (o.timer > 16) o.state = 0;
+      return;
+    }
+    if (o.state !== 2) return;
+    // `:2598-2610`: the anchor is the ship's own column stepped out by thirty-two, and
+    // the swing advances three degrees a frame, the far blade running backwards.
+    let baseX = world.playerX;
+    if (index === 0) {
+      baseX -= BLADE_STRAFE;
+      o.orbitAngle = normalizeOptionAngle(o.orbitAngle + BLADE_SWING);
+    } else {
+      baseX += BLADE_STRAFE;
+      o.orbitAngle = normalizeOptionAngle(o.orbitAngle - BLADE_SWING);
+    }
+    o.targetX += (baseX - o.targetX) * BLADE_ANCHOR_EASE;
+    o.targetY += (world.playerY - o.targetY) * BLADE_ANCHOR_EASE;
+    o.x = o.targetX + Math.cos(o.orbitAngle) * BLADE_RADIUS;
+    o.y = o.targetY + Math.sin(o.orbitAngle) * BLADE_RADIUS;
+    world.onTrail?.(o.x, o.y, TRAIL_COLOUR_BLADES);
+  }
+
+  /**
+   * `FUN_0044f2d0` (`:2387-2472`), the blade 妖梦&妖妖 let go with.
+   *
+   * It is armed on the focus *falling* edge (`:748-755`) and swings around
+   * `vectors2CC[15]` - the ship's position sixteen frames of movement ago - so it
+   * traces the path she just flew instead of orbiting her. That anchor is what
+   * `ply03a`'s `updateCb 8` entries fire along (`FUN_00450110:2817` reads
+   * `optionStates[2].facingAngle`), which makes this route the muzzle of her normal
+   * shot rather than a decoration.
+   */
+  private stepReleaseBlade(o: PlayerOptionState, world: OptionWorld): void {
+    if (o.state === 1) {
+      this.startBody(o, 'f2d0', world);
+      o.state = 2;
+      o.targetX = this.trailAnchorX;
+      o.targetY = this.trailAnchorY;
+      o.orbitAngle = 0;
+      o.facingAngle = -Math.PI / 2;
+      // `:2400` falls through, same as the other entrance.
+    }
+    if (o.state === 3) {
+      this.leaveBody(o);
+      if (o.timer > 16) o.state = 0;
+      return;
+    }
+    if (o.state !== 2) return;
+    this.swingOnTrail(o, RELEASE_BLADE_RADIUS);
+    // `:2407` throws the spark before the facing switch, so a ship standing still
+    // still leaves a trail here - unlike `FUN_0044f5e0`, where the same `goto` skips it.
+    world.onTrail?.(o.x, o.y, TRAIL_COLOUR_RELEASE);
+    this.faceMovement(o, world);
+  }
+
+  /**
+   * `FUN_0044f5e0` (`:2474-2572`), solo 妖梦's blade: the same swing as the exit blade,
+   * recoloured and re-eased by the focus byte.
+   *
+   * Row 10 of {@link OPTION_ROUTES}, and only a solo shot type can select it, so no
+   * pair this build offers walks here. It is translated rather than stubbed because it
+   * shares both the swing and the facing machine with {@link stepReleaseBlade}, and
+   * because the constants it used to carry - an anchor at the ship instead of on her
+   * trail, and a spark colour of `0xffff8080` - matched neither of the two spellings
+   * the binary actually has.
    */
   private stepFacing(o: PlayerOptionState, world: OptionWorld): void {
     if (o.state === 1) {
       this.startBody(o, 'f5e0', world);
       o.state = 2;
-      o.targetX = world.playerX;
-      o.targetY = world.playerY;
+      o.targetX = this.trailAnchorX;
+      o.targetY = this.trailAnchorY;
       o.orbitAngle = 0;
       o.facingAngle = -Math.PI / 2;
     }
@@ -667,12 +919,85 @@ export class OptionSystem {
       return;
     }
     if (o.state !== 2) return;
-    o.orbitAngle = normalizeOptionAngle(o.orbitAngle + 0.05235987755982988);
-    o.targetX += (world.playerX - o.targetX) * 0.05;
-    o.targetY += (world.playerY - o.targetY) * 0.05;
-    o.x = o.targetX + Math.cos(o.orbitAngle) * 8;
-    o.y = o.targetY + Math.sin(o.orbitAngle) * 8;
-    world.onTrail?.(o.x, o.y, 0xffff8080);
+    this.swingOnTrail(o, RELEASE_BLADE_RADIUS);
+    setD3dColor(o.vm, 0xffff8080);
+    if (world.modeFlag === 0) {
+      setD3dColor(o.vm, 0xffffffff);
+      // `:2503`: standing still leaves by `goto optionUpdateDone`, which is past both
+      // the turn and the spark, so the blade holds its heading and throws nothing.
+      if (world.movementDirection === 0) return;
+      this.faceMovement(o, world);
+      world.onTrail?.(o.x, o.y, TRAIL_COLOUR_RELEASE);
+    } else {
+      world.onTrail?.(o.x, o.y, TRAIL_COLOUR_FOCUSED);
+    }
+  }
+
+  /**
+   * The swing both 妖梦 routes share: `:2402-2405` and `:2491-2494` are the same four
+   * lines with the radius as their only difference.
+   *
+   * The anchor chases `vectors2CC[15]` at one twentieth of the gap a frame, and the
+   * body sits on the circle at the *sum* of anchor and offset, which is what lets the
+   * blade cut inside the trail instead of trailing it by a constant eight pixels.
+   */
+  private swingOnTrail(o: PlayerOptionState, radius: number): void {
+    o.orbitAngle = normalizeOptionAngle(o.orbitAngle + BLADE_SWING);
+    o.targetX += (this.trailAnchorX - o.targetX) * RELEASE_ANCHOR_EASE;
+    o.targetY += (this.trailAnchorY - o.targetY) * RELEASE_ANCHOR_EASE;
+    o.x = o.targetX + Math.cos(o.orbitAngle) * radius;
+    o.y = o.targetY + Math.sin(o.orbitAngle) * radius;
+  }
+
+  /**
+   * `:2410-2456`, the blade's own turn.
+   *
+   * The wrap-then-snap shape is the behaviour: a difference of more than half a
+   * right angle is taken as "the other side of the circle" and the blade is put there
+   * outright, and only a smaller one is eased at seven percent. Written as a plain
+   * shortest-arc lerp the two cases collapse, and the blade slides through the
+   * quarter turns it is supposed to jump.
+   */
+  private faceMovement(o: PlayerOptionState, world: OptionWorld): void {
+    const direction = world.movementDirection;
+    if (direction < 1 || direction > 8) return;
+    let target = MOVE_FACING[direction];
+    let difference = Math.abs(o.facingAngle - target);
+    if (difference > Math.PI) {
+      target += o.facingAngle > target ? Math.PI * 2 : -Math.PI * 2;
+      difference = Math.abs(o.facingAngle - target);
+    }
+    o.facingAngle =
+      difference > Math.PI / 2
+        ? target
+        : normalizeOptionAngle(o.facingAngle + (target - o.facingAngle) * 0.07);
+  }
+
+  /** `:756-757` / `:1702`: every history entry becomes where the ship stands now. */
+  private seedTrail(world: OptionWorld): void {
+    this.trail.length = 0;
+    for (let i = 0; i < TRAIL_HISTORY; i++) {
+      this.trail.push(world.playerX, world.playerY);
+    }
+    this.trailSeed = false;
+  }
+
+  /**
+   * `:985-991`, and only while the ship is actually moving.
+   *
+   * The array is newest-first, so the shift is a copy down the chain and `[15]` is the
+   * oldest. A ship that stops flying leaves it exactly where it was, which is why 妖梦's
+   * blade keeps circling the spot she paused at instead of sliding under her.
+   */
+  private rollTrail(world: OptionWorld): void {
+    if (!this.trail.length) return;
+    if (!world.moving) return;
+    for (let i = TRAIL_HISTORY - 1; i > 0; i--) {
+      this.trail[i * 2] = this.trail[(i - 1) * 2];
+      this.trail[i * 2 + 1] = this.trail[(i - 1) * 2 + 1];
+    }
+    this.trail[0] = world.playerX;
+    this.trail[1] = world.playerY;
   }
 }
 

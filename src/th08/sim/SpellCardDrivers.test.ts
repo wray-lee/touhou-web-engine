@@ -339,6 +339,118 @@ describe('card capture payout (Spellcard::EndSpell)', () => {
     expect(runner.gs.spellName).toBeNull();
   });
 
+  /**
+   * `Spellcard::flags` bit 2, the capture permission. `StartSpell` raises it
+   * (`Spellcard.cpp:766`) and `EndSpell` is its only reader (`:1070`), wrapping both
+   * the bonus and the time-orb ladder, so a card the ship gave up pays nothing at all.
+   */
+  it('pays nothing once the card has been given up', () => {
+    const { mgr } = managerFor({
+      0: (e) =>
+        (function* () {
+          e.setLives(1000);
+          e.setSpellTimer(600, 1);
+          e.startSpell('テスト符', 'ボス', 0, 0, 500000);
+          e.setPhase(0, 500, 2);
+          yield 9999;
+        })(),
+      1: () =>
+        (function* () {
+          yield 9999;
+        })(),
+      2: () =>
+        (function* () {
+          yield 9999;
+        })(),
+    });
+
+    const boss = mgr.spawn(0, 100, 60, 1000)!;
+    boss.voidCardBonus();
+    boss.applyDamage(600);
+    mgr.tick();
+
+    expect(mgr.frameSpellResults).toHaveLength(1);
+    const card = mgr.frameSpellResults[0];
+    // The bar broke, so a driver really did settle it; only the permission is gone.
+    expect(card.remainingFrames).toBeGreaterThan(0);
+    expect(card.captured).toBe(false);
+    expect(card.bonus).toBe(0);
+    expect(card.fullBonus).toBe(0);
+  });
+
+  it('takes the card away from a bomb press (Player.cpp:1288)', () => {
+    const runner = runnerFor((e) =>
+      (function* () {
+        e.setBossPresent(1);
+        e.setLives(1000);
+        e.setSpellTimer(1200, 3);
+        e.startSpell('雷符「テスト」', 'ボス', 0, 0, 500000);
+        yield 9999;
+      })(),
+    );
+
+    for (let i = 0; i < 8; i++) runner.tick(noInput);
+    expect(runner.gs.spellName).toBe('雷符「テスト」');
+
+    runner.player.bombs = 2;
+    runner.tick({ ...noInput, bomb: true });
+
+    const boss = runner.enemies.gaugeOwner();
+    expect(boss).not.toBeNull();
+    boss!.applyDamage(2000);
+    const cards: SpellResult[] = [];
+    for (let i = 0; i < 4; i++) {
+      runner.tick(noInput);
+      cards.push(...runner.lastSpellResults);
+    }
+
+    expect(cards).toHaveLength(1);
+    expect(cards[0].captured).toBe(false);
+    expect(cards[0].bonus).toBe(0);
+    // `EndSpell` keeps the orbs inside the same permission test, so a bombed card buys
+    // none of them either.
+    expect(runner.gs.timeOrbs).toBe(0);
+  });
+
+  it('takes the card away from a death that could not be cancelled (Player.cpp:1334)', () => {
+    const runner = runnerFor((e) =>
+      (function* () {
+        e.setBossPresent(1);
+        e.setLives(1000);
+        e.setSpellTimer(1200, 3);
+        e.startSpell('死符「テスト」', 'ボス', 0, 0, 500000);
+        yield 9999;
+      })(),
+    );
+
+    for (let i = 0; i < 8; i++) runner.tick(noInput);
+    expect(runner.gs.spellName).toBe('死符「テスト」');
+
+    // No bombs, so `Die:610` arms the two-frame formality window and the death settles.
+    runner.player.bombs = 0;
+    expect(runner.player.hit()).toBe(true);
+    const cards: SpellResult[] = [];
+    for (let i = 0; i < 40; i++) {
+      runner.tick(noInput);
+      cards.push(...runner.lastSpellResults);
+    }
+    // Dying alone does not end a card; the ship has to come back and break it.
+    expect(cards).toHaveLength(0);
+    expect(runner.gs.spellName).toBe('死符「テスト」');
+
+    const boss = runner.enemies.gaugeOwner();
+    expect(boss).not.toBeNull();
+    boss!.applyDamage(2000);
+    for (let i = 0; i < 4; i++) {
+      runner.tick(noInput);
+      cards.push(...runner.lastSpellResults);
+    }
+
+    expect(cards).toHaveLength(1);
+    expect(cards[0].captured).toBe(false);
+    expect(cards[0].bonus).toBe(0);
+  });
+
   it('clears the field of plain enemies when a card changes', () => {
     const { mgr } = managerFor({
       0: (e) =>

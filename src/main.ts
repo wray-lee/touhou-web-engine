@@ -588,31 +588,30 @@ function enemyDebug(game: TH08Game): string {
  *
  * The `.sht` pool owns the ship's weapon now - `Player::FUN_004512f0` walks those
  * 128 slots and the presentation pool has nothing left to report - so a weapon that
- * stops integrating looks identical to one that never existed. Three rows is enough
- * to see a stalled ring, and `@o2` names the shots that left from an option rather
- * than from the ship, which is how 紫's 式神 becomes visible from outside the page's
- * own world. A trailing `*` marks a slot that has already spent itself on a hit.
+ * stops integrating looks identical to one that never existed. The header counts the
+ * ring (`n` live, `o` of them fired by an option) because the two are different
+ * failures - a 式神 that is out but silent has `o0` - and the rows put the option's
+ * own shots first, since they are the ones a three-slot window used to hide. `@o2`
+ * names the slot they left from; a trailing `*` marks one that has already spent
+ * itself on a hit.
  */
 function playerShotDebug(game: TH08Game): string {
   const runner = game.eclRunner;
   if (!runner) return '-';
-  const shots: string[] = [];
-  for (const shot of runner.shots.shots) {
-    if (shot.state === 0) continue;
-    shots.push(
-      shot.x.toFixed(0) +
-        ',' +
-        shot.y.toFixed(0) +
-        ' v' +
-        Math.hypot(shot.vx, shot.vy).toFixed(2) +
-        ' h' +
-        shot.angle.toFixed(2) +
-        (shot.entry && shot.entry.option > 0 ? '@o' + shot.entry.option : '') +
-        (shot.state === 2 ? '*' : ''),
-    );
-    if (shots.length >= 3) break;
-  }
-  return shots.join(' | ');
+  const live = runner.shots.shots.filter((shot) => shot.state !== 0);
+  const row = (shot: (typeof live)[number]) =>
+    shot.x.toFixed(0) +
+    ',' +
+    shot.y.toFixed(0) +
+    ' v' +
+    Math.hypot(shot.vx, shot.vy).toFixed(2) +
+    ' h' +
+    shot.angle.toFixed(2) +
+    (shot.entry && shot.entry.option > 0 ? '@o' + shot.entry.option : '') +
+    (shot.state === 2 ? '*' : '');
+  const byOption = live.filter((shot) => shot.entry && shot.entry.option > 0);
+  const rest = live.filter((shot) => !shot.entry || shot.entry.option === 0);
+  return `n${live.length} o${byOption.length} ` + [...byOption, ...rest].slice(0, 4).map(row).join(' | ');
 }
 
 /**

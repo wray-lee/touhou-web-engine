@@ -727,6 +727,19 @@ export class EnemySlot implements EnemyCtx {
   private cardFrames = 0;
   /** Stops one card from paying twice when a driver and op 123 both fire. */
   private cardSettled = true;
+  /**
+   * `Spellcard::flags` bit 2: the live card may still be captured.
+   *
+   * `StartSpell` raises it (`Spellcard.cpp:766`) and `EndSpell` is the only reader
+   * (`:1070`), but two things on the ship's side put it back down: `acceptBomb` calls
+   * `Spellcard::FUN_0044cba0` (`Player.cpp:1288`), and the frame a death stops being
+   * cancellable calls `Spellcard::FUN_0044d150` (`:1334`). Both clear the bit *and*
+   * zero `bonusProgress`, so the plate goes to zero on screen and nothing is owed when
+   * the card ends. That is retail's rule that a card broken through a bomb or a death
+   * is not a capture, and without it a ship with eleven lives can farm every
+   * 20,000,000-point card in the game.
+   */
+  private cardCapturable = true;
   /** op 184: the live card's bonus is held still instead of decaying. */
   private cardBonusFrozen = false;
   /** Card outcomes produced this frame, drained into `EnemyManager.frameSpellResults`. */
@@ -2663,6 +2676,8 @@ export class EnemySlot implements EnemyCtx {
     // `Spellcard::StartSpell` opens the card with its full bonus and starts the
     // clock that decays it (`Spellcard.cpp:775-784`).
     this.cardBonusProgress = bonus | 0;
+    // `:766`: a new card is a fresh chance at its own bonus.
+    this.cardCapturable = true;
     this.cardFrames = Math.max(0, this.spellTimerFrames);
     this.cardElapsedFrames = 0;
     this.cardSettled = false;
@@ -2673,6 +2688,23 @@ export class EnemySlot implements EnemyCtx {
     this.gs.spellName = null;
     this.gs.spellBonus = 0;
     this.gs.spellFrames = 0;
+  }
+
+  /**
+   * `Spellcard::FUN_0044cba0` (`:1763-1769`) and `FUN_0044d150` (`:1772-1776`), the two
+   * calls the ship makes when it gives up a card: one from `acceptBomb`
+   * (`Player.cpp:1288`), one from the frame its death stops being cancellable (`:1334`).
+   *
+   * Both take the capture bit and zero the bonus that is still standing, which is why
+   * the plate on screen goes to 0 rather than keeping its last value. The extra line in
+   * the bomb's version - copy bit 0 into bit 7 - is not modelled: nothing in the
+   * recovered sources ever reads that bit back, and the only `bit7` readers anywhere are
+   * about an *enemy* word (`EnemyManager.cpp:891`, `:908`, `:1513`).
+   */
+  voidCardBonus(): void {
+    if (this.cardSettled) return;
+    this.cardCapturable = false;
+    this.cardBonusProgress = 0;
   }
 
   /** Frames still on the countdown, as the scripts and the plate see them. */
@@ -2689,6 +2721,9 @@ export class EnemySlot implements EnemyCtx {
   private settleCard(captured: boolean): void {
     if (this.cardSettled || !this.gs.spellName) return;
     this.cardSettled = true;
+    // `Spellcard.cpp:1070`: the second condition is the bit the ship's own bomb or
+    // death takes away, so a card broken after either pays nothing.
+    captured = captured && this.cardCapturable;
     const remaining =
       this.spellTimerFrames >= 0 ? Math.max(0, this.spellTimerFrames - this.spellTimerElapsed) : 0;
     const progress = Math.max(0, this.cardBonusProgress);

@@ -236,6 +236,20 @@ export class PlayerSim {
   leanX = 0;
   leanY = 0;
 
+  /**
+   * `Player+0xE2A98`, `movementDirection`: the nine-way index the input bits resolve
+   * to. 妖梦's blade turns to face it (`:2410`, `:2501`), and the walk animation's lean
+   * is derived from the same value, so the two cannot disagree.
+   */
+  movementDirection = 0;
+
+  /**
+   * Whether the ship's own velocity is non-zero, which is `:985`'s test for walking the
+   * position history. A pointer has no direction bits of its own, so here the travel
+   * stands in for them.
+   */
+  moving = false;
+
   // Shot cooldown
   shootCooldown = 0;
   shotLevel = 0;
@@ -444,6 +458,8 @@ export class PlayerSim {
     // which are the same fields the walk animation reads - so under a slow-motion
     // the ship crawls, and its lean crawls with it.
     const ts = this.gs.timeScale;
+    let direction = 0;
+    let moving = false;
     if (input.moveTarget) {
       // Pointer steering: home straight in, and stop inside a pixel so the ship
       // does not buzz around the cursor.
@@ -456,6 +472,13 @@ export class PlayerSim {
         this.y += (oy / dist) * travel;
         this.leanX = (ox / dist) * travel;
         this.leanY = (oy / dist) * travel;
+        direction = movementDirectionIndex(
+          (this.leanY < 0 ? MOVE_BITS.up : 0) |
+            (this.leanY > 0 ? MOVE_BITS.down : 0) |
+            (this.leanX < 0 ? MOVE_BITS.left : 0) |
+            (this.leanX > 0 ? MOVE_BITS.right : 0),
+        );
+        moving = true;
       } else {
         this.leanX = 0;
         this.leanY = 0;
@@ -467,12 +490,16 @@ export class PlayerSim {
           (input.dy > 0 ? MOVE_BITS.down : 0) |
           (input.dx < 0 ? MOVE_BITS.left : 0) |
           (input.dx > 0 ? MOVE_BITS.right : 0);
-      const [vx, vy] = movementAxisSpeeds(movementDirectionIndex(bits), axis, diagonal);
+      direction = movementDirectionIndex(bits);
+      const [vx, vy] = movementAxisSpeeds(direction, axis, diagonal);
       this.x += vx * ts;
       this.y += vy * ts;
       this.leanX = vx * ts;
       this.leanY = vy * ts;
+      moving = vx !== 0 || vy !== 0;
     }
+    this.movementDirection = direction;
+    this.moving = moving;
     this.x = Math.max(8, Math.min(PLAYFIELD_W - 8, this.x));
     this.y = Math.max(16, Math.min(PLAYFIELD_H - 16, this.y));
 
@@ -682,11 +709,27 @@ export class PlayerSim {
     // own bomb is up.
     const gained = this.gs.bombRunning ? 0 : reward.grazeGain;
     this.graze = Math.min(999999, this.graze + gained);
-    this.score += reward.score;
+    this.addScore(reward.score);
     // `Player.cpp:501`: the subrank bump sits outside the card guard at `:487`, so a
     // graze under your own stopped clock still buys rank.
     increaseSubrank(this.gs, 6);
     return { grazeGain: gained, score: reward.score };
+  }
+
+  /**
+   * `GameManager::AddScore` (`GameManager.cpp:191-194`), the one door every point in
+   * the game walks through: `globals->score += score / 10`, integer division.
+   *
+   * That `/ 10` is why retail's tables read the way they do - a graze is 2000 or 4000
+   * (`Player.cpp:505`) and buys 200 or 400 on the read-out; an enemy's own score field
+   * is 100 and pays 10; 慧音's cards carry 20,000,000 and pay 2,000,000. Every caller
+   * below passes retail's raw argument, so the division happens exactly once, here.
+   * The 点 path is the exception by construction: `ItemPool` publishes the raw number
+   * as `popup` for the float and the divided one as `score` (`ItemPool.ts:519`), so
+   * those arrive already scaled and must not come through this door.
+   */
+  addScore(raw: number): void {
+    this.score += Math.trunc(raw / 10);
   }
 
   /**

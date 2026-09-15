@@ -30,7 +30,13 @@ import {
 } from './ShotDamage';
 import { ItemPool, type CollectResult } from './ItemPool';
 import { checkPlayerCollisions, checkLaserCollisions, type CollisionStats } from './Collision';
-import { OPTION_SLOTS, OptionSystem, type OptionCandidate, type OptionWorld } from './PlayerOptions';
+import {
+  OPTION_SLOTS,
+  OptionSystem,
+  TRAIL_SPARK,
+  type OptionCandidate,
+  type OptionWorld,
+} from './PlayerOptions';
 import {
   PlayerShotPool,
   SHOT_FREE,
@@ -403,7 +409,9 @@ export class StageRunner {
         ctx,
         primary.bombHit,
       );
-      if (resolved.score > 0) this.player.score += resolved.score;
+      // `EnemyManagerUpdate.cpp:686` hands the capped pre-card figure to `AddScore`,
+      // which is where the ten comes off.
+      if (resolved.score > 0) this.player.addScore(resolved.score);
       if (resolved.damage <= 0) continue;
       enemy.lastFrameDamage = resolved.damage;
       enemy.applyDamage(resolved.damage);
@@ -427,7 +435,7 @@ export class StageRunner {
       this.lastDeaths.push(slot);
       // `EnemyManagerUpdate.cpp:837/845`: both ordinary death modes pay the
       // enemy's own score field, which is 100 unless a spawn overrode it.
-      if (slot.scoreValue > 0) this.player.score += slot.scoreValue;
+      if (slot.scoreValue > 0) this.player.addScore(slot.scoreValue);
       // `EnemyManager.cpp:363-369`: a boss death drags the meter toward neutral.
       if (slot.bossLives > 0) this.player.onEnemyKilled();
     }
@@ -445,7 +453,7 @@ export class StageRunner {
     for (const card of this.enemies.frameSpellResults) {
       this.lastSpellResults.push(card);
       if (!card.captured) continue;
-      if (card.bonus > 0) this.player.score += card.bonus;
+      if (card.bonus > 0) this.player.addScore(card.bonus);
       const span = card.timerFrames - Math.trunc(card.timerFrames / 7);
       let orbs = 100;
       if (card.noTimeoutPenalty) orbs = 700;
@@ -619,10 +627,22 @@ export class StageRunner {
     // and it is why the tracking reads as broken once a phase ends.
     this.tailPosition = trackedAimPoint(UNTRACKED_AIM, this.player.x, aim);
 
+    // `Player.cpp:1101-1116`, twelve lines further down the same common path and behind
+    // the same dialogue gate as the 妖率計: with the meter pinned at either extreme the
+    // game pays `AddScore(100)` every frame, which after the funnel is ten points a
+    // frame and 600 a second for as long as it stays pinned. Both extremes pay the same
+    // amount and count into different pairs of frame counters, and those four counters
+    // (`0x3DE18`..`0x3DE24`) are result-screen statistics rather than mechanics, so they
+    // are not modelled; the score drip, which is what a player can actually feel, is.
+    if (!this.worldFreeze) {
+      const gauge = this.player.gauge;
+      if (gauge.isExtremelyHuman() || gauge.isExtremelyYoukai()) this.player.addScore(100);
+    }
+
     // The options first: a shot's origin is whichever slot the partner is riding.
     const optionWorld = this.optionWorld();
     this.options.setFocus(this.player.isSlow, shotType);
-    this.options.tick(optionWorld, shotType);
+    this.options.tick(optionWorld);
 
     const world = this.shipWorld();
     // `Player::Update` runs these two at `:1098`/`:1099` in the order below: move
@@ -670,7 +690,21 @@ export class StageRunner {
         get frameStop() {
           return self.frameStopClock;
         },
+        // `Player+3`. The same byte the firing chain reads as `focusByte`, read here by
+        // the routes that change colour with it.
+        get modeFlag() {
+          return self.player.isSlow ? 1 : 0;
+        },
+        get movementDirection() {
+          return self.player.movementDirection;
+        },
+        get moving() {
+          return self.player.moving;
+        },
         homingCandidates: () => self.candidateViews,
+        onTrail: (x: number, y: number, color: number) => {
+          self.effectPool?.spawn(TRAIL_SPARK, x, y, { count: 1, color });
+        },
         get anmPack() {
           return self.anm ? self.anm.pack : null;
         },
@@ -902,6 +936,9 @@ export class StageRunner {
       // `FUN_0040be30` arms the card and the ship's post-card state with one call,
       // and the state clock is the longer of the two.
       this.player.bombStateTimer = spec.stateTimer;
+      // `Player.cpp:1288`, inside the same `acceptBomb` that just spent the bomb: the
+      // card that is on screen loses its capture bonus to this press.
+      this.enemies.voidLiveCardBonus();
       // `PlayerBomb.cpp:178`: dropping a card banks every item on the field, which
       // is why a bomb in the middle of a cutscene still collects the screen.
       this.items.autoCollectAll();
@@ -1006,6 +1043,9 @@ export class StageRunner {
     // deathbomb never reaches this branch.
     if (this.player.deathSettled) {
       this.player.deathSettled = false;
+      // `Player.cpp:1334`, one line before the 时符 bill below: the card the ship was
+      // standing under when it died is no longer a capture.
+      this.enemies.voidLiveCardBonus();
       // `Player.cpp:1337-1339`: dying costs 500 时符 once the bank is deep, and a
       // tenth of it otherwise. `addTimeOrbs` clamps at zero rather than going negative.
       addTimeOrbs(this.gs, this.gs.timeOrbs > 5000 ? -500 : -Math.trunc(this.gs.timeOrbs / 10));

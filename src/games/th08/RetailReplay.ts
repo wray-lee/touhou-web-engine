@@ -105,6 +105,19 @@ export interface ReplayOutcome {
   scoreRatio: number;
   /** ours - theirs, signed. */
   scoreDelta: number;
+  /**
+   * Score at the last frame the recording was still playing.
+   *
+   * `recordedScore` is one number: what the stage ended on. A run that outlives the
+   * envelope is therefore not comparable to it any more -- past that frame the
+   * recorded ship stops shooting and the stage cannot end, so every extra point is
+   * earned in a tail ZUN never performed. This is the number the ladder reads.
+   */
+  scoreAtEnvelope: number;
+  /** `scoreAtEnvelope / recordedScore`. */
+  envelopeScoreRatio: number;
+  /** Deaths spent inside the envelope, which is the window the ceiling is written for. */
+  envelopeDeaths: number;
   graze: number;
   pointItems: number;
   power: number;
@@ -259,6 +272,9 @@ export async function playReplay(
     recordedScore: h.score,
     scoreRatio: 0,
     scoreDelta: 0,
+    scoreAtEnvelope: 0,
+    envelopeScoreRatio: 0,
+    envelopeDeaths: 0,
     graze: 0,
     pointItems: 0,
     power: h.power,
@@ -286,6 +302,11 @@ export async function playReplay(
   // line collapsing at its first disagreement.
   runner.debugNoFail = options.immortal === true;
   let prevBomb = false;
+  // The envelope is crossed once, and the frame it happens on is the only frame whose
+  // score can be set against the recording's own total.
+  let envelopeSeen = false;
+  let scoreAtEnvelope = 0;
+  let envelopeDeaths = 0;
   for (let i = 0; i < limit; i++) {
     const bits = stage.inputs[i];
     const b = replayButtons(bits);
@@ -355,6 +376,11 @@ export async function playReplay(
     }
 
     outcome.ran = i + 1;
+    if (!envelopeSeen && outcome.ran >= outcome.playableFrames) {
+      scoreAtEnvelope = runner.player.score;
+      envelopeDeaths = outcome.deaths;
+      envelopeSeen = true;
+    }
     outcome.peakBullets = Math.max(outcome.peakBullets, runner.bullets.activeCount);
     outcome.peakEnemies = Math.max(outcome.peakEnemies, runner.enemies.activeCount);
     if (runner.enemies.gaugeOwner()) outcome.bossFrames++;
@@ -391,6 +417,15 @@ export async function playReplay(
   }
 
   outcome.score = runner.player.score;
+  // A run that ends before the envelope never crossed it, so its whole score *is* the
+  // in-window score and its whole death count the in-window count.
+  if (!envelopeSeen) {
+    scoreAtEnvelope = outcome.score;
+    envelopeDeaths = outcome.deaths;
+  }
+  outcome.scoreAtEnvelope = scoreAtEnvelope;
+  outcome.envelopeDeaths = envelopeDeaths;
+  outcome.envelopeScoreRatio = h.score > 0 ? scoreAtEnvelope / h.score : 0;
   outcome.graze = runner.player.graze;
   outcome.pointItems = gs.pointItemsCollected;
   outcome.power = runner.player.power;

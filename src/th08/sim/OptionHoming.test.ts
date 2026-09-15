@@ -37,6 +37,14 @@ const STAY = () => (_e: EnemySlot) =>
     yield 99999;
   })();
 
+/** Wrap to (-pi, pi], the same range the routes keep their angles in. */
+const wrap = (a: number): number => {
+  let v = a % (Math.PI * 2);
+  if (v > Math.PI) v -= Math.PI * 2;
+  else if (v < -Math.PI) v += Math.PI * 2;
+  return v;
+};
+
 /** The buttons for "hold Shift and hold fire", which is the whole of 紫's stance. */
 const FOCUS_FIRE = { dx: 0, dy: 0, shoot: true, bomb: false, slow: true };
 
@@ -196,5 +204,46 @@ describe('the 式神 route, from the ship that arms it to the shot that lands', 
     expect(option.substate).not.toBe(3);
     expect(runner.options.homingTarget).toBeNull();
     expect(option.y).toBeGreaterThan(232);
+  });
+});
+
+describe('妖梦&妖妖, whose weapon is made of options rather than of the ship', () => {
+  /** The same stance, held long enough for the history to have something in it. */
+  const FOCUS_AND_FLY = { ...FOCUS_FIRE, dx: 1 };
+  const FLY = { ...FOCUS_AND_FLY, slow: false };
+
+  it('fires from both blades while focus is held', () => {
+    const runner = runnerFor(3);
+    for (let i = 0; i < 90; i++) runner.tick(FOCUS_AND_FLY);
+    const fromBlades = runner.shots.live().filter((shot) => shot.entry !== null && shot.entry.option > 0);
+    // `ply03as` puts five of its nine max-power entries behind options 1 and 2, so a
+    // pair with nothing installed in those slots still looks like it is shooting.
+    expect(new Set(fromBlades.map((shot) => shot.entry?.option))).toEqual(new Set([1, 2]));
+  });
+
+  it('throws the release blade along where the ship was sixteen frames ago', () => {
+    const runner = runnerFor(3);
+    for (let i = 0; i < 40; i++) runner.tick(FOCUS_AND_FLY);
+    const shipAtRelease = { x: runner.player.x, y: runner.player.y };
+    // `:749-750` hands slot 2 to the exit route on the falling edge, and it never
+    // leaves: `ply03a`'s option-3 entries are 妖梦's *normal* shot.
+    const blade = runner.options.options[2];
+    let fresh: PlayerShot | null = null;
+    for (let i = 0; i < 200 && !fresh; i++) {
+      runner.tick(FLY);
+      fresh = runner.shots.live().find((shot) => shot.entry?.option === 3 && shot.timer === 0) ?? null;
+    }
+    if (!fresh?.entry) throw new Error('no shot ever left the trailing blade');
+    // The slot is still out once the blade has fired: the exit route never walks away,
+    // which is what makes 妖梦's blade a permanent part of her normal shot.
+    expect(blade.state).toBe(2);
+    const shot = fresh;
+    const entry = fresh.entry;
+    // The muzzle is the blade, not the ship - and the ship has flown away by now.
+    expect(Math.hypot(shot.x - blade.x, shot.y - blade.y)).toBeLessThan(8);
+    expect(Math.hypot(shot.x - shipAtRelease.x, shot.y - shipAtRelease.y)).toBeGreaterThan(8);
+    // `FUN_00450110:2817`: the heading is the blade's own facing plus the table angle,
+    // which is the only reader `facingAngle` has anywhere in the binary.
+    expect(shot.angle).toBeCloseTo(wrap(blade.facingAngle + entry.angle), 9);
   });
 });

@@ -137,12 +137,15 @@ describe('retail demo replay gate', () => {
   /**
    * Measured from the mortal run, and each may only move toward the retail value.
    *
-   * `DEATH_CEILING` walks down to 0 and `SCORE_FLOOR` walks up to 1. Raising a floor
-   * or lowering a ceiling is progress; the opposite is a regression, and the message
-   * names the demo so the diff says which stage moved.
+   * `DEATH_CEILING` counts deaths inside the recording's playable envelope and walks
+   * down to 0; `TOTAL_DEATH_CEILING` counts them over the whole stream and is the
+   * tripwire behind it; `SCORE_FLOOR` walks up to 1 on the envelope number. Raising a
+   * floor or lowering a ceiling is progress; the opposite is a regression, and the
+   * message names the demo so the diff says which stage moved.
    *
-   * The floors are low because the runs are short: a mortal run stops at its eighth
-   * death, which on `demorpy3` is frame 2807 of 9260. That is the distance.
+   * The floors are low because the runs are short: a mortal run stops when its last
+   * life goes, which on `demorpy3` is frame 3759, and the run ends at 4041 of a stream
+   * that carries on to frame 6956 with the fire button off. That is the distance.
    *
    * Re-baselined when `RandomizeAntiTamper` landed. Retail spends eight
    * `GetRandomU32` on the frame before every `Player::Die` (`Player.cpp:337`,
@@ -164,15 +167,26 @@ describe('retail demo replay gate', () => {
    */
   const DEATH_CEILING: Record<string, number> = {
     demorpy0: 9,
+    demorpy1: 10,
+    demorpy2: 7,
+    demorpy3: 9,
+  };
+  /**
+   * Deaths over the whole recording, tail included, measured alongside the envelope
+   * ceilings above. This is the second net, not a replacement for the first: a run
+   * that stops clearing stages would show up here even if its envelope stayed clean.
+   */
+  const TOTAL_DEATH_CEILING: Record<string, number> = {
+    demorpy0: 9,
     demorpy1: 11,
-    demorpy2: 9,
+    demorpy2: 11,
     demorpy3: 9,
   };
   const SCORE_FLOOR: Record<string, number> = {
-    demorpy0: 0.14,
-    demorpy1: 0.587,
-    demorpy2: 0.115,
-    demorpy3: 0.095,
+    demorpy0: 0.068,
+    demorpy1: 0.36,
+    demorpy2: 0.12,
+    demorpy3: 0.045,
   };
   /**
    * Sum of the four ratios: 0.480 before the anti-tamper draw, 0.513 after it,
@@ -325,7 +339,67 @@ describe('retail demo replay gate', () => {
    * the sixth and seventh notes measured — and `TOTAL_SCORE_FLOOR` 0.99 -> 0.94, both with
    * this note attached rather than a quiet edit.
    */
-  const TOTAL_SCORE_FLOOR = 0.94;
+  /*
+   * Re-baselined a tenth time. Three changes ride together, and the second one moves
+   * every number in this file down, so the whole accounting is written out here.
+   *
+   * 1) 妖梦&妖妖's blades. `OPTION_ROUTES[3]` arms slot 1 and slot 2 with
+   *    `FUN_0044f930`, and letting go of focus hands slot 2 to
+   *    `g_PlayerRoute3ExitUpdateCallbacks[2]` = `FUN_0044f2d0` (`Player.cpp:749-752`).
+   *    Neither body existed here: the two slots sat at their zeroed position while
+   *    `ply03a`/`ply03as` fire nine entries out of them, so a third of the team's
+   *    weapon left the muzzle at the origin of the field. With the swing, the
+   *    sixteen-frame position history (`vectors2CC`, `:985-991`) and the eight-way
+   *    facing table (`:2410-2456`) translated, `demorpy2` stopped collapsing at frame
+   *    4210 and walked ZUN's whole performance: envelope deaths 9 -> 7, deaths over the
+   *    recording 9 -> 11, ran 4210 -> 6604, point items 196 -> 618. `DEATH_CEILING`
+   *    tightens with it, 9 / 11 / 9 / 9 -> 9 / 10 / 7 / 9, and a second table appears
+   *    under it (`TOTAL_DEATH_CEILING`, 9 / 11 / 11 / 9) so a tail that cannot stop
+   *    bleeding cannot rot unnoticed either.
+   *
+   * 2) `GameManager::AddScore` (`GameManager.cpp:191-194`) is `score += score / 10`,
+   *    and it is the one door every point in the game walks through: the graze's
+   *    2000/4000 (`Player.cpp:505-506`), an enemy's own 100
+   *    (`EnemyManagerUpdate.cpp:837`, `:845`), the shot hit's `10 * (damage / 5)`
+   *    (`:686`), a card's bonus (`Spellcard.cpp:806`, `:1428`). The port had been
+   *    adding four of those five whole -- only the item path divided (`ItemPool.ts:519`)
+   *    -- so the read-out paid ten times what retail pays for grazes, hits, kills and
+   *    cards, and a captured 慧音 card moved it by 19,993,420. Items are the biggest
+   *    contributor, which is why the correction is between 1.6x and 2.1x a row and not
+   *    10x: measured 0.143 / 0.570 / 0.226 / 0.096 -> 0.068 / 0.362 / 0.126 / 0.046.
+   *    `TOTAL_SCORE_FLOOR` goes 0.94 -> 0.60 with this note attached rather than a
+   *    quiet edit, and that is the honest direction: the floor was standing on an
+   *    inflated read-out. One row rose through the correction -- 妖梦's 0.116 -> 0.126,
+   *    i.e. her blades bought more than the funnel took away.
+   *
+   * 3) The measurement window. Until a run could outlive the envelope, "score at the
+   *    last frame run" and "score when ZUN stopped playing" were the same number. Now
+   *    two runs overrun it, and past that frame the recorded ship holds still with the
+   *    gun off: the stage cannot end, so every point beyond it is earned in a tail the
+   *    recording never performed and cannot be set against `recordedScore`, which is a
+   *    single end-of-stage figure. The ladder therefore reads `scoreAtEnvelope` and
+   *    `envelopeDeaths`. `demorpy1` moved for this reason alone and for no other:
+   *    0.588 -> 0.570 is 338 frames of tail taken out of the numerator, not a life.
+   *
+   * The bug that made the row look impossible, found while writing (1) and fixed in
+   * the same pass: `Spellcard::flags` bit 2, the capture permission. `StartSpell`
+   * raises it (`Spellcard.cpp:766`), `EndSpell` is its only reader (`:1070`) and wraps
+   * both the bonus and the time-orb ladder inside it, and the ship takes it back down
+   * twice -- `acceptBomb` calls `FUN_0044cba0` (`Player.cpp:1288`) and the frame a death
+   * stops being cancellable calls `FUN_0044d150` (`:1334`). Both also zero
+   * `bonusProgress`, which is why the plate falls to 0 on screen rather than keeping its
+   * last value (`Spellcard.cpp:1597-1600` reads the same bit). This demo bombs three
+   * times and dies eleven, so under retail's rule it captures nothing at all -- which is
+   * also how the recording's stage total can sit below a single card's bonus. Measured
+   * on the row, before the funnel: 21,765,248 -> 1,771,828.
+   *
+   * And one mechanism the funnel had to land before it was worth adding:
+   * `Player.cpp:1101-1116` pays `AddScore(100)` every frame the 妖率計 sits pinned at
+   * either extreme, with no dialogue on screen -- 600 points a second for staying
+   * pinned, which is the price the game puts on living at the ends of the meter. The
+   * score is in the sim now; the four result-screen frame counters beside it are not.
+   */
+  const TOTAL_SCORE_FLOOR = 0.60;
 
   it.skipIf(!hasAssets)(
     "runs ZUN's whole stream through the sim with nothing structural left to fix",
@@ -362,7 +436,7 @@ describe('retail demo replay gate', () => {
 
       console.log(
         [
-          'demo      route    team             playable   ran clear deaths 1stDeath  bombs  blt   power   pic  score     retail    ratio',
+          'demo      route    team             playable   ran clear 1stDeath  bombs  blt   power   pic  envDeath deaths  envScore   score    retail   envRatio  ratio',
           ...rows.map(
             (r) =>
               r.demo.padEnd(10) +
@@ -371,14 +445,17 @@ describe('retail demo replay gate', () => {
               String(r.playableFrames).padStart(8) +
               String(r.ran).padStart(6) +
               String(r.clearFrame).padStart(6) +
-              String(r.deaths).padStart(7) +
               String(r.deathFrames[0] ?? '-').padStart(8) +
               String(r.bombsUsed).padStart(7) +
               String(r.peakBullets).padStart(5) +
               String(r.power).padStart(7) +
               String(r.pointItems).padStart(6) +
-              String(r.score).padStart(10) +
+              String(r.envelopeDeaths).padStart(9) +
+              String(r.deaths).padStart(7) +
+              String(r.scoreAtEnvelope).padStart(11) +
+              String(r.score).padStart(9) +
               String(r.recordedScore).padStart(10) +
+              String(r.envelopeScoreRatio.toFixed(3)).padStart(9) +
               String(r.scoreRatio.toFixed(3)).padStart(8),
           ),
           // Which frames the run bled on matters more than the count: the count only
@@ -395,22 +472,31 @@ describe('retail demo replay gate', () => {
             /game over \(lives spent\)$/,
           );
         }
+        // Two ceilings, because the two numbers answer different questions. The
+        // envelope one is the fidelity claim: ZUN's dodge line only *is* a dodge line
+        // while he was playing it. The total one is a tripwire over the tail, where a
+        // run that cannot finish the stage stands still and bleeds.
         const ceiling = DEATH_CEILING[r.demo];
         expect(
-          r.deaths,
-          `${r.demo}: ${r.deaths} deaths, ceiling ${ceiling}. Lower it by making the patterns agree with ZUN's.`,
+          r.envelopeDeaths,
+          `${r.demo}: ${r.envelopeDeaths} deaths inside its ${r.playableFrames}-frame envelope, ceiling ${ceiling}. ` +
+            `Lower it by making the patterns agree with ZUN's.`,
         ).toBeLessThanOrEqual(ceiling);
+        expect(
+          r.deaths,
+          `${r.demo}: ${r.deaths} deaths over the whole recording, ceiling ${TOTAL_DEATH_CEILING[r.demo]}`,
+        ).toBeLessThanOrEqual(TOTAL_DEATH_CEILING[r.demo]);
         const floor = SCORE_FLOOR[r.demo];
         expect(
-          r.scoreRatio,
-          `${r.demo}: ratio ${r.scoreRatio.toFixed(3)} fell below the measured floor ${floor}`,
+          r.envelopeScoreRatio,
+          `${r.demo}: envelope ratio ${r.envelopeScoreRatio.toFixed(3)} fell below the measured floor ${floor}`,
         ).toBeGreaterThanOrEqual(floor);
       }
 
-      const total = rows.reduce((sum, r) => sum + r.scoreRatio, 0);
+      const total = rows.reduce((sum, r) => sum + r.envelopeScoreRatio, 0);
       expect(
         total,
-        `combined score ratio ${total.toFixed(3)} fell below the measured floor ${TOTAL_SCORE_FLOOR}`,
+        `combined envelope ratio ${total.toFixed(3)} fell below the measured floor ${TOTAL_SCORE_FLOOR}`,
       ).toBeGreaterThanOrEqual(TOTAL_SCORE_FLOOR);
     },
     600_000,

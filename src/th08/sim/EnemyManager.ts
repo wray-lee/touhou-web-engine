@@ -528,6 +528,19 @@ export class EnemyManager {
     return this.gaugeOwner() !== null;
   }
 
+  /**
+   * The ship gave up the live card: bomb it or die on it, the bonus is gone
+   * (`Player.cpp:1288`, `:1334` -> `Spellcard::FUN_0044cba0` / `FUN_0044d150`).
+   *
+   * One slot at a time can hold an unsettled card, because `startSpell` is the only
+   * writer of the game-wide name, but the pass visits every slot: a card op 123
+   * already settled has nothing left to take away, and one that a driver left
+   * half-resolved must not keep a bonus alive either.
+   */
+  voidLiveCardBonus(): void {
+    for (const slot of this.slots) slot.voidCardBonus();
+  }
+
   /** True while an active slot still holds a boss marker (op 127). */
   hasBossMarker(): boolean {
     for (const slot of this.slots) if (slot.active && slot.isBoss) return true;
