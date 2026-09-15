@@ -666,11 +666,7 @@ export class StageRunner {
 
     this.lastHits = hits;
     this.lastLaserHits = laserHits.hits;
-    if (
-      (hits.length > 0 || laserHits.hits.length > 0) &&
-      !this.player.isInvulnerable &&
-      !freeze
-    ) {
+    if ((hits.length > 0 || laserHits.hits.length > 0) && !this.player.isInvulnerable && !freeze) {
       // The bullets that landed are consumed either way, so a QA run that cannot
       // dodge does not end up re-colliding with the same shot every frame.
       for (const b of hits) b.active = false;

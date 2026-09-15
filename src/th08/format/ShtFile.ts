@@ -80,3 +80,133 @@ export function parseSht(buf: Buffer | Uint8Array): ShtFile {
     itemTimeScale: dv.getFloat32(0x34, true),
   };
 }
+
+/**
+ * One entry of a firing chain, `0x38` bytes. The layout is not guessed: it is the
+ * order in which `Player::FUN_0044fb70` (`Player.cpp:2633-2680`) copies the entry
+ * into a shot slot, and `Player::FUN_0044fd80` (`:2684-2693`) decides whether the
+ * entry fires at all.
+ */
+export interface ShtShotEntry {
+  /**
+   * `entry+0x00`, the divisor of the firing test `value % interval == phase`.
+   * It is not a shot *type* - `5` means "one volley every five frames", and the
+   * shipped tables use 2, 3, 4, 5, 6, 8, 10, 12, 15, 16 and 30.
+   */
+  interval: number;
+  /** `entry+0x02`, the position inside that interval. */
+  phase: number;
+  /** `entry+0x04`, x offset from the entry's origin. */
+  dx: number;
+  /** `entry+0x08`, y offset from the entry's origin. */
+  dy: number;
+  /** `entry+0x0C` -> `slot+0x430`. Read as the float the file also carries. */
+  field0c: number;
+  /** `entry+0x10` -> `slot+0x434`. */
+  field10: number;
+  /** `entry+0x14` -> `slot+0x450`, radians; `-pi/2` is straight up. */
+  angle: number;
+  /** `entry+0x18` -> `slot+0x44C`, and `slot+0x43C/0x440` are its components. */
+  speed: number;
+  /** `entry+0x1C` -> `slot+0x460`. */
+  field1c: number;
+  /** `entry+0x1E`: when positive and the ship is 极度妖怪, the shot is marked. */
+  youkaiBoost: number;
+  /**
+   * `entry+0x20`: which origin fires this entry. Zero is the ship itself
+   * (`Player+0x2B4`); 1..4 are the option slots, which retail keeps at
+   * `Player + (n-1)*0x2F4 + 0x6B0`. Ninety-eight of the 227 shipped entries - 43 %
+   * - are fired by an option rather than by the ship, and that is what the player
+   * side of the port is still missing.
+   */
+  option: number;
+  /** `entry+0x22` -> `slot+0x464`. */
+  field22: number;
+  /**
+   * `entry+0x24`: the player ANM script to run, offset by ten on the way in
+   * (`SetAndExecuteScriptIdx(slot, entry+0x24 + 10)`).
+   */
+  anmScript: number;
+  /** `entry+0x26`: sound id, or negative for none. */
+  sound: number;
+  /**
+   * `entry+0x28`, an index into `g_PlayerShotUpdateCallbacks` (`:209-211`).
+   * Zero is the plain interval fire; `LoadShtFile` resolves the others to
+   * function pointers, and the port keeps the index so it can name them.
+   */
+  updateCb: number;
+  /** `entry+0x2C` -> `g_PlayerShotRenderCallbacks` (`:212-213`). */
+  renderCb: number;
+  /** `entry+0x30` -> `g_PlayerShotTimerCallbacks` (`:214`). */
+  timerCb: number;
+  /**
+   * `entry+0x34` -> `g_PlayerShotCollisionCallbacks`: 1 is `FUN_00450c50`,
+   * 2 is `FUN_00450ee0`, 3..8 name a difficulty rather than a callback.
+   */
+  collisionCb: number;
+}
+
+/** One power tier of one table: the power it unlocks at, and its firing chain. */
+export interface ShtPowerTable {
+  /**
+   * `g_PlayerRawShtFile`'s second word. `FUN_00450f60:3116-3119` walks the tables
+   * while `GetPower() >= gate`, so this is the *lowest* power the tier covers:
+   * the shipped files use 8, 24, 48, 80, 128 and 999.
+   */
+  powerGate: number;
+  entries: ShtShotEntry[];
+}
+
+/**
+ * The firing chains of one `.sht`. `Player::LoadShtFile` (`:1775-1815`) walks
+ * `header+0x02` table pointers from `header+0x38`, eight bytes each, and each
+ * chain ends at an entry whose `interval` is negative.
+ */
+export function parseShtTables(buf: Buffer | Uint8Array): ShtPowerTable[] {
+  const dv = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+  const count = dv.getUint16(0x02, true);
+  const tables: ShtPowerTable[] = [];
+  for (let t = 0; t < count; t++) {
+    const entries: ShtShotEntry[] = [];
+    // The loader adds the file base to this word before dereferencing it; a
+    // detached buffer is already based at zero, so the offset is the address.
+    for (let at = dv.getUint32(0x38 + t * 8, true); at + 0x38 <= buf.length; at += 0x38) {
+      const interval = dv.getInt16(at, true);
+      if (interval < 0) break;
+      entries.push({
+        interval,
+        phase: dv.getInt16(at + 0x02, true),
+        dx: dv.getFloat32(at + 0x04, true),
+        dy: dv.getFloat32(at + 0x08, true),
+        field0c: dv.getFloat32(at + 0x0c, true),
+        field10: dv.getFloat32(at + 0x10, true),
+        angle: dv.getFloat32(at + 0x14, true),
+        speed: dv.getFloat32(at + 0x18, true),
+        field1c: dv.getInt16(at + 0x1c, true),
+        youkaiBoost: dv.getInt16(at + 0x1e, true),
+        option: dv.getInt16(at + 0x20, true),
+        field22: dv.getInt16(at + 0x22, true),
+        anmScript: dv.getInt16(at + 0x24, true),
+        sound: dv.getInt16(at + 0x26, true),
+        updateCb: dv.getUint32(at + 0x28, true),
+        renderCb: dv.getUint32(at + 0x2c, true),
+        timerCb: dv.getUint32(at + 0x30, true),
+        collisionCb: dv.getUint32(at + 0x34, true),
+      });
+    }
+    tables.push({ powerGate: dv.getUint32(0x38 + t * 8 + 4, true), entries });
+  }
+  return tables;
+}
+
+/**
+ * Which power tier fires right now, `FUN_00450f60:3116-3119`. The walk stops at
+ * the first table whose gate is above the ship's power, and the last tier's gate
+ * is 999 - unreachable, because a full 128.00 power bar is the `+0x08` maximum -
+ * so the top tier is what a maxed ship reads.
+ */
+export function shtTableForPower(tables: ShtPowerTable[], power: number): ShtPowerTable {
+  let i = 0;
+  while (i < tables.length && power >= tables[i].powerGate) i++;
+  return tables[Math.min(i, tables.length - 1)];
+}
