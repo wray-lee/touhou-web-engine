@@ -293,8 +293,16 @@ export const WRITABLE_FLOAT_FIELD_BY_ID: Record<number, string> = {
  * `g_EclGameTimeScale`, the factor the interpreter multiplies scripted motion by
  * when it steps and integrates an enemy (`EnemyManagerUpdate.cpp:486-490`).
  *
- * Retail keeps it at 1 for a normal run and drops it for a slow-motion effect;
- * the port has no such effect, so every motion step runs at full scale. It lives
- * beside the register tables because both are the interpreter's own vocabulary.
+ * The live value is `GameState.timeScale`; this constant is the scale a host that
+ * does not model the effect at all runs at, which is what the generated scripts
+ * and every standalone unit test use. Retail keeps it at 1 for a normal run and
+ * drops it for a slow-motion beat - `ex 18` writes `1 / value` into it
+ * (`EclExIns.cpp:825-837`), and because the global *is*
+ * `g_Supervisor.framerateMultiplier` (`EclGlobals.cpp:117`), bullets, lasers,
+ * items, enemies, effects, score popups and the ship itself all crawl together.
+ * Stage 6b opens a spell card with `ex 18 4` and closes it with `ex 18 1`.
+ *
+ * It lives beside the register tables because both are the interpreter's own
+ * vocabulary.
  */
 export const ECL_GAME_TIME_SCALE = 1;

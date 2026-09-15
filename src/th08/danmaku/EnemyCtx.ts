@@ -372,7 +372,11 @@ export interface EnemyCtx {
   setSpellTimerElapsed(frames: number): void;
   /** op 134: arm the card countdown; `sub` runs when it expires. */
   setSpellTimer(frames: number, sub: number): void;
-  setMisc136(...args: number[]): void;
+  /**
+   * op 136, the `ex` family: `sub` indexes `g_EclExInsn` and `value` is that
+   * handler's operand. Every shipped script calls it with exactly these two.
+   */
+  setMisc136(sub: number, value: number): void;
   setMisc144(...args: number[]): void;
   setMisc145(...args: number[]): void;
   setMisc147(...args: number[]): void;

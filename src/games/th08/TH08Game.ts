@@ -854,6 +854,18 @@ export class TH08Game {
     };
   }
 
+  /**
+   * Whether a conversation is on screen, from either of the two systems that can
+   * put one there: the retail `.dat` message interpreter (`RetailDialogue`, which
+   * is `Gui::IsDialogPresent` itself) and the profile-driven boss and spell talks.
+   *
+   * Both hold the world the same way, because both are the same promise to the
+   * player: for these frames the ship is watching someone talk.
+   */
+  get dialogPresent(): boolean {
+    return this.retail?.showing === true || this.dialogue?.isActive === true;
+  }
+
   /** Where the stage conversation has got to, for the debug mirror in `main.ts`. */
   get dialogueDebug(): ReturnType<RetailDialogue['debugState']> {
     return (
@@ -925,6 +937,10 @@ export class TH08Game {
         runner.items.spawn('powerFull', runner.player.x, runner.player.y);
       }
     }
+    // A talk scene hangs the field. Retail reaches this state through
+    // `g_EclScriptedGlobalUpdateFreeze`, which is what its own bullet and enemy
+    // clocks check; the conversation is the second producer of it in this port.
+    runner.worldFreeze = this.dialogPresent;
     runner.tick(input);
 
     // Sync ECL player state back to the rendering Player
@@ -2016,7 +2032,7 @@ export class TH08Game {
     // fallback chart that used to cover this no longer exists.
     this.tryLoadEcl();
 
-    if (this.input.wasKeyPressed('bomb')) {
+    if (this.input.wasKeyPressed('bomb') && !this.dialogPresent) {
       this.player.useBomb();
     }
 
@@ -2034,7 +2050,7 @@ export class TH08Game {
     this.hud.setMember(this.player.member.name, this.player.member.label, this.player.isSlowMode);
 
     // Auto-fire while pointer-steering (touch drag, or mouse if that option is on).
-    if (this.input.isKeyDown('shoot') || this.input.isSteering) {
+    if ((this.input.isKeyDown('shoot') || this.input.isSteering) && !this.dialogPresent) {
       const newShots = this.player.shoot(this.stage.currentFrame);
       if (newShots.length > 0) {
         this.audio.playSE('shoot');

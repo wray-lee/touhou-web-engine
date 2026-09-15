@@ -238,6 +238,13 @@ class TH08Shell {
         rank: r ? r.gs.rank : 0,
         sub: r ? r.gs.subRank : 0,
         fstop: r ? (r.gs.bombRunning ? 1 : 0) : 0,
+        /**
+         * A conversation owns the screen, which is retail's `Gui::IsDialogPresent`.
+         * While this reads 1 the field is frozen on `g_EclScriptedGlobalUpdateFreeze`:
+         * bullets and enemy scripts hang in the air, the stage timeline feeds the
+         * field nothing, and the shot and bomb keys read as unpressed.
+         */
+        dlg: game.dialogPresent ? 1 : 0,
         lives: p.lives,
         bombs: p.bombs,
         pow: Math.round(p.power),

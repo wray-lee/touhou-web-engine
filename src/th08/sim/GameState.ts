@@ -160,6 +160,14 @@ export interface GameState {
    */
   playerIsYoukai: boolean;
   /**
+   * `g_EclGameTimeScale`, which is `g_Supervisor.framerateMultiplier`
+   * (`EclGlobals.cpp:117`). Retail leaves it at 1 and lets the ECL `ex 18` drop it
+   * for a scripted slow-motion beat, and every consumer that cares multiplies its
+   * own step by it: enemy motion (`EnemyManagerUpdate.cpp:486-490`) and the speed
+   * a fresh bullet launches with (`BulletManager.cpp:184`).
+   */
+  timeScale: number;
+  /**
    * `Player.bombState.frameStop` (`Player.hpp:99-102`, the int at `Player+0xFDC`).
    * The name is a misnomer inherited from the decomp: retail raises it in
    * `acceptBomb` (`Player.cpp:1277`) and drops it only when the card's own timer
@@ -314,6 +322,8 @@ export function createGameState(difficulty: Difficulty = 'normal', seed = 0): Ga
     maxRank: RANK_PARAMS_BY_DIFFICULTY[DIFFICULTY_ID[difficulty]][2],
     youkaiGauge: 0,
     playerIsYoukai: false,
+    // `ECL_GAME_TIME_SCALE` in `src/th08/core/EclRegisters.ts` is the same 1.
+    timeScale: 1,
     bombRunning: false,
     bombForcedFocus: false,
     timeOrbs: 0,

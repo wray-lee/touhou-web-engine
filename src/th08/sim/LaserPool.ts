@@ -139,6 +139,12 @@ export interface LaserSpawnArgs {
 export class LaserPool {
   readonly lasers: Laser[];
 
+  /**
+   * `g_EclGameTimeScale` (`EclGlobals.cpp:117`), applied to the beam's length
+   * growth at `BulletManager.cpp:1046`. The host keeps it in step once a frame.
+   */
+  timeScale = 1;
+
   constructor() {
     this.lasers = Array.from({ length: MAX_LASERS }, createLaser);
   }
@@ -196,7 +202,9 @@ export class LaserPool {
 
   /** The body of `BulletManager.cpp:1043-1152`, one beam at a time. */
   private stepLaser(laser: Laser): void {
-    laser.head += laser.speed;
+    // `:1046`: the beam's length grows by `g_EclGameTimeScale * 0x56C`, so a
+    // slow-motion slows the sweep as well as the bullets.
+    laser.head += laser.speed * this.timeScale;
     if (laser.head - laser.tail > laser.startLength) {
       laser.tail = laser.head - laser.startLength;
     }

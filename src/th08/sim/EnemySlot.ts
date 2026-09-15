@@ -1243,10 +1243,11 @@ export class EnemySlot implements EnemyCtx {
 
     // Retail advances the motion producer at the tail of the script pass and only
     // integrates it in the manager update, clamping on both sides of the step
-    // (`EnemyManagerUpdate.cpp:486-490`).
-    this.stepMotionModel(ECL_GAME_TIME_SCALE);
+    // (`EnemyManagerUpdate.cpp:486-490`). Both steps carry `g_EclGameTimeScale`, which
+    // an ECL `ex 18` drops for a scripted slow-motion beat (`EclExIns.cpp:829-837`).
+    this.stepMotionModel(this.gs.timeScale);
     this.clampPosition();
-    this.integrateMotion(ECL_GAME_TIME_SCALE);
+    this.integrateMotion(this.gs.timeScale);
     this.clampPosition();
     // Without a VM the facing rate has to be integrated here; with one the
     // script owns the same field, so stepping it twice would double the spin.
@@ -3336,7 +3337,56 @@ export class EnemySlot implements EnemyCtx {
       this.cardFrames = Math.max(0, frames | 0);
     }
   }
-  setMisc136(..._args: number[]) {}
+  /**
+   * op 136 (`EclRunHigh.inl:865`): the `ex` family. The first operand selects one
+   * of 32 handlers out of `g_EclExInsn` (`EclGlobals.cpp:73-105`) and the rest are
+   * that handler's own arguments, so this is a second opcode space hidden inside
+   * one ECL instruction - the same shape as the ECL's own dispatch, one level down.
+   *
+   * Only `ex 18` has a modelled effect today. The rest are listed below with what
+   * they actually do in retail and why they are safe to skip, rather than being
+   * silently swallowed:
+   *
+   * - `0`, `1`, `5`, `6`, `10`, `14`, `15`, `17`, `20`, `23`, `24`: all of them are
+   *   `ScreenEffect::RegisterChain` calls (`EclExIns.cpp:47-120`, `:801`) that ask
+   *   the post-process manager for a chain - screen tint, shake, the 幻想庭园
+   *   barrier wash. They change nothing about the simulation, and the port has no
+   *   post-process chain manager, so skipping them costs pixels and not behaviour.
+   * - `12` (`ReisenFreezeBullets`, `EclExIns.cpp:620-660`) plus `13`: the stage-5
+   *   bullet freeze, which writes every live bullet's velocity to the release
+   *   heading and swaps its sprite band. This is a real gameplay effect and the
+   *   most-used `ex` in the shipped scripts (18 calls). It is not modelled yet.
+   * - `22` (`MokouResurrection`, `:846`): a cut-in banner for stage 3's Mokou card.
+   * - `30`: bump `g_ScreenEffectCounter`.
+   * - `31` (`FUN_00425390`, `:971`): drop a 点 or 符 item depending on
+   *   `Player+0xFDC` - i.e. it asks whether a spell card is playing.
+   * - `26` (`FUN_00425070`, `:897`): `g_EclScriptedGlobalUpdateFreeze`, which the
+   *   port already reaches through `StageRunner.worldFreeze`; the conversation and
+   *   menu producers share that one channel with it.
+   *
+   * `ex 18` (`FUN_00424f90`, `EclExIns.cpp:825-837`) is the global slow-motion:
+   * `g_EclGameTimeScale = 1 / value`, and `EclGlobals.cpp:117` makes that global
+   * *be* `g_Supervisor.framerateMultiplier`, so every consumer that multiplies its
+   * step by it crawls together - bullets launch and renormalise slower
+   * (`BulletManager.cpp:184`, `:1192-1417`), enemy motion slows
+   * (`EnemyManager.cpp:63-89`, `EnemyManagerUpdate.cpp:486`), so do lasers
+   * (`:1046`), items (`ItemManager.cpp:210`), the ship itself
+   * (`Player.cpp:880`) and its 妖力 meter (`:939`). Stage 6b opens with
+   * `ex 18 4` and restores it with `ex 18 1`.
+   */
+  setMisc136(sub: number, value: number) {
+    switch (sub | 0) {
+      case 18: {
+        // `EclExIns.cpp:833-836`: the operand is a divisor, and a zero operand is
+        // what retail computes too - `1 / 0` is infinity, which is a stalled game,
+        // so the scripts never send it. Guard the sign of the guard, not the maths.
+        this.gs.timeScale = value === 0 ? 1 : 1 / value;
+        break;
+      }
+      default:
+        break;
+    }
+  }
   setMisc144(..._args: number[]) {}
   setMisc145(..._args: number[]) {}
   setMisc147(..._args: number[]) {}

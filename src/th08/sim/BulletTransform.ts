@@ -122,6 +122,14 @@ export interface BulletWorld {
   sizeFor(type: number, color: number): number;
   /** `transformSound` / `spawnSound` ids, played by the host. */
   onSound(id: number, x: number): void;
+  /**
+   * `g_EclGameTimeScale` (`EclGlobals.cpp:117`), which is `g_Supervisor`
+   * `.framerateMultiplier`. Retail scales a bullet's *velocity* by it at every
+   * site that (re)writes velocity, while the raw speed field `+0xD68` stays
+   * unscaled - which is what lets a slow-motion start mid-flight and end again.
+   * Absent means the host has no such effect, i.e. 1.
+   */
+  timeScale?: number;
 }
 
 /**
@@ -329,8 +337,13 @@ export function advanceShotRecords(b: Bullet, world: BulletWorld, pool: BulletPo
     case REC.ACCELERATE: {
       b.tfActive |= REC.ACCELERATE;
       const heading = r.float1 > -990 ? r.float1 : b.angle;
-      b.h10ax = Math.cos(heading) * r.float0;
-      b.h10ay = Math.sin(heading) * r.float0;
+      // `BulletManager.cpp:362-364` builds the acceleration vector with the time
+      // scale already folded in, and `FUN_004322b0` multiplies by it again on
+      // every frame it is applied. That is retail's double scaling; both halves
+      // are load-bearing for a slow-motion that starts after the arm.
+      const accel = (world.timeScale ?? 1) * r.float0;
+      b.h10ax = Math.cos(heading) * accel;
+      b.h10ay = Math.sin(heading) * accel;
       b.h10t = 0;
       b.h10dur = r.int0;
       if (b.tfIndex !== 0 && b.tSound >= 0) world.onSound(b.tSound, b.x);
@@ -456,10 +469,12 @@ export function advanceShotRecords(b: Bullet, world: BulletWorld, pool: BulletPo
 export function runShotHandlers(b: Bullet, world: BulletWorld): void {
   const f = b.tfActive;
   if (f === 0) return;
+  // `TH08_BULLET_TIME_SCALE` is `g_EclGameTimeScale` (`BulletManager.cpp:26`).
+  const ts = world.timeScale ?? 1;
 
-  if (f & REC.BIRTH_PUSH) birthPush(b);
-  if (f & REC.ACCELERATE) accelerate(b);
-  if (f & REC.CURL) curl(b);
+  if (f & REC.BIRTH_PUSH) birthPush(b, ts);
+  if (f & REC.ACCELERATE) accelerate(b, ts);
+  if (f & REC.CURL) curl(b, ts);
   if (f & 0x40) rampCycle(b, 0x40, 'relative', world);
   if (f & 0x100) rampCycle(b, 0x100, 'absolute', world);
   if (f & 0x80) rampCycle(b, 0x80, 'home', world);
@@ -481,11 +496,14 @@ export function runShotHandlers(b: Bullet, world: BulletWorld): void {
 }
 
 /** `FUN_00432210`: 5 px/frame of extra push that falls away over 16 frames. */
-function birthPush(b: Bullet): void {
+function birthPush(b: Bullet, ts: number): void {
   if (b.h1 <= 16) {
     const magnitude = 5 - (b.h1 * 5) / 16;
-    b.vx = Math.cos(b.angle) * (magnitude + b.speed);
-    b.vy = Math.sin(b.angle) * (magnitude + b.speed);
+    // `:1192-1194` - the push and the bullet's own raw speed are summed first,
+    // and only the sum is scaled.
+    const v = (magnitude + b.speed) * ts;
+    b.vx = Math.cos(b.angle) * v;
+    b.vy = Math.sin(b.angle) * v;
   } else {
     b.tfActive &= ~REC.BIRTH_PUSH;
   }
@@ -493,12 +511,12 @@ function birthPush(b: Bullet): void {
 }
 
 /** `FUN_004322b0`: add a fixed acceleration vector, and follow the result. */
-function accelerate(b: Bullet): void {
+function accelerate(b: Bullet, ts: number): void {
   if (b.h10t >= b.h10dur) {
     b.tfActive &= ~REC.ACCELERATE;
   } else {
-    b.vx += b.h10ax;
-    b.vy += b.h10ay;
+    b.vx += b.h10ax * ts;
+    b.vy += b.h10ay * ts;
     if (Math.abs(b.vx) > 0.0001 || Math.abs(b.vy) > 0.0001) {
       b.angle = Math.atan2(b.vy, b.vx);
     }
@@ -507,14 +525,16 @@ function accelerate(b: Bullet): void {
 }
 
 /** `FUN_00432390`: change speed and heading by a fixed amount each frame. */
-function curl(b: Bullet): void {
+function curl(b: Bullet, ts: number): void {
   if (b.h20t >= b.h20dur) {
     b.tfActive &= ~REC.CURL;
   } else {
-    b.angle = normalizeAngle(b.angle + b.h20da);
-    b.speed += b.h20ds;
-    b.vx = Math.cos(b.angle) * b.speed;
-    b.vy = Math.sin(b.angle) * b.speed;
+    // `:1242-1251`: the heading delta and the speed delta are both scaled, and
+    // the velocity is rebuilt from the *scaled* raw speed.
+    b.angle = normalizeAngle(b.angle + ts * b.h20da);
+    b.speed += ts * b.h20ds;
+    b.vx = Math.cos(b.angle) * (ts * b.speed);
+    b.vy = Math.sin(b.angle) * (ts * b.speed);
   }
   b.h20t++;
 }
@@ -541,8 +561,11 @@ function rampCycle(b: Bullet, bit: number, aim: 'relative' | 'absolute' | 'home'
   } else {
     magnitude = b.speed - (b.h40t * b.speed) / b.h40dur;
   }
-  b.vx = Math.cos(b.angle) * magnitude;
-  b.vy = Math.sin(b.angle) * magnitude;
+  // `:1292` / `:1332` / `:1373`: the ramp is computed against the raw speed and
+  // only the finished magnitude is scaled.
+  const ts = world.timeScale ?? 1;
+  b.vx = Math.cos(b.angle) * (magnitude * ts);
+  b.vy = Math.sin(b.angle) * (magnitude * ts);
   b.h40t++;
 }
 
@@ -558,8 +581,11 @@ function bounce(b: Bullet, world: BulletWorld): void {
     b.angle = normalizeAngle(-b.angle);
   }
   b.speed = b.hBounceSpeed;
-  b.vx = Math.cos(b.angle) * b.speed;
-  b.vy = Math.sin(b.angle) * b.speed;
+  // `:1413-1417`: `0xD68` takes the raw bounce speed, and the velocity written
+  // from it carries the time scale.
+  const ts = world.timeScale ?? 1;
+  b.vx = Math.cos(b.angle) * (b.speed * ts);
+  b.vy = Math.sin(b.angle) * (b.speed * ts);
   b.hBounceDone++;
   if (b.hBounceDone >= b.hBounceMax) b.tfActive &= ~0xc00;
 }

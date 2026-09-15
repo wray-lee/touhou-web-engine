@@ -216,6 +216,20 @@ export class StageRunner {
   /** The card's expanding bullet-cancel ring, or null while none is live. */
   bombCancel: { x: number; y: number; radius: number; alpha: number } | null = null;
   /**
+   * `g_EclScriptedGlobalUpdateFreeze` (`EclGlobals.cpp:116`), retail's own
+   * cutscene channel: the ECL `ex 26` raises it, and while it stands the bullets
+   * stop integrating (`BulletManager.cpp:853-854`) and enemy scripts lose their
+   * clock (`EnemyManagerUpdate.cpp:980-981`). The field hangs in the air.
+   *
+   * The host raises it for a conversation. Retail never needs to say so — its
+   * stage-opening talk scenes are scripted onto an empty field, and the same call
+   * already takes the shot and bomb keys out of the player's hands
+   * (`Gui::IsDialogPresent`, `Player.cpp:921`, `:1204`) — but a port whose script
+   * pacing differs needs the pause to be real, or a line of dialogue becomes a
+   * death sentence.
+   */
+  worldFreeze = false;
+  /**
    * What the running card paints over the backdrop this frame: the plate behind the
    * sprites, and any full-screen square in front of them. `null` on both once the
    * card comes down, which is when retail's draw callback stops running.
@@ -257,6 +271,9 @@ export class StageRunner {
       sizeFor: (type: number, color: number) => (self.bulletSizeFor ? self.bulletSizeFor(type, color) : 8),
       onSound: (id: number, x: number) => {
         self.enemies.frameSfx.push({ id, x });
+      },
+      get timeScale() {
+        return self.gs.timeScale;
       },
     };
     return this.bulletWorldCache;
@@ -489,6 +506,13 @@ export class StageRunner {
 
   /** Run one game frame. */
   tick(input: PlayerInput): void {
+    // A frozen field is a cutscene: the shot clock never starts (`Player.cpp:921`),
+    // a bomb press is not accepted (`:1204`), and the 妖率計 holds its breath
+    // (`:924`). All three retail gates on the conversation itself, so they ride on
+    // the same flag here.
+    const freeze = this.worldFreeze;
+    if (freeze) input = { ...input, shoot: false, bomb: false };
+
     this.gs.frame++;
     this.lastCollected = [];
     // `SpawnItem:122` and `:133` read the ship's state out of the global player, so
@@ -515,14 +539,23 @@ export class StageRunner {
     const frameStop = this.gs.bombRunning;
     // Sakuya's stopped clock proper: her cards hang the bullets, the lasers and the
     // sparks in the air for their own window, which is presentation on top of the card
-    // flag above and not the same thing.
-    const frozen = this.activeBomb?.freeze === true;
+    // flag above and not the same thing. `ex 26` reaches the same state by a different
+    // route, and so does a conversation — one channel, two producers, because retail
+    // hangs the same three consumers off it (`BulletManager.cpp:853`,
+    // `EnemyManagerUpdate.cpp:980`, and the effect chain at `EffectManager.cpp:1063`).
+    const frozen = this.activeBomb?.freeze === true || freeze;
 
     // The card's own clock, which the cut-in uses to time its own slide.
     if (this.gs.spellName && !frozen) this.gs.spellFrames++;
 
-    // 1. Timeline spawns
-    this.timeline.tick();
+    // `ex 18` can drop the global time scale mid-frame, and the pools that have no
+    // `BulletWorld` of their own read it off the runner instead. Retail threads the
+    // same global through every consumer (`EclGlobals.cpp:117`).
+    this.bullets.timeScale = this.gs.timeScale;
+    this.lasers.timeScale = this.gs.timeScale;
+
+    // 1. Timeline spawns. Nothing new reaches a field that is standing still.
+    if (!freeze) this.timeline.tick();
 
     // 2. Enemy AI (run generators). A card holds the scripts of the enemies that asked
     // for it (op 173, `EnemyManagerUpdate.cpp:466-472`); Sakuya's clock additionally
@@ -541,6 +574,7 @@ export class StageRunner {
     if (this.effectPool && !frozen) this.effectPool.update();
 
     // 4. Player input + state machine
+    this.player.holdGauge = freeze;
     this.player.tick(input);
     // Stage scripts read the 妖化 state through ECL operand 0x2771.
     this.gs.playerIsYoukai = this.player.isYoukai;
@@ -632,7 +666,11 @@ export class StageRunner {
 
     this.lastHits = hits;
     this.lastLaserHits = laserHits.hits;
-    if ((hits.length > 0 || laserHits.hits.length > 0) && !this.player.isInvulnerable) {
+    if (
+      (hits.length > 0 || laserHits.hits.length > 0) &&
+      !this.player.isInvulnerable &&
+      !freeze
+    ) {
       // The bullets that landed are consumed either way, so a QA run that cannot
       // dodge does not end up re-colliding with the same shot every frame.
       for (const b of hits) b.active = false;
@@ -698,6 +736,9 @@ export class StageRunner {
       this.player.state === 'alive',
       this.player.itemGrabSpeed,
       this.player.isSlow ? this.player.itemTimeScaleFocused : this.player.itemTimeScale,
+      // `g_EclGameTimeScale`, which `:210` folds into the team's `+0x34` figure
+      // and which also reaches the hover gravity and the grabbed step on its own.
+      this.gs.timeScale,
       // `ItemManager.cpp:236`: a hovering 时符 releases the field the moment the
       // twenty-frame fire window shuts, even if it has not finished rising.
       this.player.shotWindowOpen,

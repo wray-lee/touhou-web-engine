@@ -27,7 +27,7 @@ function grab(
 ): CollectResult[] {
   const pool = new ItemPool(gs);
   pool.spawn(kind, 0, y);
-  return pool.tick(0, y, 400, 128, false, extremeHuman, true, 8, 1, shotWindowOpen);
+  return pool.tick(0, y, 400, 128, false, extremeHuman, true, 8, 1, 1, shotWindowOpen);
 }
 
 describe('ItemPool point items', () => {
@@ -147,7 +147,7 @@ describe('the retail item clock (sht +0x34)', () => {
 function runTo(pool: ItemPool, item: Item, frames: number, shotWindowOpen = true): void {
   for (let f = 0; f < frames; f++) {
     if (!item.active) return;
-    pool.tick(600, 430, 12, 128, false, false, true, 8, 1, shotWindowOpen);
+    pool.tick(600, 430, 12, 128, false, false, true, 8, 1, 1, shotWindowOpen);
   }
 }
 
@@ -181,7 +181,7 @@ describe('the retail item states', () => {
     expect(Math.abs(item.vx)).toBeLessThanOrEqual(0.6);
 
     // `:315`: the item box passes straight through it, however generous the box is.
-    const collected = pool.tick(100, 200, 400, 128, false, false, true, 8, 1, true);
+    const collected = pool.tick(100, 200, 400, 128, false, false, true, 8, 1, 1, true);
     expect(collected).toHaveLength(0);
     expect(item.active).toBe(true);
   });
@@ -203,7 +203,7 @@ describe('the retail item states', () => {
     const pool = new ItemPool(createGameState('normal'));
     pool.spawn('timeOrb', 100, 200);
     const item = pool.items.find((i) => i.active) as Item;
-    pool.tick(600, 430, 12, 128, false, false, true, 8, 1, false);
+    pool.tick(600, 430, 12, 128, false, false, true, 8, 1, 1, false);
     // `:235-238` ORs the shut window into the turnover test, so the whole screen
     // comes in as soon as the player lets go of fire.
     expect(item.magnetized).toBe(true);
@@ -217,7 +217,7 @@ describe('the retail item states', () => {
     // The sweep lives in retail's `else` branch (`:272-289`), which a UNK3 item never
     // reaches: flying above the line does not vacuum up orbs that have not turned
     // over yet.
-    pool.tick(100, 20, 12, 128, false, false, true, 8, 1, true);
+    pool.tick(100, 20, 12, 128, false, false, true, 8, 1, 1, true);
     expect(item.magnetized).toBe(false);
   });
 

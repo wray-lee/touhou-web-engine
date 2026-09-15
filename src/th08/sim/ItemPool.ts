@@ -262,10 +262,19 @@ export class ItemPool {
     /**
      * `plyNNa.sht + 0x34`: the time scale retail puts on free-falling items, both
      * on the position step and on the gravity term (`ItemManager.cpp:207-209`,
-     * `:301`, `:313-316`). Grabbed items skip it: retail jumps those straight to
-     * the pickup test after one `g_EclGameTimeScale` step.
+     * `:301`, `:313-316`). It is only half of the step: `:210` multiplies it by
+     * `g_EclGameTimeScale` before anything reads it, so the two times sit in
+     * separate arguments rather than being folded into one number.
      */
     timeScale = 1,
+    /**
+     * `g_EclGameTimeScale` (`EclGlobals.cpp:117`). It reaches items in three
+     * distinct places, and they do not share a multiplier: it scales the team's
+     * `+0x34` figure to make the fall/step speed (`:210`), it scales the hover's
+     * own `0.05` gravity on its own (`:234`, `:251`), and a grabbed item is
+     * integrated by this alone with no `+0x34` in sight (`:284`).
+     */
+    gameTimeScale = 1,
     /**
      * `g_Player.timerE2AC4 >= 0` (`Player.cpp:3289-3352`, read back at
      * `ItemManager.cpp:236`). The window stays open for twenty frames and then shuts,
@@ -277,6 +286,10 @@ export class ItemPool {
   ): CollectResult[] {
     const collected: CollectResult[] = [];
     const sweeping = fullPowerMode || playerY <= pointItemValueLine;
+    // `ItemManager.cpp:207-210`: the fall clock is the team's `+0x34` figure with
+    // `g_EclGameTimeScale` already multiplied in, and `moveItem` and the gravity
+    // term both read that product.
+    const speed = timeScale * gameTimeScale;
 
     for (const item of this.items) {
       if (!item.active) continue;
@@ -304,16 +317,18 @@ export class ItemPool {
         // the magnet either when it turns over or when the fire window shuts. The
         // grab is armed rather than applied so this frame still moves on the hover
         // velocity, which is what `moveItem` does in retail.
-        item.vy += HOVER_DECEL * timeScale;
+        // `:234`: the hover's own gravity takes `g_EclGameTimeScale` alone, with
+        // no `+0x34` in it.
+        item.vy += HOVER_DECEL * gameTimeScale;
         if (item.vy > 0 || !shotWindowOpen) grabbedNow = true;
       } else if (item.rise === 'hoverDouble') {
         // `:249-265`: the graze drop integrates its own motion on top of `moveItem`,
         // so it covers twice the distance while it rises, and while it is still
         // rising nothing else on the frame touches it -- not gravity, not the cull,
         // not the item box.
-        item.vy += HOVER_DECEL * timeScale;
-        item.x += item.vx * timeScale;
-        item.y += item.vy * timeScale;
+        item.vy += HOVER_DECEL * gameTimeScale;
+        item.x += item.vx * speed;
+        item.y += item.vy * speed;
         if (item.vy > 0) grabbedNow = true;
         else {
           item.timer++;
@@ -347,14 +362,15 @@ export class ItemPool {
           item.magnetized = true;
         }
         // Gravity
-        if (item.vy < MAX_FALL) item.vy += GRAVITY * timeScale;
+        if (item.vy < MAX_FALL) item.vy += GRAVITY * speed;
         else item.vy = MAX_FALL;
       }
 
-      // Free items move on the team's `+0x34` clock; grabbed ones are already
-      // flying at `+0x14` and retail lets nothing scale them down.
+      // Free items move on the combined `+0x34 × g_EclGameTimeScale` clock
+      // (`:301`); a grabbed one was integrated by `g_EclGameTimeScale` alone the
+      // moment the magnet took it (`:284`), and nothing else touches it.
       if (!gliding) {
-        const step = item.magnetized && !grabbedNow ? 1 : timeScale;
+        const step = item.magnetized && !grabbedNow ? gameTimeScale : speed;
         item.x += item.vx * step;
         item.y += item.vy * step;
 
