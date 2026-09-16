@@ -166,6 +166,24 @@ export interface OptionCandidate {
   /** `EnemyManagerUpdate::HasAttachedEnemy()` - part of a multi-body enemy. */
   hasAttached: boolean;
   /**
+   * Retail never even walks this enemy in the pass that picks the target.
+   *
+   * `EnemyManagerUpdate.cpp:747-758` is nested twice more than its own comment history
+   * suggests: at depth 4 it sits inside `if (!noSprite && !skipCombatA && !skipCombatB
+   * && (!noDamageDuringStop || !frameStop))` (`:614-617`) and at depth 5 inside
+   * `if (acceptsDamage)` (`:641`) - so a slot with no sprite, or one that ops 80/81 or a
+   * death animation took out of the damage pass, cannot be *acquired*.
+   *
+   * It is an acquisition filter only. The clause that replaces a held target compares
+   * y and nothing else (`:751-754`), and the only writers that drop a lock are
+   * deactivation (`:448-452`, `EnemyManager.cpp:803-804`) and the option's own state
+   * machine (`Player.cpp:2011`, `:2077`). So an enemy that goes invisible *while held*
+   * keeps the lock until it stops existing, exactly like retail's raw pointer.
+   *
+   * Optional so a caller with no combat model can omit it; `undefined` means "walked".
+   */
+  skipsCombat?: boolean;
+  /**
    * `EnemyManagerUpdateEnemy::slotIndex`, the identity the target is remembered by.
    *
    * Retail holds a pointer, so a target dies with its enemy: the update pass clears
@@ -408,17 +426,26 @@ function chaseTo(o: PlayerOptionState, tx: number, ty: number): void {
  *
  * The winner is compared against one anchor and aimed at another (`+0x2D34`
  * versus `+0x2D88`); our enemy slots carry a single position, so both are that.
+ *
+ * What this function must not do is *own* the answer. Both its `current` argument and
+ * its return value are views into the caller's reused candidate array, and a view gets
+ * rewritten with a different enemy the moment the active order shifts - which is
+ * precisely the frame a target dies. Held by reference, the lock stops meaning "that
+ * enemy" and starts meaning "whichever enemy is currently in view slot n", which is how
+ * a 式神 ends up glued for thousands of frames to a launcher parked at x=-20, outside
+ * the window it could never have been picked through. Retail cannot be fooled that way:
+ * it holds a slot pointer and clears it in the frame the enemy goes inactive
+ * (`EnemyManagerUpdate.cpp:448-452`, `EnemyManager.cpp:803-804`). So the id is carried
+ * by the holder, in {@link OptionSystem.tick}, and this stays a pure chooser.
  */
 export function pickHomingTarget(
   current: OptionCandidate | null,
   candidates: OptionCandidate[],
   aimX: number,
 ): OptionCandidate | null {
-  // `EnemyManagerUpdate.cpp:448-452` and `EnemyManager.cpp:803-804`: retail holds a
-  // pointer, so a target dies with the enemy behind it. Re-resolving the held id
-  // against this frame's live candidates is the same rule with a value type, and it
-  // is what stops a 式神 from parking at the top edge after the thing it chased
-  // has flown off screen.
+  // The held candidate, re-resolved by the id the holder copied last frame: a target
+  // dies with the enemy behind it, and anything with no slot in this frame's list is
+  // simply gone.
   let best =
     current === null || current.id === undefined
       ? current
@@ -426,6 +453,7 @@ export function pickHomingTarget(
   for (const c of candidates) {
     if (Math.abs(c.x - aimX) >= 64) continue;
     if (c.hasAttached) continue;
+    if (c.skipsCombat) continue;
     if (best === null || best.y > c.y) best = c;
   }
   return best;
@@ -446,6 +474,17 @@ export class OptionSystem {
 
   /** `g_Player.optionHomingTarget`, chosen by {@link pickHomingTarget}. */
   homingTarget: OptionCandidate | null = null;
+  /**
+   * The system's own copy of the held target, which is what `homingTarget` always
+   * points at.
+   *
+   * It exists so a lock cannot alias a candidate view. The views are reused every frame
+   * (`StageRunner.candidateViews`), so an id read out of one after a shift describes
+   * whoever moved into that view, and {@link pickHomingTarget}'s "dies with the enemy"
+   * rule silently becomes "dies with the array index". Carrying the id in a copy the
+   * caller owns is what keeps it a per-enemy rule, as retail's pointer is.
+   */
+  private readonly heldTarget: OptionCandidate = { x: 0, y: 0, hasAttached: false };
 
   /** `Player+0x2B4`, the muzzle the shot origins and the x-window both use. */
   aimX = 0;
@@ -601,8 +640,22 @@ export class OptionSystem {
     this.aimX = world.playerX;
     if (this.trailSeed) this.seedTrail(world);
     const candidates = world.homingCandidates();
-    // The target is chosen in the enemy pass, before the ship reads it.
-    this.homingTarget = pickHomingTarget(this.homingTarget, candidates, this.aimX);
+    // The target is chosen in the enemy pass, before the ship reads it. The id comes
+    // from the copy rather than from the views, so a target that left no slot behind is
+    // dropped instead of being inherited by the next enemy to fill that view.
+    const heldId = this.homingTarget?.id;
+    const held =
+      heldId === undefined ? null : (candidates.find((candidate) => candidate.id === heldId) ?? null);
+    const picked = pickHomingTarget(held, candidates, this.aimX);
+    if (picked) {
+      this.heldTarget.x = picked.x;
+      this.heldTarget.y = picked.y;
+      this.heldTarget.hasAttached = picked.hasAttached;
+      this.heldTarget.id = picked.id;
+      this.homingTarget = this.heldTarget;
+    } else {
+      this.homingTarget = null;
+    }
     for (let i = 0; i < OPTION_SLOTS; i++) {
       const o = this.options[i];
       if (o.route === 'none') continue;

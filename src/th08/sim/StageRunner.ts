@@ -643,9 +643,18 @@ export class StageRunner {
       view.y = slot.posY;
       view.boss = slot.isBoss;
       let candidate = candidates[i];
-      if (!candidate) candidate = candidates[i] = { x: 0, y: 0, hasAttached: false };
+      if (!candidate) candidate = candidates[i] = { x: 0, y: 0, hasAttached: false, skipsCombat: false };
       candidate.x = slot.posX;
       candidate.y = slot.posY;
+      // The pass that chooses the target is nested inside the combat gate
+      // (`EnemyManagerUpdate.cpp:614-617`, `:641`), so an enemy the damage pass refuses
+      // to walk is not walkable here either. Same conditions, same frame, as the damage
+      // loop in `damageEnemiesAt`.
+      candidate.skipsCombat =
+        slot.noSprite ||
+        slot.invulnerable ||
+        !slot.damageEnabled ||
+        (this.gs.bombRunning && slot.noDamageDuringStop);
       // `HasAttachedEnemy()` is the launcher pointer at `enemy+0x2DA4`, not a child
       // count: the pass excludes the familiars that ops 90..92 launched and keeps the
       // bodies that launched them. Reading it the other way round sent every 式神

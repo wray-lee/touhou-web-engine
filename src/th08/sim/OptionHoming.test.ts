@@ -171,6 +171,58 @@ describe('the 式神 route, from the ship that arms it to the shot that lands', 
     expect(target === null || target.id !== head!.slotIndex).toBe(true);
   });
 
+  it('does not hand the lock to an enemy that was never allowed to win it', () => {
+    // The candidate list is a reused view array (`StageRunner.candidateViews`), so a
+    // held target that *points into* it stops meaning "that enemy" the moment the
+    // active order shifts. Retail holds a slot pointer and clears it in the frame the
+    // enemy goes inactive (`EnemyManagerUpdate.cpp:448-452`), so a lock can never be
+    // inherited by whoever arrives next. The measurable difference: an enemy parked at
+    // x=-20 is outside the ±64 acquisition window (`:747-749`) and must never become the
+    // target, not now and not after the real one dies.
+    const runner = runnerFor(0);
+    const near = runner.enemies.spawn(0, 192, 220, 100000)!;
+    runner.enemies.spawn(0, -20, 60, 100000)!;
+    runUntil(runner, 240, FOCUS_FIRE, () => runner.options.homingTarget !== null);
+    expect(runner.options.homingTarget!.id).toBe(near.slotIndex);
+
+    near.applyDamage(999999);
+    let guard = 0;
+    while (near.active && guard++ < 600) runner.tick(FOCUS_FIRE);
+    runner.tick(FOCUS_FIRE);
+    expect(runner.options.homingTarget).toBeNull();
+    for (let i = 0; i < 180; i++) runner.tick(FOCUS_FIRE);
+    expect(runner.options.homingTarget).toBeNull();
+  });
+
+  it('will not acquire an enemy the combat pass refuses to walk', () => {
+    // The chooser is nested twice deeper than its own headline rule suggests:
+    // `EnemyManagerUpdate.cpp:747-758` sits inside `if (acceptsDamage)` (`:641`), which
+    // sits inside `if (!noSprite && !skipCombatA && !skipCombatB && …)` (`:614-617`). So
+    // a slot that has left the combat pass - a disabled damage flag, a sprite-less
+    // script - is not acquirable at all. It matters because the rule prefers the
+    // *smallest* y: one invisible body parked above the field would win every frame and
+    // spend the 式神's whole volley on something that cannot be hurt.
+    const runner = runnerFor(0);
+    // Both decoys are further up the screen than the body, so both would win the
+    // smallest-y rule if the gate were missing.
+    const invisible = runner.enemies.spawn(0, 192, 40, 100000)!;
+    const untouchable = runner.enemies.spawn(0, 192, 60, 100000)!;
+    const solid = runner.enemies.spawn(0, 192, 220, 100000)!;
+    // `EMUF1_NO_SPRITE`, bit 4 of `enemy+0x3324` - the same bit ops 80/81 move.
+    invisible.flags |= 0x10;
+    // `EMUF1_ACCEPTS_DAMAGE`, bit 6, which op 80 clears and a death mode clears too.
+    untouchable.disableDamage();
+    runUntil(runner, 240, FOCUS_FIRE, () => runner.options.homingTarget !== null);
+    expect(runner.options.homingTarget!.id).toBe(solid.slotIndex);
+
+    // Acquisition only: the clause that replaces a held target compares y and nothing
+    // else (`:751-754`), and the locks only go away with the enemy itself
+    // (`:448-452`). So leaving the combat pass does not revoke a lock already held.
+    solid.disableDamage();
+    for (let i = 0; i < 120; i++) runner.tick(FOCUS_FIRE);
+    expect(runner.options.homingTarget!.id).toBe(solid.slotIndex);
+  });
+
   it('rebuilds the charm aim point from this frame, so a lock never outlives its enemy', () => {
     // The aim half of the same machinery: `Player::Update` calls `FUN_0044d420` right
     // after the firing chain (`Player.cpp:1100`, `:1493-1497`), which writes `-999` back
