@@ -92,6 +92,7 @@ runtime evidence or an explicit 🟡). This file only tracks phase progress.
 - [x] Task 5: 击杀小怪贴图残留清理与 Boss 贴图透明度修复
 - [x] Task 6: Start 1..6 面连续模式与 Practice 选关模式分离，全避通关支持
 - [x] Task 7: 响应式视口上下占满屏幕与鼠标控制选项化
+- [x] Task 8: 根除自机静止向左抽搐判定、剔除 Sprite 物理歪斜旋转，落实全 8 人原生图集切片优先渲染
 
 ## Remaining for 90%
 

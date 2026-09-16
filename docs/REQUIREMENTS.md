@@ -765,3 +765,14 @@ else
   - Start 模式固定从一面开始连续推进至六面通关，中途不显示 Thanks for Playing；独立 Practice 菜单供单关选关打，单关结束后显示 Thanks for Playing。ECL 符卡计时结束超时自动推进。
 - **任务 7：响应式上下充满视口与鼠标控制选项化**
   - 保证垂直 100% 充满屏幕高度；设置菜单提供鼠标操作开关，记录至 localStorage 并并入文档。
+### 24. 本轮（09-17 续九：自机原地向左抽搐根除、剔除 Sprite 物理旋转倾斜与 8 人切片优先级）
+
+- **自机原地抽搐与向左动画误判根因彻底查清并修复**：
+  - **根因分析**：`th08-player-registration.ts:237` 中设了 `deadZone: 0`。在 `TaiseiAnim.ts:113` 的 `setDirection` 中，判定逻辑为 `vx > deadZone ? "right" : vx < -deadZone ? "left" : "main"`。当 `deadZone = 0` 时，由于浮点精度残差（或微弱负残差 `-0`），任何负数哪怕是 `-1e-15` 均会导致 `vx < -0` 判定为真，触发向左过渡动画 `main2left`。紧接着下一帧静止又切回 `left2main`，导致在无按键输入时自机每隔一帧反复横跳，呈现高频原地向左抽搐。
+  - **修复措施**：在 `TaiseiAnim.ts` 中引入 `const effectiveDeadZone = Math.max(0.05, deadZone);` 强制防抖下限；将 `th08-player-registration.ts` 中的死区阈值上调至 `0.08`，彻底消除无输入时的微小扰动抽搐。
+- **自机歪斜（旋转角度）彻底根除**：
+  - **根因分析**：`PixiRenderer.ts:2205-2207` 曾经包含物理旋转代码 `sprite.rotation = this.playerLean * PLAYER_MAX_LEAN; sprite.position.set(x, y + Math.abs(this.playerLean) * 1.6);`。东方原作中自机绝无 Sprite 的 Z 轴物理旋转，完全依靠 ANM 帧切片（倾斜帧）表现侧倾。该代码使得自机在移动或回退贴图时产生了歪斜的视觉效果。
+  - **修复措施**：剔除所有对 `sprite.rotation` 的物理倾角赋值，将 `sprite.rotation = 0; sprite.position.set(x, y);` 保持水平绝对垂直，完全交由原生 10 帧/8 帧 ANM 切片动画表现左右倾斜。
+- **8 人自机原生切片优先级保障（拒绝降级为程序简陋模型）**：
+  - 确认八位自机（灵梦、紫、魔理沙、爱丽丝、咲夜、蕾米莉亚、妖梦、幽幽子）全部由 `registerTH08PlayerSprites` 从 `player00_t0.png` ~ `player03_t0.png` 切片生成并注册于 `player:<memberId>` 命名空间，在渲染中作为第一优先级。
+- **门禁状态**：全量 `npm run build` 编译通过；开发服务器常驻 200 OK。
