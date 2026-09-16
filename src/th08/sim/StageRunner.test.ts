@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { HITBOX_GLOW_TEMPLATE, StageRunner } from './StageRunner';
+import {
+  HITBOX_GLOW_TEMPLATE,
+  STYLE_SWITCH_OFF_COLOR,
+  STYLE_SWITCH_ON_COLOR,
+  STYLE_SWITCH_EDGE_GATE,
+  STYLE_SWITCH_OFF_TEMPLATE,
+  STYLE_SWITCH_ON_TEMPLATE,
+  StageRunner,
+} from './StageRunner';
 import { createGameState } from './GameState';
 import { parseEcl } from '../format/EclFile';
 import { collectEclSubs, createEclSubFactory } from './EclBridge';
@@ -387,42 +395,47 @@ describe('StageRunner boss gauge (ECL ops 127 / 131 / 148 / 158 / 137)', () => {
  * at `StageRunner.ts:965` and the ship's firing chain at `:1025`, which is how retail has
  * it too (the effect chain runs before the player chain). A glow lit on frame N therefore
  * first draws, and first moves, on frame N+1.
+ *
+ * The helpers live at module scope because the style-switch describe below drives the same
+ * focus edges and only varies the shot type.
  */
-describe('the focus hitbox glow (Player.cpp:704-707 / :768-770)', () => {
-  const FOCUS = { ...noInput, slow: true };
-  const DRIFT = { ...FOCUS, dx: 1 };
-  /** The mid-range draws the EffectPool locks use, so the spin of the ring is stable. */
-  const midRng = (): AnmRng => ({
-    randomU32InRange: (bound) => Math.trunc(bound / 2),
-    randomF32InRange: (bound) => bound / 2,
+const FOCUS = { ...noInput, slow: true };
+const DRIFT = { ...FOCUS, dx: 1 };
+/** The mid-range draws the EffectPool locks use, so the spin of the ring is stable. */
+const midRng = (): AnmRng => ({
+  randomU32InRange: (bound) => Math.trunc(bound / 2),
+  randomF32InRange: (bound) => bound / 2,
+});
+
+function glowRunner(shotType = 0): { runner: StageRunner; pool: EffectPool } {
+  const pool = new EffectPool({
+    rng: midRng(),
+    templates: EFFECT_TEMPLATES,
+    scriptBytes: TH08_EFFECT_SCRIPT_BYTES,
   });
+  const gs = createGameState('normal', 7);
+  gs.shotType = shotType;
+  const runner = new StageRunner({
+    gs,
+    ecl: {
+      version: 2048,
+      subCount: 1,
+      subs: [{ id: 0, offset: 0, instructions: [] }],
+      timelines: [{ index: 0, offset: 0, instructions: [] }],
+    },
+    subFactory: () => (_e: EnemySlot) =>
+      (function* () {
+        yield 9999;
+      })(),
+    effectPool: pool,
+  });
+  return { runner, pool };
+}
 
-  function glowRunner(): { runner: StageRunner; pool: EffectPool } {
-    const pool = new EffectPool({
-      rng: midRng(),
-      templates: EFFECT_TEMPLATES,
-      scriptBytes: TH08_EFFECT_SCRIPT_BYTES,
-    });
-    const runner = new StageRunner({
-      gs: createGameState('normal', 7),
-      ecl: {
-        version: 2048,
-        subCount: 1,
-        subs: [{ id: 0, offset: 0, instructions: [] }],
-        timelines: [{ index: 0, offset: 0, instructions: [] }],
-      },
-      subFactory: () => (_e: EnemySlot) =>
-        (function* () {
-          yield 9999;
-        })(),
-      effectPool: pool,
-    });
-    return { runner, pool };
-  }
+const glows = (pool: EffectPool): EffectView[] => pool.views.filter((v) => v.id === HITBOX_GLOW_TEMPLATE);
+const ringsOf = (pool: EffectPool, id: number): EffectView[] => pool.views.filter((v) => v.id === id);
 
-  const glows = (pool: EffectPool): EffectView[] =>
-    pool.views.filter((view) => view.id === HITBOX_GLOW_TEMPLATE);
-
+describe('the focus hitbox glow (Player.cpp:704-707 / :768-770)', () => {
   it('lights exactly one glow on the press edge and holds it while Shift stays down', () => {
     const { runner, pool } = glowRunner();
     for (let i = 0; i < 30; i++) runner.tick(noInput);
@@ -430,8 +443,9 @@ describe('the focus hitbox glow (Player.cpp:704-707 / :768-770)', () => {
 
     runner.tick(FOCUS);
     // The ship ticks after the pool, so the press registers this frame and the ring first
-    // draws next frame -- and it never draws twice.
-    expect(pool.live).toBe(1);
+    // draws next frame -- and it never draws twice. Two records are live on the press
+    // frame because retail lights two: the 判定点光环 and the style-switch ring.
+    expect(pool.live).toBe(2);
     expect(glows(pool)).toHaveLength(0);
     runner.tick(FOCUS);
     expect(glows(pool)).toHaveLength(1);
@@ -478,7 +492,10 @@ describe('the focus hitbox glow (Player.cpp:704-707 / :768-770)', () => {
     // Press again mid-fade. Retail owns one reserved slot and one pointer, so the ship
     // must never end up with a fading ring stacked under a bright one.
     runner.tick(FOCUS);
-    expect(pool.live).toBe(1);
+    // The named slot is taken back rather than stacked. (The pool holds more than one
+    // record here: the release ten frames ago threw a style ring out, and this press
+    // collapses a new one in. Those are templates 28 and 29, not the glow's slot.)
+    expect(glows(pool)).toHaveLength(1);
     for (let i = 0; i < 40; i++) runner.tick(FOCUS);
     expect(glows(pool)).toHaveLength(1);
     expect(glows(pool)[0].alpha).toBe(1);
@@ -501,5 +518,128 @@ describe('the focus hitbox glow (Player.cpp:704-707 / :768-770)', () => {
     for (let i = 0; i < 40; i++) runner.tick(parked);
     expect(glows(pool)).toHaveLength(0);
     expect(runner.player.x).toBeGreaterThan(192);
+  });
+});
+
+/**
+ * The two rings that say a pair just changed weapon.
+ *
+ * `Player.cpp:696-703` and `:760-767` sit in the same focus-edge block as the glow, and they
+ * are the only visible feedback a 自机 gives when Shift swaps its shot file: `etama.anm`
+ * script 58 (template 29) collapses a cell-193 ring in from scale 5 while its alpha runs up,
+ * script 57 (template 28) throws the same cell back out to scale 5 while its alpha runs down.
+ * Each deletes itself after the two 10-frame ramps, which is why these locks sample the first
+ * frames and then the grave.
+ *
+ * Both spawns are inside the `shotType < 4` guard, so a solo - which has no second weapon to
+ * switch to - gets the glow and nothing else, and both are gated on `Player+8 >= 4`, the
+ * frames the other state had to last first. Every number below is measured off the VM.
+ */
+describe('the style-switch rings (Player.cpp:696-703 / :760-767)', () => {
+  const on = (pool: EffectPool) => ringsOf(pool, STYLE_SWITCH_ON_TEMPLATE);
+  const off = (pool: EffectPool) => ringsOf(pool, STYLE_SWITCH_OFF_TEMPLATE);
+
+  it('collapses a ring in on the press and throws one out on the release', () => {
+    const { runner, pool } = glowRunner();
+    for (let i = 0; i < 30; i++) runner.tick(noInput);
+    expect(on(pool)).toHaveLength(0);
+
+    runner.tick(FOCUS);
+    runner.tick(FOCUS);
+    const press = on(pool);
+    expect(press).toHaveLength(1);
+    // Script 58: cell 193, additive, lit red by the 0x80FF8080 spawn colour.
+    expect(press[0].scriptIdx).toBe(58);
+    expect(press[0].sprite).toBe(193);
+    expect(press[0].additive).toBe(true);
+    expect(press[0].tint).toBe((STYLE_SWITCH_ON_COLOR & 0xffffff) >>> 0);
+    expect(press[0].alpha).toBeCloseTo(0.1, 5);
+    expect(press[0].scaleX).toBeCloseTo(4.54, 2);
+
+    runner.tick(FOCUS);
+    // Brighter and smaller: ALPHA 0 → 255 against SCALE 5 → 0.4, both over ten frames.
+    expect(on(pool)[0].alpha).toBeCloseTo(0.2, 5);
+    expect(on(pool)[0].scaleX).toBeCloseTo(4.08, 2);
+
+    // The script ends in DELETE, so the ring is a flash, not a fixture.
+    for (let i = 0; i < 20; i++) runner.tick(FOCUS);
+    expect(on(pool)).toHaveLength(0);
+
+    runner.tick(noInput);
+    runner.tick(noInput);
+    const release = off(pool);
+    expect(release).toHaveLength(1);
+    expect(release[0].id).toBe(STYLE_SWITCH_OFF_TEMPLATE);
+    expect(release[0].scriptIdx).toBe(57);
+    expect(release[0].sprite).toBe(193);
+    expect(release[0].additive).toBe(true);
+    expect(release[0].tint).toBe((STYLE_SWITCH_OFF_COLOR & 0xffffff) >>> 0);
+    expect(release[0].alpha).toBeCloseTo(0.9, 5);
+    expect(release[0].scaleX).toBeCloseTo(0.95, 2);
+
+    runner.tick(noInput);
+    // Script 57 runs the other way: alpha → 0 while the scale blows back out to 5.
+    expect(off(pool)[0].alpha).toBeCloseTo(0.8, 5);
+    expect(off(pool)[0].scaleX).toBeCloseTo(1.4, 2);
+    for (let i = 0; i < 20; i++) runner.tick(noInput);
+    expect(off(pool)).toHaveLength(0);
+  });
+
+  it('holds the Player+8 >= 4 gate, so flicking Shift cannot spam them', () => {
+    expect(STYLE_SWITCH_EDGE_GATE).toBe(4);
+    for (const settled of [0, 1, 2, 3]) {
+      const { runner, pool } = glowRunner();
+      for (let i = 0; i < settled; i++) runner.tick(noInput);
+      runner.tick(FOCUS);
+      runner.tick(FOCUS);
+      expect(on(pool)).toHaveLength(0);
+      // The glow itself has no such gate - `:704` only checks its own pointer.
+      expect(glows(pool)).toHaveLength(1);
+    }
+    for (const settled of [4, 5]) {
+      const { runner, pool } = glowRunner();
+      for (let i = 0; i < settled; i++) runner.tick(noInput);
+      runner.tick(FOCUS);
+      runner.tick(FOCUS);
+      expect(on(pool)).toHaveLength(1);
+    }
+  });
+
+  it('skips both rings for a solo, which never changes weapon', () => {
+    // shotType 4 is 妖梦 solo; `:696` and `:760` guard the ring (and the swap anim) on < 4,
+    // while `:704` sits outside it, so the glow is the only thing a solo gets.
+    const { runner, pool } = glowRunner(4);
+    for (let i = 0; i < 20; i++) runner.tick(noInput);
+    runner.tick(FOCUS);
+    runner.tick(FOCUS);
+    expect(on(pool)).toHaveLength(0);
+    expect(glows(pool)).toHaveLength(1);
+    for (let i = 0; i < 20; i++) runner.tick(FOCUS);
+    runner.tick(noInput);
+    runner.tick(noInput);
+    expect(off(pool)).toHaveLength(0);
+    expect(glows(pool)).toHaveLength(1);
+  });
+
+  it('sends them through the rotating pool, leaving the glow its own slot', () => {
+    // `:702`/`:766` are plain SpawnEffect calls against the rotating pool; only `:707` asks
+    // for slot 2. So a ring in flight must never cost the ship its 判定点光环.
+    const { runner, pool } = glowRunner();
+    for (let i = 0; i < 10; i++) runner.tick(noInput);
+    for (let cycle = 0; cycle < 4; cycle++) {
+      runner.tick(FOCUS);
+      runner.tick(FOCUS);
+      expect(glows(pool)).toHaveLength(1);
+      expect(on(pool)).toHaveLength(1);
+      expect(pool.live).toBeGreaterThanOrEqual(2);
+      for (let i = 0; i < 4; i++) runner.tick(FOCUS);
+      runner.tick(noInput);
+      runner.tick(noInput);
+      expect(glows(pool)).toHaveLength(1);
+      expect(off(pool)).toHaveLength(1);
+      // Four presses, four glows - and they share one slot, so never more than one at a time.
+      expect(ringsOf(pool, HITBOX_GLOW_TEMPLATE).length).toBe(1);
+      for (let i = 0; i < 4; i++) runner.tick(noInput);
+    }
   });
 });

@@ -288,6 +288,10 @@ class TH08Shell {
         /** Live popups as `b<bank> a<alpha> s<scale> n<digits>`: the two retail
          *  channels a still frame cannot separate - bank flicker and distance fade. */
         popd: game.popupDebug,
+        /** Live retail effects as `<template>:<sprite> a<alpha> x<scale>`: the pool is
+         *  where the 判定点光环 (22) and the two style-switch rings (28/29) come from, and
+         *  a sub-second flash is only observable through a readout like this one. */
+        fx: game.effectDebug,
         /** Panel/reward text the HUD is being asked to draw this frame. */
         bnr: game.bannerDebug,
         /** Card the scripts have up right now, straight from op 122. */

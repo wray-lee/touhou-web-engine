@@ -220,6 +220,27 @@ export const HITBOX_GLOW_TEMPLATE = 22;
  */
 export const HITBOX_GLOW_SLOT = 2;
 
+/**
+ * `Player.cpp:696-703` and `:760-767`: the two rings that mark a pair changing weapon.
+ *
+ * Taking focus spawns template 29 - `etama.anm` script 58, cell 193 with z-write off and
+ * additive blend, alpha 0 → 255 while the scale runs 5 → 0.4 - which reads as a ring
+ * collapsing onto the ship. Letting go spawns template 28 (script 57: the same cell, alpha
+ * → 0 while the scale runs 0.5 → 5), which reads as it bursting back out. Both sit inside
+ * the `shotType < 4` guard, so a solo - which never changes weapon - never gets one, and
+ * both are gated on `Player+8 >= 4`, the frames since the last edge, so flicking the key
+ * cannot spam them.
+ */
+export const STYLE_SWITCH_ON_TEMPLATE = 29;
+export const STYLE_SWITCH_OFF_TEMPLATE = 28;
+
+/** Retail's spawn colours, `0x80FF8080` on the press and `0x808080FF` on the release. */
+export const STYLE_SWITCH_ON_COLOR = 0x80ff8080 | 0;
+export const STYLE_SWITCH_OFF_COLOR = 0x808080ff | 0;
+
+/** `Player+8 >= 4` at `:701` and `:765` - frames the other state had to last first. */
+export const STYLE_SWITCH_EDGE_GATE = 4;
+
 export class StageRunner {
   readonly gs: GameState;
   readonly enemies: EnemyManager;
@@ -660,7 +681,7 @@ export class StageRunner {
     const optionWorld = this.optionWorld();
     this.options.setFocus(this.player.isSlow, shotType);
     this.options.tick(optionWorld);
-    this.tickHitboxGlow(this.player.isSlow);
+    this.tickFocusEdgeEffects(this.player.isSlow);
 
     const world = this.shipWorld();
     // `Player::Update` runs these two at `:1098`/`:1099` in the order below: move
@@ -674,9 +695,12 @@ export class StageRunner {
   private hitboxGlow: EffectHandle | null = null;
   /** The latch the focus edges are taken from - retail reads `Player+3`, we read focus. */
   private glowFocused = false;
+  /** `Player+8`: frames since the last focus edge, counting in whichever state we are in. */
+  private focusEdgeFrames = 0;
 
   /**
-   * `Player.cpp:704-707` and `:768-770`, both inside the focus-edge block.
+   * The whole of retail's focus-edge block: `Player.cpp:696-708` on the press and
+   * `:760-772` on the release.
    *
    * The press spawns template 22 once - retail only spawns when its own pointer is NULL,
    * and the spawn goes to a named record rather than to the rotating pool, so a second
@@ -685,9 +709,24 @@ export class StageRunner {
    * alpha to 0 over 30 frames and then `DELETE`s. That is why letting go of Shift fades
    * the ring instead of cutting it, and why the pointer is cleared on the same frame - the
    * ship is free to light a new one.
+   *
+   * The two style-switch rings are the other half of the same block, and they are the
+   * whole of what a pair *looks* like when it changes weapon: the press collapses one in
+   * (`:701-702`, and only once the ship has been unfocused for four frames), the release
+   * throws it back out (`:765-766`). The glow has no such gate and no such shot-type guard,
+   * which is why a solo still gets a 判定点光环 when it slows down but never a ring.
    */
-  private tickHitboxGlow(focus: boolean): void {
-    if (focus && !this.glowFocused) {
+  private tickFocusEdgeEffects(focus: boolean): void {
+    const rising = focus && !this.glowFocused;
+    const falling = !focus && this.glowFocused;
+    const edged = rising || falling;
+    const gated = this.gs.shotType < 4 && this.focusEdgeFrames >= STYLE_SWITCH_EDGE_GATE;
+    if (edged && gated) {
+      const ring = rising ? STYLE_SWITCH_ON_TEMPLATE : STYLE_SWITCH_OFF_TEMPLATE;
+      const color = rising ? STYLE_SWITCH_ON_COLOR : STYLE_SWITCH_OFF_COLOR;
+      this.effectPool?.spawn(ring, this.player.x, this.player.y, { count: 1, color });
+    }
+    if (rising) {
       this.hitboxGlow =
         this.effectPool?.spawn(HITBOX_GLOW_TEMPLATE, this.player.x, this.player.y, {
           count: 1,
@@ -695,9 +734,15 @@ export class StageRunner {
           slotIndex: HITBOX_GLOW_SLOT,
           ownerPos: () => ({ x: this.player.x, y: this.player.y }),
         }) ?? null;
-    } else if (!focus && this.glowFocused && this.hitboxGlow) {
-      this.hitboxGlow.interrupt(1);
+      this.focusEdgeFrames = 0;
+    } else if (falling) {
+      // `:768-769`: the release only interrupts a glow the ship still holds a pointer to.
+      this.hitboxGlow?.interrupt(1);
       this.hitboxGlow = null;
+      this.focusEdgeFrames = 0;
+    } else {
+      // `:714` / `:776`: the counter only runs on frames that are not an edge.
+      this.focusEdgeFrames++;
     }
     this.glowFocused = focus;
   }

@@ -390,6 +390,28 @@ export class TH08Game {
       .view(runner?.player.x ?? this.player.position.x, runner?.player.y ?? this.player.position.y, 0, 0)
       .map((view) => `b${view.bank} a${Math.round(view.alpha * 255)} s${view.scale} n${view.digits.length}`);
   }
+
+  /**
+   * The live retail effects, as `<template>:<sprite> a<alpha> x<scale>`.
+   *
+   * A flash that lasts a fifth of a second cannot be caught in a screenshot, and the
+   * effect pool had no readout at all, which made every art report ("the ring is missing",
+   * "the sprite stuck") a guess. This is the same list `drawEffects` consumes a few lines
+   * below, so a template that shows here and not on screen is a renderer problem, and one
+   * that is missing here is a sim problem. Capped, because the whole thing is written into
+   * a DOM attribute every frame.
+   */
+  get effectDebug(): string[] {
+    const pool = this.eclRunner?.effectPool;
+    if (!pool) return [];
+    return pool.views
+      .slice(0, 8)
+      .map(
+        (view) =>
+          `${view.id}:${view.sprite} a${Math.round(view.alpha * 255)} x${Math.round(view.scaleX * 10) / 10}`,
+      );
+  }
+
   /**
    * The banner lines the HUD is being asked to draw right now, trimmed of the
    * leading spaces `%7d` pads with. QA reads this to tell "the banner never fired"
