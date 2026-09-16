@@ -88,12 +88,29 @@ export interface SpawnOptions {
   ownerPos?: () => { x: number; y: number } | null;
   /** Op 174 uses the second, 128-slot pool and can arrive on an interrupt label. */
   secondary?: boolean;
+  /**
+   * A dedicated record of the retail pool, addressed by number instead of by cursor.
+   *
+   * `EffectManager.cpp:269-271` -- `FUN_00425870` -- is the spawner the *host* code uses:
+   * it takes `(slotIndex + 0x280) * 0x360 + 0x1C`, frees whatever script was living there,
+   * and `memset`s the whole 0x360-byte record before starting the new script. So the
+   * ship's 判定点光环 is always record 2 (`Player.cpp:707`), its death flare record 8
+   * (`:973`), the options record 3 (`:1325`), and a re-press replaces a ring that is still
+   * fading instead of stacking a second one under it.
+   */
+  slotIndex?: number;
   interrupt?: number;
 }
 
 /** Slots in the two retail pools: `0x200` scanned by the rotating cursor, `0x80` by the second spawner. */
 export const EFFECT_MAIN_SLOTS = 512;
 export const EFFECT_SECONDARY_SLOTS = 128;
+/**
+ * Records past the 640 pooled slots that `FUN_00425870` addresses by number. The shipped
+ * object runs to `(0x89BFC - 0x1C) / 0x360 == 653` records, so 640 pooled plus 13 named;
+ * 16 leaves room for the highest index any caller in the decompile uses (12).
+ */
+export const EFFECT_DEDICATED_SLOTS = 16;
 /** `EnemyManager.cpp:1039`/`:1046`: an orbit grows 0.3 a frame and turns 2 degrees a frame. */
 const ORBIT_GROW = 0.3;
 const ORBIT_SPIN = 0.031415928;
@@ -349,6 +366,24 @@ export const EFFECT_BEHAVIORS: Record<string, EffectBehaviorPort> = {
       return true;
     },
   },
+  /*
+   * `EffectManager.cpp:428-436`, the mover of the ship's own 判定点光环 (template 22):
+   * retire when the script has run out (`FUN_00428720` is `vm.currentInstruction == NULL`),
+   * otherwise rewrite the draw position from `g_TargetPlayerPosition` every frame. The
+   * glow is therefore not parked where Shift happened to be pressed - it rides the ship,
+   * which is the whole reason it reads as "the point on me" rather than a decal on the
+   * background. With no owner the last position is kept, as retail keeps its global.
+   */
+  FUN_00426c40: {
+    update: (state) => {
+      const owner = state.ownerPos?.();
+      if (owner) {
+        state.x = owner.x;
+        state.y = owner.y;
+      }
+      return true;
+    },
+  },
   // `EffectManager.cpp:766-781`: pick a heading, then `:786-794` throws 128px out on an
   // ease-out curve over 90 frames. This is the id every shipped launcher uses for its flare.
   FUN_004270c0: {
@@ -454,6 +489,12 @@ export interface EffectHandle {
    * it replaced before spawning the next one (`EclRunHigh.inl:1090-1092`).
    */
   stop(): void;
+  /**
+   * `AnmVm::SetInterrupt(code)` on the effect's own VM, which is how the host reaches
+   * into a script that is already running: the ship's 判定点光环 sits on `STOP` until
+   * `Player.cpp:769` sends label 1, and only that branch fades it out over 30 frames.
+   */
+  interrupt(code: number): void;
 }
 
 const BLANK_STATE: Omit<EffectState, 'id'> = {
@@ -508,6 +549,7 @@ export class EffectPool {
   private readonly scriptBytes: readonly (string | null)[];
   private readonly main: EffectInstance[];
   private readonly secondary: EffectInstance[];
+  private readonly dedicated: EffectInstance[];
   private readonly scriptCache = new Map<number, Int32Array | null>();
   private readonly viewList: EffectView[] = [];
   private cursor = 0;
@@ -527,6 +569,7 @@ export class EffectPool {
     this.scriptBytes = deps.scriptBytes;
     this.main = createSlots(deps, EFFECT_MAIN_SLOTS);
     this.secondary = createSlots(deps, EFFECT_SECONDARY_SLOTS);
+    this.dedicated = createSlots(deps, EFFECT_DEDICATED_SLOTS);
     this.mover = { camera: deps.camera ?? (() => null) };
   }
 
@@ -535,12 +578,16 @@ export class EffectPool {
     return this.viewList;
   }
 
-  /** Live slots across both pools. */
+  /** Live slots across the two pools and the dedicated records. */
   get live(): number {
     let n = 0;
-    for (const slot of this.main) if (slot.active) n++;
-    for (const slot of this.secondary) if (slot.active) n++;
+    for (const bank of this.banks) for (const slot of bank) if (slot.active) n++;
     return n;
+  }
+
+  /** Draw order follows the retail object layout: pooled first, named records last. */
+  private get banks(): readonly EffectInstance[][] {
+    return [this.main, this.secondary, this.dedicated];
   }
 
   /**
@@ -552,12 +599,22 @@ export class EffectPool {
   spawn(id: number, x: number, y: number, opts: SpawnOptions = {}): EffectHandle | null {
     const template = this.templates[id];
     if (!template) return null;
-    const pool = opts.secondary ? this.secondary : this.main;
     const words = this.words(template.scriptIdx);
     if (!words) {
       this.missingScript++;
       return null;
     }
+    if (opts.slotIndex !== undefined) {
+      const slot = this.dedicated[opts.slotIndex];
+      // The retail spawner has no room to say no to a named record: it takes the slot and
+      // `memset`s whatever was in it (`EffectManager.cpp:271-280`). Out of range is a bug
+      // in the caller, so it is the same silent no-op the missing script gets.
+      if (!slot) return null;
+      this.start(slot, id, template, x, y, opts, words);
+      this.spawned++;
+      return handleFor(slot, slot.generation);
+    }
+    const pool = opts.secondary ? this.secondary : this.main;
     let last: EffectInstance | null = null;
     const count = Math.max(1, Math.trunc(opts.count ?? 1));
     for (let n = 0; n < count; n++) {
@@ -576,7 +633,7 @@ export class EffectPool {
   /** Advance every live effect by one frame and rebuild the draw list. */
   update(): void {
     this.viewList.length = 0;
-    for (const pool of [this.main, this.secondary]) {
+    for (const pool of this.banks) {
       for (const slot of pool) {
         if (!slot.active) continue;
         const state = slot.state;
@@ -612,7 +669,7 @@ export class EffectPool {
 
   /** Empty the pool, as `ResetEffects` does between stages (`EffectManager.cpp:114-117`). */
   clear(): void {
-    for (const pool of [this.main, this.secondary]) for (const slot of pool) slot.active = false;
+    for (const pool of this.banks) for (const slot of pool) slot.active = false;
     this.viewList.length = 0;
     this.cursor = 0;
   }
@@ -721,6 +778,9 @@ function handleFor(slot: EffectInstance, generation: number): EffectHandle {
     },
     stop: () => {
       if (slot.active && slot.generation === generation) slot.active = false;
+    },
+    interrupt: (code: number) => {
+      if (slot.active && slot.generation === generation) slot.vm.setInterrupt(code);
     },
   };
 }

@@ -361,3 +361,125 @@ describe('the .std ember families', () => {
     expect(pool.spawn(26, 100, 100, { count: 1, velocity: { x: 0, y: 0, z: 0 } })).not.toBeNull();
   });
 });
+
+/**
+ * Template 22, the 判定点光环 the ship lights on the focus edge.
+ *
+ * These are the first assertions in this file that come off `th08.exe` itself rather
+ * than off the decompile: the template table at `0x004c6d30` says row 22 runs script
+ * 54 with mover `FUN_00426c40` and no init callback, and script 54 is
+ * `SPRITE 218; Z_WRITE_DISABLE; ALPHA 0; F_SET_RAND; ALPHA_TIME(20, 1, 255); STOP;
+ * INTERRUPT_LABEL 1; ALPHA_TIME(30, 1, 0); DELETE`. That is what the four locks below
+ * hold: the cell, the 20-frame fade in, the park-and-spin at `STOP`, and the
+ * 30-frame fade out that only interrupt 1 can start.
+ */
+describe('the focus hitbox glow (template 22 / script 54)', () => {
+  const GLOW = 22;
+  /** `etama_t1` cell 218, the 64x64 red-white marker the script names. */
+  const GLOW_SPRITE = 218;
+
+  function spawnGlow(owner = { x: 192, y: 384 }, slotIndex?: number) {
+    const pool = new EffectPool(deps());
+    const handle = pool.spawn(GLOW, owner.x, owner.y, {
+      count: 1,
+      color: -1,
+      slotIndex,
+      ownerPos: () => owner,
+    });
+    return { pool, handle, owner };
+  }
+
+  it('draws cell 218 and fades in over the script twenty frames', () => {
+    const { pool } = spawnGlow();
+    pool.update();
+    const first = viewAt(pool, GLOW)!;
+    expect(first.sprite).toBe(GLOW_SPRITE);
+    // `ALPHA 0` comes before the ramp, so the first frame is still nearly dark; the
+    // view alpha is the VM byte divided by 255, so a full ramp reads as 1.
+    expect(first.alpha).toBeGreaterThan(0);
+    expect(first.alpha).toBeLessThan(0.01);
+    for (let frame = 0; frame < 18; frame++) pool.update();
+    expect(viewAt(pool, GLOW)!.alpha).toBeLessThan(1);
+    pool.update();
+    expect(viewAt(pool, GLOW)!.alpha).toBe(1);
+  });
+
+  it('parks at STOP and keeps turning until the script is interrupted', () => {
+    const { pool } = spawnGlow();
+    for (let frame = 0; frame < 60; frame++) pool.update();
+    const before = viewAt(pool, GLOW)!;
+    expect(before.alpha).toBe(1);
+    const spin = before.rotation;
+    pool.update();
+    // The angular velocity is the script's own random draw, so the lock is that it
+    // turns at all and that nothing retires while `STOP` holds it.
+    expect(viewAt(pool, GLOW)!.rotation).not.toBe(spin);
+    for (let frame = 0; frame < 200; frame++) pool.update();
+    expect(viewAt(pool, GLOW)!.alpha).toBe(1);
+  });
+
+  it('rides the ship it was lit for, and stays put without an owner', () => {
+    const { pool, owner } = spawnGlow();
+    pool.update();
+    const atHome = viewAt(pool, GLOW)!;
+    expect(atHome.x).toBe(owner.x);
+    owner.y = 300;
+    pool.update();
+    expect(viewAt(pool, GLOW)!.y).toBe(300);
+
+    const loose = new EffectPool(deps());
+    loose.spawn(GLOW, 120, 200, { count: 1, color: -1 });
+    loose.update();
+    const parked = loose.views.find((v) => v.id === GLOW)!;
+    expect([parked.x, parked.y]).toEqual([120, 200]);
+    loose.update();
+    expect([parked.x, parked.y]).toEqual([120, 200]);
+  });
+
+  it('fades out over thirty frames only after interrupt 1, then gives the slot back', () => {
+    const { pool, handle } = spawnGlow();
+    for (let frame = 0; frame < 25; frame++) pool.update();
+    expect(viewAt(pool, GLOW)!.alpha).toBe(1);
+    handle!.interrupt(1);
+    pool.update();
+    const fading = viewAt(pool, GLOW)!;
+    expect(fading.alpha).toBeLessThan(1);
+    expect(fading.alpha).toBeGreaterThan(0.99);
+    for (let frame = 0; frame < 30 && viewAt(pool, GLOW); frame++) pool.update();
+    expect(viewAt(pool, GLOW)).toBeNull();
+    expect(pool.live).toBe(0);
+    // An old handle must not be able to fade a slot it no longer owns.
+    handle!.interrupt(1);
+    expect(pool.live).toBe(0);
+  });
+
+  it('owns a named record, so a second press takes it back from a fading ring', () => {
+    // `FUN_00425870` addresses `(slotIndex + 0x280) * 0x360` and `memset`s whatever is
+    // there, which is the only reason the ship can never stack two glows.
+    const { pool, handle } = spawnGlow(undefined, 2);
+    for (let frame = 0; frame < 25; frame++) pool.update();
+    handle!.interrupt(1);
+    for (let frame = 0; frame < 10; frame++) pool.update();
+    expect(pool.live).toBe(1);
+
+    const again = pool.spawn(GLOW, 192, 384, {
+      count: 1,
+      color: -1,
+      slotIndex: 2,
+      ownerPos: () => ({ x: 192, y: 384 }),
+    });
+    expect(again).not.toBeNull();
+    pool.update();
+    expect(pool.live).toBe(1);
+    const views = pool.views.filter((view) => view.id === GLOW);
+    expect(views).toHaveLength(1);
+    // The new ring is at the start of its own ramp, not the tail of the old one.
+    expect(views[0].alpha).toBeLessThan(0.01);
+    // The handle the first press held points at a generation that is gone: sending it an
+    // interrupt must leave the new ring alone, and the new ring is still ramping up.
+    const ramping = views[0].alpha;
+    handle!.interrupt(1);
+    pool.update();
+    expect(viewAt(pool, GLOW)!.alpha).toBeGreaterThan(ramping);
+  });
+});

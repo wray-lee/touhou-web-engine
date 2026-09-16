@@ -367,10 +367,10 @@ export class PixiRenderer {
   private bossShadow: Sprite;
   /** Hitbox dot and swap flourish: always composited above every sprite. */
   private hitboxGraphics: Graphics;
-  /** The retail 判定点 glow, additive, painted just below `hitboxGraphics`. */
+  /** The retail 判定点光环 (effect template 22), painted just below `hitboxGraphics`. */
   private hitboxMarker: Sprite;
-  /** ANM tick clock that drives the marker's four-frame cycle. */
-  private markerTick = 0;
+  /** The live glow handed in by the game layer, or null while none is on screen. */
+  private hitboxGlow: HitboxGlow | null = null;
   private playfieldMask: Graphics;
   /**
    * The standing-down team member, drawn as a portrait in the right panel.
@@ -518,14 +518,15 @@ export class PixiRenderer {
     this.bombGraphics = new Graphics();
     this.bombGraphics.blendMode = 'add';
     this.gameContainer.addChild(this.bombGraphics);
-    // The retail marker is a 24x29 red coil that fills most of the ship, so it is
-    // a glow and never a point. It goes down first and the dot goes over it:
-    // adding the two in the other order buries a 7 px bead under a 29 px coil,
-    // which is exactly why slow mode read as "somewhere in this red haze".
+    // The retail ring is a 64 px red-and-white mark that fills most of the ship, so it
+    // is a glow and never a point. It goes down first and the dot goes over it: adding
+    // the two in the other order buries a 7 px bead under a 64 px ring, which is exactly
+    // why slow mode read as "somewhere in this red haze". Script 54 never touches
+    // `ADDITIVE_BLEND_MODE`, so the cell keeps retail's normal compositing.
     // The dot still has to survive the ship sprite, the partner ghost and every
     // bullet on top of it, so it stays the last thing painted in the playfield.
     this.hitboxMarker = makeSprite();
-    this.hitboxMarker.blendMode = 'add';
+    this.hitboxMarker.blendMode = 'normal';
     this.gameContainer.addChild(this.hitboxMarker);
     this.hitboxGraphics = new Graphics();
     this.gameContainer.addChild(this.hitboxGraphics);
@@ -776,7 +777,6 @@ export class PixiRenderer {
     items: Item[] = [],
   ): void {
     this.playerPose = environment.playerPose ?? 'normal';
-    if (!isPaused) this.markerTick++;
     this.hitboxMarker.visible = false;
     this.entityGraphics.clear();
     this.bulletGraphics.clear();
@@ -879,41 +879,49 @@ export class PixiRenderer {
       // (`Player.cpp:1457-1479`); the colour it writes is 0xf02020.
       this.playerSprite.tint = player.bombStateFlash ? 0xf02020 : 0xffffff;
 
-      // 永夜抄 focus mode: the retail 判定点 is one additive effect sprite parked at
-      // the ship centre, redrawn every frame while Shift is held. It is drawn in a
-      // dedicated sprite node placed after the ship so the ship art cannot cover it.
+      /*
+       * The 判定点光环, drawn from the live effect the sim spawned.
+       *
+       * This is retail's own template 22 (`Player.cpp:704-707`), whose script 54 in
+       * `etama.anm` selects cell 218 - a 64x64 red-and-white radial mark with a white
+       * core - ramps alpha 0 → 255 over 20 frames, and spins at a random angular
+       * velocity. Cell, alpha and rotation all come off the script; the node it lands on
+       * is chosen here because this renderer's effect batch sits under the ship sprite,
+       * and a ring the ship covers is a ring with a bite out of it. It is deliberately
+       * not gated on `hitboxVisible`: the script's own fade is the authority on when the
+       * ring is on screen, and retail starts it on the frame Shift goes down.
+       *
+       * What used to be here was an invented 4-cell additive coil (`etama_t5` 326..329,
+       * the only additive loop in the pack), chosen when the template table at
+       * `0x004c6d30` could not be read. The table has since been read out of the shipped
+       * `th08.exe`, no template anywhere in those 66 rows names script 114, and the
+       * script the table does name for template 22 draws a different cell entirely.
+       */
+      const glow = this.hitboxGlow;
+      const glowArt = glow ? this.assets.get(glow.key) : undefined;
+      if (glow && glowArt && glow.alpha > 0) {
+        this.hitboxMarker.visible = true;
+        this.hitboxMarker.texture = glowArt;
+        this.hitboxMarker.position.set(px, py);
+        this.hitboxMarker.alpha = pa * glow.alpha;
+        this.hitboxMarker.rotation = glow.rotation;
+        this.hitboxMarker.scale.set(
+          glow.width / Math.max(1, glowArt.width),
+          glow.height / Math.max(1, glowArt.height),
+        );
+      }
       if (player.hitboxVisible) {
-        const step = Math.floor(this.markerTick / HITBOX_MARKER_TICKS) % HITBOX_MARKER_IDS.length;
-        const art = this.assets.get('th08:bullet:etama_t5:' + HITBOX_MARKER_IDS[step]);
-        if (art) {
-          this.hitboxMarker.visible = true;
-          this.hitboxMarker.texture = art;
-          this.hitboxMarker.position.set(px, py);
-          this.hitboxMarker.alpha = pa * HITBOX_MARKER_ALPHA;
-          this.hitboxMarker.scale.set(HITBOX_MARKER_SPAN / Math.max(1, art.width));
-        }
-        // Source of truth: `Player.cpp:696-708` spawns effect template 22 on the
-        // focus edge, and `FUN_00425870(22, ...)` resolves it through the effect
-        // template table at 0x004c6d30. Open question, registered 2026-09-16: that
-        // table has now been read out of the shipped `th08.exe` (66 rows, and
-        // `EFFECT_TEMPLATES[22]` is script 54 with mover `FUN_00426c40`), while the
-        // 4-cell cycling script drawn here was identified from the art instead -
-        // `etama.anm` script index 114 is the only additive-blend loop in the pack,
-        // and it steps sprites 326..329 (etama_t5 at y=160, 32x32 each) over 12
-        // ticks. Which of the two retail actually shows needs script 54 decoded
-        // before the marker moves; see REQUIREMENTS 台账 §17.
         // The bead itself, on top of the glow and drawn whether or not the pack
-        // loaded. `etama_t5` 326-329 turned out to be a flat red coil 24 px wide,
-        // so on its own it says "somewhere around here" and nothing more, while
-        // the one piece of information focus mode exists to convey is a point.
-        // The real hit box is `plyNNa.sht + 0x0C / 2`, under a playfield unit
-        // across, which at any window size is one pixel; the bead is therefore
-        // the honest extent clamped up to the smallest thing the eye can pin.
+        // loaded. Retail draws nothing at the centre of that ring - cell 218 carries its
+        // own white core - so this is a stated addition rather than a reconstruction: the
+        // real hit box is `plyNNa.sht + 0x0C / 2`, under a playfield unit across, which at
+        // any window size is one pixel, and a 64 px ring does not pin a point that small.
+        // The bead is the honest extent, clamped up to the smallest thing the eye can fix.
         const hb = this.hitboxGraphics;
         const bead = Math.max(HITBOX_DOT, player.hitbox.radius);
-        // The dark pocket is what separates the bead from the coil it sits in:
-        // both are red, so without a hole punched in the glow the "point" is just
-        // a brighter patch of the same colour and the eye cannot fix it.
+        // The dark pocket is what separates the bead from the red ring it sits in: both
+        // are red, so without a hole punched in the glow the "point" is just a brighter
+        // patch of the same colour and the eye cannot fix it.
         hb.circle(px, py, bead + HITBOX_BEZEL).fill({ color: 0x06121f, alpha: 0.82 * pa });
         hb.circle(px, py, bead).fill({ color: 0xff5a6e, alpha: 0.95 * pa });
         hb.circle(px, py, Math.max(1.4, bead - HITBOX_CORE)).fill({ color: 0xffffff, alpha: pa });
@@ -1987,6 +1995,18 @@ export class PixiRenderer {
   }
 
   /**
+   * Take the ship's 判定点光环 for this frame, or null when the script has none live.
+   *
+   * Called once per frame by the game layer out of the effect pool, before `render`.
+   * Holding it here rather than pushing it through the ordinary effect batch is the only
+   * liberty taken, and it is a layering one: the batch composites under the ship sprite,
+   * and retail's ring is unmistakably drawn over the ship's own art.
+   */
+  setHitboxGlow(glow: HitboxGlow | null): void {
+    this.hitboxGlow = glow;
+  }
+
+  /**
    * Wash the whole picture into `color` over `frames` frames.
    *
    * `Gui.cpp:876-879` asks for exactly this from stage message op 14:
@@ -2508,30 +2528,30 @@ export const PORTRAIT_SCALE = 1.5;
  */
 export const HITBOX_DOT = 3.4;
 /**
- * How far the dark pocket under the bead reaches past it, in playfield units.
- * The retail marker coil is red and additive and 24x29 across, so the bead needs
- * a hole in that colour to read as a point at all.
+ * How far the dark pocket under the bead reaches past it, in playfield units. The
+ * retail ring is red and 64 px across, so the bead needs a hole in that colour to
+ * read as a point at all.
  */
 export const HITBOX_BEZEL = 2.6;
 /** Radial inset of the white core from the bead edge, leaving the red rim. */
 export const HITBOX_CORE = 1.4;
 /**
- * The retail 判定点 is `etama.anm` script index 114: `ADDITIVE_BLEND_MODE 1` then
- * sprites 326-329 on page t5, three ticks each, looping. It is the only additive
- * cycling script in the pack, which is what identifies it as the marker the player
- * effect slot keeps re-triggering (`Player.cpp:704-708`).
+ * One frame of the ship's 判定点光环, as the effect script produced it.
  *
- * Decoded, those four cells are a flat red coil most of the way across the 32x32
- * square, so they read as the glow around the ship rather than as the point, and
- * that is the only job they are given here.
+ * The sim owns the ring - `StageRunner` spawns template 22 on the focus edge and the ANM
+ * VM runs its fade-in, spin and release fade - and the game layer hands the resulting
+ * cell here instead of into the ordinary effect batch, which is composited under the
+ * ship. Nothing about the picture is invented at this end: `key`, `alpha` and `rotation`
+ * are read off the live view.
  */
-export const HITBOX_MARKER_IDS = [326, 327, 328, 329];
-/** Ticks each marker frame holds, straight out of the script's `i16 time` fields. */
-export const HITBOX_MARKER_TICKS = 3;
-/** The 32x32 cell is drawn 1:1, the way the ANM VM's default scale leaves it. */
-export const HITBOX_MARKER_SPAN = 32;
-/** How much of the coil's alpha survives once the bead is doing the pointing. */
-export const HITBOX_MARKER_ALPHA = 0.55;
+export interface HitboxGlow {
+  /** Asset key of the cell the script currently selects, e.g. `th08:bullet:etama_t1:218`. */
+  key: string;
+  width: number;
+  height: number;
+  alpha: number;
+  rotation: number;
+}
 /** Frames the swap flourish runs; mirrors Player.switchFlash. */
 const SWITCH_FLASH_FRAMES = 14;
 

@@ -15,7 +15,7 @@ import { BulletPool } from './BulletPool';
 import type { Bullet } from './BulletPool';
 import type { BulletWorld, SeTick } from './BulletTransform';
 import { LaserPool } from './LaserPool';
-import type { EffectPool } from './EffectPool';
+import type { EffectHandle, EffectPool } from './EffectPool';
 import type { Laser } from './LaserPool';
 import { PlayerSim, type PlayerInput } from './PlayerSim';
 import {
@@ -202,6 +202,23 @@ function simShotViews(bullets: Bullet[]): ShotView[] {
   }
   return views;
 }
+
+/**
+ * `Player.cpp:707` hands `FUN_00425870` the id `22`, and `g_EffectTemplates[22]` (read out
+ * of the shipped `th08.exe`, and mirrored by `effect-templates.ref.json`) is script 54 of
+ * `etama.anm`: cell 218, alpha 0 → 255 over 20 frames, spinning at a random angular
+ * velocity, parked on `STOP` until the release edge sends interrupt 1 and fades it out
+ * over 30. This is the retail 判定点光环, and it is the only art focus mode draws.
+ */
+export const HITBOX_GLOW_TEMPLATE = 22;
+
+/**
+ * The third argument of that same call: record 2 of the retail pool's named bank. The
+ * glow is not allocated from the rotating 512, it owns a record of its own
+ * (`EffectManager.cpp:269-280`), which is what lets a second Shift press overwrite a ring
+ * that is still fading out instead of drawing two.
+ */
+export const HITBOX_GLOW_SLOT = 2;
 
 export class StageRunner {
   readonly gs: GameState;
@@ -643,6 +660,7 @@ export class StageRunner {
     const optionWorld = this.optionWorld();
     this.options.setFocus(this.player.isSlow, shotType);
     this.options.tick(optionWorld);
+    this.tickHitboxGlow(this.player.isSlow);
 
     const world = this.shipWorld();
     // `Player::Update` runs these two at `:1098`/`:1099` in the order below: move
@@ -650,6 +668,38 @@ export class StageRunner {
     // spends one frame at the muzzle before it travels.
     this.shots.update(world);
     this.shots.fire(world);
+  }
+
+  /** `Player+0xBE834`: the one live 判定点光环 the ship holds a pointer to. */
+  private hitboxGlow: EffectHandle | null = null;
+  /** The latch the focus edges are taken from - retail reads `Player+3`, we read focus. */
+  private glowFocused = false;
+
+  /**
+   * `Player.cpp:704-707` and `:768-770`, both inside the focus-edge block.
+   *
+   * The press spawns template 22 once - retail only spawns when its own pointer is NULL,
+   * and the spawn goes to a named record rather than to the rotating pool, so a second
+   * press takes the record back from a glow that is still fading. The release does not
+   * delete the effect: it sends interrupt 1, which is the branch of script 54 that fades
+   * alpha to 0 over 30 frames and then `DELETE`s. That is why letting go of Shift fades
+   * the ring instead of cutting it, and why the pointer is cleared on the same frame - the
+   * ship is free to light a new one.
+   */
+  private tickHitboxGlow(focus: boolean): void {
+    if (focus && !this.glowFocused) {
+      this.hitboxGlow =
+        this.effectPool?.spawn(HITBOX_GLOW_TEMPLATE, this.player.x, this.player.y, {
+          count: 1,
+          color: -1,
+          slotIndex: HITBOX_GLOW_SLOT,
+          ownerPos: () => ({ x: this.player.x, y: this.player.y }),
+        }) ?? null;
+    } else if (!focus && this.glowFocused && this.hitboxGlow) {
+      this.hitboxGlow.interrupt(1);
+      this.hitboxGlow = null;
+    }
+    this.glowFocused = focus;
   }
 
   /** The four option positions, nulled out for slots retail leaves inactive. */

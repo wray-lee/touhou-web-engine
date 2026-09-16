@@ -67,7 +67,7 @@ import {
   type StageRoute,
 } from './StageRoute';
 import { StageProgress } from './StageProgress';
-import type { StageRunner } from '../../th08/sim/StageRunner';
+import { HITBOX_GLOW_TEMPLATE, type StageRunner } from '../../th08/sim/StageRunner';
 import { selectBomb } from '../../th08/sim/BombSystem';
 import { adaptEclEnemies, adaptEclBullets, adaptEclLasers, resetEclAdapters } from './EclAdapter';
 import {
@@ -1282,9 +1282,24 @@ export class TH08Game {
     const pool = this.eclRunner?.effectPool;
     const renderer = this.renderer;
     if (!pool || !renderer) return;
+    // The ring is only on screen while its script says so; every frame starts from
+    // "nothing live" and the loop below is the only thing that can put it back.
+    renderer.setHitboxGlow(null);
     for (const view of pool.views) {
       const cell = TH08_ETAMA_CELLS[view.sprite];
       if (!cell || view.alpha <= 0) continue;
+      if (view.id === HITBOX_GLOW_TEMPLATE) {
+        // The ship's own 判定点光环 rides the node above the ship art. Cell, alpha ramp
+        // and spin are the retail script's; only the compositing slot is chosen here.
+        renderer.setHitboxGlow({
+          key: `th08:bullet:etama_t${cell.page}:${view.sprite}`,
+          width: cell.w * view.scaleX,
+          height: cell.h * view.scaleY,
+          alpha: Math.min(1, view.alpha),
+          rotation: view.rotation,
+        });
+        continue;
+      }
       renderer.spawnEffectRect(
         `th08:bullet:etama_t${cell.page}:${view.sprite}`,
         view.x,

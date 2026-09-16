@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { StageRunner } from './StageRunner';
+import { HITBOX_GLOW_TEMPLATE, StageRunner } from './StageRunner';
 import { createGameState } from './GameState';
 import { parseEcl } from '../format/EclFile';
 import { collectEclSubs, createEclSubFactory } from './EclBridge';
 import * as eclSubs from '../stages/stage1/scripts';
 import type { EnemySlot } from './EnemySlot';
+import { EffectPool, type EffectView } from './EffectPool';
+import { EFFECT_TEMPLATES, TH08_EFFECT_SCRIPT_BYTES } from '../../games/th08/data/th08-effect-anm';
+import type { AnmRng } from '../../engine/anm/AnmVm';
 import fs from 'fs';
 import path from 'path';
 
@@ -368,5 +371,135 @@ describe('StageRunner boss gauge (ECL ops 127 / 131 / 148 / 158 / 137)', () => {
     );
     for (let i = 0; i < 10; i++) leaving.tick(noInput);
     expect(leaving.gs.isBossPresent).toBe(false);
+  });
+});
+
+/**
+ * The 判定点光环 the ship lights for itself on the focus edge.
+ *
+ * `Player.cpp:704-707` spawns effect id 22 when Shift goes down and only when its own
+ * `Player+0xBE834` pointer is NULL; `:768-770` sends interrupt 1 on the release edge and
+ * clears the pointer. Script 54 of `etama.anm` turns that into a 20-frame fade in, a
+ * `STOP` that parks the ring while it spins, and a 30-frame fade out that only the
+ * interrupt can start, so the whole life of the glow is governed by the two edges.
+ *
+ * The one thing these locks also pin down is the calc-chain order: the effect pool ticks
+ * at `StageRunner.ts:965` and the ship's firing chain at `:1025`, which is how retail has
+ * it too (the effect chain runs before the player chain). A glow lit on frame N therefore
+ * first draws, and first moves, on frame N+1.
+ */
+describe('the focus hitbox glow (Player.cpp:704-707 / :768-770)', () => {
+  const FOCUS = { ...noInput, slow: true };
+  const DRIFT = { ...FOCUS, dx: 1 };
+  /** The mid-range draws the EffectPool locks use, so the spin of the ring is stable. */
+  const midRng = (): AnmRng => ({
+    randomU32InRange: (bound) => Math.trunc(bound / 2),
+    randomF32InRange: (bound) => bound / 2,
+  });
+
+  function glowRunner(): { runner: StageRunner; pool: EffectPool } {
+    const pool = new EffectPool({
+      rng: midRng(),
+      templates: EFFECT_TEMPLATES,
+      scriptBytes: TH08_EFFECT_SCRIPT_BYTES,
+    });
+    const runner = new StageRunner({
+      gs: createGameState('normal', 7),
+      ecl: {
+        version: 2048,
+        subCount: 1,
+        subs: [{ id: 0, offset: 0, instructions: [] }],
+        timelines: [{ index: 0, offset: 0, instructions: [] }],
+      },
+      subFactory: () => (_e: EnemySlot) =>
+        (function* () {
+          yield 9999;
+        })(),
+      effectPool: pool,
+    });
+    return { runner, pool };
+  }
+
+  const glows = (pool: EffectPool): EffectView[] =>
+    pool.views.filter((view) => view.id === HITBOX_GLOW_TEMPLATE);
+
+  it('lights exactly one glow on the press edge and holds it while Shift stays down', () => {
+    const { runner, pool } = glowRunner();
+    for (let i = 0; i < 30; i++) runner.tick(noInput);
+    expect(glows(pool)).toHaveLength(0);
+
+    runner.tick(FOCUS);
+    // The ship ticks after the pool, so the press registers this frame and the ring first
+    // draws next frame -- and it never draws twice.
+    expect(pool.live).toBe(1);
+    expect(glows(pool)).toHaveLength(0);
+    runner.tick(FOCUS);
+    expect(glows(pool)).toHaveLength(1);
+    expect(glows(pool)[0].sprite).toBe(218);
+
+    // The ramp lands on full alpha after the script's twenty frames, `STOP` holds it, and
+    // holding the key down must never light a second ring.
+    for (let i = 0; i < 40; i++) runner.tick(FOCUS);
+    expect(glows(pool)).toHaveLength(1);
+    expect(glows(pool)[0].alpha).toBe(1);
+    const spin = glows(pool)[0].rotation;
+    runner.tick(FOCUS);
+    expect(glows(pool)[0].rotation).not.toBe(spin);
+  });
+
+  it('fades the ring out over the script thirty frames instead of cutting it', () => {
+    const { runner, pool } = glowRunner();
+    for (let i = 0; i < 40; i++) runner.tick(FOCUS);
+    expect(glows(pool)[0].alpha).toBe(1);
+
+    runner.tick(noInput);
+    runner.tick(noInput);
+    expect(glows(pool)).toHaveLength(1);
+    const fading = glows(pool)[0].alpha;
+    expect(fading).toBeLessThan(1);
+    expect(fading).toBeGreaterThan(0.9);
+    // Still on screen a dozen frames later: the release interrupts the script, it does not
+    // delete the effect.
+    for (let i = 0; i < 10; i++) runner.tick(noInput);
+    expect(glows(pool)).toHaveLength(1);
+    expect(glows(pool)[0].alpha).toBeLessThan(fading);
+    for (let i = 0; i < 25; i++) runner.tick(noInput);
+    expect(glows(pool)).toHaveLength(0);
+    expect(pool.live).toBe(0);
+  });
+
+  it('reuses the one slot, so a fresh press replaces a ring that is still fading', () => {
+    const { runner, pool } = glowRunner();
+    for (let i = 0; i < 40; i++) runner.tick(FOCUS);
+    for (let i = 0; i < 10; i++) runner.tick(noInput);
+    expect(glows(pool)).toHaveLength(1);
+    expect(glows(pool)[0].alpha).toBeLessThan(1);
+
+    // Press again mid-fade. Retail owns one reserved slot and one pointer, so the ship
+    // must never end up with a fading ring stacked under a bright one.
+    runner.tick(FOCUS);
+    expect(pool.live).toBe(1);
+    for (let i = 0; i < 40; i++) runner.tick(FOCUS);
+    expect(glows(pool)).toHaveLength(1);
+    expect(glows(pool)[0].alpha).toBe(1);
+  });
+
+  it('rides the ship, one calc chain behind it', () => {
+    const { runner, pool } = glowRunner();
+    runner.tick(FOCUS);
+    runner.tick(DRIFT);
+    for (let i = 0; i < 20; i++) {
+      const lastFrame = { x: runner.player.x, y: runner.player.y };
+      runner.tick(DRIFT);
+      const glow = glows(pool)[0];
+      expect(glow).toBeTruthy();
+      expect([glow.x, glow.y]).toEqual([lastFrame.x, lastFrame.y]);
+    }
+    // And it is still put there by the mover, not by a spawn that simply followed: let go
+    // of Shift and the ring keeps its place while the ship walks away from it.
+    const parked = { ...noInput, dx: 1 };
+    for (let i = 0; i < 40; i++) runner.tick(parked);
+    expect(glows(pool)).toHaveLength(0);
+    expect(runner.player.x).toBeGreaterThan(192);
   });
 });
