@@ -120,6 +120,12 @@ export interface ReplayOutcome {
   envelopeDeaths: number;
   graze: number;
   pointItems: number;
+  /**
+   * 时符 banked by the end of the run. The gate does not score it, but it is the number
+   * four other systems compare against `g_TimeRequirementParams`, so the replay has to say
+   * what it reached: that is what proves the threshold work is inert for these four runs.
+   */
+  timeOrbs: number;
   power: number;
   lives: number;
   bombs: number;
@@ -277,6 +283,7 @@ export async function playReplay(
     envelopeDeaths: 0,
     graze: 0,
     pointItems: 0,
+    timeOrbs: 0,
     power: h.power,
     lives: h.lives,
     bombs: h.bombs,
@@ -428,6 +435,7 @@ export async function playReplay(
   outcome.envelopeScoreRatio = h.score > 0 ? scoreAtEnvelope / h.score : 0;
   outcome.graze = runner.player.graze;
   outcome.pointItems = gs.pointItemsCollected;
+  outcome.timeOrbs = gs.timeOrbs;
   outcome.power = runner.player.power;
   outcome.lives = runner.player.lives;
   outcome.bombs = runner.player.bombs;

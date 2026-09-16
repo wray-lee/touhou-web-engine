@@ -14,6 +14,7 @@ import { PixiRenderer } from '../../engine/renderer/PixiRenderer';
 import {
   POPUP_COLOR_MAX,
   POPUP_COLOR_NORMAL,
+  POPUP_COLOR_TIME_PAID,
   POPUP_COLOR_POWER_UP,
   ScorePopupSystem,
 } from '../../engine/core/ScorePopupSystem';
@@ -1198,11 +1199,14 @@ export class TH08Game {
       const gainedPower = runner.player.power > this.eclPrevPower;
       if (gainedPower) this.hud.showMessage('POWER UP!', 60);
       // The float carries the raw value, not the /10 the read-out gains, and turns
-      // gold when the pickup paid its ceiling. A shot level going up replaces the
-      // number with the 48x8 star, which is retail's only non-numeric popup.
+      // gold when the pickup paid its ceiling. A 时符 has a third colour of its own --
+      // amber once the Last Spell threshold is met, which is the same line the HUD's Time
+      // row lights on (`ItemManager.cpp:630`, `Gui.cpp:1462`). A shot level going up
+      // replaces the number with the 48x8 star, which is retail's only non-numeric popup.
       for (const c of runner.lastCollected) {
         if (c.popup <= 0) continue;
-        this.popups.spawn(c.x, c.y, c.popup, c.maxValue ? POPUP_COLOR_MAX : POPUP_COLOR_NORMAL);
+        const color = c.orbPaid ? POPUP_COLOR_TIME_PAID : c.maxValue ? POPUP_COLOR_MAX : POPUP_COLOR_NORMAL;
+        this.popups.spawn(c.x, c.y, c.popup, color);
       }
       if (powerLevel(runner.player.power) > powerLevel(this.eclPrevPower)) {
         this.popups.spawn(runner.player.x, runner.player.y - 12, -1, POPUP_COLOR_POWER_UP);
@@ -2449,6 +2453,16 @@ export class TH08Game {
       // `g_GameManager + 0x3054`), which `addTimeOrbs` keeps in step with the stage
       // counter. It was never fed, so the panel printed `1056/ 0`.
       this.hud.timeOrbTotal = gs.totalTimeOrbs;
+      /*
+       * The Time row's right column, which is the same number four other systems read: the
+       * ECL register `0x2772`, the deathbomb grace, the clock's one-or-two hours, and this
+       * row's warm-white state. `Infinity` is only ever what a state with no stage data
+       * carries, and printing that on the panel would be a lie in a font, so it falls back
+       * to "this host models no threshold".
+       */
+      this.hud.timeOrbThreshold = Number.isFinite(gs.lastSpellTimeOrbThreshold)
+        ? gs.lastSpellTimeOrbThreshold
+        : null;
       // The night clock. `clockControl` (ECL op 181) advances this once per
       // chime and the run ends the night at 12, so the dial is the only place
       // a player can read how much of it is left.

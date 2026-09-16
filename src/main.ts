@@ -307,6 +307,11 @@ class TH08Shell {
         b: gauge ? [Math.round(gauge.hp), Math.round(gauge.maxHp), gauge.pips, gauge.timerFrames] : null,
         /** Run totals the cards feed: time orbs, banked spell bonus, cards ended. */
         to: r ? Math.round(r.gs.timeOrbs) : 0,
+        /** The 时符 count this stage's Last Spell asks for (`null` = no threshold modelled),
+         *  which is the number the HUD Time row prints on the right and lights warm white on.
+         *  Read next to `to` so a QA pass can tell "the stage never asks" from "the run has
+         *  not paid yet". */
+        thr: game.hud.timeOrbThreshold,
         sb: game.spellBonus,
         cl: game.spellLog.length,
         cap: game.hud.spellCaptured ? 1 : 0,

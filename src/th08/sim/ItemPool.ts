@@ -450,7 +450,18 @@ export class ItemPool {
           this.gs.pointItemsCollectedInStage >= 2000
             ? 10000
             : Math.max(100, Math.trunc(this.gs.pointItemsCollected / 2) * 10);
-        return this.result(item, { popup, timeOrb: true });
+        /*
+         * The same function picks the float's colour two lines later (`:630`), and it is a
+         * threshold test on the count *before* `AddTimeOrbs(1)` at `:635`: white while a
+         * Last Spell still cannot be paid for, amber (`0xdfffef80`) only from the orb *after*
+         * the one that crosses the line -- the crossing orb itself is still white. So this
+         * reads `timeOrbs` before the caller banks it, which is the order retail has it in.
+         */
+        return this.result(item, {
+          popup,
+          timeOrb: true,
+          orbPaid: this.gs.timeOrbs >= this.gs.lastSpellTimeOrbThreshold,
+        });
       }
     }
   }
@@ -525,6 +536,13 @@ export class ItemPool {
     if (pay.bomb) out.bomb = true;
     if (pay.extend) out.extend = true;
     if (pay.timeOrb) out.timeOrb = true;
+    /*
+     * `orbPaid` is the one flag that has to survive as a boolean rather than as presence:
+     * retail's `:630` picks between two colours on *every* 时符, so "below the threshold" is
+     * an answer, not a missing field. Keeping it off the other kinds is what lets the
+     * renderer treat `undefined` as "not a 时符".
+     */
+    if (pay.timeOrb) out.orbPaid = pay.orbPaid === true;
     if (pay.pointItem) {
       gs.pointItemsCollected++;
       gs.pointItemsCollectedInStage++;
@@ -685,6 +703,11 @@ export interface CollectResult {
   /** An 延长 item, or a point item that just crossed the extend threshold. */
   extend?: boolean;
   timeOrb?: boolean;
+  /**
+   * A 时符 collected while the Last Spell threshold is already met, which is what turns
+   * its float amber (`ItemManager.cpp:630`). Only ever set on the orb branch.
+   */
+  orbPaid?: boolean;
   /** Internal: this pickup is a 点 item, so it counts and can extend. */
   pointItem?: boolean;
 }

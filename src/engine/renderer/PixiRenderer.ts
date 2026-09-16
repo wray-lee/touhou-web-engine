@@ -259,6 +259,13 @@ const STAR = '★';
  */
 const HUD_TOP_LEFT = { anchorX: 0, anchorY: 0 } as const;
 
+/**
+ * The panel's "a Last Spell can be paid for" colour. `Gui.cpp:1463` hands the ascii
+ * manager `0xfffff0c0` -- ARGB, so the RGB is a warm off-white -- for the whole Time row
+ * and puts `0xffffffff` back at `:1471`.
+ */
+const HUD_TIME_ROW_PAID = 0xfff0c0;
+
 export class PixiRenderer {
   public app: Application;
   public gameContainer: Container;
@@ -1768,14 +1775,27 @@ export class PixiRenderer {
     this.drawHudText(String(hud.graze), HUD_VALUE_X, HUD_ROWS.graze);
     this.drawPointRow(String(hud.pointItems), String(hud.nextPointExtend), HUD_ROWS.point);
     /*
-     * Retail prints `currentTimeOrbs / lastSpellTimeOrbThreshold` here (`Gui.cpp:1462-1471`)
-     * and warms the row to 0xfffff0c0 once the left term reaches the right one. The second
-     * term is the one number this port cannot source -- see `RETAIL_SE_SOURCE`'s neighbour
-     * note in `docs/REQUIREMENTS.md` R-15 §8 -- so the right column shows the run-lifetime
-     * orb count instead and the highlight is deliberately not drawn: keying it on the
-     * substitute would light the row for reasons retail never does.
+     * `Gui.cpp:1462-1471`: the Time row is `currentTimeOrbs / lastSpellTimeOrbThreshold`,
+     * and retail's `SetColor(0xfffff0c0)` covers the whole row -- both numbers *and* the
+     * slash between them -- from the frame the orbs on hand can pay for a Last Spell, back
+     * to white on the way out. That right-hand number is
+     * `g_TimeRequirementParams[stage][difficulty]` (`GameManager.cpp:46-57`), which the
+     * stage setup now loads, so this is retail's own row. A host that models no threshold
+     * (`null`) keeps the older substitution -- run-lifetime count, untinted -- because
+     * lighting the row on a stand-in would make it read as retail for a reason retail
+     * never does.
      */
-    this.drawPointRow(String(hud.timeOrbs), String(hud.timeOrbTotal), HUD_ROWS.time);
+    if (hud.timeOrbThreshold === null) {
+      this.drawPointRow(String(hud.timeOrbs), String(hud.timeOrbTotal), HUD_ROWS.time);
+    } else {
+      const paid = hud.timeOrbs >= hud.timeOrbThreshold;
+      this.drawPointRow(
+        String(hud.timeOrbs),
+        String(hud.timeOrbThreshold),
+        HUD_ROWS.time,
+        paid ? HUD_TIME_ROW_PAID : undefined,
+      );
+    }
 
     // The difficulty badge closes the panel (`ascii.anm` script 25 at (552, 200)).
     // Retail prints nothing else here: the 永夜抄 plate owns the rest of the panel,
@@ -1810,9 +1830,12 @@ export class PixiRenderer {
     }
   }
 
-  /** Point/Time rows: `count`, a half-width slash, then the extend threshold. */
-  private drawPointRow(count: string, limit: string, y: number): void {
-    const advance = this.drawHudText(count, HUD_VALUE_X, y);
+  /**
+   * Point/Time rows: `count`, a half-width slash, then the extend threshold. The tint is
+   * retail's whole-row `SetColor`, so it has to cover the slash as well as the digits.
+   */
+  private drawPointRow(count: string, limit: string, y: number, tint?: number): void {
+    const advance = this.drawHudText(count, HUD_VALUE_X, y, 1, 'left', { tint });
     const slashX = HUD_VALUE_X + advance;
     const slash = this.assets.get(hudGlyphKey(0x2f));
     if (slash) {
@@ -1822,10 +1845,11 @@ export class PixiRenderer {
         y,
         width: 8,
         height: 16,
+        tint: tint ?? 0xffffff,
         ...HUD_TOP_LEFT,
       });
     }
-    this.drawHudText(limit, slashX + 8 + 6, y);
+    this.drawHudText(limit, slashX + 8 + 6, y, 1, 'left', { tint });
   }
 
   /**

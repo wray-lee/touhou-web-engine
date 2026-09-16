@@ -24,6 +24,13 @@ import {
 /** `0xAARRGGBB`, the form the decompilation hands around. */
 export const POPUP_COLOR_MAX = 0xffffff00;
 export const POPUP_COLOR_NORMAL = 0xffffffff;
+/**
+ * A 时符 collected once the Last Spell threshold is met (`ItemManager.cpp:630` picks this
+ * one over white). Retail's literal is `0xdfffef80` -- amber with the `0xDF` alpha most of
+ * its in-stage floats carry -- and the alpha is dropped here for the same reason every
+ * other popup colour drops it.
+ */
+export const POPUP_COLOR_TIME_PAID = 0xffef80;
 export const POPUP_COLOR_POWER_UP = 0xffffc0a0;
 
 export interface ScorePopup {

@@ -40,6 +40,15 @@ export class HUD {
   /** Second Time column: run-lifetime orbs, `g_GameManager + 0x3054`. */
   public timeOrbTotal = 0;
   /**
+   * The 时符 count this stage's last spell asks for, `globals->lastSpellTimeOrbThreshold`
+   * (`GameManager.cpp:226-229`). Retail prints it as the Time row's right column and warms
+   * the whole row once the orbs on hand reach it (`Gui.cpp:1462-1471`).
+   *
+   * `null` means the host does not model a last-spell threshold at all, in which case the
+   * renderer keeps the second column on the run-lifetime count and leaves the row untinted.
+   */
+  public timeOrbThreshold: number | null = null;
+  /**
    * The night clock, in the units `GetClockTime()` returns: 0 is midnight and
    * 12 is dawn. The panel draws it as a dial, so the renderer needs the raw
    * count rather than a formatted string.

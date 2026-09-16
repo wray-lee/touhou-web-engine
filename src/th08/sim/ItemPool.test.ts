@@ -373,3 +373,39 @@ describe('full-power conversion', () => {
     expect(other.kind).toBe('pointSmall');
   });
 });
+
+/**
+ * `CollectTimeOrb` (`ItemManager.cpp:604-636`) picks the float colour at `:630` and banks the
+ * orb at `:635`, so the comparison runs against the count *before* the pickup. Worth locking
+ * on its own: the two statements are five lines apart in the decompile and either one reads
+ * like the obvious place to test.
+ */
+describe('the last-spell 时符 threshold on a collected orb', () => {
+  it('leaves the flag off when no stage has loaded a threshold yet', () => {
+    const gs = createGameState('normal');
+    // `createGameState` does not know which stage it is heading into, so the field is still
+    // the `Infinity` the stage loader lowers.
+    expect(gs.lastSpellTimeOrbThreshold).toBe(Number.POSITIVE_INFINITY);
+    gs.timeOrbs = 9999;
+    expect(grab(gs, 'timeOrb', 60, false, false)[0].orbPaid).toBe(false);
+  });
+
+  it('reads the bank before it fills it, so the crossing orb itself stays white', () => {
+    const gs = createGameState('normal');
+    gs.lastSpellTimeOrbThreshold = 2500;
+    gs.timeOrbs = 2499;
+    expect(grab(gs, 'timeOrb', 60, false, false)[0].orbPaid).toBe(false);
+    gs.timeOrbs = 2500;
+    expect(grab(gs, 'timeOrb', 60, false, false)[0].orbPaid).toBe(true);
+  });
+
+  it('carries the flag on 时符 pickups only', () => {
+    const gs = createGameState('normal');
+    gs.lastSpellTimeOrbThreshold = 0;
+    expect(grab(gs, 'point', 60)[0].orbPaid).toBeUndefined();
+    expect(grab(gs, 'powerSmall', 60)[0].orbPaid).toBeUndefined();
+    // A zero threshold is a real stage value -- 6A, 6B and Extra all carry one -- and it
+    // makes every orb amber from the first frame.
+    expect(grab(gs, 'timeOrb', 60, false, false)[0].orbPaid).toBe(true);
+  });
+});

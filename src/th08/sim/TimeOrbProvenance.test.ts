@@ -118,4 +118,32 @@ describe('time orb provenance', () => {
     expect(runner.player.gauge.isExtremelyYoukai()).toBe(false);
     expect(spawned.grazeOrbs).toBe(0);
   });
+
+  /**
+   * The threshold is part of the orb economy for one reason: it is what the counter is
+   * measured *against*. `GameManagerSetup.cpp:250-253` loads one cell of
+   * `g_TimeRequirementParams` per stage, and the register the boss scripts read
+   * (`0x2772`, `EclOperandsInt.cpp:153-158`) is a comparison against it, so a stage that
+   * came up with no threshold is a stage whose Last Spell can never be paid for -- which
+   * is exactly the bug this lock exists to keep out.
+   */
+  it('loads each route its own stage cell of the retail table', async () => {
+    const load = async (route: 'stage1' | 'stage4a' | 'stage6a', difficulty: 'easy' | 'normal') => {
+      const runner = await loadEclStage({
+        route,
+        difficulty,
+        character: 'reimu-yukari',
+        power: 128,
+        stageNumber: 1,
+      });
+      if (!runner) throw new Error(`${route} failed to load`);
+      return runner.gs.lastSpellTimeOrbThreshold;
+    };
+
+    expect(await load('stage1', 'normal')).toBe(2500);
+    // 4A's row is 9999 for every difficulty, so the branch stays shut there by design.
+    expect(await load('stage4a', 'easy')).toBe(9999);
+    // The true final asks for nothing: the orbs on hand always clear 0.
+    expect(await load('stage6a', 'normal')).toBe(0);
+  });
 });

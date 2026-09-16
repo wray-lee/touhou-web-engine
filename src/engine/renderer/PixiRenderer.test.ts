@@ -519,19 +519,50 @@ describe('PixiRenderer', () => {
     });
 
     /**
-     * Retail's Time row is `currentTimeOrbs / lastSpellTimeOrbThreshold`, and the whole
-     * row goes warm white when the left term reaches the right one (`Gui.cpp:1462-1471`).
-     * This port cannot source the threshold, so the right column carries the run-lifetime
-     * orb count instead and the highlight stays off -- asserting both pins the substitution
-     * down so it cannot quietly start reading as retail behaviour.
+     * Retail's Time row is `currentTimeOrbs / lastSpellTimeOrbThreshold`, and the whole row
+     * goes warm white (`0xfffff0c0`) from the frame the left term reaches the right one
+     * (`Gui.cpp:1462-1471`). The threshold is the table cell the stage setup loads, so a
+     * host that has one gets retail's row; a host that does not (`null`) keeps the older
+     * substitution, and pinning *that* is the point of the first case: the stand-in must not
+     * be able to quietly start reading as retail behaviour.
      */
     it('prints the Time row from the substitute and leaves it untinted', async () => {
       const calls = await renderRows((hud) => {
         hud.timeOrbs = 208;
         hud.timeOrbTotal = 208;
+        hud.timeOrbThreshold = null;
       });
       expect(rowAt(calls, HUD_ROWS.time).map((c) => c.text)).toEqual(['208', '208']);
       expect(rowAt(calls, HUD_ROWS.time).map((c) => c.tint)).toEqual([undefined, undefined]);
+    });
+
+    it('prints the threshold and warms the row only once the orbs can pay', async () => {
+      const short = await renderRows((hud) => {
+        hud.timeOrbs = 2499;
+        hud.timeOrbTotal = 4000;
+        hud.timeOrbThreshold = 2500;
+      });
+      expect(rowAt(short, HUD_ROWS.time).map((c) => c.text)).toEqual(['2499', '2500']);
+      expect(rowAt(short, HUD_ROWS.time).map((c) => c.tint)).toEqual([undefined, undefined]);
+
+      // The boundary is `>=`, and it is the same comparison the ECL register and the
+      // deathbomb grace make, so the row has to light on the very frame they do.
+      const paid = await renderRows((hud) => {
+        hud.timeOrbs = 2500;
+        hud.timeOrbTotal = 4000;
+        hud.timeOrbThreshold = 2500;
+      });
+      expect(rowAt(paid, HUD_ROWS.time).map((c) => c.text)).toEqual(['2500', '2500']);
+      expect(rowAt(paid, HUD_ROWS.time).map((c) => c.tint)).toEqual([0xfff0c0, 0xfff0c0]);
+
+      // A threshold of 0 is a real value and not a missing one: 6A and 6B ship it, which is
+      // why the row is lit there from the first frame rather than falling back.
+      const free = await renderRows((hud) => {
+        hud.timeOrbs = 0;
+        hud.timeOrbThreshold = 0;
+      });
+      expect(rowAt(free, HUD_ROWS.time).map((c) => c.text)).toEqual(['0', '0']);
+      expect(rowAt(free, HUD_ROWS.time).map((c) => c.tint)).toEqual([0xfff0c0, 0xfff0c0]);
     });
   });
 });

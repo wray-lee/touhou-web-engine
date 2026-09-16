@@ -312,8 +312,9 @@ describe('the last-spell test (register 0x2772)', () => {
   });
 
   it('is 0 for a stage that never armed a last-spell threshold', () => {
-    // The default is positive infinity: the shipped build only lowers it from the
-    // globals block, whose writer is not in the decompile.
+    // The default is positive infinity, which now only means "no stage was loaded":
+    // the shipped build fills the field from g_TimeRequirementParams during stage setup
+    // (`GameManagerSetup.cpp:251`), so a bare slot never pays and can never break early.
     expect(slot().timeOrbReady).toBe(0);
   });
 });

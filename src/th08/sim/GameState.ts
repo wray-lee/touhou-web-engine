@@ -66,6 +66,49 @@ export const RANK_PARAMS_BY_DIFFICULTY: ReadonlyArray<readonly [number, number, 
   [16, 15, 16],
 ];
 
+/**
+ * `g_TimeRequirementParams` (`GameManager.cpp:46-57`): the 时符 count a stage's last
+ * spell card asks for, one row per retail `Stage` (`ScoreDat.hpp:71-85`) and one column
+ * per difficulty (`Difficulty`, `:44-52`, Easy..Lunatic).
+ *
+ * `GameManagerSetup.cpp:250-253` copies one cell into `globals->lastSpellTimeOrbThreshold`
+ * when a stage is set up, and that is the *only* writer in the whole decompile -- which is
+ * why the number looked unsourceable for so long: it is not computed, it is a static table
+ * that the setup reads. Spell practice writes 0 instead, i.e. a practice run always counts
+ * as having paid.
+ *
+ * The shape of the table is worth reading before assuming it is a ladder. Stage 1 asks for
+ * 2000-3000, stages 2, 3 and 4B for 6500-8800, and then two rows of `9999`: 4A and 5 have a
+ * Last Spell the scripts can never reach on the 时符 test, so their `0x2772` branch is a
+ * permanent 0. 6A, 6B and Extra carry 0, which makes the test always true -- consistent
+ * with `GetClockTimeIncrement` (`GameManager.cpp:1555-1558`) returning 0 for the two final
+ * stages: by then the night is over, and the clock stops asking anything of the player.
+ */
+export const TIME_REQUIREMENT_BY_STAGE: ReadonlyArray<readonly [number, number, number, number]> = [
+  [2000, 2500, 2700, 3000], // STAGE1
+  [6500, 7200, 7200, 7200], // STAGE2
+  [7500, 8500, 8800, 8800], // STAGE3
+  [9999, 9999, 9999, 9999], // STAGE4A
+  [7500, 8500, 8500, 8500], // STAGE4B
+  [9999, 9999, 9999, 9999], // STAGE5
+  [0, 0, 0, 0], // STAGE6A
+  [0, 0, 0, 0], // STAGE6B
+  [0, 0, 0, 0], // EXTRASTAGE
+];
+
+/**
+ * The cell `GameManagerSetup.cpp:251` would read for one stage and difficulty.
+ *
+ * Retail indexes a 4-wide row with a `difficulty` that can be `EXTRA` (4), which walks one
+ * past the row into the next stage's Easy cell. Extra is out of scope for this
+ * reproduction, so the clamp is a documented difference rather than a silent one.
+ */
+export function lastSpellTimeOrbThreshold(stageIndex: number, difficulty: Difficulty): number {
+  const row = TIME_REQUIREMENT_BY_STAGE[stageIndex];
+  if (!row) return Number.POSITIVE_INFINITY;
+  return row[Math.min(DIFFICULTY_ID[difficulty], row.length - 1)];
+}
+
 /** One rank step is worth this much of `subRank` (`GameManager.cpp:1378, :1392`). */
 export const SUBRANK_PER_RANK = 100;
 
@@ -199,11 +242,14 @@ export interface GameState {
   /** `globals->totalTimeOrbs`, the parity source for the point-value bump. */
   totalTimeOrbs: number;
   /**
-   * `globals->lastSpellTimeOrbThreshold`, the 时符 count at which a death buys seven
-   * extra frames of deathbomb window (`Player.cpp:555-556`). Read at that one site
-   * and at `EclOperandsInt.cpp:152-158`, never assigned anywhere in the decompile,
-   * so it stays an input: `Infinity` means "never take the bonus", and stage data
-   * lowers it once the value is recovered.
+   * `globals->lastSpellTimeOrbThreshold`: the 时符 count this stage's last spell asks
+   * for. `lastSpellTimeOrbThreshold()` loads it from `g_TimeRequirementParams` when the
+   * stage is set up, and everything downstream reads it from here: the seven extra frames
+   * of deathbomb window a paid last spell buys (`Player.cpp:555-556`), the ECL register
+   * `0x2772` the boss scripts branch their last-spell break on
+   * (`EclOperandsInt.cpp:153-158`), the warm-white Time row (`Gui.cpp:1462-1471`), and
+   * `GetClockTimeIncrement`'s one-or-two hours (`GameManager.cpp:1487-1556`).
+   * `Infinity` is the "no stage data loaded" value, which buys nothing and never fires.
    */
   lastSpellTimeOrbThreshold: number;
 

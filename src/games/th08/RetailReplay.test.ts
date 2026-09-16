@@ -47,7 +47,8 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { isKnownInput, parseReplay } from '../../th08/format/ReplayFile';
 import { playReplay, recordedStage, teamForShotType, type ReplayOutcome } from './RetailReplay';
-import { ROUTE_ORDER, stage4RouteForShotType } from './StageRoute';
+import { ROUTE_ORDER, routeIndex, stage4RouteForShotType } from './StageRoute';
+import { lastSpellTimeOrbThreshold } from '../../th08/sim/GameState';
 
 const RAW_DIR = join(process.cwd(), 'public', 'assets', 'th08', 'raw');
 
@@ -479,7 +480,9 @@ describe('retail demo replay gate', () => {
 
       console.log(
         [
-          'demo      route    team             playable   ran clear 1stDeath  bombs  blt   power   pic  envDeath deaths  envScore   score    retail   envRatio  ratio',
+          'demo      route    team             playable   ran clear 1stDeath  bombs  blt   power   pic   orbs  envDeath deaths  envScore   score    retail   envRatio  ratio',
+          // `orbs` is not gated; it is printed so that the last-spell lock below can be
+          // read off the run instead of taken on faith.
           ...rows.map(
             (r) =>
               r.demo.padEnd(10) +
@@ -493,6 +496,7 @@ describe('retail demo replay gate', () => {
               String(r.peakBullets).padStart(5) +
               String(r.power).padStart(7) +
               String(r.pointItems).padStart(6) +
+              String(r.timeOrbs).padStart(7) +
               String(r.envelopeDeaths).padStart(9) +
               String(r.deaths).padStart(7) +
               String(r.scoreAtEnvelope).padStart(11) +
@@ -544,6 +548,27 @@ describe('retail demo replay gate', () => {
     },
     600_000,
   );
+
+  /**
+   * `0x2772` is a comparison, so swapping in the real table only changes a run once an orb
+   * count crosses its line. That was argued in prose while the threshold work was being
+   * landed; it is cheap to make it a checked fact instead. All four demos are Lunatic, none
+   * of their four routes carries a threshold of 0, and the 时符 they bank stay far under the
+   * number the stage asks for -- which is exactly why the ladder did not have to move.
+   */
+  it.skipIf(!hasAssets)('keeps every demo under the last-spell threshold its route asks for', () => {
+    for (const r of rows) {
+      const threshold = lastSpellTimeOrbThreshold(routeIndex(r.route), r.difficulty);
+      // A 0 threshold would make the test always true, which is a different claim.
+      expect(threshold, `${r.demo} on ${r.route} asks for nothing`).toBeGreaterThan(0);
+      expect(
+        r.timeOrbs,
+        `${r.demo}: ${r.timeOrbs} 时符 reaches the ${threshold} ${r.route} asks for, so the ` +
+          `register is no longer inert for this recording and the ladder has to be re-read ` +
+          `rather than re-explained`,
+      ).toBeLessThan(threshold);
+    }
+  });
 
   it.skipIf(!hasAssets)('keeps the survey and the mortal run telling the same story', () => {
     expect(surveys.length).toBe(DEMO_NAMES.length);

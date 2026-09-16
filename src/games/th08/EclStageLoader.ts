@@ -9,7 +9,12 @@
  * branches, so a run can actually diverge the way the retail game does.
  */
 
-import { createGameState, SHOT_TYPES, type Difficulty } from '../../th08/sim/GameState';
+import {
+  createGameState,
+  lastSpellTimeOrbThreshold,
+  SHOT_TYPES,
+  type Difficulty,
+} from '../../th08/sim/GameState';
 import { StageRunner } from '../../th08/sim/StageRunner';
 import { createEclSubFactory, collectEclSubs } from '../../th08/sim/EclBridge';
 import { EffectPool } from '../../th08/sim/EffectPool';
@@ -22,7 +27,7 @@ import type { AnmPack } from '../../engine/anm/AnmPack';
 import { enemyAnmBytes } from './data/th08-enemy-anm';
 import { TH08_STGENM, stgenmBytes } from './data/th08-stgenm-anm';
 import { getBulletDrawRadius, getBulletHitRadius } from './data/th08-bullet-types';
-import type { StageRoute } from './StageRoute';
+import { routeIndex, type StageRoute } from './StageRoute';
 import type { CharacterId } from './types';
 
 /**
@@ -168,6 +173,16 @@ export async function loadEclStage(config: EclStageConfig): Promise<StageRunner 
     gs.bombs = config.bombs ?? 3;
     gs.power = config.power ?? 0;
     gs.currentStage = config.stageNumber ?? 1;
+    /*
+     * `GameManagerSetup.cpp:250-253` sets this once per stage from
+     * `g_TimeRequirementParams[currentStage][difficulty]`, and four separate systems read
+     * it back: the ECL register `0x2772` a mid-boss breaks its last-spell sequence on, the
+     * seven extra deathbomb frames a paid last spell buys (`Player.cpp:555`), the warm
+     * white the HUD's Time row turns (`Gui.cpp:1462-1471`), and how many hours the stage
+     * clear costs on the 夜時計 (`GameManager.cpp:1487-1556`). Keyed by *route*, because
+     * `stageNumber` is the display label and 4A/4B and 6A/6B share theirs.
+     */
+    gs.lastSpellTimeOrbThreshold = lastSpellTimeOrbThreshold(routeIndex(config.route), config.difficulty);
     const carry = config.carry;
     if (carry) {
       gs.score = carry.score;
