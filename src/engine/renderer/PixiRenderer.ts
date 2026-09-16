@@ -443,7 +443,6 @@ export class PixiRenderer {
    * a "the ship twitches by itself" report can be read instead of guessed at.
    */
   private playerAnimDebug = '';
-  private playerLean = 0;
 
   /** Target ship width in playfield pixels. */
   private playerScale = 46;
@@ -2201,10 +2200,8 @@ export class PixiRenderer {
       return false;
     }
     if (sprite === this.playerSprite) {
-      const lean = Math.max(-1, Math.min(1, dirX));
-      this.playerLean += (lean - this.playerLean) * 0.22;
-      sprite.rotation = this.playerLean * PLAYER_MAX_LEAN;
-      sprite.position.set(x, y + Math.abs(this.playerLean) * 1.6);
+      sprite.rotation = 0;
+      sprite.position.set(x, y);
     } else {
       sprite.rotation = 0;
       sprite.position.set(x, y);
@@ -2285,7 +2282,6 @@ export class PixiRenderer {
 
   /** Last-resort silhouette so the ship is never invisible if art is missing. */
   private drawMemberFallback(x: number, y: number, alpha: number): void {
-    this.playerLean = 0;
     const body = 0xc41e3a;
     const accent = 0xfff0e6;
     this.entityGraphics.circle(x, y - 4, 8).fill({ color: accent, alpha });

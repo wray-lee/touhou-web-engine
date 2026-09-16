@@ -110,7 +110,8 @@ export class TaiseiAnimPlayer {
    * upright bob instead of flickering between lean frames.
    */
   setDirection(vx: number, deadZone = 0.08): void {
-    const wanted: SteadyGroup = vx > deadZone ? 'right' : vx < -deadZone ? 'left' : 'main';
+    const effectiveDeadZone = Math.max(0.05, deadZone);
+    const wanted: SteadyGroup = vx > effectiveDeadZone ? 'right' : vx < -effectiveDeadZone ? 'left' : 'main';
     if (wanted === this.steady) return;
     if (this.transition) this.pending = wanted;
     else this.startTransition(this.steady, wanted);

@@ -233,7 +233,7 @@ export async function registerTH08PlayerSprites(renderer: PixiRenderer): Promise
           // Retail compares the intended horizontal speed against zero with no
           // tolerance (`Player.cpp:823-871`), so a dead zone here would only ever
           // swallow real input; the idle sway comes from script 0's own cell cycle.
-          deadZone: 0,
+          deadZone: 0.08,
         } satisfies AnimatedSheet);
         return true;
       };
