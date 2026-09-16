@@ -1529,7 +1529,7 @@ export class TH08Game {
       this.stageTransitionFrames = 180;
       return;
     }
-    this.hud.showMessage(this.clearBanner, 600);
+    this.hud.showMessage(this.clearBanner, CLEAR_BANNER_FRAMES);
     const result = this.buildReport(this.campaign);
     this.leaderboard.submit({
       name: this.player.characterName,
@@ -1539,7 +1539,8 @@ export class TH08Game {
       character: result.character,
       numRetries: this.numRetries,
     });
-    this.onStageClear?.(result);
+    this.pendingClearReport = result;
+    this.stageTransitionFrames = CLEAR_BANNER_FRAMES;
   }
 
   /**

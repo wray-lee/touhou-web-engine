@@ -336,7 +336,8 @@ export class ItemPool {
         }
       }
 
-      if (!item.magnetized && !grabbedNow && item.rise === 'none' && sweeping) {
+      if (!item.magnetized && !grabbedNow && item.rise !== 'hover' && item.rise !== 'hoverDouble' && sweeping) {
+        item.rise = 'none';
         item.magnetized = true;
       }
       if (item.magnetized && !grabbedNow && !shipOnField && item.rise === 'none') {

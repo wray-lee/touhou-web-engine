@@ -84,14 +84,14 @@ runtime evidence or an explicit 🟡). This file only tracks phase progress.
 
 
 
-### P6 — 90% Fidelity Sprint (In Progress)
-- [ ] Task 1: 对话开启清屏（敌弹/杂兵/激光全消并吸道具）与对话期间无敌冻结
-- [ ] Task 2: 灵梦 Bomb「夢想妙珠」/「夢想封印 瞬」真实消弹圈与宝珠追踪效果
-- [ ] Task 3: 顶部 POC（Point of Collection）全屏吸道具无死角触发
-- [ ] Task 4: 死亡 30 帧决死/60 帧消弹/240 帧无敌时序与残机/Bomb 跨关继承
-- [ ] Task 5: 击杀小怪贴图残留清理与 Boss 贴图透明度修复
-- [ ] Task 6: Start 1..6 面连续模式与 Practice 选关模式分离，全避通关支持
-- [ ] Task 7: 响应式视口上下占满屏幕与鼠标控制选项化
+### P6 — 90% Fidelity Sprint (Complete)
+- [x] Task 1: 对话开启清屏（敌弹/杂兵/激光全消并吸道具）与对话期间无敌冻结
+- [x] Task 2: 灵梦 Bomb「夢想妙珠」/「夢想封印 瞬」真实消弹圈与宝珠追踪效果
+- [x] Task 3: 顶部 POC（Point of Collection）全屏吸道具无死角触发
+- [x] Task 4: 死亡 30 帧决死/60 帧消弹/240 帧无敌时序与残机/Bomb 跨关继承
+- [x] Task 5: 击杀小怪贴图残留清理与 Boss 贴图透明度修复
+- [x] Task 6: Start 1..6 面连续模式与 Practice 选关模式分离，全避通关支持
+- [x] Task 7: 响应式视口上下占满屏幕与鼠标控制选项化
 
 ## Remaining for 90%
 

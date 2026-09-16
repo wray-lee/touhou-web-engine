@@ -985,6 +985,10 @@ export class PixiRenderer {
     // its sprite parented to entityLayer and frozen at its last position.
     for (const [enemy, sprite] of this.enemySprites) {
       if (liveEnemies.has(enemy)) continue;
+      sprite.visible = false;
+      if (typeof (this.entityLayer as any).removeChild === 'function') {
+        this.entityLayer.removeChild(sprite);
+      }
       sprite.destroy();
       this.enemySprites.delete(enemy);
     }

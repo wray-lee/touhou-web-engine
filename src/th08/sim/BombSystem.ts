@@ -633,6 +633,7 @@ export function tickBomb(
   const ringOpen = state.timer <= state.spec.cancelLife;
   const radius = state.spec.cancelRadius * grow;
   state.cancelRadius = ringOpen && grow < 1 ? radius : 0;
+  if (state.cancelRadius > 0) bullets.cancelInCircle(player.x, player.y, state.cancelRadius);
   for (const z of state.zones) {
     if (z.cancel <= 0 || z.age < z.delay || z.hitsLeft <= 0) continue;
     bullets.cancelInCircle(z.x, z.y, z.cancel);

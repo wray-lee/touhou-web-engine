@@ -313,6 +313,7 @@ export class StageRunner {
    * death sentence.
    */
   worldFreeze = false;
+  private lastWorldFreeze = false;
   /**
    * What the running card paints over the backdrop this frame: the plate behind the
    * sprites, and any full-screen square in front of them. `null` on both once the
@@ -956,6 +957,13 @@ export class StageRunner {
     // (`:924`). All three retail gates on the conversation itself, so they ride on
     // the same flag here.
     const freeze = this.worldFreeze;
+    if (freeze && !this.lastWorldFreeze) {
+      this.bullets.cancelAllEnemy();
+      this.lasers.clearAll();
+      this.enemies.wipeNonBossEnemies(-1);
+      this.items.autoCollectAll();
+    }
+    this.lastWorldFreeze = freeze;
     if (freeze) input = { ...input, shoot: false, bomb: false };
     // `g_GuiMessageInputCurrent & 1`: the option chase reads the button itself, not
     // the conversation-masked version the shot clock is gated on (`:3332`).
@@ -1087,7 +1095,7 @@ export class StageRunner {
     this.tickShipWeapon();
 
     // 6. Player vs enemy bullets
-    const { hits, grazes } = checkPlayerCollisions(
+    const { hits, grazes } = freeze ? { hits: [], grazes: [] } : checkPlayerCollisions(
       this.bullets.bullets,
       this.player,
       this.player.hitboxHalfExtent,
@@ -1096,7 +1104,7 @@ export class StageRunner {
     );
     // Lasers use the *hit* box for both the lethal and the graze pass
     // (`Player::CalcLaserHitbox`, `Player.cpp:421-477`).
-    const laserHits = checkLaserCollisions(
+    const laserHits = freeze ? { hits: [], grazes: [] } : checkLaserCollisions(
       this.lasers.getActive(),
       this.player,
       this.player.hitboxHalfExtent,
