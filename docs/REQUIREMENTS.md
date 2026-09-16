@@ -745,3 +745,23 @@ else
   - 实时页实测（`?autostart&team=reimu-yukari&diff=normal&route=stage1&maxpower&nofail&autofire&slow`）：`member=yukari`、`anim=player:yukari main#1 pose=slow`、`pdr=["shots 0+0","opt t0:22 a255"]`、`opt 0:2.0 192,288 s22/255 … tgt -`。本体在、格子在、位置正好在自机上方 96 像素（`Player.cpp:2006-2009` 的 `y -= 96; if (y < 32) y = 32`），但 `substate=0` 而不是攻击态 3——那一段 `dlg=1` 在对话里，且场上敌机全在 x=13..37，离自机 x=192 差 130 像素以上，过不了 ±64，所以不出手。不出手是零售的规则，不是缺失。
   - 一句话：**以前它「总是追踪」是假的，现在它「常常不追」是真的**。玩家觉得变差，是 bug 拿走之后剩下的空洞第一次露出来。要把它填回去，得靠别的合法伤害，而不是把那个 bug 请回来。
 - **门禁状态**：`vitest run` **106 文件 / 988 测试**，1 failed（就是上面那条包络地板），其余全绿；`tsc --noEmit` 0 错、`eslint src` 0 错、prettier clean。本轮 +1 条锁（`OptionHoming.test.ts`），且那条做过摘除验证。
+
+### 23. 本轮（09-17 续八：90% 体验冲刺方案与反编译对账清单）
+
+- **对账背景与用户反馈**：在完成自机八人双环切换与式神槽位对账后，针对用户反馈的 7 大核心体验痛点（对话容易被打死、灵梦 Bomb 效果与消弹圈不符、顶部 POC 吸点不彻底、死亡无敌时序与资源刷新、小怪击杀贴图残留与 Boss 透明度、选关与普通通关流程混淆、响应式满屏与鼠标控制），建立反编译事实与落地任务清单。
+- **任务 1：对话开启清场与对话期间无敌冻结**
+  - 原作事实：GuiImpl::FUN_0043396d (Gui.cpp:347-349)：对话开始瞬间调用 g_BulletManager.bulletmanager_fun_00415c60()（非 Boss 敌弹全消并转为道具）、g_EnemyManager.FUN_0042efb0(0, 0)（清除非 Boss 杂兵）、g_ItemManager.AutoCollectAllItems()（全屏吸道具）。
+  - 对话期间：BulletManager.cpp:801 if (((*(u32 *)&g_GameManager.flags >> 10) & 1) != 0) return; 敌弹冻结。StageRunner.ts 当 worldFreeze 时跳过碰撞判定（不产生 hits 与 laserHits），保证绝对安全。
+- **任务 2：灵梦 Bomb「夢想妙珠」/「夢想封印 瞬」消弹圈与追踪**
+  - 原作事实：Player.cpp:100-124 回调表槽 1 与槽 2。放 B 瞬间调用 FUN_0044df00(&player->position, 96.0f, ...) 在自机周围展开消弹圈。修复先前 cancelRadius 仅画特效未调用 ullets.cancelInCircle 的问题。16 枚宝珠扩散旋转追踪爆破。
+- **任务 3：自机顶部 POC（Point of Collection）全屏吸道具无死角触发**
+  - 原作事实：ItemManager.cpp:207-288。自机到达 playerY <= pointItemValueLine 或处于 Full Power 模式时，全屏掉落物无论上升还是下落一律开启磁吸。解除 item.rise === 'none' 的严苛限制。
+- **任务 4：死亡 30 帧决死 / 60 帧消弹 / 240 帧无敌时序与资源跨关继承**
+  - 原作事实：Player.cpp 击中后给 30 帧决死 Bomb 窗口；死亡触发爆炸，复活时 60 帧消弹圈，240 帧无敌闪烁。
+  - 关卡继承：从一面连续推至后序关卡，残机、Bomb、火力正常继承，不重新刷回初值。
+- **任务 5：击杀小怪贴图残留与 Boss 贴图透明度修复**
+  - 排查 EnemySlot 死亡与 PixiRenderer 间生命周期，确保 dead enemy 的 Sprite 彻底被销毁并移出图层；检查 Boss 贴图混合模式，修复脸部透明问题。
+- **任务 6：Start 连续流程与选关（Practice）分离，支持全避通关**
+  - Start 模式固定从一面开始连续推进至六面通关，中途不显示 Thanks for Playing；独立 Practice 菜单供单关选关打，单关结束后显示 Thanks for Playing。ECL 符卡计时结束超时自动推进。
+- **任务 7：响应式上下充满视口与鼠标控制选项化**
+  - 保证垂直 100% 充满屏幕高度；设置菜单提供鼠标操作开关，记录至 localStorage 并并入文档。

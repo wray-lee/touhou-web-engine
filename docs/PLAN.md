@@ -1,6 +1,6 @@
 # 永夜抄 Web Engine — Implementation Status
 
-> Updated: 2026-09-12
+> Updated: 2026-09-17
 > TSC: CLEAN | Lint: 0 errors | Tests: 688/688 (76 files) | Build: OK | Source: `npm run ci`
 > Dev server: `npx vite --port 5180 --strictPort --no-open` → `http://localhost:5180/`
 
@@ -17,6 +17,7 @@ runtime evidence or an explicit 🟡). This file only tracks phase progress.
 | **P3** | Hand refactor layer | ✅ Done | 100% |
 | **P4** | Presentation layer | ✅ Done | 90% |
 | **P5** | Flow, docs, cleanup | ✅ Done | 95% |
+| **P6** | 90% Fidelity Sprint (Player/Dialogue/Bomb/Flow) | 🔄 In Progress | 86% |
 
 ## Completed
 
@@ -80,6 +81,17 @@ runtime evidence or an explicit 🟡). This file only tracks phase progress.
 - [x] `docs/REQUIREMENTS.md` rewritten as an evidence ledger; README documents the extraction
       commands, the translation pipeline and the copyright boundary
 - [x] Temp-file cleanup; `npm run format && npm run ci && npm run build` green
+
+
+
+### P6 — 90% Fidelity Sprint (In Progress)
+- [ ] Task 1: 对话开启清屏（敌弹/杂兵/激光全消并吸道具）与对话期间无敌冻结
+- [ ] Task 2: 灵梦 Bomb「夢想妙珠」/「夢想封印 瞬」真实消弹圈与宝珠追踪效果
+- [ ] Task 3: 顶部 POC（Point of Collection）全屏吸道具无死角触发
+- [ ] Task 4: 死亡 30 帧决死/60 帧消弹/240 帧无敌时序与残机/Bomb 跨关继承
+- [ ] Task 5: 击杀小怪贴图残留清理与 Boss 贴图透明度修复
+- [ ] Task 6: Start 1..6 面连续模式与 Practice 选关模式分离，全避通关支持
+- [ ] Task 7: 响应式视口上下占满屏幕与鼠标控制选项化
 
 ## Remaining for 90%
 
