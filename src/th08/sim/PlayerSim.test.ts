@@ -35,6 +35,24 @@ describe('PlayerSim', () => {
     expect(p.y).toBe(RESPAWN_Y);
   });
 
+  it('pays a tenth of every raw figure, the way GameManager::AddScore does', () => {
+    // `GameManager.cpp:191-194` is the one door the whole game walks through:
+    // `score += score / 10`, integer division. Raw in, tenths on the read-out.
+    const p = new PlayerSim(createGameState());
+    const start = p.score;
+    p.addScore(100); // an enemy's own score field (`EnemyManagerUpdate.cpp:837`)
+    p.addScore(1999); // and it truncates rather than rounds
+    expect(p.score - start).toBe(10 + 199);
+
+    // The graze tiers stay 2,000 / 4,000 on the way in (`Player.cpp:505-506`) and
+    // buy 200 / 400 on screen, so the returned number is the raw one and the score
+    // field the divided one.
+    const before = p.score;
+    const reward = p.grazeReward();
+    expect(reward.score).toBeGreaterThanOrEqual(2000);
+    expect(p.score - before).toBe(Math.trunc(reward.score / 10));
+  });
+
   it('moves at fast speed unfocused and slow speed focused', () => {
     const p = new PlayerSim(createGameState());
     const x0 = p.x;

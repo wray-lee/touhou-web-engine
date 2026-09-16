@@ -57,6 +57,46 @@ describe('StageRunner', () => {
     expect(runner.enemies.activeCount).toBe(1);
     expect(runner.player.state).toBe('alive');
   });
+
+  it('pays ten points a frame only while the 妖率計 is pinned at an end', () => {
+    // `Player.cpp:1101-1116`: with no dialogue on screen and the meter at either
+    // extreme, the game calls `AddScore(100)` every frame. Through the funnel that is
+    // ten points a frame, 600 a second -- the price the game puts on living at the
+    // ends of the meter. The meter is held still so the drip, not the relaxation, is
+    // what the assertion reads.
+    const gs = createGameState('normal', 42);
+    const runner = new StageRunner({
+      gs,
+      ecl: {
+        version: 2048,
+        subCount: 1,
+        subs: [{ id: 0, offset: 0, instructions: [] }],
+        timelines: [{ index: 0, offset: 0, instructions: [] }],
+      },
+      subFactory: () => (_e: EnemySlot) =>
+        (function* () {
+          yield 9999;
+        })(),
+    });
+    runner.player.holdGauge = true;
+    for (let i = 0; i < 40; i++) runner.tick(noInput);
+    expect(runner.player.state).toBe('alive');
+
+    const drip = (value: number, frames: number): number => {
+      runner.player.gauge.set(value);
+      const before = runner.player.score;
+      for (let i = 0; i < frames; i++) runner.tick(noInput);
+      return runner.player.score - before;
+    };
+
+    expect(drip(0, 10)).toBe(0);
+    const bounds = runner.player.gauge.bounds;
+    expect(drip(bounds.youkaiLimit, 10)).toBe(100);
+    expect(drip(bounds.humanLimit, 10)).toBe(100);
+    // Midway up the meter nothing is owed, which is what makes the two above a rule
+    // about the extremes rather than about ticking.
+    expect(drip(bounds.moderateYoukai, 10)).toBe(0);
+  });
 });
 
 describe.skipIf(!hasAssets)('StageRunner integration (ecldata1)', () => {
