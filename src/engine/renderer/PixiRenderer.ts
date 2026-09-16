@@ -894,10 +894,14 @@ export class PixiRenderer {
         }
         // Source of truth: `Player.cpp:696-708` spawns effect template 22 on the
         // focus edge, and `FUN_00425870(22, ...)` resolves it through the effect
-        // template table at 0x004c6d30, which the decompile does not carry. The
-        // 4-cell cycling script is identified from the art instead: `etama.anm`
-        // script index 114 is the only additive-blend loop in the pack, and it
-        // steps sprites 326..329 (etama_t5 at y=160, 32x32 each) over 12 ticks.
+        // template table at 0x004c6d30. Open question, registered 2026-09-16: that
+        // table has now been read out of the shipped `th08.exe` (66 rows, and
+        // `EFFECT_TEMPLATES[22]` is script 54 with mover `FUN_00426c40`), while the
+        // 4-cell cycling script drawn here was identified from the art instead -
+        // `etama.anm` script index 114 is the only additive-blend loop in the pack,
+        // and it steps sprites 326..329 (etama_t5 at y=160, 32x32 each) over 12
+        // ticks. Which of the two retail actually shows needs script 54 decoded
+        // before the marker moves; see REQUIREMENTS 台账 §17.
         // The bead itself, on top of the glow and drawn whether or not the pack
         // loaded. `etama_t5` 326-329 turned out to be a flat red coil 24 px wide,
         // so on its own it says "somewhere around here" and nothing more, while

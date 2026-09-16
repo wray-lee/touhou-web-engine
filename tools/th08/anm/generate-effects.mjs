@@ -1,10 +1,13 @@
 /**
  * Lift the retail effect template table into the game.
  *
- * `g_EffectTemplates[66]` lives in `th08.exe`'s `.data` at 0x4c6d30, which is not on
- * this machine; the recompiled reference build states the same table as literals
- * (`src/modern/linux/linux_runtime.cpp:148`, `InitializeTargetData`), and that is the
- * snapshot in `effect-templates.ref.json`. Each row carries the script index, the
+ * `g_EffectTemplates[66]` lives in `th08.exe`'s `.data` at 0x4c6d30. The snapshot in
+ * `effect-templates.ref.json` comes from the recompiled reference build
+ * (`src/modern/linux/linux_runtime.cpp:148`, `InitializeTargetData`), and on 2026-09-16
+ * it was checked against the shipped executable itself: `node .scratch/efftable.cjs`
+ * maps the VA through the PE section table, reads all 66 rows (scriptIdx, the `field348`
+ * update, the `callback` init) and every row agrees with this snapshot. The table is no
+ * longer an inference from a rebuild. Each row carries the script index, the
  * per-frame update (`field348`) and the one-shot init (`callback`), and
  * the script index addresses `AnmManager::GetAnm(6)` -- `etama.anm` -- because
  * `EffectManager::AddedCallback` (`EffectManager.cpp:1347`) binds exactly the pack
