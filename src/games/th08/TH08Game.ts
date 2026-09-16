@@ -413,6 +413,26 @@ export class TH08Game {
   }
 
   /**
+   * What the ship's own weapon funnel actually handed the renderer last frame.
+   *
+   * `pbf` reports where the sim thinks the shots are, and `fx` reports the effect pool,
+   * but the ship's shots, 式神 and blades go through a third door - `tickPlayerShots`,
+   * which drops any VM whose sprite has no rect in the pack, silently. That is exactly
+   * the shape of an "the 式神 is missing" report, so the door now keeps a tally: the
+   * shot counts, one line per drawn option body, and `miss N` for the cells that were
+   * asked for and not found. A headless run skips the draw call but keeps the tally,
+   * because the gate is the half that breaks; in the browser the same numbers mean the
+   * quad went out.
+   */
+  get playerWeaponDebug(): string[] {
+    const audit = this.weaponAudit;
+    const out = [`shots ${audit.live}+${audit.spent}`];
+    if (audit.dropped) out.push(`miss ${audit.dropped}`);
+    for (const option of audit.options) out.push(`opt ${option}`);
+    return out;
+  }
+
+  /**
    * The banner lines the HUD is being asked to draw right now, trimmed of the
    * leading spaces `%7d` pads with. QA reads this to tell "the banner never fired"
    * apart from "the banner fired and the renderer dropped it".
@@ -451,6 +471,17 @@ export class TH08Game {
   private pendingStageSong = false;
   /** Frame-advance explosion animations, drained by renderFrame(). */
   private explosions: { x: number; y: number; frame: number }[] = [];
+  /**
+   * One frame's worth of `tickPlayerShots` submissions, read back by `playerWeaponDebug`.
+   * Reset at the head of the pass rather than allocated per frame, because this runs 60
+   * times a second next to the draw loop it describes.
+   */
+  private weaponAudit = {
+    live: 0,
+    spent: 0,
+    dropped: 0,
+    options: [] as string[],
+  };
   /** Taisei point-of-fade sparkles, drained by renderFrame(). */
   private pointOfFade: { x: number; y: number; frame: number }[] = [];
   /** Guards the once-only item sweep that fires when a boss is defeated. */
@@ -1357,10 +1388,18 @@ export class TH08Game {
   private tickPlayerShots(): void {
     const runner = this.eclRunner;
     const renderer = this.renderer;
-    if (!runner || !renderer) return;
+    // The tally is about the gate, not the GPU: a headless run has no renderer, and the
+    // silent `if (!rect) return` below is the failure a missing weapon actually comes
+    // from, so the pass runs either way and only the draw call is conditional.
+    if (!runner) return;
     const team = th08PlayerAnmTeam(runner.gs.shotType);
     const pack = TH08_PLAYER_ANM_PACKS[team];
     if (!pack) return;
+
+    this.weaponAudit.live = 0;
+    this.weaponAudit.spent = 0;
+    this.weaponAudit.dropped = 0;
+    this.weaponAudit.options.length = 0;
 
     const cell = (sprite: number) => pack.rects[sprite] ?? null;
     const draw = (
@@ -1377,13 +1416,13 @@ export class TH08Game {
       rotation: number,
       flipX: boolean,
       tint?: number,
-    ) => {
-      if (!vm.visible) return;
+    ): 'drawn' | 'hidden' | 'nocell' => {
+      if (!vm.visible) return 'hidden';
       const rect = cell(vm.sprite);
-      if (!rect) return;
+      if (!rect) return 'nocell';
       const alpha = vm.color1.a / 255;
-      if (alpha <= 0) return;
-      renderer.spawnEffectRect(
+      if (alpha <= 0) return 'hidden';
+      renderer?.spawnEffectRect(
         th08PlayerCellKey(team, rect.tex, vm.sprite),
         x,
         y,
@@ -1395,6 +1434,7 @@ export class TH08Game {
         vm.blendMode !== 0,
         flipX,
       );
+      return 'drawn';
     };
 
     for (const pass of [SHOT_SPENT, SHOT_LIVE]) {
@@ -1403,12 +1443,31 @@ export class TH08Game {
         const rotation = shot.vm.renderType !== 0 ? shot.angle : shot.vm.rotation.z;
         // `:3239-3244`: a shot fired while the meter sits on 极度妖怪 is repainted
         // 0x4040ff, which is the blue half of 妖化's visual signature.
-        draw(shot.x, shot.y, shot.vm, rotation, false, shot.youkaiMark !== 0 ? 0x4040ff : undefined);
+        const outcome = draw(
+          shot.x,
+          shot.y,
+          shot.vm,
+          rotation,
+          false,
+          shot.youkaiMark !== 0 ? 0x4040ff : undefined,
+        );
+        if (outcome === 'nocell') this.weaponAudit.dropped++;
+        else if (outcome === 'drawn') {
+          if (pass === SHOT_LIVE) this.weaponAudit.live++;
+          else this.weaponAudit.spent++;
+        }
       }
     }
     for (const option of runner.options.options) {
       if (option.state === 0) continue;
-      draw(option.x, option.y, option.vm, option.vm.rotation.z, option.scaleSign < 0);
+      const outcome = draw(option.x, option.y, option.vm, option.vm.rotation.z, option.scaleSign < 0);
+      if (outcome === 'nocell') this.weaponAudit.dropped++;
+      else if (outcome === 'drawn') {
+        const rect = cell(option.vm.sprite);
+        this.weaponAudit.options.push(
+          `t${rect?.tex ?? '-'}:${option.vm.sprite} a${Math.round(option.vm.color1.a)}`,
+        );
+      }
     }
   }
 

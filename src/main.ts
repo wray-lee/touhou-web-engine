@@ -8,6 +8,7 @@ import type { CharacterId } from './touhou-common/player/CharacterProfile';
 import type { Difficulty } from './games/th08/types';
 import { ROUTE_ORDER, type StageRoute } from './games/th08/StageRoute';
 import type { StageRunner } from './th08/sim/StageRunner';
+import { PLAYFIELD_H, PLAYFIELD_W } from './th08/sim/Playfield';
 
 declare global {
   interface Window {
@@ -334,6 +335,11 @@ class TH08Shell {
         /** Where the player's own shots actually are. A ring that never leaves the
          *  ship is the signature of shots that stopped integrating. */
         pbf: playerShotDebug(game),
+        /** What the ship's weapon funnel submitted to the renderer last frame: shot
+         *  counts, one line per drawn 式神, and `miss N` for a sprite the pack has no
+         *  rect for. Read next to `pbf`/`opt` to tell a missing weapon apart from a
+         *  weapon the sim has and the draw path drops. */
+        pdr: game.playerWeaponDebug,
         /** The partner's option slots and the field's aim target, which together are
          *  the difference between a 式神 that hovers and one that attacks. */
         opt: r ? optionDebug(r) : null,
@@ -640,7 +646,13 @@ function optionDebug(runner: StageRunner): string {
     )
     .join(' ');
   const target = runner.options.homingTarget;
-  return slots + (target ? ` tgt ${Math.round(target.x)},${Math.round(target.y)}` : ' tgt -');
+  // The `!` says the target has already left the 384x448 field. Retail chases it there
+  // anyway - `PlayerOptionHomingToTarget` (`Player.cpp:2138-2157`) clamps only y - so a
+  // 式神 that "never shows up" is often one that is perfectly busy off screen, and this
+  // is the only place that two claims can be told apart without a stopwatch.
+  const off =
+    target && (target.x < 0 || target.x > PLAYFIELD_W || target.y < 0 || target.y > PLAYFIELD_H) ? '!' : '';
+  return slots + (target ? ` tgt ${Math.round(target.x)},${Math.round(target.y)}${off}` : ' tgt -');
 }
 
 /**
