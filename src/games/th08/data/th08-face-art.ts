@@ -16,6 +16,7 @@
 
 import type { MemberId } from '../../../touhou-common/player/CharacterProfile';
 import type { StageRoute } from '../StageRoute';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 
 /** Where the extractor writes the per-page face PNGs. */
 export const FACE_ASSET_DIR = '/assets/th08/anm';
@@ -154,7 +155,7 @@ export const SPEAKER_FACE_ANM: Record<string, string> = {
 export function facePageUrl(anm: string, page: number): string | undefined {
   const pages = FACE_PAGES[anm];
   if (!pages || page < 0 || page >= pages.length) return undefined;
-  return FACE_ASSET_DIR + '/' + anm + '_t' + page + '.png';
+  return resolveAssetUrl(FACE_ASSET_DIR + '/' + anm + '_t' + page + '.png');
 }
 
 /** Page index of `suffix` inside `anm`, or -1 when that ANM has no such page. */

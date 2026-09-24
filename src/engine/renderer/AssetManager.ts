@@ -1,4 +1,5 @@
 import { Assets, Texture } from 'pixi.js';
+import { resolveAssetUrl } from '../core/ResourceResolver';
 
 export type AssetManifest = Record<string, string>;
 
@@ -7,7 +8,7 @@ export class AssetManager {
 
   async load(key: string, url: string): Promise<Texture | null> {
     try {
-      const texture = (await Assets.load(url)) as Texture;
+      const texture = (await Assets.load(resolveAssetUrl(url))) as Texture;
       this.textures.set(key, texture);
       return texture;
     } catch {

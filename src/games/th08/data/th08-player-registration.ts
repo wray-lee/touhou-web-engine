@@ -6,6 +6,7 @@
 import { Texture } from 'pixi.js';
 import type { PixiRenderer, AnimatedSheet } from '../../../engine/renderer/PixiRenderer';
 import type { TaiseiAnim, TaiseiAnimGroup } from '../../../engine/renderer/TaiseiAnim';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 import { TH08_PLAYER_SPRITES } from './th08-sprites';
 import type { SpriteFrame } from './th08-sprites';
 
@@ -173,7 +174,7 @@ export async function sliceAtlas(
 ): Promise<Map<number, Texture>> {
   const img = new Image();
   img.crossOrigin = 'anonymous';
-  img.src = atlasUrl;
+  img.src = resolveAssetUrl(atlasUrl);
   await new Promise<void>((resolve, reject) => {
     img.onload = () => resolve();
     img.onerror = () => reject(new Error('Failed to load ' + atlasUrl));

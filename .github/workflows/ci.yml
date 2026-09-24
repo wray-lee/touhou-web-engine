@@ -21,6 +21,8 @@ jobs:
       - run: bun run lint
       - run: bun run test
       - run: bun run build
+      - name: Build Standalone Demo for GitHub Pages
+        run: bun x vite build --config .github/vite.pages.config.ts
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4

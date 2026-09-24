@@ -1,4 +1,5 @@
 import { InputSystem } from '../../../engine/core/InputSystem';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 
 /** Virtual action buttons for touch play, skinned with the baked ui:touch atlas. */
 export type TouchAction = 'shoot' | 'bomb' | 'focus' | 'pause';
@@ -44,7 +45,7 @@ export class TouchControls {
       .map(
         (action) =>
           `<button type="button" class="th08-touch-btn th08-touch-${action}" data-touch="${action}" aria-label="${LABEL[action]}">` +
-          `<img src="/assets/ui/touch-${action}.png" alt="" draggable="false"><span>${LABEL[action]}</span></button>`,
+          `<img src="${resolveAssetUrl(`/assets/ui/touch-${action}.png`)}" alt="" draggable="false"><span>${LABEL[action]}</span></button>`,
       )
       .join('');
     this.root.appendChild(el);

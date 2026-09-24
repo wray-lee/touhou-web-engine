@@ -1,4 +1,5 @@
 import { SeBus, type SeBusSource } from './SeBus';
+import { resolveAssetUrl } from '../core/ResourceResolver';
 
 /**
  * Every sound the shipped game can ask for. The first seven are gameplay;
@@ -292,7 +293,7 @@ export class AudioManager {
     }
 
     if (url) {
-      this.bgmAudio = new Audio(url);
+      this.bgmAudio = new Audio(resolveAssetUrl(url));
       /*
        * A shipped recording with the fanfare baked on cannot use the element's own
        * loop, which only ever rewinds to 0. Hand the rewinding to `startLoopWatch`

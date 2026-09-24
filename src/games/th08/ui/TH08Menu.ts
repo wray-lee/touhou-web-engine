@@ -1,5 +1,6 @@
 import type { StageClearResult } from '../TH08Game';
 import { TAISEI_DIFFICULTY_LOGO, partnerPortraitUrl, teamPortraitUrl } from '../data/taisei-ui';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 import { PlayerSkin, PlayerPrefs, loadPrefs, savePrefs, TouchMode } from './PlayerPrefs';
 import { RetailResultScreen, RESULT_STATS_LAYOUT, pad9, resultStatRows } from './RetailResultScreen';
 import { Leaderboard, ScoreEntry } from '../../../engine/score/Leaderboard';
@@ -415,7 +416,7 @@ export class TH08Menu {
     const items = DIFFICULTY_ORDER.map(
       (d, i) =>
         `<button type="button" class="th08-diff-row${i === this.cursor ? ' is-active' : ''}" data-menu="diff" data-index="${i}">` +
-        `<img class="th08-diff-logo" src="${TAISEI_DIFFICULTY_LOGO[d]}" alt="${DIFFICULTY_MODIFIERS[d].label}" draggable="false">` +
+        `<img class="th08-diff-logo" src="${resolveAssetUrl(TAISEI_DIFFICULTY_LOGO[d])}" alt="${DIFFICULTY_MODIFIERS[d].label}" draggable="false">` +
         `<span class="th08-diff-name">${DIFFICULTY_MODIFIERS[d].label}</span>` +
         `<span class="th08-diff-brief">${DIFFICULTY_BRIEF[d]}</span></button>`,
     );
@@ -619,6 +620,14 @@ export class TH08Menu {
     }
     // A drill has no next stage at any stage number, so it is checked before the
     // campaign's "is there a stage 6?" guard.
+    if (this.cursor === 1 && report.gameOver) {
+      this.callbacks.onStart({
+        stage: report.stage,
+        difficulty: report.difficulty,
+        character: report.character,
+      });
+      return;
+    }
     if (this.cursor === 1 && report.practice) {
       this.showPractice();
       return;
@@ -798,6 +807,18 @@ export class TH08Menu {
   }
 
   hide(): void {
+    if (this.resultRaf) {
+      cancelAnimationFrame(this.resultRaf);
+      this.resultRaf = 0;
+    }
+    if (this.resultObserver) {
+      this.resultObserver.disconnect();
+      this.resultObserver = null;
+    }
+    if (this.resultScreen) {
+      this.resultScreen.destroy();
+      this.resultScreen = null;
+    }
     this.root.style.display = 'none';
     this.root.innerHTML = '';
     if (this.keyHandler) {

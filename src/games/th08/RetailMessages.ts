@@ -18,6 +18,7 @@ import { parseMsg, type MsgFile, type MsgScript } from '../../th08/format/MsgFil
 import { MessageVm, type MessageInput, type MessageVmHost } from '../../th08/sim/MessageVm';
 import type { GameState } from '../../th08/sim/GameState';
 import type { DialogueOverlay } from '../../engine/renderer/DialogueOverlay';
+import { resolveAssetUrl } from '../../engine/core/ResourceResolver';
 import { ROUTE_ORDER, type StageRoute } from './StageRoute';
 import { MEMBER_FACE_ANM, ROUTE_BOSS_FACE, ROUTE_MIDBOSS_FACE } from './data/th08-face-art';
 import { RetailAnmCatalog } from './data/th08-face-anm';
@@ -249,7 +250,7 @@ export class RetailMessageSource {
     if (held) return Promise.resolve(held);
     const inflight = this.pending.get(pack);
     if (inflight) return inflight;
-    const request = fetch(`${MSG_ASSET_DIR}/${pack}.dat`)
+    const request = fetch(resolveAssetUrl(`${MSG_ASSET_DIR}/${pack}.dat`))
       .then((response) => (response.ok ? response.arrayBuffer() : null))
       .then((body) => {
         if (!body) return null;

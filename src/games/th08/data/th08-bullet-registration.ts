@@ -5,6 +5,7 @@
 
 import { Texture } from 'pixi.js';
 import type { PixiRenderer } from '../../../engine/renderer/PixiRenderer';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 import { TH08_BULLET_SPRITES } from './th08-bullet-sprites';
 import { getEtamaSpriteId } from './th08-bullet-types';
 
@@ -14,7 +15,7 @@ async function sliceAtlas(
 ): Promise<Map<number, Texture>> {
   const img = new Image();
   img.crossOrigin = 'anonymous';
-  img.src = atlasUrl;
+  img.src = resolveAssetUrl(atlasUrl);
   await new Promise<void>((resolve, reject) => {
     img.onload = () => resolve();
     img.onerror = () => reject(new Error('Failed to load ' + atlasUrl));

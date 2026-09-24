@@ -7,6 +7,7 @@ export * from './engine/core/BulletSystem';
 export * from './engine/core/CollisionSystem';
 export * from './engine/core/InputSystem';
 export * from './engine/core/Stage';
+export * from './engine/core/ResourceResolver';
 
 // Physics
 export * from './engine/physics/SpatialHashGrid';

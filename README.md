@@ -11,7 +11,7 @@
 
 ## 🌟 Highlights
 
-- **Pure Web & Lightweight**: Built on TypeScript & PixiJS 8.x with WebGL hardware acceleration — 60 FPS guaranteed even with 2000+ bullets on screen.
+- **Pure Web & Lightweight**: Built on TypeScript & PixiJS 8.x with WebGL hardware acceleration — targeting a fluid 60 FPS even with 2000+ bullets on screen (benchmarked under frame budget).
 - **Three-Tier Architecture**:
   1. **Engine Core** (`@core`): Pure game-agnostic STG engine (Entities, Spatial Hash Grid Collision, Timeline, Web Audio).
   2. **Touhou Common** (`@touhou`): Reusable abstractions for the Touhou series (Bullet Patterns, Player Controller, Boss/SpellCard mechanics, HUD).
@@ -41,17 +41,28 @@
 
 ## 🖼️ Screenshots
 
-已补充可复现的 GUI 验证截图：
+已补充通过真实渲染管线截取的可复现实机截图（统一为 1280×960 原生渲染分辨率，对应 640×480 视口 2× 缩放）：
 
-![Stage 1 Rumia gameplay](docs/screenshots/screenshot-stage1.png)
+![Stage 1 Wriggle Nightbug gameplay](docs/screenshots/screenshot-stage1.png)
+*Stage 1 莉格露·奈特巴格道中实机弹幕*
 
-![F12 performance monitor](docs/screenshots/evidence-f12-monitor.jpg)
+![Boss spell card](docs/screenshots/screenshot-boss-spellcard.png)
+*Boss 符卡战（符卡名横幅、残机与倒计时）*
 
-![Focus-mode hitbox marker](docs/screenshots/evidence-slow-hitbox.jpg)
+![F12 performance monitor](docs/screenshots/screenshot-perf-monitor.png)
+*F12 性能监控浮层（实时 FPS、实体数与空间哈希碰撞比较计数）*
 
-![Stage 3 lasers](docs/screenshots/evidence-laser-stage3.jpg)
+![Stage 3 lasers](docs/screenshots/screenshot-stage3-lasers.png)
+*Stage 3 上白泽慧音关卡激光与弹幕*
 
 ![Spatial-hash collision debug](docs/screenshots/screenshot-collision-debug.png)
+*空间哈希碰撞网格（64px 划分与自机判定点）*
+
+![Dialogue scene](docs/screenshots/screenshot-dialogue.png)
+*道中 / Boss 前剧情对话场景（原生立绘与对话框）*
+
+![Results screen demonstration](docs/screenshots/screenshot-results.png)
+*结算面板演示画面（通过 `?resultscreen` 演示桩调出，展示各项结算字段与版面）*
 
 ---
 
@@ -125,7 +136,7 @@ the moment you hold it, which is the original's focus-equals-switch design.
 | 咲夜 / 蕾米莉亚 | Sakuya A | rapid knives | Remilia B | devil spread |
 | 妖梦 / 幽幽子 | Youmu A | wide blade spread | Yuyuko B | slow homing spirits |
 
-The hitbox radius is 1.5 playfield pixels — the same 448x448 playfield as the real
+The hitbox radius is 1.5 playfield pixels — the same 384x448 logical playfield (inside a 640x480 arcade canvas) as the real
 TH08, so engine units are 1:1 with the original. The on-screen dot is a small dark
 backing plus a red core, with no rotating overlay.
 
@@ -180,23 +191,33 @@ bun add @uestc-touhou/touhou-web-engine
 
 ### React / Web Integration Example
 
+The engine provides an embeddable host lane (`mountTH08`) with built-in support for React 18 StrictMode double-mounting, automatic lifecycle teardown, and scoped styling.
+
+#### Option A: Full Host Mount (`mountTH08`) — Recommended for web apps
+
 ```tsx
 import React, { useEffect, useRef } from 'react';
-import { TH08Game } from '@uestc-touhou/touhou-web-engine/th08';
+import { mountTH08, type TH08HostHandle } from '@uestc-touhou/touhou-web-engine/th08';
+import '@uestc-touhou/touhou-web-engine/th08/style.css';
 
 export const TouhouGameComponent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<TH08HostHandle | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const game = new TH08Game();
-    game.init(containerRef.current).then(() => {
-      game.start();
+    // mountTH08 attaches the complete UI shell (title menu, canvas, HUD, pause menu, touch controls)
+    const handle = mountTH08(containerRef.current, {
+      resourceBase: '/assets/th08/', // optional base URL for external game assets
+      // autostart: true,            // optionally start directly into gameplay
     });
+    handleRef.current = handle;
 
     return () => {
-      game.destroy();
+      // Handles unmount cleanly even under React 18 StrictMode rapid remounts
+      handle.destroy();
+      handleRef.current = null;
     };
   }, []);
 
@@ -206,6 +227,7 @@ export const TouhouGameComponent: React.FC = () => {
       style={{
         width: '640px',
         height: '480px',
+        position: 'relative',
         borderRadius: '8px',
         overflow: 'hidden',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
@@ -213,6 +235,21 @@ export const TouhouGameComponent: React.FC = () => {
     />
   );
 };
+```
+
+#### Option B: Low-Level Engine Instance (`TH08Game`) — For custom wrappers
+
+```typescript
+import { TH08Game } from '@uestc-touhou/touhou-web-engine/th08';
+
+const game = new TH08Game({ character: 'reimu-yukari', difficulty: 'normal', stage: 1 });
+await game.init(document.getElementById('canvas-container')!);
+game.start();
+
+// Lifecycle control:
+// game.pause();
+// game.resume();
+// game.destroy();
 ```
 
 ### Developing Locally
@@ -228,7 +265,7 @@ bun install
 # Start local interactive demo server
 bun run dev
 
-# Run Vitest test suite (688 tests incl. a 2000-bullet perf benchmark)
+# Run Vitest test suite (including 2000-bullet danmaku performance benchmark)
 bun run test
 
 # Lint + typecheck
@@ -238,7 +275,7 @@ bun run typecheck
 # Full CI gate (typecheck + lint + test)
 bun run ci
 
-# Build bundle & type declarations
+# Build bundle & type declarations (outputs to dist/ and dist/games/th08/)
 bun run build
 ```
 
@@ -332,7 +369,7 @@ or boss lives behind a small, stable API surface.
 ```
 ┌───────────────────────────────────────────────────────────────────────────┐
 │  GAME IMPL          src/games/th08/            (TH08 专属，可整体替换)      │
-│    TH08Game · stages/Stage1 (帧时间轴) · bosses/Rumia (3 阶段 AI/符卡)      │
+│    TH08Game · TH08Shell · EclStageLoader (六面战役) · RetailDialogue / Menu │
 ├───────────────────────────────────────────────────────────────────────────┤
 │  TOUHOU COMMON      src/touhou-common/         (TH06–TH18 系列可复用)       │
 │    player/Player (移动/低速/Bomb/擦弹/触摸)   enemy/Enemy (航点+周期射击)    │
@@ -525,7 +562,7 @@ game.start();
 
 Continuous Integration runs on GitHub Actions on every commit (`typecheck → lint → test → build`):
 - TypeScript 5.7 strict mode verification + ESLint flat-config lint
-- 247 Unit tests covering:
+- Comprehensive test suite covering:
   - Vector & Entity math & lifecycle（含 `Entity.transform` 位置/速度/旋转联动视图）
   - Typed `EventEmitter`（泛型 EventMap：`on` / `off` / `once` / `emit`）
   - Spatial Hash Grid collision bounds & neighbor queries
@@ -538,7 +575,8 @@ Continuous Integration runs on GitHub Actions on every commit (`typecheck → li
   - SpriteManager procedural sprite registry (built-ins, custom keys, default fallback)
   - Player controller movement clamping & invulnerability, touch-follow physics
   - Boss HP phase transitions & SpellCard timeouts
-  - TH08 Stage 1 Rumia AI (incl. Demarcation composite dual-ring salvo) & timeline triggers
+  - TH08 full campaign ECL translation & timeline triggers
+  - TH08 host mounting lifecycle, StrictMode double-mount resiliency, and asset URL resolution
   - TH08Game pause freeze/resume & ESC toggle
   - HUD spellcard banner display window & boss-approach warning lifecycle
   - Item physics (gravity, drag, terminal fall, magnetism), drop tables, pooling,
@@ -560,7 +598,7 @@ Contributing guidelines (code style, TDD requirements, PR flow, commit conventio
 ## 📜 Copyright & Attribution
 
 - **Engine Code**: Released under the [MIT License](LICENSE).
-- **Touhou Project**: Original game series and characters created by **ZUN / Team Shanghai Alice**. This is an unofficial derivative fan-work complying with Touhou Project fan-made content guidelines.
+- **Touhou Project**: Original game series and characters created by **ZUN / Team Shanghai Alice**. This is an unofficial derivative fan-work complying with Touhou Project fan-made content guidelines (東方Projectの二次創作ガイドライン).
 - **Art & Sound Design**: Referencing the open-source [Taisei Project](https://github.com/taisei-project/taisei) and [th08-web](https://github.com/N0zoM1z0/th08-web).
 
 ### Vendored Taisei art
