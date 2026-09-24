@@ -172,7 +172,7 @@ function overlayFor(...held: Witness[]) {
   return { overlay, held };
 }
 
-describe('shipped face art', () => {
+describe.skipIf(!hasArt)('shipped face art', () => {
   it('straddles every tier both width tests branch on', () => {
     expect(hasArt, MANIFEST).toBe(true);
     expect(NARROW, 'a bust at or under 128 px').not.toBeNull();

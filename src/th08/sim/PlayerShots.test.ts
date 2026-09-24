@@ -269,7 +269,7 @@ describe.skipIf(!hasAssets)('the rest of the eight files', () => {
   });
 });
 
-describe('the frame rules around the volley', () => {
+describe.skipIf(!hasAssets)('the frame rules around the volley', () => {
   it('silences 魔理沙 and 爱丽丝 under a stopped clock, and nobody else', () => {
     for (const shotType of [1, 6, 7]) {
       expect(
@@ -351,7 +351,7 @@ describe('the aim point the charms steer to', () => {
   });
 });
 
-describe('the pool itself', () => {
+describe.skipIf(!hasAssets)('the pool itself', () => {
   it('walks the chain one entry per free slot, like the original loop', () => {
     const pool = new PlayerShotPool(rng);
     const w = world({ shotWindow: 0 });

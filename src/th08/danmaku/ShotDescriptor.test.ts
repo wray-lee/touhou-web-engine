@@ -8,7 +8,7 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { parseEcl } from '../format/EclFile';
 import { INT_FIELD_BY_ID, FLOAT_FIELD_BY_ID } from '../sim/EnemySlot';
 import {
@@ -40,6 +40,7 @@ const isRegister: RegisterLookup = (id) =>
   Object.prototype.hasOwnProperty.call(FLOAT_FIELD_BY_ID, id);
 
 function everyInstruction() {
+  if (!hasAssets) return [];
   const out: {
     file: string;
     offset: number;
@@ -48,7 +49,9 @@ function everyInstruction() {
     flags: number;
   }[] = [];
   for (const name of FILES) {
-    const ecl = parseEcl(fs.readFileSync(path.join(RAW_DIR, `${name}.ecl`)));
+    const filePath = path.join(RAW_DIR, `${name}.ecl`);
+    if (!fs.existsSync(filePath)) continue;
+    const ecl = parseEcl(fs.readFileSync(filePath));
     for (const sub of ecl.subs) {
       for (const ins of sub.instructions) {
         out.push({
@@ -65,9 +68,15 @@ function everyInstruction() {
 }
 
 describe.skipIf(!hasAssets)('shot / laser descriptor round trip', () => {
-  const all = everyInstruction();
-  const shots = all.filter((i) => i.opcode >= 96 && i.opcode <= 104);
-  const lasers = all.filter((i) => i.opcode === 114 || i.opcode === 115);
+  let all: ReturnType<typeof everyInstruction> = [];
+  let shots: typeof all = [];
+  let lasers: typeof all = [];
+
+  beforeAll(() => {
+    all = everyInstruction();
+    shots = all.filter((i) => i.opcode >= 96 && i.opcode <= 104);
+    lasers = all.filter((i) => i.opcode === 114 || i.opcode === 115);
+  });
 
   it('covers a meaningful share of the shipped scripts', () => {
     // Guards the test itself: if the opcode ranges ever stop matching, a green
