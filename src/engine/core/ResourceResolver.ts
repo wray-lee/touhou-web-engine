@@ -21,7 +21,10 @@ let currentBase: string = defaultBase;
 const ASSET_REV = '1';
 
 function withRev(url: string): string {
-  if (!ASSET_REV || url.includes('?')) return url;
+  // Only the shipped asset tree, written both as '/assets/...' and 'assets/...'.
+  // 'th08-assets' is a base, not the tree, and test doubles live under /fake.
+  const path = url.startsWith('/') ? url : `/${url}`;
+  if (!ASSET_REV || url.includes('?') || !path.includes('/assets/')) return url;
   return `${url}?v=${ASSET_REV}`;
 }
 

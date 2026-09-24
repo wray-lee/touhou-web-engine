@@ -54,9 +54,11 @@ describe('ResourceResolver', () => {
     expect(resolveAssetUrl('/assets/face.png')).toBe('./assets/face.png?v=1');
   });
 
-  it('keeps a query an asset already carries and still busts the cache otherwise', () => {
+  it('busts the cache on shipped assets but leaves a carried query and test doubles alone', () => {
     setResourceBase('/th08-assets/');
+    expect(resolveAssetUrl('/assets/ui/logo.png')).toBe('/th08-assets/assets/ui/logo.png?v=1');
     expect(resolveAssetUrl('/assets/ui/logo.png?x=1')).toBe('/th08-assets/assets/ui/logo.png?x=1');
+    expect(resolveAssetUrl('/fake/backdrop.png')).toBe('/th08-assets/fake/backdrop.png');
   });
 });
 
