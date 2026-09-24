@@ -13,7 +13,9 @@
     "./th08": {
       "import": "./dist/games/th08/index.js",
       "types": "./dist/games/th08/index.d.ts"
-    }
+    },
+    "./th08/style.css": "./dist/games/th08/style.css",
+    "./style.css": "./dist/games/th08/style.css"
   },
   "files": [
     "dist",

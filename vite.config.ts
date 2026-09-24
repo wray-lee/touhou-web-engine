@@ -19,6 +19,7 @@ export default defineConfig({
         'games/th08/index': path.resolve(__dirname, 'src/games/th08/index.ts'),
       },
       formats: ['es'],
+      cssFileName: 'games/th08/style',
     },
     rollupOptions: {
       external: ['pixi.js'],

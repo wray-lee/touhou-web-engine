@@ -16,6 +16,7 @@
  */
 
 import { AnmVm, type AnmRng } from '../anm/AnmVm';
+import { resolveAssetUrl } from '../core/ResourceResolver';
 
 /** Quiet RNG: interface scripts do not randomise. */
 const stillRng: AnmRng = {
@@ -62,7 +63,7 @@ function loadImage(url: string): Promise<HTMLImageElement | null> {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
-    img.src = url;
+    img.src = resolveAssetUrl(url);
   });
 }
 

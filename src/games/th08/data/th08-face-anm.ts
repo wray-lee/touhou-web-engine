@@ -20,6 +20,7 @@ import { Rectangle, Texture } from 'pixi.js';
 import { loadAnmPage } from './anm-atlas';
 import { anmScriptFromBase64 } from '../../../engine/anm/AnmVm';
 import { ANM_OPCODE } from '../../../engine/anm/AnmOpcode';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 import { FACE_ASSET_DIR } from './th08-face-art';
 
 /** Where `extract.mjs` publishes the per-pack metadata. */
@@ -71,7 +72,7 @@ export class RetailAnmCatalog {
   /** Fetch and parse the manifest. Resolves to an empty catalog without one. */
   static async load(url: string = TH08_MANIFEST_URL): Promise<RetailAnmCatalog> {
     try {
-      const response = await fetch(url);
+      const response = await fetch(resolveAssetUrl(url));
       if (!response.ok) return new RetailAnmCatalog({});
       const manifest = (await response.json()) as Manifest;
       return new RetailAnmCatalog(manifest.anm ?? {});

@@ -8,6 +8,7 @@
 
 import { Assets, Rectangle, Texture } from 'pixi.js';
 import type { PixiRenderer } from '../../../engine/renderer/PixiRenderer';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 
 /** One atlas cell: a rect on a page, addressed by its ANM sprite id. */
 export interface AtlasCell {
@@ -24,7 +25,7 @@ export interface AtlasCell {
  */
 export async function loadAnmPage(url: string): Promise<Texture | null> {
   try {
-    const texture = (await Assets.load(url)) as Texture;
+    const texture = (await Assets.load(resolveAssetUrl(url))) as Texture;
     texture.source.style.scaleMode = 'nearest';
     return texture;
   } catch {

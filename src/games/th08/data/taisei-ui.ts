@@ -1,5 +1,6 @@
 import type { CharacterId, MemberId } from '../../../touhou-common/player/CharacterProfile';
 import type { Difficulty } from '../types';
+import { resolveAssetUrl } from '../../../engine/core/ResourceResolver';
 
 import { memberPortraitUrl, speakerFaceUrl } from './th08-face-art';
 
@@ -103,11 +104,11 @@ function teamMember(id: CharacterId): MemberId {
  * fallback for a checkout without the extracted originals.
  */
 export function teamPortraitUrl(id: CharacterId): string {
-  return (
+  const url =
     memberPortraitUrl(teamMember(id)) ??
     TAISEI_TEAM_PORTRAIT[id] ??
-    '/assets/player/' + id.split('-')[0] + '.png'
-  );
+    '/assets/player/' + id.split('-')[0] + '.png';
+  return resolveAssetUrl(url);
 }
 
 /** Portrait for the team's B seat — the member Shift switches you into. */
@@ -121,7 +122,7 @@ export function partnerPortraitUrl(id: CharacterId): string {
  */
 export function dialogFaceUrl(speaker: string, mood?: string): string | undefined {
   const original = speakerFaceUrl(speaker, mood);
-  if (original) return original;
+  if (original) return resolveAssetUrl(original);
   const id = DIALOG_SPEAKER_KEY[speaker] ?? DIALOG_SPEAKER_KEY[speaker.toLowerCase()];
-  return id ? TAISEI_DIALOG_FACE[id] : undefined;
+  return id && TAISEI_DIALOG_FACE[id] ? resolveAssetUrl(TAISEI_DIALOG_FACE[id]) : undefined;
 }

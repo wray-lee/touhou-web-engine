@@ -491,6 +491,7 @@ export class TH08Game {
    * portraits. Null until `init` has the ANM manifest in hand.
    */
   private retail: RetailDialogue | null = null;
+  private isDestroyed = false;
 
   constructor(options: TH08GameOptions = {}) {
     this.profile = options.profile ?? TH08_PROFILE;
@@ -1842,6 +1843,7 @@ export class TH08Game {
       playerSkin: this.playerSkin,
       backend: this.rendererBackend,
     });
+    if (this.isDestroyed || !this.renderer) return;
     this.ensureBackdropPages();
     // Danmaku art is baked per shape x palette colour; snap live colours to the ramp.
     this.renderer.sprites.setBulletTextures({
@@ -2082,6 +2084,7 @@ export class TH08Game {
   }
 
   destroy(): void {
+    this.isDestroyed = true;
     this.dialogue?.stop();
     this.stop();
     clearTimeout(this.gameOverTimer);

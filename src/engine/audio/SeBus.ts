@@ -21,6 +21,7 @@
  * in from the game through `SeBusSource`.
  */
 import { parseWav } from './Wav';
+import { resolveAssetUrl } from '../core/ResourceResolver';
 
 /** One row of `g_SoundBufferIdxVol`: which file, and how loud. */
 export interface SeBusEntry {
@@ -108,7 +109,7 @@ export function seQueuePush(slots: SeRequest[], idx: number, pan: number): boole
 }
 
 const defaultLoad = (path: string): Promise<ArrayBuffer> =>
-  fetch(path).then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error(`HTTP ${res.status}`))));
+  fetch(resolveAssetUrl(path)).then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error(`HTTP ${res.status}`))));
 
 export class SeBus {
   private slots: SeRequest[] = [];
