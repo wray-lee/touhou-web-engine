@@ -23,35 +23,42 @@ describe('ResourceResolver', () => {
 
   it('leaves paths untouched when base is empty or root', () => {
     setResourceBase('');
-    expect(resolveAssetUrl('assets/ui/logo.png')).toBe('assets/ui/logo.png');
-    expect(resolveAssetUrl('/assets/ui/logo.png')).toBe('/assets/ui/logo.png');
+    expect(resolveAssetUrl('assets/ui/logo.png')).toBe('assets/ui/logo.png?v=1');
+    expect(resolveAssetUrl('/assets/ui/logo.png')).toBe('/assets/ui/logo.png?v=1');
 
     setResourceBase('/');
-    expect(resolveAssetUrl('assets/ui/logo.png')).toBe('assets/ui/logo.png');
-    expect(resolveAssetUrl('/assets/ui/logo.png')).toBe('/assets/ui/logo.png');
+    expect(resolveAssetUrl('assets/ui/logo.png')).toBe('assets/ui/logo.png?v=1');
+    expect(resolveAssetUrl('/assets/ui/logo.png')).toBe('/assets/ui/logo.png?v=1');
   });
 
   it('prefixes paths correctly when resource base is configured', () => {
     setResourceBase('/touhou-web-engine/');
     expect(getResourceBase()).toBe('/touhou-web-engine/');
-    expect(resolveAssetUrl('assets/ui/title.png')).toBe('/touhou-web-engine/assets/ui/title.png');
-    expect(resolveAssetUrl('/assets/ui/title.png')).toBe('/touhou-web-engine/assets/ui/title.png');
+    expect(resolveAssetUrl('assets/ui/title.png')).toBe('/touhou-web-engine/assets/ui/title.png?v=1');
+    expect(resolveAssetUrl('/assets/ui/title.png')).toBe('/touhou-web-engine/assets/ui/title.png?v=1');
 
     // Frontend embed subpath contract: BASE_URL + 'th08-assets/'
     setResourceBase('/gensokyo/th08-assets/');
-    expect(resolveAssetUrl('assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg');
-    expect(resolveAssetUrl('/assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg');
+    expect(resolveAssetUrl('assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg?v=1');
+    expect(resolveAssetUrl('/assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg?v=1');
 
     // Idempotent: does not duplicate base if already prefixed
-    expect(resolveAssetUrl('/gensokyo/th08-assets/assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg');
-    expect(resolveAssetUrl('gensokyo/th08-assets/assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg');
+    expect(resolveAssetUrl('/gensokyo/th08-assets/assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg?v=1');
+    expect(resolveAssetUrl('gensokyo/th08-assets/assets/audio/bgm.ogg')).toBe('/gensokyo/th08-assets/assets/audio/bgm.ogg?v=1');
   });
 
   it('supports relative resource base ./', () => {
     setResourceBase('./');
     expect(getResourceBase()).toBe('./');
-    expect(resolveAssetUrl('assets/face.png')).toBe('./assets/face.png');
-    expect(resolveAssetUrl('/assets/face.png')).toBe('./assets/face.png');
+    expect(resolveAssetUrl('assets/face.png')).toBe('./assets/face.png?v=1');
+    expect(resolveAssetUrl('/assets/face.png')).toBe('./assets/face.png?v=1');
+  });
+
+  it('busts the cache on shipped assets but leaves a carried query and test doubles alone', () => {
+    setResourceBase('/th08-assets/');
+    expect(resolveAssetUrl('/assets/ui/logo.png')).toBe('/th08-assets/assets/ui/logo.png?v=1');
+    expect(resolveAssetUrl('/assets/ui/logo.png?x=1')).toBe('/th08-assets/assets/ui/logo.png?x=1');
+    expect(resolveAssetUrl('/fake/backdrop.png')).toBe('/th08-assets/fake/backdrop.png');
   });
 });
 

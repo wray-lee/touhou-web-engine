@@ -16,6 +16,18 @@ const defaultBase: string =
 
 let currentBase: string = defaultBase;
 
+// Appended to resolved asset URLs so a long-lived CDN cache of a 404 does not
+// outlive the file appearing. Bump when the shipped asset set changes.
+const ASSET_REV = '1';
+
+function withRev(url: string): string {
+  // Only the shipped asset tree, written both as '/assets/...' and 'assets/...'.
+  // 'th08-assets' is a base, not the tree, and test doubles live under /fake.
+  const path = url.startsWith('/') ? url : `/${url}`;
+  if (!ASSET_REV || url.includes('?') || !path.includes('/assets/')) return url;
+  return `${url}?v=${ASSET_REV}`;
+}
+
 export function setResourceBase(base: string): void {
   if (!base || base === '.' || base === './') {
     currentBase = base === '.' || base === './' ? './' : '';
@@ -45,23 +57,23 @@ export function resolveAssetUrl(url: string, base: string = currentBase): string
   }
 
   if (!base || base === '/') {
-    return url;
+    return withRev(url);
   }
 
   const cleanBase = base.endsWith('/') ? base : `${base}/`;
 
   // If url is already prefixed with cleanBase, avoid duplicate prefix
   if (url === cleanBase || url.startsWith(cleanBase)) {
-    return url;
+    return withRev(url);
   }
 
   const pathWithoutLeadingSlash = url.startsWith('/') ? url.slice(1) : url;
   if (cleanBase !== './') {
     const baseWithoutLeadingSlash = cleanBase.startsWith('/') ? cleanBase.slice(1) : cleanBase;
     if (pathWithoutLeadingSlash.startsWith(baseWithoutLeadingSlash)) {
-      return cleanBase.startsWith('/') ? `/${pathWithoutLeadingSlash}` : pathWithoutLeadingSlash;
+      return withRev(cleanBase.startsWith('/') ? `/${pathWithoutLeadingSlash}` : pathWithoutLeadingSlash);
     }
   }
 
-  return `${cleanBase}${pathWithoutLeadingSlash}`;
+  return withRev(`${cleanBase}${pathWithoutLeadingSlash}`);
 }

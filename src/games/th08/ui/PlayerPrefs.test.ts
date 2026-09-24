@@ -75,12 +75,12 @@ describe('player preferences', () => {
       bgmVolume: 0.4,
     };
     stored(table, legacy);
-    expect(loadPrefs()).toEqual({ ...legacy, fog: true });
+    expect(loadPrefs()).toEqual({ ...legacy, fog: true, touchControls: 'never' });
   });
 
   it('coerces junk instead of propagating it', () => {
     stored(table, { mouseControl: 1, playerSkin: 'lunatic', touchControls: 'sometimes', bgmVolume: 9 });
-    expect(loadPrefs()).toEqual({ ...DEFAULT_PREFS, mouseControl: true, bgmVolume: 1 });
+    expect(loadPrefs()).toEqual({ ...DEFAULT_PREFS, mouseControl: true, bgmVolume: 1, touchControls: 'never' });
   });
 
   it('ignores an unparseable table', () => {

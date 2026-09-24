@@ -98,7 +98,8 @@ describe('TH08Menu keyboard navigation', () => {
     press('ArrowDown');
     expect(activeRow(h.root, 'opt')).toBe(1);
     press('Enter');
-    expect(rowText(h.root, 'opt', 1)).toContain('始终显示 ALWAYS');
+    // Default is off, so the first press lands on the guess mode, not always-on.
+    expect(rowText(h.root, 'opt', 1)).toContain('自动 AUTO');
     // The highlight must stay put: an options screen that jumps back to row 1
     // after every change forces a re-traverse for each setting.
     expect(activeRow(h.root, 'opt')).toBe(1);
