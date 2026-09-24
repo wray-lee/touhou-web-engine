@@ -1,9 +1,9 @@
-var xa = Object.defineProperty;
-var Da = (s, A, t) => A in s ? xa(s, A, { enumerable: !0, configurable: !0, writable: !0, value: t }) : s[A] = t;
-var r = (s, A, t) => Da(s, typeof A != "symbol" ? A + "" : A, t);
-import { C as Ea, S as Sa, t as Mt, P as PA, h as Qa, a as Ca, b as _a, c as ka, d as Fa, e as Pa, f as ja, H as ht, g as Xt, i as va, m as De, M as Y, j as Ta, D as za, k as Si, l as Ra, n as Ua, B as Ha, o as Ee, p as Ga, s as Oa, q as La, r as Ya, u as Qi, E as Ci, v as Na, w as _i, x as ki, I as Ja, R as xt, y as Xa, L as Ka, z as Wa, A as Va, F as qa, G as Za, J as $a, K as Ao, N as to, O as eo, Q as so, T as io, U as Se, V as ao, W as oo, X as ro, Y as no, Z as po, _ as se, $ as lo, a0 as co } from "./Boss-BY9U9ygY.js";
-import { Texture as yt, Rectangle as Fi, Assets as ho, Container as Pi, Graphics as uo, Sprite as ji, TextStyle as go, Text as mo } from "pixi.js";
-const vi = {
+var oo = Object.defineProperty;
+var ro = (s, A, t) => A in s ? oo(s, A, { enumerable: !0, configurable: !0, writable: !0, value: t }) : s[A] = t;
+var r = (s, A, t) => ro(s, typeof A != "symbol" ? A + "" : A, t);
+import { C as kA, S as no, t as Tt, r as Y, P as RA, h as po, a as lo, b as co, c as ho, d as go, e as uo, f as wo, H as It, g as ne, i as mo, m as Oe, M as J, j as fo, D as Bo, k as Aa, l as yo, n as bo, B as Io, o as Ne, p as Mo, s as xo, q as Do, u as Qo, v as ta, E as ea, w as Eo, x as sa, y as ia, I as Co, R as Ut, z as So, L as aa, A as Fo, F as _o, G as Po, J as ko, K as vo, N as jo, O as To, Q as Uo, T as Ro, U as Go, V as Je, W as zo, X as Ho, Y as Yo, Z as Lo, _ as Oo, $ as Ie, a0 as No, a1 as Jo, a2 as Vo, a3 as Wo } from "./Boss-C8S9tkJU.js";
+import { Texture as Pt, Rectangle as oa, Assets as Ko, Container as ra, Graphics as Xo, Sprite as na, TextStyle as Zo, Text as qo } from "pixi.js";
+const pa = {
   "bg:bambooMoon:mid": "/assets/bg/bambooMoon-mid.png",
   "bg:bambooMoon:near": "/assets/bg/bambooMoon-near.png",
   "bg:bambooMoon:sky": "/assets/bg/bambooMoon-sky.png",
@@ -894,7 +894,7 @@ const vi = {
   "ui:touch:focus": "/assets/ui/touch-focus.png",
   "ui:touch:pause": "/assets/ui/touch-pause.png",
   "ui:touch:shoot": "/assets/ui/touch-shoot.png"
-}, wo = {
+}, $o = {
   red: 16724838,
   blue: 6011135,
   cyan: 6744319,
@@ -907,7 +907,7 @@ const vi = {
   teal: 4905152,
   indigo: 8026879,
   rose: 16736158
-}, fo = [
+}, Ar = [
   "ball",
   "ring",
   "rice",
@@ -928,12 +928,12 @@ const vi = {
   "soul",
   "apple",
   "homing"
-], ie = Object.keys(vi), Fl = {
+], Me = Object.keys(pa), pe = {
   easy: { label: "Easy", bulletSpeed: 0.82, bulletDensity: 0.72, enemyHp: 0.8, bossHp: 0.75 },
   normal: { label: "Normal", bulletSpeed: 1, bulletDensity: 1, enemyHp: 1, bossHp: 1 },
   hard: { label: "Hard", bulletSpeed: 1.12, bulletDensity: 1.18, enemyHp: 1.2, bossHp: 1.1 },
   lunatic: { label: "Lunatic", bulletSpeed: 1.25, bulletDensity: 1.4, enemyHp: 1.45, bossHp: 1.2 }
-}, Kt = {
+}, le = {
   1: {
     stage: 1,
     title: "暗闇の夜",
@@ -994,7 +994,7 @@ const vi = {
     bgBrightness: 0.72,
     bgScroll: 0.9
   }
-}, Pl = [
+}, Lc = [
   "forestNight",
   "lake",
   "nightSky",
@@ -1002,25 +1002,25 @@ const vi = {
   "bambooMoon",
   "moonCity"
 ];
-function jl(s) {
+function Oc(s) {
   return Number.isInteger(s) && s >= 1 && s <= 6;
 }
-function yo(s = "reimu-yukari") {
-  return { ...Ea[s] };
+function tr(s = "reimu-yukari") {
+  return { ...kA[s] };
 }
-const bo = {
+const er = {
   "reimu-yukari": ["霊夢", "紫"],
   "marisa-alice": ["魔理沙", "アリス"],
   "sakuya-remilia": ["咲夜", "レミリア"],
   "youmu-yuyuko": ["妖夢", "幽々子"]
-}, Bo = {
+}, sr = {
   1: "ルミア",
   2: "リグル",
   3: "ミスティア",
   4: "慧音",
   5: "鈴仙",
   6: "永琳"
-}, Qe = {
+}, Ve = {
   1: [
     [
       {
@@ -1145,7 +1145,7 @@ const bo = {
       { speaker: "幽々子", text: "永い夜は退屈なの。終わらせてもらいましょう。", mood: "normal" }
     ]
   ]
-}, Io = {
+}, ir = {
   1: [{ speaker: "ルミア", text: "暗闇は私のもの。光が欲しいなら、私を越えていきなさい！", mood: "smug" }],
   2: [
     {
@@ -1162,7 +1162,7 @@ const bo = {
     { speaker: "鈴仙", text: "月へ帰らねば。邪魔をするなら、幻覚で視ることをやめさせます。", mood: "normal" }
   ],
   6: [{ speaker: "永琳", text: "永夜は完成しつつある。貴方たちのご主人も、もう戻れない。", mood: "smug" }]
-}, Mo = {
+}, ar = {
   1: [[{ speaker: "ルミア", text: "闇符「デマケーション・サイン」！ 夜を切り分けてあげる！", mood: "smug" }]],
   2: [[{ speaker: "リグル", text: "蛍符「地上の流星」！ 秋の夜空を奪います！", mood: "normal" }]],
   3: [[{ speaker: "ミスティア", text: "声符「木菟咆哮」！ この歌から逃げられるかしら？", mood: "smug" }]],
@@ -1170,27 +1170,27 @@ const bo = {
   5: [[{ speaker: "鈴仙", text: "波符「赤眼催眠」！ 貴方の目は、もう私のもの。", mood: "smug" }]],
   6: [[{ speaker: "永琳", text: "薬符「壺中の大銀河」！ 宇宙の広さを見せてあげる。", mood: "smug" }]]
 };
-function xo(s, A) {
-  return (Qe[s][So[A]] ?? Qe[s][0]).slice();
+function or(s, A) {
+  return (Ve[s][pr[A]] ?? Ve[s][0]).slice();
 }
-function Do(s, A) {
-  const [t] = bo[A];
+function rr(s, A) {
+  const [t] = er[A];
   return [
-    { speaker: t, text: "ここが震源ね……" + Bo[s] + "、でしたか。", mood: "normal" },
-    ...Io[s] ?? []
+    { speaker: t, text: "ここが震源ね……" + sr[s] + "、でしたか。", mood: "normal" },
+    ...ir[s] ?? []
   ];
 }
-function Eo(s) {
+function nr(s) {
   var A;
-  return ((A = (Mo[s] ?? [])[0]) == null ? void 0 : A.slice()) ?? [];
+  return ((A = (ar[s] ?? [])[0]) == null ? void 0 : A.slice()) ?? [];
 }
-const So = {
+const pr = {
   "reimu-yukari": 0,
   "marisa-alice": 1,
   "sakuya-remilia": 2,
   "youmu-yuyuko": 3
-}, Qo = Object.keys(Kt).map((s) => Number(s)).sort((s, A) => s - A).map((s) => {
-  const A = Kt[s];
+}, lr = Object.keys(le).map((s) => Number(s)).sort((s, A) => s - A).map((s) => {
+  const A = le[s];
   return {
     stage: A.stage,
     title: A.title,
@@ -1201,13 +1201,13 @@ const So = {
     bgBrightness: A.bgBrightness,
     bgScroll: A.bgScroll
   };
-}), Co = {
+}), cr = {
   id: "th08",
   label: "TH08 永夜抄",
   title: "東方永夜抄",
   subtitle: "Imperishable Night",
   stageCount: 6,
-  stages: Qo,
+  stages: lr,
   /**
    * TH08 has no hand-authored stage. Every wave, boss and spell card comes from
    * the translated ECL script in `src/th08/stages/<route>/`, which
@@ -1217,17 +1217,17 @@ const So = {
    * "demo look" the translated data replaced.
    */
   buildStage(s, A) {
-    const t = Kt[s];
-    return new Sa({ name: t.title, stageNumber: s, timeline: [] });
+    const t = le[s];
+    return new no({ name: t.title, stageNumber: s, timeline: [] });
   },
-  introDialogue: (s, A) => xo(s, A),
-  bossDialogue: (s, A) => Do(s, A),
-  spellDialogue: (s) => Eo(s)
-}, _o = /* @__PURE__ */ new Map();
-function ko(s) {
-  return _o.set(s.id, s), s;
+  introDialogue: (s, A) => or(s, A),
+  bossDialogue: (s, A) => rr(s, A),
+  spellDialogue: (s) => nr(s)
+}, hr = /* @__PURE__ */ new Map();
+function dr(s) {
+  return hr.set(s.id, s), s;
 }
-const Dt = {
+const Rt = {
   "player/reimu": {
     main: { frames: [4, 5, 6, 7], delay: 10, mirror: !1 },
     left: { frames: [0, 1, 2, 3], delay: 10, mirror: !0 },
@@ -1340,17 +1340,17 @@ const Dt = {
     specialshot_hold: { frames: [15], delay: 6, mirror: !1 },
     specialshot_release: { frames: [16, 17, 9, 10, 11], delay: 3, mirror: !1 }
   }
-}, Fo = {
+}, gr = {
   reimu: "reimu",
   marisa: "marisa",
   youmu: "youmu"
-}, Po = {
+}, ur = {
   lumiaFairy: "fairy_blue",
   fairy: "fairy_red",
   rigelFairy: "bigfairy",
   cloudFairy: "hugefairy",
   sangFairy: "superfairy"
-}, jo = {
+}, wr = {
   cirno: "cirno",
   elly: "elly",
   hina: "hina",
@@ -1359,48 +1359,48 @@ const Dt = {
   scuttle: "scuttle",
   wriggle: "wriggle",
   wriggleex: "wriggleex"
-}, HA = 0.6, vo = ["yukari", "alice", "sakuya", "remilia", "yuyuko"], To = {
+}, JA = 0.6, mr = ["yukari", "alice", "sakuya", "remilia", "yuyuko"], fr = {
   main: { frames: [0, 1, 2, 3, 4, 5], delay: 8, mirror: !1 }
 };
-function zo(s) {
+function Br(s) {
   let A = 0;
-  for (const [t, e] of Object.entries(Fo)) {
-    const i = Dt["player/" + e];
+  for (const [t, e] of Object.entries(gr)) {
+    const i = Rt["player/" + e];
     i && (s.registerSheet("player:" + t, {
-      frameKey: Mt("taisei:player", e),
+      frameKey: Tt("taisei:player", e),
       anim: i,
-      scale: HA,
+      scale: JA,
       steer: !0
     }), A += 1);
   }
-  for (const t of vo)
+  for (const t of mr)
     s.registerSheet("player:" + t, {
       frameKey: (e) => "player-frame:" + t + ":frame" + e,
-      anim: To,
-      scale: HA,
+      anim: fr,
+      scale: JA,
       steer: !1
     }), A += 1;
-  for (const [t, e] of Object.entries(Po)) {
-    const i = Dt["enemy/" + e];
+  for (const [t, e] of Object.entries(ur)) {
+    const i = Rt["enemy/" + e];
     i && (s.registerSheet("enemy:" + t, {
-      frameKey: Mt("taisei:enemy", e),
+      frameKey: Tt("taisei:enemy", e),
       anim: i,
-      scale: HA,
+      scale: JA,
       steer: !0
     }), A += 1);
   }
-  for (const [t, e] of Object.entries(jo)) {
-    const i = Dt["boss/" + e];
+  for (const [t, e] of Object.entries(wr)) {
+    const i = Rt["boss/" + e];
     i && (s.registerSheet("boss:" + t, {
-      frameKey: Mt("taisei:boss", e),
+      frameKey: Tt("taisei:boss", e),
       anim: i,
-      scale: HA,
+      scale: JA,
       steer: !1
     }), A += 1);
   }
   return A;
 }
-const Ro = {
+const yr = {
   reimu: {
     atlas: "/assets/th08/anm/player00_t0.png",
     width: 256,
@@ -2381,106 +2381,106 @@ const Ro = {
       }
     ]
   }
-}, P = (s, A, t = !1) => ({
+}, k = (s, A, t = !1) => ({
   frames: s,
   delay: A,
   mirror: t
-}), Uo = (s) => s === "portrait" ? { main: P([0, 1, 2, 3], 6) } : s === "stance9" ? {
-  main: P([0, 1, 2, 3], 6),
-  left: P([6, 7, 8], 6),
-  right: P([6, 7, 8], 6, !0),
-  main2left: P([4, 5], 2),
-  left2main: P([5, 4], 1),
-  main2right: P([4, 5], 2, !0),
-  right2main: P([5, 4], 1, !0)
+}), br = (s) => s === "portrait" ? { main: k([0, 1, 2, 3], 6) } : s === "stance9" ? {
+  main: k([0, 1, 2, 3], 6),
+  left: k([6, 7, 8], 6),
+  right: k([6, 7, 8], 6, !0),
+  main2left: k([4, 5], 2),
+  left2main: k([5, 4], 1),
+  main2right: k([4, 5], 2, !0),
+  right2main: k([5, 4], 1, !0)
 } : s === "stance8" ? {
-  main: P([0, 1, 2, 3], 6),
-  left: P([5, 6, 7], 6),
-  right: P([5, 6, 7], 6, !0),
-  main2left: P([4], 1),
-  left2main: P([5, 4], 1),
-  main2right: P([4], 1, !0),
-  right2main: P([5, 4], 1, !0)
+  main: k([0, 1, 2, 3], 6),
+  left: k([5, 6, 7], 6),
+  right: k([5, 6, 7], 6, !0),
+  main2left: k([4], 1),
+  left2main: k([5, 4], 1),
+  main2right: k([4], 1, !0),
+  right2main: k([5, 4], 1, !0)
 } : {
-  main: P([0, 1, 2, 3], 6),
-  left: P([7, 8, 9, 10], 6),
-  right: P([7, 8, 9, 10], 6, !0),
-  main2left: P([4, 5, 6], 1),
-  left2main: P([7, 6, 5, 4], 1),
-  main2right: P([4, 5, 6], 1, !0),
-  right2main: P([7, 6, 5, 4], 1, !0)
+  main: k([0, 1, 2, 3], 6),
+  left: k([7, 8, 9, 10], 6),
+  right: k([7, 8, 9, 10], 6, !0),
+  main2left: k([4, 5, 6], 1),
+  left2main: k([7, 6, 5, 4], 1),
+  main2right: k([4, 5, 6], 1, !0),
+  right2main: k([7, 6, 5, 4], 1, !0)
 };
-function Ho(s, A) {
-  const t = Uo(s);
+function Ir(s, A) {
+  const t = br(s);
   for (const e of Object.values(t)) {
     const i = e.frames.filter((a) => a >= 0 && a < A);
     e.frames = i.length ? i : [0];
   }
   return t;
 }
-const X = (s, A) => Array.from({ length: A - s + 1 }, (t, e) => s + e), Go = {
+const K = (s, A) => Array.from({ length: A - s + 1 }, (t, e) => s + e), Mr = {
   // player00.anm -- 幻想封印队: Reimu flies upright, Yukari takes 低速.
-  reimu: { page: "reimu", ids: X(0, 10), kind: "stance11", scale: 1 },
+  reimu: { page: "reimu", ids: K(0, 10), kind: "stance11", scale: 1 },
   yukari: {
     page: "reimu",
-    ids: X(11, 21),
+    ids: K(11, 21),
     kind: "stance11",
-    portraitIds: X(22, 29),
+    portraitIds: K(22, 29),
     scale: 1
   },
   // player01.anm -- 新梦想队.
-  marisa: { page: "marisa", ids: X(0, 10), kind: "stance11", scale: 1 },
+  marisa: { page: "marisa", ids: K(0, 10), kind: "stance11", scale: 1 },
   alice: {
     page: "marisa",
-    ids: X(11, 21),
+    ids: K(11, 21),
     kind: "stance11",
-    portraitIds: X(22, 25),
+    portraitIds: K(22, 25),
     scale: 1
   },
   // player02.anm -- 完全飞翔队. Remilia's bank is 46x46 because of her wings.
-  sakuya: { page: "sakuya", ids: X(0, 10), kind: "stance11", scale: 1 },
+  sakuya: { page: "sakuya", ids: K(0, 10), kind: "stance11", scale: 1 },
   remilia: {
     page: "sakuya",
-    ids: X(11, 19),
+    ids: K(11, 19),
     kind: "stance9",
     portraitIds: [20],
     scale: 1
   },
   // player03.anm -- 六行定队. Both banks use the compact eight-frame shape.
-  youmu: { page: "youmu", ids: X(0, 7), kind: "stance8", scale: 1 },
-  yuyuko: { page: "youmu", ids: X(8, 15), kind: "stance8", scale: 1 }
+  youmu: { page: "youmu", ids: K(0, 7), kind: "stance8", scale: 1 },
+  yuyuko: { page: "youmu", ids: K(8, 15), kind: "stance8", scale: 1 }
 };
-async function iA(s, A) {
+async function oA(s, A) {
   const t = new Image();
-  t.crossOrigin = "anonymous", t.src = s, await new Promise((i, a) => {
+  t.crossOrigin = "anonymous", t.src = Y(s), await new Promise((i, a) => {
     t.onload = () => i(), t.onerror = () => a(new Error("Failed to load " + s));
   });
   const e = /* @__PURE__ */ new Map();
   for (const i of A) {
     const a = document.createElement("canvas");
     a.width = i.w, a.height = i.h, a.getContext("2d").drawImage(t, i.x, i.y, i.w, i.h, 0, 0, i.w, i.h);
-    const n = yt.from(a);
+    const n = Pt.from(a);
     n.source.style.scaleMode = "nearest", e.set(i.id, n);
   }
   return e;
 }
-async function Oo(s) {
+async function xr(s) {
   let A = 0;
-  for (const [t, e] of Object.entries(Go)) {
-    const i = Ro[e.page];
+  for (const [t, e] of Object.entries(Mr)) {
+    const i = yr[e.page];
     if (!i) continue;
     const a = new Map(i.frames.map((o) => [o.id, o]));
     try {
       const o = async (n, p, l, c, h) => {
-        const u = n.map((f) => a.get(f)).filter((f) => f !== void 0);
-        if (u.length === 0) return !1;
-        const m = await iA(i.atlas, u);
-        return m.size === 0 ? !1 : (u.forEach((f, g) => {
-          const d = m.get(f.id);
-          d && s.assets.register(p + ":frame" + String(g).padStart(4, "0"), d);
+        const d = n.map((m) => a.get(m)).filter((m) => m !== void 0);
+        if (d.length === 0) return !1;
+        const w = await oA(i.atlas, d);
+        return w.size === 0 ? !1 : (d.forEach((m, u) => {
+          const g = w.get(m.id);
+          g && s.assets.register(p + ":frame" + String(u).padStart(4, "0"), g);
         }), s.registerSheet(l, {
-          frameKey: (f) => p + ":frame" + String(f).padStart(4, "0"),
-          anim: Ho(c, u.length),
+          frameKey: (m) => p + ":frame" + String(m).padStart(4, "0"),
+          anim: Ir(c, d.length),
           scale: e.scale,
           // Only the member that actually flies leans into the stick.
           steer: h,
@@ -2502,7 +2502,7 @@ async function Oo(s) {
   }
   return A;
 }
-const dt = [
+const Mt = [
   {
     name: "player00",
     pages: ["player00_t0.png", "player00_t1.png"],
@@ -3023,17 +3023,17 @@ const dt = [
       // 21
     ]
   }
-], Lo = "/assets/th08/anm/";
-function Ti(s, A, t) {
+], Dr = "/assets/th08/anm/";
+function la(s, A, t) {
   return `th08:pshot:player${String(s).padStart(2, "0")}_t${A}:${t}`;
 }
-function Yo(s) {
+function Qr(s) {
   return [0, 1, 2, 3, 0, 0, 1, 1, 2, 2, 3, 3][Math.max(0, Math.min(11, s | 0))];
 }
-async function No(s) {
+async function Er(s) {
   let A = 0;
-  for (let t = 0; t < dt.length; t++) {
-    const e = dt[t];
+  for (let t = 0; t < Mt.length; t++) {
+    const e = Mt[t];
     if (e)
       for (let i = 0; i < e.pages.length; i++) {
         const a = e.rects.map((o, n) => ({ rect: o, sprite: n })).filter((o) => o.rect !== null && o.rect.tex === i).map((o) => ({
@@ -3045,10 +3045,10 @@ async function No(s) {
         }));
         if (a.length !== 0)
           try {
-            const o = await iA(Lo + e.pages[i], a);
+            const o = await oA(Dr + e.pages[i], a);
             for (const n of a) {
               const p = o.get(n.id);
-              p && (s.assets.register(Ti(t, i, n.id), p), A++);
+              p && (s.assets.register(la(t, i, n.id), p), A++);
             }
           } catch {
           }
@@ -3056,7 +3056,7 @@ async function No(s) {
   }
   return A;
 }
-function Jo(s) {
+function Cr(s) {
   const A = new DataView(s.buffer, s.byteOffset, s.byteLength), t = A.getUint16(2, !0), e = [];
   for (let i = 0; i < t; i++) {
     const a = [];
@@ -3088,12 +3088,12 @@ function Jo(s) {
   }
   return e;
 }
-function Xo(s, A) {
+function Sr(s, A) {
   let t = 0;
   for (; t < s.length && A >= s[t].powerGate; ) t++;
   return s[Math.min(t, s.length - 1)];
 }
-const w = {
+const f = {
   END_OF_SCRIPT: -1,
   DELETE: 1,
   STATIC: 2,
@@ -3182,7 +3182,7 @@ const w = {
   COLOR2_TIME: 86,
   ALPHA2_TIME: 87,
   RETURN_FROM_INTERRUPT: 89
-}, Ko = {
+}, Fr = {
   POS: 0,
   RGB1: 1,
   ALPHA1: 2,
@@ -3191,7 +3191,7 @@ const w = {
   RGB2: 5,
   ALPHA2: 6,
   LAST: 7
-}, J = {
+}, W = {
   LINEAR: 0,
   EASE_IN: 1,
   EASE_IN_CUBIC: 2,
@@ -3210,12 +3210,12 @@ const w = {
   F3: 10007,
   IC0: 10008,
   IC1: 10009
-}, { POS: q, RGB1: GA, ALPHA1: oA, ROTATE: OA, SCALE: rA, RGB2: LA, ALPHA2: YA, LAST: NA } = Ko, U = (s = 0, A = 0, t = 0) => ({ x: s, y: A, z: t }), O = (s = 0, A = 0) => ({ x: s, y: A }), L = (s = 255, A = 255, t = 255, e = 255) => ({ r: s, g: A, b: t, a: e }), zi = (s) => {
+}, { POS: $, RGB1: VA, ALPHA1: lA, ROTATE: WA, SCALE: cA, RGB2: KA, ALPHA2: XA, LAST: ZA } = Fr, z = (s = 0, A = 0, t = 0) => ({ x: s, y: A, z: t }), L = (s = 0, A = 0) => ({ x: s, y: A }), N = (s = 255, A = 255, t = 255, e = 255) => ({ r: s, g: A, b: t, a: e }), ca = (s) => {
   if (!Number.isFinite(s)) return 0;
   let A = s % (Math.PI * 2);
   return A > Math.PI ? A -= Math.PI * 2 : A < -Math.PI && (A += Math.PI * 2), A;
-}, JA = (s, A) => zi(s + A), XA = (s) => s << 16 >> 16, KA = (s) => s >>> 16;
-class hA {
+}, qA = (s, A) => ca(s + A), $A = (s) => s << 16 >> 16, At = (s) => s >>> 16;
+class rA {
   constructor(A) {
     /** The script this VM is running, as 4-byte words. Shared, never copied. */
     r(this, "script", null);
@@ -3226,30 +3226,30 @@ class hA {
     r(this, "timeInScript", 0);
     /** Non-zero while a `Wait` is still counting down. */
     r(this, "waitTimer", 0);
-    r(this, "pos", U());
+    r(this, "pos", z());
     /** The offset position, used when `PosMode` redirects writes away from `pos`. */
-    r(this, "pos2", U());
-    r(this, "posInitial", U());
-    r(this, "posFinal", U());
-    r(this, "rotation", U());
-    r(this, "angleVel", U());
-    r(this, "rotateInitial", U());
-    r(this, "rotateFinal", U());
-    r(this, "scale", O(1, 1));
-    r(this, "scaleGrowth", O());
-    r(this, "scaleInitial", O(1, 1));
-    r(this, "scaleFinal", O(1, 1));
-    r(this, "color1", L());
-    r(this, "color2", L());
-    r(this, "color1Initial", L());
-    r(this, "color1Final", L());
-    r(this, "color2Initial", L());
-    r(this, "color2Final", L());
-    r(this, "uvScrollPos", O());
-    r(this, "uvScrollVel", O());
+    r(this, "pos2", z());
+    r(this, "posInitial", z());
+    r(this, "posFinal", z());
+    r(this, "rotation", z());
+    r(this, "angleVel", z());
+    r(this, "rotateInitial", z());
+    r(this, "rotateFinal", z());
+    r(this, "scale", L(1, 1));
+    r(this, "scaleGrowth", L());
+    r(this, "scaleInitial", L(1, 1));
+    r(this, "scaleFinal", L(1, 1));
+    r(this, "color1", N());
+    r(this, "color2", N());
+    r(this, "color1Initial", N());
+    r(this, "color1Final", N());
+    r(this, "color2Initial", N());
+    r(this, "color2Final", N());
+    r(this, "uvScrollPos", L());
+    r(this, "uvScrollVel", L());
     /** Sprite cell the script last asked for, and the box it draws into. */
     r(this, "sprite", 0);
-    r(this, "spriteSize", O(32, 32));
+    r(this, "spriteSize", L(32, 32));
     /** Frame the sprite last changed, so a host can tell an idle cycle from a live one. */
     r(this, "timeOfLastSpriteSet", 0);
     r(this, "visible", !1);
@@ -3288,9 +3288,9 @@ class hA {
     r(this, "intVar", [0, 0, 0, 0]);
     r(this, "floatVar", [0, 0, 0, 0]);
     r(this, "counterVar", [0, 0]);
-    r(this, "interpCurrentTimers", new Array(NA).fill(0));
-    r(this, "interpEndTimers", new Array(NA).fill(0));
-    r(this, "interpModes", new Array(NA).fill(0));
+    r(this, "interpCurrentTimers", new Array(ZA).fill(0));
+    r(this, "interpEndTimers", new Array(ZA).fill(0));
+    r(this, "interpModes", new Array(ZA).fill(0));
     /**
      * Scratch for the rare instruction that writes an argument slot that is not a
      * register. The original pokes the shared script bytes directly, which would
@@ -3310,7 +3310,7 @@ class hA {
   }
   /** Put every field back the way `AnmVm::Initialize` leaves it. */
   reset() {
-    this.script = null, this.pc = -1, this.finished = !0, this.deleted = !1, this.timeInScript = 0, this.waitTimer = 0, this.pos = U(), this.pos2 = U(), this.posInitial = U(), this.posFinal = U(), this.rotation = U(), this.angleVel = U(), this.rotateInitial = U(), this.rotateFinal = U(), this.scale = O(1, 1), this.scaleGrowth = O(), this.scaleInitial = O(1, 1), this.scaleFinal = O(1, 1), this.color1 = L(), this.color2 = L(), this.color1Initial = L(), this.color1Final = L(), this.color2Initial = L(), this.color2Final = L(), this.uvScrollPos = O(), this.uvScrollVel = O(), this.sprite = 0, this.timeOfLastSpriteSet = 0, this.visible = !1, this.stopped = !1, this.usePosOffset = !1, this.blendMode = 0, this.anchor = 0, this.flip = 0, this.zWriteDisabled = 0, this.renderType = 0, this.flag15 = 0, this.updateRotation = !1, this.updateScale = !1, this.intVar = [0, 0, 0, 0], this.pendingInterrupt = 0, this.interruptReturnTime = 0, this.interruptReturnPc = -1, this.floatVar = [0, 0, 0, 0], this.counterVar = [0, 0], this.interpCurrentTimers.fill(0), this.interpEndTimers.fill(0), this.interpModes.fill(0), this.argScratch.clear();
+    this.script = null, this.pc = -1, this.finished = !0, this.deleted = !1, this.timeInScript = 0, this.waitTimer = 0, this.pos = z(), this.pos2 = z(), this.posInitial = z(), this.posFinal = z(), this.rotation = z(), this.angleVel = z(), this.rotateInitial = z(), this.rotateFinal = z(), this.scale = L(1, 1), this.scaleGrowth = L(), this.scaleInitial = L(1, 1), this.scaleFinal = L(1, 1), this.color1 = N(), this.color2 = N(), this.color1Initial = N(), this.color1Final = N(), this.color2Initial = N(), this.color2Final = N(), this.uvScrollPos = L(), this.uvScrollVel = L(), this.sprite = 0, this.timeOfLastSpriteSet = 0, this.visible = !1, this.stopped = !1, this.usePosOffset = !1, this.blendMode = 0, this.anchor = 0, this.flip = 0, this.zWriteDisabled = 0, this.renderType = 0, this.flag15 = 0, this.updateRotation = !1, this.updateScale = !1, this.intVar = [0, 0, 0, 0], this.pendingInterrupt = 0, this.interruptReturnTime = 0, this.interruptReturnPc = -1, this.floatVar = [0, 0, 0, 0], this.counterVar = [0, 0], this.interpCurrentTimers.fill(0), this.interpEndTimers.fill(0), this.interpModes.fill(0), this.argScratch.clear();
   }
   /**
    * Advance one frame. Returns true once the script is over, mirroring the
@@ -3342,9 +3342,9 @@ class hA {
     this.pendingInterrupt = 0;
     let e = -1, i = -1;
     for (let n = 0; n < A.length; ) {
-      const p = A[n], l = XA(p);
-      if (l === w.END_OF_SCRIPT || l === w.DELETE) break;
-      if (l === w.INTERRUPT_LABEL) {
+      const p = A[n], l = $A(p);
+      if (l === f.END_OF_SCRIPT || l === f.DELETE) break;
+      if (l === f.INTERRUPT_LABEL) {
         const c = A[n + 2] ?? 0;
         if (c === t) {
           e = n;
@@ -3352,14 +3352,14 @@ class hA {
         }
         c === -1 && i < 0 && (i = n);
       }
-      n += Math.max(2, KA(p) / 4);
+      n += Math.max(2, At(p) / 4);
     }
     const a = e >= 0 ? e : i;
     if (a < 0)
       return this.timeInScript--, !1;
     this.interruptReturnTime = this.timeInScript, this.interruptReturnPc = this.pc;
-    const o = a + Math.max(2, KA(A[a]) / 4);
-    return this.pc = o, this.timeInScript = XA(A[o + 1] ?? 0), this.visible = !0, this.stopped = !1, !0;
+    const o = a + Math.max(2, At(A[a]) / 4);
+    return this.pc = o, this.timeInScript = $A(A[o + 1] ?? 0), this.visible = !0, this.stopped = !1, !0;
   }
   /** Run every instruction whose time has come. */
   execute() {
@@ -3371,151 +3371,151 @@ class hA {
         this.finished = !0, this.pc = -1;
         return;
       }
-      const e = this.pc, i = XA(A[e]), a = KA(A[e]), o = XA(A[e + 1]), n = KA(A[e + 1]);
+      const e = this.pc, i = $A(A[e]), a = At(A[e]), o = $A(A[e + 1]), n = At(A[e + 1]);
       if (o > this.timeInScript) return;
-      const p = Math.max(2, a / 4), l = (d) => this.argWord(e, d), c = (d) => this.argFloat(e, d), h = (d) => n & 1 << d ? this.intVarById(l(d)) : this.argInt(e, d), u = (d) => n & 1 << d ? this.floatVarById(c(d)) : this.argFloat(e, d), m = (d) => {
-        const y = (b) => {
-          this.argScratch.set(e + 2 + d, b | 0);
+      const p = Math.max(2, a / 4), l = (g) => this.argWord(e, g), c = (g) => this.argFloat(e, g), h = (g) => n & 1 << g ? this.intVarById(l(g)) : this.argInt(e, g), d = (g) => n & 1 << g ? this.floatVarById(c(g)) : this.argFloat(e, g), w = (g) => {
+        const B = (y) => {
+          this.argScratch.set(e + 2 + g, y | 0);
         };
-        return n & 1 << d ? this.setIntById(l(d)) ?? y : y;
-      }, f = (d) => {
-        const y = (b) => {
-          this.argScratch.set(e + 2 + d, Vo(Z(b)));
+        return n & 1 << g ? this.setIntById(l(g)) ?? B : B;
+      }, m = (g) => {
+        const B = (y) => {
+          this.argScratch.set(e + 2 + g, Pr(AA(y)));
         };
-        return n & 1 << d ? this.setFloatById(c(d)) ?? y : y;
-      }, g = (d, y) => {
-        this.timeInScript = y, this.pc = d;
+        return n & 1 << g ? this.setFloatById(c(g)) ?? B : B;
+      }, u = (g, B) => {
+        this.timeInScript = B, this.pc = g;
       };
       switch (i) {
-        case w.END_OF_SCRIPT:
-        case w.DELETE:
+        case f.END_OF_SCRIPT:
+        case f.DELETE:
           this.visible = !1, this.deleted = !0, this.finished = !0, this.pc = -1;
           return;
-        case w.STATIC:
+        case f.STATIC:
           this.finished = !0, this.pc = -1;
           return;
-        case w.SPRITE:
+        case f.SPRITE:
           this.visible = !0, this.sprite = h(0), this.timeOfLastSpriteSet = this.timeInScript;
           break;
-        case w.SCALE:
-          this.scale.x = u(0), this.scale.y = u(1), this.updateScale = !0;
+        case f.SCALE:
+          this.scale.x = d(0), this.scale.y = d(1), this.updateScale = !0;
           break;
-        case w.ALPHA:
+        case f.ALPHA:
           this.color1.a = h(0);
           break;
-        case w.COLOR:
+        case f.COLOR:
           this.color1.r = h(0), this.color1.g = h(1), this.color1.b = h(2);
           break;
-        case w.ALPHA2:
+        case f.ALPHA2:
           this.color2.a = h(0);
           break;
-        case w.COLOR2:
+        case f.COLOR2:
           this.color2.r = h(0), this.color2.g = h(1), this.color2.b = h(2);
           break;
-        case w.JMP:
-          g(l(0) / 4, l(1));
+        case f.JMP:
+          u(l(0) / 4, l(1));
           continue;
-        case w.JMP_DEC: {
-          const d = m(0), y = h(0) - 1;
-          if (d && d(y), y > 0) {
-            this.setIntByIdRaw(l(0), y), g(l(1) / 4, l(2));
+        case f.JMP_DEC: {
+          const g = w(0), B = h(0) - 1;
+          if (g && g(B), B > 0) {
+            this.setIntByIdRaw(l(0), B), u(l(1) / 4, l(2));
             continue;
           }
           break;
         }
-        case w.FLIP_X:
+        case f.FLIP_X:
           this.flip ^= 1, this.scale.x *= -1, this.updateScale = !0;
           break;
-        case w.FLIP_Y:
+        case f.FLIP_Y:
           this.flip ^= 2, this.scale.y *= -1, this.updateScale = !0;
           break;
-        case w.POS_MODE:
+        case f.POS_MODE:
           this.usePosOffset = l(0) !== 0;
           break;
-        case w.ROTATE:
-          this.rotation.x = u(0), this.rotation.y = u(1), this.rotation.z = u(2), this.updateRotation = !0;
+        case f.ROTATE:
+          this.rotation.x = d(0), this.rotation.y = d(1), this.rotation.z = d(2), this.updateRotation = !0;
           break;
-        case w.ANGULAR_VELOCITY:
-          this.angleVel.x = u(0), this.angleVel.y = u(1), this.angleVel.z = u(2), this.updateRotation = !0;
+        case f.ANGULAR_VELOCITY:
+          this.angleVel.x = d(0), this.angleVel.y = d(1), this.angleVel.z = d(2), this.updateRotation = !0;
           break;
-        case w.SCALE_GROWTH:
-          this.scaleGrowth.x = u(0), this.scaleGrowth.y = u(1);
+        case f.SCALE_GROWTH:
+          this.scaleGrowth.x = d(0), this.scaleGrowth.y = d(1);
           break;
-        case w.SCALE_TIME_LINEAR:
-          this.interpCurrentTimers[rA] = 0, this.interpEndTimers[rA] = h(2), this.interpModes[rA] = J.LINEAR, this.scaleInitial = { ...this.scale }, this.scaleFinal.x = u(0), this.scaleFinal.y = u(1);
+        case f.SCALE_TIME_LINEAR:
+          this.interpCurrentTimers[cA] = 0, this.interpEndTimers[cA] = h(2), this.interpModes[cA] = W.LINEAR, this.scaleInitial = { ...this.scale }, this.scaleFinal.x = d(0), this.scaleFinal.y = d(1);
           break;
-        case w.ALPHA_TIME_LINEAR:
-          this.color1Initial.a = this.color1.a, this.color1Final.a = l(0), this.interpCurrentTimers[oA] = 0, this.interpEndTimers[oA] = h(1), this.interpModes[oA] = J.LINEAR;
+        case f.ALPHA_TIME_LINEAR:
+          this.color1Initial.a = this.color1.a, this.color1Final.a = l(0), this.interpCurrentTimers[lA] = 0, this.interpEndTimers[lA] = h(1), this.interpModes[lA] = W.LINEAR;
           break;
-        case w.ADDITIVE_BLEND_MODE:
+        case f.ADDITIVE_BLEND_MODE:
           this.blendMode = l(0) !== 0 ? 1 : 0;
           break;
-        case w.BLEND_MODE:
+        case f.BLEND_MODE:
           this.blendMode = l(0);
           break;
-        case w.POS: {
-          const d = this.usePosOffset ? this.pos2 : this.pos;
-          d.x = u(0), d.y = u(1), d.z = u(2);
+        case f.POS: {
+          const g = this.usePosOffset ? this.pos2 : this.pos;
+          g.x = d(0), g.y = d(1), g.z = d(2);
           break;
         }
-        case w.POS_TIME_DECEL2:
-          this.interpModes[q] = J.EASE_OUT_QUARTIC, this.posTime(u, h);
+        case f.POS_TIME_DECEL2:
+          this.interpModes[$] = W.EASE_OUT_QUARTIC, this.posTime(d, h);
           break;
-        case w.POS_TIME_DECEL:
-          this.interpModes[q] = J.EASE_OUT, this.posTime(u, h);
+        case f.POS_TIME_DECEL:
+          this.interpModes[$] = W.EASE_OUT, this.posTime(d, h);
           break;
-        case w.POS_TIME_LINEAR:
-          this.interpModes[q] = J.LINEAR, this.posTime(u, h);
+        case f.POS_TIME_LINEAR:
+          this.interpModes[$] = W.LINEAR, this.posTime(d, h);
           break;
-        case w.POS_TIME:
-          this.interpCurrentTimers[q] = 0, this.interpEndTimers[q] = h(0), this.interpModes[q] = l(1), this.posInitial = { ...this.usePosOffset ? this.pos2 : this.pos }, this.posFinal.x = u(2), this.posFinal.y = u(3), this.posFinal.z = u(4);
+        case f.POS_TIME:
+          this.interpCurrentTimers[$] = 0, this.interpEndTimers[$] = h(0), this.interpModes[$] = l(1), this.posInitial = { ...this.usePosOffset ? this.pos2 : this.pos }, this.posFinal.x = d(2), this.posFinal.y = d(3), this.posFinal.z = d(4);
           break;
-        case w.COLOR_TIME:
-          this.interpCurrentTimers[GA] = 0, this.interpEndTimers[GA] = h(0), this.interpModes[GA] = l(1), this.color1Initial.r = this.color1.r, this.color1Initial.g = this.color1.g, this.color1Initial.b = this.color1.b, this.color1Final.r = h(2), this.color1Final.g = h(3), this.color1Final.b = h(4);
+        case f.COLOR_TIME:
+          this.interpCurrentTimers[VA] = 0, this.interpEndTimers[VA] = h(0), this.interpModes[VA] = l(1), this.color1Initial.r = this.color1.r, this.color1Initial.g = this.color1.g, this.color1Initial.b = this.color1.b, this.color1Final.r = h(2), this.color1Final.g = h(3), this.color1Final.b = h(4);
           break;
-        case w.ALPHA_TIME:
-          this.interpCurrentTimers[oA] = 0, this.interpEndTimers[oA] = h(0), this.interpModes[oA] = l(1), this.color1Initial.a = this.color1.a, this.color1Final.a = h(2);
+        case f.ALPHA_TIME:
+          this.interpCurrentTimers[lA] = 0, this.interpEndTimers[lA] = h(0), this.interpModes[lA] = l(1), this.color1Initial.a = this.color1.a, this.color1Final.a = h(2);
           break;
-        case w.COLOR2_TIME:
-          this.interpCurrentTimers[LA] = 0, this.interpEndTimers[LA] = h(0), this.interpModes[LA] = l(1), this.color2Initial.r = this.color2.r, this.color2Initial.g = this.color2.g, this.color2Initial.b = this.color2.b, this.color2Final.r = h(2), this.color2Final.g = h(3), this.color2Final.b = h(4);
+        case f.COLOR2_TIME:
+          this.interpCurrentTimers[KA] = 0, this.interpEndTimers[KA] = h(0), this.interpModes[KA] = l(1), this.color2Initial.r = this.color2.r, this.color2Initial.g = this.color2.g, this.color2Initial.b = this.color2.b, this.color2Final.r = h(2), this.color2Final.g = h(3), this.color2Final.b = h(4);
           break;
-        case w.ALPHA2_TIME:
-          this.interpCurrentTimers[YA] = 0, this.interpEndTimers[YA] = h(0), this.interpModes[YA] = l(1), this.color2Initial.a = this.color2.a, this.color2Final.a = h(2);
+        case f.ALPHA2_TIME:
+          this.interpCurrentTimers[XA] = 0, this.interpEndTimers[XA] = h(0), this.interpModes[XA] = l(1), this.color2Initial.a = this.color2.a, this.color2Final.a = h(2);
           break;
-        case w.ROTATE_TIME:
-          this.interpCurrentTimers[OA] = 0, this.interpEndTimers[OA] = h(0), this.interpModes[OA] = l(1), this.rotateInitial = { ...this.rotation }, this.rotateFinal.x = u(2), this.rotateFinal.y = u(3), this.rotateFinal.z = u(4), this.updateRotation = !0;
+        case f.ROTATE_TIME:
+          this.interpCurrentTimers[WA] = 0, this.interpEndTimers[WA] = h(0), this.interpModes[WA] = l(1), this.rotateInitial = { ...this.rotation }, this.rotateFinal.x = d(2), this.rotateFinal.y = d(3), this.rotateFinal.z = d(4), this.updateRotation = !0;
           break;
-        case w.SCALE_TIME:
-          this.interpCurrentTimers[rA] = 0, this.interpEndTimers[rA] = h(0), this.interpModes[rA] = l(1), this.scaleInitial = { ...this.scale }, this.scaleFinal.x = u(2), this.scaleFinal.y = u(3), this.updateScale = !0;
+        case f.SCALE_TIME:
+          this.interpCurrentTimers[cA] = 0, this.interpEndTimers[cA] = h(0), this.interpModes[cA] = l(1), this.scaleInitial = { ...this.scale }, this.scaleFinal.x = d(2), this.scaleFinal.y = d(3), this.updateScale = !0;
           break;
-        case w.VISIBLE:
+        case f.VISIBLE:
           this.visible = l(0) !== 0;
           break;
-        case w.ANCHOR_TOP_LEFT:
+        case f.ANCHOR_TOP_LEFT:
           this.anchor = 3;
           break;
-        case w.INS25:
+        case f.INS25:
           this.renderType = l(0);
           break;
-        case w.INS31:
+        case f.INS31:
           this.flag15 = l(0);
           break;
-        case w.Z_WRITE_DISABLE:
+        case f.Z_WRITE_DISABLE:
           this.zWriteDisabled = l(0);
           break;
-        case w.ADD_U:
-          this.uvScrollPos.x = WA(this.uvScrollPos.x + u(0));
+        case f.ADD_U:
+          this.uvScrollPos.x = tt(this.uvScrollPos.x + d(0));
           break;
-        case w.ADD_V:
-          this.uvScrollPos.y = WA(this.uvScrollPos.y + u(0));
+        case f.ADD_V:
+          this.uvScrollPos.y = tt(this.uvScrollPos.y + d(0));
           break;
-        case w.U_SCROLL:
-          this.uvScrollVel.x = u(0);
+        case f.U_SCROLL:
+          this.uvScrollVel.x = d(0);
           break;
-        case w.V_SCROLL:
-          this.uvScrollVel.y = u(0);
+        case f.V_SCROLL:
+          this.uvScrollVel.y = d(0);
           break;
-        case w.WAIT: {
+        case f.WAIT: {
           if (this.waitTimer === 0 ? this.waitTimer = h(0) : this.waitTimer--, this.waitTimer <= 0) {
             this.waitTimer = 0;
             break;
@@ -3526,9 +3526,9 @@ class hA {
         // `:383-390` `StopHide` is `Stop` with the sprite put away first, and
         // `Stop` only parks the VM while no interrupt is waiting; with one
         // pending it falls straight into the interrupt handler.
-        case w.STOP_HIDE:
-        case w.STOP:
-          if (i === w.STOP_HIDE && (this.visible = !1), this.pendingInterrupt === 0) {
+        case f.STOP_HIDE:
+        case f.STOP:
+          if (i === f.STOP_HIDE && (this.visible = !1), this.pendingInterrupt === 0) {
             this.stopped = !0, this.pc = e;
             return;
           }
@@ -3537,228 +3537,228 @@ class hA {
             return;
           }
           continue;
-        case w.RETURN_FROM_INTERRUPT:
+        case f.RETURN_FROM_INTERRUPT:
           this.timeInScript = this.interruptReturnTime, this.pc = this.interruptReturnPc;
           continue;
-        case w.I_SET: {
-          const d = m(0);
-          d && d(h(1));
+        case f.I_SET: {
+          const g = w(0);
+          g && g(h(1));
           break;
         }
-        case w.F_SET: {
-          const d = f(0);
-          d && d(u(1));
+        case f.F_SET: {
+          const g = m(0);
+          g && g(d(1));
           break;
         }
-        case w.I_SET_ADD: {
-          const d = m(0);
-          d && d(h(1) + h(2));
+        case f.I_SET_ADD: {
+          const g = w(0);
+          g && g(h(1) + h(2));
           break;
         }
-        case w.F_SET_ADD: {
-          const d = f(0);
-          d && d(u(1) + u(2));
+        case f.F_SET_ADD: {
+          const g = m(0);
+          g && g(d(1) + d(2));
           break;
         }
-        case w.I_SET_SUB: {
-          const d = m(0);
-          d && d(h(1) - h(2));
+        case f.I_SET_SUB: {
+          const g = w(0);
+          g && g(h(1) - h(2));
           break;
         }
-        case w.F_SET_SUB: {
-          const d = f(0);
-          d && d(u(1) - u(2));
+        case f.F_SET_SUB: {
+          const g = m(0);
+          g && g(d(1) - d(2));
           break;
         }
-        case w.I_SET_MUL: {
-          const d = m(0);
-          d && d(h(1) * h(2));
+        case f.I_SET_MUL: {
+          const g = w(0);
+          g && g(h(1) * h(2));
           break;
         }
-        case w.F_SET_MUL: {
-          const d = f(0);
-          d && d(u(1) * u(2));
+        case f.F_SET_MUL: {
+          const g = m(0);
+          g && g(d(1) * d(2));
           break;
         }
-        case w.I_SET_DIV: {
-          const d = m(0);
-          d && d(Math.trunc(h(1) / h(2)));
+        case f.I_SET_DIV: {
+          const g = w(0);
+          g && g(Math.trunc(h(1) / h(2)));
           break;
         }
-        case w.F_SET_DIV: {
-          const d = f(0);
-          d && d(u(1) / u(2));
+        case f.F_SET_DIV: {
+          const g = m(0);
+          g && g(d(1) / d(2));
           break;
         }
-        case w.I_SET_MOD: {
-          const d = m(0);
-          d && d(h(1) % h(2));
+        case f.I_SET_MOD: {
+          const g = w(0);
+          g && g(h(1) % h(2));
           break;
         }
-        case w.F_SET_MOD: {
-          const d = f(0);
-          d && d(u(1) % u(2));
+        case f.F_SET_MOD: {
+          const g = m(0);
+          g && g(d(1) % d(2));
           break;
         }
-        case w.I_ADD: {
-          const d = m(0);
-          d && d(h(0) + h(1));
+        case f.I_ADD: {
+          const g = w(0);
+          g && g(h(0) + h(1));
           break;
         }
-        case w.F_ADD: {
-          const d = f(0);
-          d && d(u(0) + u(1));
+        case f.F_ADD: {
+          const g = m(0);
+          g && g(d(0) + d(1));
           break;
         }
-        case w.I_SUB: {
-          const d = m(0);
-          d && d(h(0) - h(1));
+        case f.I_SUB: {
+          const g = w(0);
+          g && g(h(0) - h(1));
           break;
         }
-        case w.F_SUB: {
-          const d = f(0);
-          d && d(u(0) - u(1));
+        case f.F_SUB: {
+          const g = m(0);
+          g && g(d(0) - d(1));
           break;
         }
-        case w.I_MUL: {
-          const d = m(0);
-          d && d(h(0) * h(1));
+        case f.I_MUL: {
+          const g = w(0);
+          g && g(h(0) * h(1));
           break;
         }
-        case w.F_MUL: {
-          const d = f(0);
-          d && d(u(0) * u(1));
+        case f.F_MUL: {
+          const g = m(0);
+          g && g(d(0) * d(1));
           break;
         }
-        case w.I_DIV: {
-          const d = m(0);
-          d && d(Math.trunc(h(0) / h(1)));
+        case f.I_DIV: {
+          const g = w(0);
+          g && g(Math.trunc(h(0) / h(1)));
           break;
         }
-        case w.F_DIV: {
-          const d = f(0);
-          d && d(u(0) / u(1));
+        case f.F_DIV: {
+          const g = m(0);
+          g && g(d(0) / d(1));
           break;
         }
-        case w.I_MOD: {
-          const d = m(0);
-          d && d(h(0) % h(1));
+        case f.I_MOD: {
+          const g = w(0);
+          g && g(h(0) % h(1));
           break;
         }
-        case w.F_MOD: {
-          const d = f(0);
-          d && d(u(0) % u(1));
+        case f.F_MOD: {
+          const g = m(0);
+          g && g(d(0) % d(1));
           break;
         }
-        case w.I_SET_RAND: {
-          const d = m(0);
-          d && d(this.rng.randomU32InRange(h(1)));
+        case f.I_SET_RAND: {
+          const g = w(0);
+          g && g(this.rng.randomU32InRange(h(1)));
           break;
         }
-        case w.F_SET_RAND: {
-          const d = f(0);
-          d && d(this.rng.randomF32InRange(u(1)));
+        case f.F_SET_RAND: {
+          const g = m(0);
+          g && g(this.rng.randomF32InRange(d(1)));
           break;
         }
-        case w.F_SIN: {
-          const d = f(0);
-          d && d(Math.sin(u(1)));
+        case f.F_SIN: {
+          const g = m(0);
+          g && g(Math.sin(d(1)));
           break;
         }
-        case w.F_COS: {
-          const d = f(0);
-          d && d(Math.cos(u(1)));
+        case f.F_COS: {
+          const g = m(0);
+          g && g(Math.cos(d(1)));
           break;
         }
-        case w.F_TAN: {
-          const d = f(0);
-          d && d(Math.tan(u(1)));
+        case f.F_TAN: {
+          const g = m(0);
+          g && g(Math.tan(d(1)));
           break;
         }
-        case w.F_ACOS: {
-          const d = f(0);
-          d && d(Math.acos(u(1)));
+        case f.F_ACOS: {
+          const g = m(0);
+          g && g(Math.acos(d(1)));
           break;
         }
-        case w.F_ATAN: {
-          const d = f(0);
-          d && d(Math.atan(u(1)));
+        case f.F_ATAN: {
+          const g = m(0);
+          g && g(Math.atan(d(1)));
           break;
         }
-        case w.NORMALIZE_ANGLE: {
-          const d = f(0);
-          d && d(zi(u(0)));
+        case f.NORMALIZE_ANGLE: {
+          const g = m(0);
+          g && g(ca(d(0)));
           break;
         }
-        case w.I_JMP_EQ:
+        case f.I_JMP_EQ:
           if (h(0) === h(1)) {
-            g(l(2) / 4, l(3));
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.F_JMP_EQ:
-          if (u(0) === u(1)) {
-            g(l(2) / 4, l(3));
+        case f.F_JMP_EQ:
+          if (d(0) === d(1)) {
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.I_JMP_NEQ:
+        case f.I_JMP_NEQ:
           if (h(0) !== h(1)) {
-            g(l(2) / 4, l(3));
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.F_JMP_NEQ:
-          if (u(0) !== u(1)) {
-            g(l(2) / 4, l(3));
+        case f.F_JMP_NEQ:
+          if (d(0) !== d(1)) {
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.I_JMP_LESS:
+        case f.I_JMP_LESS:
           if (h(0) < h(1)) {
-            g(l(2) / 4, l(3));
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.F_JMP_LESS:
-          if (u(0) < u(1)) {
-            g(l(2) / 4, l(3));
+        case f.F_JMP_LESS:
+          if (d(0) < d(1)) {
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.I_JMP_LESS_OR_EQ:
+        case f.I_JMP_LESS_OR_EQ:
           if (h(0) <= h(1)) {
-            g(l(2) / 4, l(3));
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.F_JMP_LESS_OR_EQ:
-          if (u(0) <= u(1)) {
-            g(l(2) / 4, l(3));
+        case f.F_JMP_LESS_OR_EQ:
+          if (d(0) <= d(1)) {
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.I_JMP_GREATER:
+        case f.I_JMP_GREATER:
           if (h(0) > h(1)) {
-            g(l(2) / 4, l(3));
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.F_JMP_GREATER:
-          if (u(0) > u(1)) {
-            g(l(2) / 4, l(3));
+        case f.F_JMP_GREATER:
+          if (d(0) > d(1)) {
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.I_JMP_GREATER_OR_EQ:
+        case f.I_JMP_GREATER_OR_EQ:
           if (h(0) >= h(1)) {
-            g(l(2) / 4, l(3));
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
-        case w.F_JMP_GREATER_OR_EQ:
-          if (u(0) >= u(1)) {
-            g(l(2) / 4, l(3));
+        case f.F_JMP_GREATER_OR_EQ:
+          if (d(0) >= d(1)) {
+            u(l(2) / 4, l(3));
             continue;
           }
           break;
@@ -3770,57 +3770,57 @@ class hA {
   }
   /** `PosTimeLinear/Decel/Decel2` all share this body. */
   posTime(A, t) {
-    this.posInitial = { ...this.usePosOffset ? this.pos2 : this.pos }, this.posFinal.x = A(0), this.posFinal.y = A(1), this.posFinal.z = A(2), this.interpEndTimers[q] = t(3), this.interpCurrentTimers[q] = 0;
+    this.posInitial = { ...this.usePosOffset ? this.pos2 : this.pos }, this.posFinal.x = A(0), this.posFinal.y = A(1), this.posFinal.z = A(2), this.interpEndTimers[$] = t(3), this.interpCurrentTimers[$] = 0;
   }
   /** The per-frame easing pass that runs after the script, exactly as the original orders it. */
   advanceTail(A) {
     for (const t of ["x", "y", "z"]) {
       const e = this.angleVel[t];
-      e !== 0 && (this.rotation[t] = JA(this.rotation[t], A * e), this.updateRotation = !0);
+      e !== 0 && (this.rotation[t] = qA(this.rotation[t], A * e), this.updateRotation = !0);
     }
-    for (let t = 0; t < NA; t++) {
+    for (let t = 0; t < ZA; t++) {
       const e = this.interpEndTimers[t];
       if (e <= 0) continue;
       this.interpCurrentTimers[t]++;
       let i = !1, a = this.interpCurrentTimers[t] / e;
       this.interpCurrentTimers[t] >= e && (a = 1, this.interpEndTimers[t] = 0, i = !0);
-      const o = qo(a, this.interpModes[t]);
+      const o = kr(a, this.interpModes[t]);
       this.applyInterp(t, o), i && (this.interpCurrentTimers[t] = 0);
     }
-    this.scaleGrowth.y !== 0 && (this.scale.y += A * this.scaleGrowth.y, this.updateScale = !0), this.scaleGrowth.x !== 0 && (this.scale.x += A * this.scaleGrowth.x, this.updateScale = !0, this.updateRotation = !0), this.uvScrollPos.x = WA(this.uvScrollPos.x + this.uvScrollVel.x), this.uvScrollPos.y = WA(this.uvScrollPos.y + this.uvScrollVel.y);
+    this.scaleGrowth.y !== 0 && (this.scale.y += A * this.scaleGrowth.y, this.updateScale = !0), this.scaleGrowth.x !== 0 && (this.scale.x += A * this.scaleGrowth.x, this.updateScale = !0, this.updateRotation = !0), this.uvScrollPos.x = tt(this.uvScrollPos.x + this.uvScrollVel.x), this.uvScrollPos.y = tt(this.uvScrollPos.y + this.uvScrollVel.y);
   }
   applyInterp(A, t) {
     switch (A) {
-      case q: {
+      case $: {
         const e = this.usePosOffset ? this.pos2 : this.pos;
         e.x = t * (this.posFinal.x - this.posInitial.x) + this.posInitial.x, e.y = t * (this.posFinal.y - this.posInitial.y) + this.posInitial.y, e.z = t * (this.posFinal.z - this.posInitial.z) + this.posInitial.z;
         break;
       }
-      case GA:
+      case VA:
         this.color1.r = t * (this.color1Final.r - this.color1Initial.r) + this.color1Initial.r, this.color1.g = t * (this.color1Final.g - this.color1Initial.g) + this.color1Initial.g, this.color1.b = t * (this.color1Final.b - this.color1Initial.b) + this.color1Initial.b;
         break;
-      case oA:
+      case lA:
         this.color1.a = t * (this.color1Final.a - this.color1Initial.a) + this.color1Initial.a;
         break;
-      case LA:
+      case KA:
         this.color2.r = t * (this.color2Final.r - this.color2Initial.r) + this.color2Initial.r, this.color2.g = t * (this.color2Final.g - this.color2Initial.g) + this.color2Initial.g, this.color2.b = t * (this.color2Final.b - this.color2Initial.b) + this.color2Initial.b;
         break;
-      case YA:
+      case XA:
         this.color2.a = t * (this.color2Final.a - this.color2Initial.a) + this.color2Initial.a;
         break;
-      case OA:
-        this.rotation.x = JA(
+      case WA:
+        this.rotation.x = qA(
           (this.rotateFinal.x - this.rotateInitial.x) * t,
           this.rotateInitial.x
-        ), this.rotation.y = JA(
+        ), this.rotation.y = qA(
           (this.rotateFinal.y - this.rotateInitial.y) * t,
           this.rotateInitial.y
-        ), this.rotation.z = JA(
+        ), this.rotation.z = qA(
           (this.rotateFinal.z - this.rotateInitial.z) * t,
           this.rotateInitial.z
         ), this.updateRotation = !0;
         break;
-      case rA:
+      case cA:
         this.scale.x = t * (this.scaleFinal.x - this.scaleInitial.x) + this.scaleInitial.x, this.scale.y = t * (this.scaleFinal.y - this.scaleInitial.y) + this.scaleInitial.y, this.updateScale = !0;
         break;
     }
@@ -3839,7 +3839,7 @@ class hA {
     return this.argWord(A, t) | 0;
   }
   argFloat(A, t) {
-    return Wo(this.argWord(A, t));
+    return _r(this.argWord(A, t));
   }
   intVarById(A) {
     switch (A) {
@@ -3913,19 +3913,19 @@ class hA {
         };
       case I.F0:
         return (t) => {
-          this.floatVar[0] = Z(t);
+          this.floatVar[0] = AA(t);
         };
       case I.F1:
         return (t) => {
-          this.floatVar[1] = Z(t);
+          this.floatVar[1] = AA(t);
         };
       case I.F2:
         return (t) => {
-          this.floatVar[2] = Z(t);
+          this.floatVar[2] = AA(t);
         };
       case I.F3:
         return (t) => {
-          this.floatVar[3] = Z(t);
+          this.floatVar[3] = AA(t);
         };
       case I.IC0:
         return (t) => {
@@ -3943,19 +3943,19 @@ class hA {
     switch (A) {
       case I.F0:
         return (t) => {
-          this.floatVar[0] = Z(t);
+          this.floatVar[0] = AA(t);
         };
       case I.F1:
         return (t) => {
-          this.floatVar[1] = Z(t);
+          this.floatVar[1] = AA(t);
         };
       case I.F2:
         return (t) => {
-          this.floatVar[2] = Z(t);
+          this.floatVar[2] = AA(t);
         };
       case I.F3:
         return (t) => {
-          this.floatVar[3] = Z(t);
+          this.floatVar[3] = AA(t);
         };
       case I.I0:
         return (t) => {
@@ -3991,54 +3991,54 @@ class hA {
     e && e(t);
   }
 }
-const WA = (s) => {
+const tt = (s) => {
   let A = s;
   return A >= 1 ? A -= 1 : A < 0 && (A += 1), A;
-}, jA = new Float32Array(1), Ri = new Int32Array(jA.buffer), Z = (s) => (jA[0] = s, jA[0]), Wo = (s) => (Ri[0] = s | 0, jA[0]), Vo = (s) => (jA[0] = s, Ri[0]), qo = (s, A) => {
+}, GA = new Float32Array(1), ha = new Int32Array(GA.buffer), AA = (s) => (GA[0] = s, GA[0]), _r = (s) => (ha[0] = s | 0, GA[0]), Pr = (s) => (GA[0] = s, ha[0]), kr = (s, A) => {
   switch (A) {
-    case J.EASE_IN:
+    case W.EASE_IN:
       return s * s;
-    case J.EASE_IN_CUBIC:
+    case W.EASE_IN_CUBIC:
       return s * s * s;
-    case J.EASE_IN_QUARTIC: {
+    case W.EASE_IN_QUARTIC: {
       const t = s * s;
       return t * t;
     }
-    case J.EASE_OUT: {
+    case W.EASE_OUT: {
       const t = 1 - s;
       return 1 - t * t;
     }
-    case J.EASE_OUT_CUBIC: {
+    case W.EASE_OUT_CUBIC: {
       const t = 1 - s;
       return 1 - t * t * t;
     }
-    case J.EASE_OUT_QUARTIC: {
+    case W.EASE_OUT_QUARTIC: {
       const t = 1 - s, e = t * t;
       return 1 - e * e;
     }
     default:
       return s;
   }
-}, dA = (s) => {
+}, nA = (s) => {
   const A = atob(s), t = new Uint8Array(A.length);
   for (let i = 0; i < A.length; i++) t[i] = A.charCodeAt(i);
   const e = new Int32Array(Math.ceil(t.length / 4));
   return new Uint8Array(e.buffer).set(t), e;
-}, Ce = 128, eA = 0, IA = 1, ae = 2;
-function Zo(s) {
+}, We = 128, iA = 0, DA = 1, xe = 2;
+function vr(s) {
   return s.shotWindow < 0 || s.cardRunning && s.cardPhase === 4 || s.frameStop && (s.shotType === 1 || s.shotType === 6 || s.shotType === 7) ? !1 : s.shotWindowAdvanced;
 }
-function $o(s) {
+function jr(s) {
   const A = s.focusByte === 0 ? s.primary : s.secondary;
   if (A.length === 0) return null;
   if (s.cardRunning && (s.shotType === 2 && (s.cardPhase & 1) !== 0 || s.shotType === 9) && s.cardFrames >= 60) {
     const t = (s.cardPhase & 2) !== 0 ? 7 : 6;
     return A[Math.min(t, A.length - 1)];
   }
-  return Xo(A, s.power);
+  return Sr(A, s.power);
 }
-const _e = Object.freeze({ x: -999, y: -999, valid: !1 });
-function Ar(s, A, t) {
+const Ke = Object.freeze({ x: -999, y: -999, valid: !1 });
+function Tr(s, A, t) {
   const e = { ...s };
   for (const i of t) {
     if (i.boss) {
@@ -4050,17 +4050,17 @@ function Ar(s, A, t) {
   }
   return e;
 }
-function ke(s) {
+function Xe(s) {
   const A = Math.PI * 2;
   let t = s % A;
   return t > Math.PI ? t -= A : t < -Math.PI && (t += A), t;
 }
-function Fe(s, A) {
+function Ze(s, A) {
   return Math.atan2(s, A);
 }
-function Pe(s) {
+function qe(s) {
   return {
-    state: eA,
+    state: iA,
     x: 0,
     y: 0,
     vx: 0,
@@ -4082,10 +4082,10 @@ function Pe(s) {
     renderCb: 0,
     collisionCb: 0,
     entry: null,
-    vm: new hA(s)
+    vm: new rA(s)
   };
 }
-class tr {
+class Ur {
   constructor(A) {
     r(this, "shots");
     /** Entries dropped this frame because their fire callback is not modelled. */
@@ -4093,19 +4093,19 @@ class tr {
     r(this, "windowSeen", -1);
     /** Kept so {@link clear} can rebuild slots without a fresh VM per shot. */
     r(this, "rng");
-    this.rng = A, this.shots = Array.from({ length: Ce }, () => Pe(A));
+    this.rng = A, this.shots = Array.from({ length: We }, () => qe(A));
   }
   /** Put every slot back, the way a stage reset does. */
   clear() {
     for (const A of this.shots) {
       const t = A.vm;
-      Object.assign(A, Pe(this.rng), { vm: t }), t.reset();
+      Object.assign(A, qe(this.rng), { vm: t }), t.reset();
     }
     this.skipped = 0, this.windowSeen = -1;
   }
   /** The live slots, in `FUN_004512f0`'s own slot order. */
   live() {
-    return this.shots.filter((A) => A.state !== eA);
+    return this.shots.filter((A) => A.state !== iA);
   }
   /**
    * `FUN_00451500:3303-3322` plus `FUN_00450f60`. Returns the number of shots
@@ -4113,13 +4113,13 @@ class tr {
    */
   fire(A) {
     const t = A.shotWindow >= 0 && A.shotWindow !== this.windowSeen;
-    if (this.windowSeen = A.shotWindow, !Zo({ ...A, shotWindowAdvanced: t })) return 0;
-    const e = $o(A);
+    if (this.windowSeen = A.shotWindow, !vr({ ...A, shotWindowAdvanced: t })) return 0;
+    const e = jr(A);
     if (!e || e.entries.length === 0) return 0;
     let i = 0, a = 0;
     this.skipped = 0;
-    for (let o = 0; o < Ce; o++)
-      if (this.shots[o].state === eA)
+    for (let o = 0; o < We; o++)
+      if (this.shots[o].state === iA)
         for (; ; ) {
           const n = e.entries[a];
           if (!n) return i;
@@ -4140,8 +4140,8 @@ class tr {
       case 1: {
         if (!a) return !1;
         if (this.initSlot(A, t, e), e.homingTarget) {
-          const o = ke(
-            Fe(e.homingTarget.y - A.y, e.homingTarget.x - A.x) + t.angle + Math.PI / 2
+          const o = Xe(
+            Ze(e.homingTarget.y - A.y, e.homingTarget.x - A.x) + t.angle + Math.PI / 2
           );
           A.speed = t.speed * 1.5, A.angle = o, A.vx = Math.cos(o) * A.speed, A.vy = Math.sin(o) * A.speed;
         }
@@ -4159,7 +4159,7 @@ class tr {
       case 8: {
         if (e.frameStop || !a) return !1;
         this.initSlot(A, t, e);
-        const o = ke(e.bladeAngle + t.angle);
+        const o = Xe(e.bladeAngle + t.angle);
         return A.angle = o, A.vx = Math.cos(o) * t.speed, A.vy = Math.sin(o) * t.speed, !0;
       }
       case 4:
@@ -4179,7 +4179,7 @@ class tr {
       const a = e.optionPositions()[t.option - 1];
       A.x = a ? a.x : e.aimX, A.y = a ? a.y : e.aimY;
     }
-    A.x += t.dx, A.y += t.dy, A.hitboxWidth = t.field0c, A.hitboxHeight = t.field10, A.angle = t.angle, A.speed = t.speed, A.vx = Math.cos(t.angle) * t.speed, A.vy = Math.sin(t.angle) * t.speed, A.timer = 0, A.timerSub = 0, A.timerAdvanced = !0, A.focusedAtSpawn = e.focusByte, A.damage = t.field1c, A.type = t.field22, A.animationIndex = t.anmScript, t.sound >= 0 && ((i = e.onSound) == null || i.call(e, t.sound, e.aimX)), this.attachScript(A, t.anmScript + 10, e), A.youkaiMark = e.extremelyYoukai && t.youkaiBoost > 0 ? 1 : 0, A.youkaiItemGate = t.youkaiBoost, A.updateCb = t.renderCb, A.renderCb = t.timerCb, A.collisionCb = t.collisionCb, A.entry = t, A.state = IA;
+    A.x += t.dx, A.y += t.dy, A.hitboxWidth = t.field0c, A.hitboxHeight = t.field10, A.angle = t.angle, A.speed = t.speed, A.vx = Math.cos(t.angle) * t.speed, A.vy = Math.sin(t.angle) * t.speed, A.timer = 0, A.timerSub = 0, A.timerAdvanced = !0, A.focusedAtSpawn = e.focusByte, A.damage = t.field1c, A.type = t.field22, A.animationIndex = t.anmScript, t.sound >= 0 && ((i = e.onSound) == null || i.call(e, t.sound, e.aimX)), this.attachScript(A, t.anmScript + 10, e), A.youkaiMark = e.extremelyYoukai && t.youkaiBoost > 0 ? 1 : 0, A.youkaiItemGate = t.youkaiBoost, A.updateCb = t.renderCb, A.renderCb = t.timerCb, A.collisionCb = t.collisionCb, A.entry = t, A.state = DA;
   }
   /**
    * Run the shot's own animation. A script the pack does not have makes the VM
@@ -4205,17 +4205,17 @@ class tr {
    */
   update(A) {
     for (const t of this.shots)
-      if (t.state !== eA) {
+      if (t.state !== iA) {
         if (this.stepBehaviour(t, A, t.timerAdvanced)) {
-          t.state = eA;
+          t.state = iA;
           continue;
         }
         if (t.x += A.timeScale * t.vx, t.y += A.timeScale * t.vy, t.type !== 4 && t.type !== 5 && !this.withinPlayfield(t, A)) {
-          t.state = eA;
+          t.state = iA;
           continue;
         }
         if (t.vm.step(A.timeScale)) {
-          t.state = eA;
+          t.state = iA;
           continue;
         }
         this.tickTimer(t, A.timeScale);
@@ -4233,9 +4233,9 @@ class tr {
    * a charm that turns into a spark does not snap upright first.
    */
   markHit(A, t) {
-    if (A.state !== IA || A.type === 4 || A.type === 5 || A.type === 6) return !1;
+    if (A.state !== DA || A.type === 4 || A.type === 5 || A.type === 6) return !1;
     const e = A.vm.rotation.z;
-    return this.attachScript(A, A.animationIndex + 11, t), A.vm.rotation.z = e, A.type !== 3 && (A.vx /= 8, A.vy /= 8), A.state = ae, !0;
+    return this.attachScript(A, A.animationIndex + 11, t), A.vm.rotation.z = e, A.type !== 3 && (A.vx /= 8, A.vy /= 8), A.state = xe, !0;
   }
   /** `ZunTimer::Tick` (`Supervisor.hpp:384-389`) against the frame multiplier. */
   tickTimer(A, t) {
@@ -4250,7 +4250,7 @@ class tr {
    * retail's "this shot is done".
    */
   stepBehaviour(A, t, e) {
-    if (A.state !== IA) return !1;
+    if (A.state !== DA) return !1;
     switch (A.updateCb) {
       case 1:
         return this.steerToTail(A, t, e), !1;
@@ -4278,7 +4278,7 @@ class tr {
       const i = A.vx, a = A.vy, o = Math.sqrt(i * i + a * a) || 1;
       A.vx = i * A.speed / o, A.vy = a * A.speed / o;
     }
-    A.angle = Fe(A.vy, A.vx);
+    A.angle = Ze(A.vy, A.vx);
   }
   /** `IsWithinPlayfield`, with the sprite's own half size added (`:3200-3208`). */
   withinPlayfield(A, t) {
@@ -4286,25 +4286,25 @@ class tr {
     return A.x + i >= o && A.x - i <= n && A.y + a >= p && A.y - a <= l;
   }
 }
-async function oe(s) {
+async function De(s) {
   try {
-    const A = await ho.load(s);
+    const A = await Ko.load(Y(s));
     return A.source.style.scaleMode = "nearest", A;
   } catch {
     return null;
   }
 }
-async function Wt(s, A) {
-  const t = /* @__PURE__ */ new Map(), e = await oe(s);
+async function ce(s, A) {
+  const t = /* @__PURE__ */ new Map(), e = await De(s);
   if (!e) return t;
   for (const i of A)
     i.w <= 0 || i.h <= 0 || t.set(
       i.id,
-      new yt({ source: e.source, frame: new Fi(i.x, i.y, i.w, i.h) })
+      new Pt({ source: e.source, frame: new oa(i.x, i.y, i.w, i.h) })
     );
   return t;
 }
-const er = "/assets/th08/anm/enemy_t0.png", Ui = [
+const Rr = "/assets/th08/anm/enemy_t0.png", da = [
   { x: 0, y: 0, w: 32, h: 32 },
   // 0
   { x: 32, y: 0, w: 32, h: 32 },
@@ -4619,7 +4619,7 @@ const er = "/assets/th08/anm/enemy_t0.png", Ui = [
   // 155
   { x: 224, y: 352, w: 32, h: 32 }
   // 156
-], sr = [
+], Gr = [
   {
     frames: [
       { sprite: 0, duration: 4 },
@@ -5473,7 +5473,7 @@ const er = "/assets/th08/anm/enemy_t0.png", Ui = [
     ],
     total: 36
   }
-], ir = [
+], zr = [
   "AwAMAAAAAAAAAAAAAwAMAAQAAAABAAAAAwAMAAgAAAACAAAAAwAMAAwAAAADAAAABAAQABAAAAAAAAAAAAAAAA==",
   // 0
   "AwAMAAAAAAAHAAAAAwAMAAgAAAAGAAAAAwAMABAAAAAFAAAAAwAMABgAAAAEAAAAAgAIABgAAAA=",
@@ -5676,18 +5676,18 @@ const er = "/assets/th08/anm/enemy_t0.png", Ui = [
   // 99
   "AwAMAAAAAACVAAAACAAMAAAAAAAAAAAABwAQAAAAAAAAAEBBAAAAACIAFAAAAAAAFAAAAAAAAAD/AAAAJAAYAAAAAAAUAAAABAAAAAAAgD8AAIA/AAAIABQAAAADAAwAFAAAAJUAAAADAAwAGAAAAJYAAAADAAwAHAAAAJcAAAADAAwAIAAAAJgAAAAEABAAJAAAAFwAAAAUAAAA"
   // 100
-], ar = (s) => ir[s] ?? null;
-function or(s, A) {
-  const t = sr[s];
+], Hr = (s) => zr[s] ?? null;
+function Yr(s, A) {
+  const t = Gr[s];
   if (!t || t.total === 0) return null;
   let e = A % t.total;
   for (const i of t.frames) {
-    if (e < i.duration) return Ui[i.sprite] ? i.sprite : null;
+    if (e < i.duration) return da[i.sprite] ? i.sprite : null;
     e -= i.duration;
   }
   return null;
 }
-const Hi = {
+const ga = {
   stg1enm: {
     atlas: "/assets/th08/anm/stg1enm_t0.png",
     width: 256,
@@ -6934,9 +6934,9 @@ const Hi = {
       }
     ]
   }
-}, rr = (() => {
+}, Lr = (() => {
   const s = /* @__PURE__ */ new Map();
-  for (const [A, t] of Object.entries(Hi)) {
+  for (const [A, t] of Object.entries(ga)) {
     const e = A.replace(/_t\d+$/, "");
     let i = s.get(e);
     i || s.set(e, i = /* @__PURE__ */ new Map());
@@ -6944,32 +6944,32 @@ const Hi = {
   }
   return s;
 })();
-function nr(s, A) {
+function Or(s, A) {
   var t;
-  return ((t = rr.get(s)) == null ? void 0 : t.get(A)) ?? null;
+  return ((t = Lr.get(s)) == null ? void 0 : t.get(A)) ?? null;
 }
-async function pr(s) {
-  const A = Ui.map((i, a) => i ? { id: a, ...i } : null).filter(
+async function Nr(s) {
+  const A = da.map((i, a) => i ? { id: a, ...i } : null).filter(
     (i) => i !== null
   );
   let t = 0;
-  const e = await Wt(er, A);
+  const e = await ce(Rr, A);
   for (const [i, a] of e)
     s.assets.register("enemy:" + i, a), t++;
-  for (const [i, a] of Object.entries(Hi)) {
+  for (const [i, a] of Object.entries(ga)) {
     const o = a.frames.map((p) => ({
       id: p.id,
       x: p.x,
       y: p.y,
       w: p.w,
       h: p.h
-    })), n = await Wt(a.atlas, o);
+    })), n = await ce(a.atlas, o);
     for (const [p, l] of n)
       s.assets.register("enemy:stage-" + i + ":" + p, l), t++;
   }
   return t;
 }
-const lr = {
+const Jr = {
   etama_t0: {
     atlas: "/assets/th08/anm/etama_t0.png",
     width: 256,
@@ -9378,7 +9378,7 @@ const lr = {
       }
     ]
   }
-}, bt = [
+}, kt = [
   { page: 0, x: 0, y: 240, w: 8, h: 8 },
   { page: 0, x: 8, y: 240, w: 8, h: 8 },
   { page: 0, x: 16, y: 240, w: 8, h: 8 },
@@ -9717,7 +9717,7 @@ const lr = {
   { page: 5, x: 160, y: 128, w: 32, h: 32 },
   { page: 5, x: 192, y: 128, w: 32, h: 32 },
   { page: 5, x: 224, y: 128, w: 32, h: 32 }
-], je = [
+], $e = [
   { script: 0, baseSprite: 0, drawOffset: 4, bucket: 5 },
   { script: 1, baseSprite: 16, drawOffset: 6, bucket: 3 },
   { script: 2, baseSprite: 32, drawOffset: 4, bucket: 4 },
@@ -9739,62 +9739,62 @@ const lr = {
   { script: 113, baseSprite: 318, drawOffset: 5, bucket: 2 },
   { script: 114, baseSprite: 326, drawOffset: 5, bucket: 2 },
   { script: 115, baseSprite: 330, drawOffset: 5, bucket: 2 }
-], ve = [
+], As = [
   { script: 10, baseSprite: 152 },
   { script: 11, baseSprite: 48 },
   { script: 12, baseSprite: 152 },
   { script: 13, baseSprite: 48 },
   { script: 14, baseSprite: 96 },
   { script: 15, baseSprite: 136 }
-], Gi = 338;
-function re(s) {
-  return je[s] ?? je[0];
+], ua = 338;
+function Qe(s) {
+  return $e[s] ?? $e[0];
 }
-function ne(s, A) {
-  const t = re(s).baseSprite + Math.max(0, A | 0);
-  return Math.min(Gi - 1, t);
+function Ee(s, A) {
+  const t = Qe(s).baseSprite + Math.max(0, A | 0);
+  return Math.min(ua - 1, t);
 }
-function Oi(s, A) {
-  const t = bt[ne(s, A)];
-  return t ? Math.max(t.w, t.h) / 2 : re(s).drawOffset;
+function wa(s, A) {
+  const t = kt[Ee(s, A)];
+  return t ? Math.max(t.w, t.h) / 2 : Qe(s).drawOffset;
 }
-function Li(s) {
-  const { drawOffset: A } = re(s);
+function ma(s) {
+  const { drawOffset: A } = Qe(s);
   return Math.max(2, Math.min(6, Math.round(A * 0.45)));
 }
-function cr(s, A) {
+function Vr(s, A) {
   var i;
-  const t = ne(s, A);
-  return "th08:bullet:etama_t" + (((i = bt[t]) == null ? void 0 : i.page) ?? 0) + ":" + t;
+  const t = Ee(s, A);
+  return "th08:bullet:etama_t" + (((i = kt[t]) == null ? void 0 : i.page) ?? 0) + ":" + t;
 }
-function hr(s, A) {
-  const t = ve[s] ?? ve[0];
-  return Math.min(Gi - 1, t.baseSprite + Math.max(0, A | 0));
+function Wr(s, A) {
+  const t = As[s] ?? As[0];
+  return Math.min(ua - 1, t.baseSprite + Math.max(0, A | 0));
 }
-function dr(s, A) {
+function Kr(s, A) {
   var i;
-  const t = hr(s, A);
-  return "th08:bullet:etama_t" + (((i = bt[t]) == null ? void 0 : i.page) ?? 0) + ":" + t;
+  const t = Wr(s, A);
+  return "th08:bullet:etama_t" + (((i = kt[t]) == null ? void 0 : i.page) ?? 0) + ":" + t;
 }
-async function ur(s, A) {
+async function Xr(s, A) {
   const t = new Image();
-  t.crossOrigin = "anonymous", t.src = s, await new Promise((i, a) => {
+  t.crossOrigin = "anonymous", t.src = Y(s), await new Promise((i, a) => {
     t.onload = () => i(), t.onerror = () => a(new Error("Failed to load " + s));
   });
   const e = /* @__PURE__ */ new Map();
   for (const i of A) {
     const a = document.createElement("canvas");
     a.width = i.w, a.height = i.h, a.getContext("2d").drawImage(t, i.x, i.y, i.w, i.h, 0, 0, i.w, i.h);
-    const n = yt.from(a);
+    const n = Pt.from(a);
     n.source.style.scaleMode = "nearest", e.set(i.id, n);
   }
   return e;
 }
-async function gr(s) {
+async function Zr(s) {
   let A = 0;
-  for (const [i, a] of Object.entries(lr))
+  for (const [i, a] of Object.entries(Jr))
     try {
-      const o = await ur(a.atlas, a.frames);
+      const o = await Xr(a.atlas, a.frames);
       for (const [n, p] of o)
         s.assets.register("th08:bullet:" + i + ":" + n, p);
       A += o.size;
@@ -9817,12 +9817,12 @@ async function gr(s) {
   ];
   for (let i = 0; i < t.length; i++)
     for (let a = 0; a < e.length; a++) {
-      const o = ne(i, a), n = s.assets.get("th08:bullet:etama_t0:" + o);
+      const o = Ee(i, a), n = s.assets.get("th08:bullet:etama_t0:" + o);
       n && s.assets.register("bullet:" + t[i] + ":" + e[a], n);
     }
   return A;
 }
-const mr = {
+const qr = {
   1: {
     textures: [
       {
@@ -10183,41 +10183,41 @@ const mr = {
       }
     ]
   }
-}, wr = {
+}, $r = {
   1: "forestNight",
   2: "lake",
   3: "nightSky",
   4: "bambooMoon",
   5: "village",
   6: "moonCity"
-}, Vt = ["sky", "mid", "near"], fr = 200, yr = 190;
-function br(s) {
-  const A = s.filter((i) => i.w >= fr && i.h >= yr), t = A.find((i) => i.w >= PA), e = A.filter((i) => i !== t).sort((i, a) => a.w * a.h - i.w * i.h);
-  return [...t ? [t] : [], ...e].slice(0, Vt.length).map((i) => i.id);
+}, he = ["sky", "mid", "near"], An = 200, tn = 190;
+function en(s) {
+  const A = s.filter((i) => i.w >= An && i.h >= tn), t = A.find((i) => i.w >= RA), e = A.filter((i) => i !== t).sort((i, a) => a.w * a.h - i.w * i.h);
+  return [...t ? [t] : [], ...e].slice(0, he.length).map((i) => i.id);
 }
-async function Br(s) {
+async function sn(s) {
   let A = 0;
-  for (const [t, e] of Object.entries(wr)) {
-    const i = mr[Number(t)];
+  for (const [t, e] of Object.entries($r)) {
+    const i = qr[Number(t)];
     if (!i) continue;
     const a = /* @__PURE__ */ new Map(), o = /* @__PURE__ */ new Map();
-    br(i.sprites).forEach((n, p) => o.set(n, "bg:" + e + ":" + Vt[p]));
+    en(i.sprites).forEach((n, p) => o.set(n, "bg:" + e + ":" + he[p]));
     for (const [n, p] of i.textures.entries()) {
       const l = i.sprites.filter((c) => c.tex === n && o.has(c.id)).map((c) => ({ id: c.id, x: c.x, y: c.y, w: c.w, h: c.h }));
       if (l.length !== 0)
-        for (const [c, h] of await iA(p.file, l)) {
+        for (const [c, h] of await oA(p.file, l)) {
           h.source.style.scaleMode = "linear";
-          const u = o.get(c);
-          u && !a.has(u) && a.set(u, h);
+          const d = o.get(c);
+          d && !a.has(d) && a.set(d, h);
         }
     }
-    for (const n of Vt) s.assets.unregister("bg:" + e + ":" + n);
+    for (const n of he) s.assets.unregister("bg:" + e + ":" + n);
     for (const [n, p] of a)
       s.assets.register(n, p), A++;
   }
   return A;
 }
-const Yi = {
+const fa = {
   hiscore: 2,
   score: 3,
   player: 4,
@@ -10226,7 +10226,7 @@ const Yi = {
   graze: 7,
   point: 8,
   time: 9
-}, qt = { life: 11, bomb: 12 }, Zt = { panel: 0, tile: 13, border: 14 }, Et = { track: 155, human: 153, youkai: 154, cursor: 152 }, Ir = "/assets/th08/anm/front_t0.png", St = "/assets/th08/anm/ascii_t0.png", Mr = "/assets/th08/anm/ascii_t2.png", xr = 32, Dr = 96, Te = (s) => s - 1, ze = {
+}, de = { life: 11, bomb: 12 }, ge = { panel: 0, tile: 13, border: 14 }, Gt = { track: 155, human: 153, youkai: 154, cursor: 152 }, an = "/assets/th08/anm/front_t0.png", zt = "/assets/th08/anm/ascii_t0.png", on = "/assets/th08/anm/ascii_t2.png", rn = 32, nn = 96, ts = (s) => s - 1, es = {
   0: { x: 128, y: 0, w: 128, h: 256 },
   1: { x: 0, y: 1, w: 128, h: 31 },
   2: { x: 0, y: 80, w: 64, h: 16 },
@@ -10243,7 +10243,7 @@ const Yi = {
   13: { x: 0, y: 224, w: 32, h: 32 },
   14: { x: 0, y: 240, w: 128, h: 16 },
   15: { x: 0, y: 240, w: 160, h: 16 }
-}, Re = {
+}, ss = {
   31: { x: 0, y: 32, w: 16, h: 16 },
   32: { x: 16, y: 32, w: 16, h: 16 },
   33: { x: 32, y: 32, w: 16, h: 16 },
@@ -10340,13 +10340,13 @@ const Yi = {
   124: { x: 208, y: 112, w: 16, h: 16 },
   125: { x: 224, y: 112, w: 16, h: 16 },
   126: { x: 240, y: 112, w: 16, h: 16 }
-}, Ue = {
+}, is = {
   152: { x: 128, y: 208, w: 8, h: 12 },
   153: { x: 160, y: 208, w: 16, h: 16 },
   154: { x: 176, y: 208, w: 16, h: 16 },
   155: { x: 0, y: 224, w: 128, h: 16 },
   156: { x: 128, y: 224, w: 48, h: 16 }
-}, He = {
+}, as = {
   282: { x: 0, y: 224, w: 160, h: 32 },
   283: { x: 192, y: 0, w: 64, h: 16 },
   284: { x: 192, y: 16, w: 64, h: 16 },
@@ -10354,7 +10354,7 @@ const Yi = {
   286: { x: 128, y: 16, w: 64, h: 16 },
   287: { x: 192, y: 192, w: 64, h: 16 },
   288: { x: 192, y: 208, w: 64, h: 16 }
-}, Ge = {
+}, os = {
   0: { x: 0, y: 0, w: 8, h: 8 },
   1: { x: 8, y: 0, w: 8, h: 8 },
   2: { x: 16, y: 0, w: 8, h: 8 },
@@ -10386,36 +10386,36 @@ const Yi = {
   28: { x: 184, y: 8, w: 8, h: 8 },
   29: { x: 192, y: 8, w: 8, h: 8 },
   30: { x: 200, y: 8, w: 8, h: 8 }
-}, Er = ["hiscore", "score", "player", "spell", "power", "graze", "point", "time"], EA = {
+}, pn = ["hiscore", "score", "player", "spell", "power", "graze", "point", "time"], FA = {
   easy: 283,
   normal: 284,
   hard: 285,
   lunatic: 286,
   extra: 287,
   spell: 282
-}, Sr = (s) => {
-  const A = Er.find((i) => Yi[i] === s);
-  if (A) return Fa(A);
-  const t = Object.keys(qt).find(
-    (i) => qt[i] === s
+}, ln = (s) => {
+  const A = pn.find((i) => fa[i] === s);
+  if (A) return go(A);
+  const t = Object.keys(de).find(
+    (i) => de[i] === s
   );
-  if (t) return Pa(t);
-  const e = Object.keys(Zt).find(
-    (i) => Zt[i] === s
+  if (t) return uo(t);
+  const e = Object.keys(ge).find(
+    (i) => ge[i] === s
   );
-  return e ? ja(e) : null;
+  return e ? wo(e) : null;
 };
-async function Qr(s) {
+async function cn(s) {
   let A = 0;
   const t = [
-    ...Object.values(Yi),
-    ...Object.values(qt),
-    ...Object.values(Zt)
+    ...Object.values(fa),
+    ...Object.values(de),
+    ...Object.values(ge)
   ];
   try {
-    const e = t.filter((a) => ze[a]).map((a) => ({ id: a, ...ze[a] })), i = await iA(Ir, e);
+    const e = t.filter((a) => es[a]).map((a) => ({ id: a, ...es[a] })), i = await oA(an, e);
     for (const a of t) {
-      const o = Sr(a), n = i.get(a);
+      const o = ln(a), n = i.get(a);
       o && n && (s.assets.register(o, n), A++);
     }
   } catch {
@@ -10423,43 +10423,43 @@ async function Qr(s) {
   }
   try {
     const e = [];
-    for (let g = 0; g < Dr; g++) {
-      const d = xr + g;
-      Re[Te(d)] && e.push(d);
+    for (let u = 0; u < nn; u++) {
+      const g = rn + u;
+      ss[ts(g)] && e.push(g);
     }
-    const i = e.map((g) => ({
-      id: g,
-      ...Re[Te(g)]
-    })), a = await iA(St, i);
-    for (const g of e) {
-      const d = a.get(g);
-      d && (s.assets.register(Qa(g), d), A++);
+    const i = e.map((u) => ({
+      id: u,
+      ...ss[ts(u)]
+    })), a = await oA(zt, i);
+    for (const u of e) {
+      const g = a.get(u);
+      g && (s.assets.register(po(u), g), A++);
     }
-    const o = Object.keys(Et), n = o.map((g) => Et[g]).filter((g) => Ue[g]).map((g) => ({ id: g, ...Ue[g] })), p = await iA(St, n);
-    for (const g of o) {
-      const d = p.get(Et[g]);
-      d && (s.assets.register(Ca(g), d), A++);
+    const o = Object.keys(Gt), n = o.map((u) => Gt[u]).filter((u) => is[u]).map((u) => ({ id: u, ...is[u] })), p = await oA(zt, n);
+    for (const u of o) {
+      const g = p.get(Gt[u]);
+      g && (s.assets.register(lo(u), g), A++);
     }
-    const l = Object.keys(EA).filter(
-      (g) => He[EA[g]]
-    ), c = l.map((g) => ({
-      id: EA[g],
-      ...He[EA[g]]
-    })), h = await iA(Mr, c);
-    for (const g of l) {
-      const d = h.get(EA[g]);
-      d && (s.assets.register(_a(g), d), A++);
+    const l = Object.keys(FA).filter(
+      (u) => as[FA[u]]
+    ), c = l.map((u) => ({
+      id: FA[u],
+      ...as[FA[u]]
+    })), h = await oA(on, c);
+    for (const u of l) {
+      const g = h.get(FA[u]);
+      g && (s.assets.register(co(u), g), A++);
     }
-    const u = Object.keys(Ge).map(Number).filter((g) => Number.isFinite(g)), m = u.map((g) => ({ id: g, ...Ge[g] })), f = await iA(St, m);
-    for (const g of u) {
-      const d = f.get(g);
-      d && (s.assets.register(ka(g), d), A++);
+    const d = Object.keys(os).map(Number).filter((u) => Number.isFinite(u)), w = d.map((u) => ({ id: u, ...os[u] })), m = await oA(zt, w);
+    for (const u of d) {
+      const g = m.get(u);
+      g && (s.assets.register(ho(u), g), A++);
     }
   } catch {
   }
   return A;
 }
-const pe = "/assets/th08/anm", Ni = {
+const Ce = "/assets/th08/anm", Ba = {
   face_rm00: ["00", "no", "n2", "hp", "dp", "an", "sw", "pr", "sp"],
   face_yk00: ["00", "no", "n2", "hp", "dp", "an", "sw", "pr", "sp"],
   face_mr00: ["00", "no", "n2", "hp", "dp", "an", "sw", "pr", "sp"],
@@ -10478,7 +10478,7 @@ const pe = "/assets/th08/anm", Ni = {
   face_st06: ["a", "name", "no", "hp", "dp", "an", "sw"],
   face_st07: ["a", "name", "no", "n2", "dp", "sw"],
   face_st08: ["a", "name", "no", "n2", "dp", "an", "sw", "ls"]
-}, ut = {
+}, zA = {
   reimu: "face_rm00",
   yukari: "face_yk00",
   marisa: "face_mr00",
@@ -10487,7 +10487,7 @@ const pe = "/assets/th08/anm", Ni = {
   remilia: "face_rs00",
   youmu: "face_ym00",
   yuyuko: "face_yy00"
-}, le = {
+}, Se = {
   stage1: "face_st01",
   stage2: "face_st02",
   stage3: "face_st03",
@@ -10496,10 +10496,10 @@ const pe = "/assets/th08/anm", Ni = {
   stage5: "face_st05",
   stage6a: "face_st06",
   stage6b: "face_st06"
-}, ce = {
+}, Fe = {
   stage5: "face_st05b",
   stage6b: "face_st07"
-}, Oe = {
+}, rs = {
   normal: ["no", "n2"],
   neutral: ["no", "n2"],
   happy: ["hp", "sp", "no"],
@@ -10512,7 +10512,7 @@ const pe = "/assets/th08/anm", Ni = {
   surprised: ["sp", "sw", "pr", "no"],
   nervous: ["sw", "dp", "no"],
   lastword: ["ls", "an", "no"]
-}, Le = {
+}, ns = {
   霊夢: "face_rm00",
   博麗霊夢: "face_rm00",
   reimu: "face_rm00",
@@ -10559,55 +10559,58 @@ const pe = "/assets/th08/anm", Ni = {
   八意永琳: "face_st06",
   eirin: "face_st06"
 };
-function Ye(s, A) {
-  const t = Ni[s];
+function ue(s, A) {
+  const t = Ba[s];
   if (!(!t || A < 0 || A >= t.length))
-    return pe + "/" + s + "_t" + A + ".png";
+    return Y(Ce + "/" + s + "_t" + A + ".png");
 }
-function Cr(s, A) {
-  const t = Ni[s];
+function hn(s, A) {
+  const t = Ba[s];
   return t ? t.indexOf(A) : -1;
 }
-function _r(s, A) {
-  const t = Le[s] ?? Le[s.toLowerCase()];
+function dn(s, A) {
+  const t = ns[s] ?? ns[s.toLowerCase()];
   if (!t) return;
-  const e = A && Oe[A] || Oe.normal;
+  const e = A && rs[A] || rs.normal;
   for (const i of e) {
-    const a = Cr(t, i);
-    if (a > 0) return Ye(t, a);
+    const a = hn(t, i);
+    if (a > 0) return ue(t, a);
   }
-  return Ye(t, 0);
+  return ue(t, 0);
 }
-function he(s, A = 0) {
+function ya(s) {
+  return ue(zA[s], 0);
+}
+function _e(s, A = 0) {
   return "th08:face:" + s + ":" + A;
 }
-function kr(s) {
-  const A = ut[s];
-  return A ? he(A) : void 0;
+function gn(s) {
+  const A = zA[s];
+  return A ? _e(A) : void 0;
 }
-function Fr(s, A = !1) {
-  const t = A ? ce[s] : le[s];
-  return t ? he(t) : void 0;
+function un(s, A = !1) {
+  const t = A ? Fe[s] : Se[s];
+  return t ? _e(t) : void 0;
 }
-function Pr() {
-  const s = new Set(Object.values(ut));
-  for (const A of Object.values(le)) s.add(A);
-  for (const A of Object.values(ce)) s.add(A);
+function wn() {
+  const s = new Set(Object.values(zA));
+  for (const A of Object.values(Se)) s.add(A);
+  for (const A of Object.values(Fe)) s.add(A);
   return [...s];
 }
-async function jr(s) {
+async function mn(s) {
   const A = await Promise.all(
-    Pr().map(async (e) => {
-      const i = await oe(pe + "/" + e + "_t0.png");
+    wn().map(async (e) => {
+      const i = await De(Ce + "/" + e + "_t0.png");
       return i ? [e, i] : null;
     })
   );
   let t = 0;
   for (const e of A)
-    e && (s.assets.register(he(e[0]), e[1]), t++);
+    e && (s.assets.register(_e(e[0]), e[1]), t++);
   return t;
 }
-const de = {
+const Pe = {
   stg1txt: {
     page: "/assets/th08/anm/stg1txt_t0.png",
     cells: [
@@ -10944,7 +10947,7 @@ const de = {
       // 3
     ]
   }
-}, vr = {
+}, fn = {
   stage1: "stg1txt",
   stage2: "stg2txt",
   stage3: "stg3txt",
@@ -10954,44 +10957,44 @@ const de = {
   stage6a: "stg6txt",
   stage6b: "stg7txt"
 };
-function Tr(s, A) {
+function Bn(s, A) {
   var t, e;
-  return ((e = (t = de[s]) == null ? void 0 : t.scripts[A]) == null ? void 0 : e.base64) ?? null;
+  return ((e = (t = Pe[s]) == null ? void 0 : t.scripts[A]) == null ? void 0 : e.base64) ?? null;
 }
-function Ji(s, A) {
+function ba(s, A) {
   return "stage-text:" + s + ":" + A;
 }
-function zr(s) {
-  const A = vr[s];
-  return A && de[A] ? A : null;
+function yn(s) {
+  const A = fn[s];
+  return A && Pe[A] ? A : null;
 }
-const Qt = /* @__PURE__ */ new Map();
-function Rr(s, A) {
+const Ht = /* @__PURE__ */ new Map();
+function bn(s, A) {
   const t = s + ":" + A;
-  if (Qt.has(t)) return Qt.get(t) ?? null;
-  const e = Tr(s, A);
+  if (Ht.has(t)) return Ht.get(t) ?? null;
+  const e = Bn(s, A);
   let i = null;
   if (e)
     try {
-      i = dA(e);
+      i = nA(e);
     } catch {
       i = null;
     }
-  return Qt.set(t, i), i;
+  return Ht.set(t, i), i;
 }
-async function Ur(s) {
+async function In(s) {
   let A = 0;
-  for (const [t, e] of Object.entries(de)) {
-    const i = e.cells.filter((o) => o.tex === 0).map((o) => ({ id: o.id, x: o.x, y: o.y, w: o.w, h: o.h })), a = await Wt(e.page, i);
+  for (const [t, e] of Object.entries(Pe)) {
+    const i = e.cells.filter((o) => o.tex === 0).map((o) => ({ id: o.id, x: o.x, y: o.y, w: o.w, h: o.h })), a = await ce(e.page, i);
     for (const [o, n] of a)
-      s.assets.register(Ji(t, o), n), A++;
+      s.assets.register(ba(t, o), n), A++;
   }
   return A;
 }
-const Xi = 2, Hr = 0.6, Gr = 7, Ki = (s) => ({
-  main: { frames: Array.from({ length: s }, (A, t) => t), delay: Gr, mirror: !1 }
+const Ia = 2, Mn = 0.6, xn = 7, Ma = (s) => ({
+  main: { frames: Array.from({ length: s }, (A, t) => t), delay: xn, mirror: !1 }
 });
-function ue(s = ie) {
+function ke(s = Me) {
   const A = /* @__PURE__ */ new Map();
   for (const t of s) {
     const e = /^sprite:(boss|enemy):(.+?):frame(\d+)$/.exec(t);
@@ -11001,19 +11004,19 @@ function ue(s = ie) {
   }
   return A;
 }
-function Or(s, A = ie) {
+function Dn(s, A = Me) {
   const t = s + ":";
-  return [...ue(A)].filter(([e, i]) => e.startsWith(t) && i >= Xi).map(([e]) => e.slice(t.length)).sort();
+  return [...ke(A)].filter(([e, i]) => e.startsWith(t) && i >= Ia).map(([e]) => e.slice(t.length)).sort();
 }
-function Lr(s, A, t = ue().get(s + ":" + A) ?? 1) {
+function Qn(s, A, t = ke().get(s + ":" + A) ?? 1) {
   return {
     frameKey: (e) => `sprite:${s}:${A}:frame${e}`,
-    anim: Ki(t),
+    anim: Ma(t),
     fit: !0,
     steer: !1
   };
 }
-function Yr(s = ie) {
+function En(s = Me) {
   const A = /* @__PURE__ */ new Map();
   for (const t of s) {
     const e = /^player-frame:(\w+):frame(\d+)$/.exec(t);
@@ -11021,26 +11024,26 @@ function Yr(s = ie) {
   }
   return A;
 }
-function Nr(s) {
-  const A = ue();
+function Cn(s) {
+  const A = ke();
   let t = 0;
   for (const e of ["boss", "enemy"])
-    for (const i of Or(e))
+    for (const i of Dn(e))
       s.registerSheet(
         `${e}:${i}`,
-        Lr(e, i, A.get(`${e}:${i}`))
+        Qn(e, i, A.get(`${e}:${i}`))
       ), t += 1;
-  for (const [e, i] of Yr())
-    i < Xi || (s.registerSheet("player-painted:" + e, {
+  for (const [e, i] of En())
+    i < Ia || (s.registerSheet("player-painted:" + e, {
       frameKey: (a) => `player-frame:${e}:frame${a}`,
-      anim: Ki(i),
-      scale: Hr,
+      anim: Ma(i),
+      scale: Mn,
       steer: !1
     }), t += 1);
   return t;
 }
-const Jr = /* @__PURE__ */ new Set(["Enter", "z", "Z", " ", "Space"]);
-class Xr {
+const Sn = /* @__PURE__ */ new Set(["Enter", "z", "Z", " ", "Space"]);
+class Fn {
   constructor(A, t = {}) {
     r(this, "root");
     r(this, "options");
@@ -11123,7 +11126,7 @@ class Xr {
       "</div>",
       '<p class="th08-dialog-hint">Z / Enter 次へ</p>'
     ].join(""), A.addEventListener("click", () => this.advance()), this.root.appendChild(A), this.el = A, this.faceEl = A.querySelector(".th08-dialog-face") ?? void 0, this.nameEl = A.querySelector(".th08-dialog-name") ?? void 0, this.textEl = A.querySelector(".th08-dialog-text") ?? void 0, this.handler = (t) => {
-      !this.el || !Jr.has(t.key) || (t.preventDefault(), this.advance());
+      !this.el || !Sn.has(t.key) || (t.preventDefault(), this.advance());
     }, window.addEventListener("keydown", this.handler);
   }
   unmount() {
@@ -11141,17 +11144,17 @@ class Xr {
     }
   }
 }
-const Kr = {
-  fullPower: { text: () => "Full Power Mode!", color: 4290818303, scale: 1, advance: ht },
+const _n = {
+  fullPower: { text: () => "Full Power Mode!", color: 4290818303, scale: 1, advance: It },
   supernaturalBorder: {
     text: () => "Supernatural Border!!",
     color: 4292915455,
     scale: 0.9,
     advance: 11
   },
-  cherryPointMax: { text: () => "CherryPoint Max!", color: 4290818303, scale: 1, advance: ht },
+  cherryPointMax: { text: () => "CherryPoint Max!", color: 4290818303, scale: 1, advance: It },
   borderBonus: {
-    text: (s) => `Border Bonus ${Wr(s, 7)}`,
+    text: (s) => `Border Bonus ${Pn(s, 7)}`,
     color: 4292915455,
     scale: 0.9,
     advance: 11
@@ -11169,11 +11172,11 @@ const Kr = {
     advance: 11
   }
 };
-function Wr(s, A) {
+function Pn(s, A) {
   return String(Math.max(0, Math.floor(s))).padStart(A, " ");
 }
-const Vr = 416, qr = 104, Zr = 168, Ne = 30, $r = 180, Je = 280, Xe = 32, Ke = 384, We = 14, Ct = 2, Ve = "Spell Card Bonus!";
-class An {
+const kn = 416, vn = 104, jn = 168, ps = 30, Tn = 180, ls = 280, cs = 32, hs = 384, ds = 14, Yt = 2, gs = "Spell Card Bonus!";
+class Un {
   constructor() {
     r(this, "kind", null);
     r(this, "timer", 0);
@@ -11195,7 +11198,7 @@ class An {
   /** Advance both slots; `frames` is 1 for a normal tick. */
   tick(A = 1) {
     for (let t = 0; t < A; t++)
-      this.kind !== null && (this.timer++, this.timer >= $r && (this.kind = null)), this.bonus !== 0 && (this.bonusTimer++, this.bonusTimer >= Je && (this.bonus = 0, this.bonusTimer = 0));
+      this.kind !== null && (this.timer++, this.timer >= Tn && (this.kind = null)), this.bonus !== 0 && (this.bonusTimer++, this.bonusTimer >= ls && (this.bonus = 0, this.bonusTimer = 0));
   }
   get panelVisible() {
     return this.kind !== null;
@@ -11205,17 +11208,17 @@ class An {
   }
   /** Where the panel banner currently is (`:1175-1179`). */
   get panelX() {
-    return this.timer < Ne ? this.timer * (-312 / Ne) + Vr : qr;
+    return this.timer < ps ? this.timer * (-312 / ps) + kn : vn;
   }
   /** What the draw chain should blit this frame, panel banner first. */
   views() {
     const A = [];
     if (this.kind !== null) {
-      const t = Kr[this.kind];
+      const t = _n[this.kind];
       A.push({
         text: t.text(this.value),
         x: this.panelX,
-        y: Zr,
+        y: jn,
         scale: t.scale,
         advance: t.advance,
         color: t.color,
@@ -11225,19 +11228,19 @@ class An {
     if (this.bonusVisible) {
       const t = `+${this.bonus}`;
       A.push({
-        text: Ve,
-        x: (Ke - Ve.length * We) / 2 + Xe,
+        text: gs,
+        x: (hs - gs.length * ds) / 2 + cs,
         y: 80,
         scale: 1,
-        advance: ht,
+        advance: It,
         color: 4294901760,
         alpha: this.bonusAlpha()
       }), A.push({
         text: t,
-        x: (Ke - t.length * We * Ct) / 2 + Xe,
+        x: (hs - t.length * ds * Yt) / 2 + cs,
         y: 96,
-        scale: Ct,
-        advance: ht * Ct,
+        scale: Yt,
+        advance: It * Yt,
         color: 4294934656,
         alpha: this.bonusAlpha()
       });
@@ -11249,11 +11252,20 @@ class An {
    * of the 280 are a linear fade so a capture does not end on a hard cut.
    */
   bonusAlpha() {
-    const A = Je - this.bonusTimer;
+    const A = ls - this.bonusTimer;
     return A >= 40 ? 1 : Math.max(0, A / 40);
   }
 }
-const tn = {
+const Rn = {
+  "reimu-yukari": "/assets/taisei/portraits/dialog/reimu.webp",
+  "marisa-alice": "/assets/taisei/portraits/dialog/marisa.webp",
+  "youmu-yuyuko": "/assets/taisei/portraits/dialog/youmu.webp"
+}, Gn = {
+  easy: "/assets/taisei/ui/difficulty/easy.webp",
+  normal: "/assets/taisei/ui/difficulty/normal.webp",
+  hard: "/assets/taisei/ui/difficulty/hard.webp",
+  lunatic: "/assets/taisei/ui/difficulty/lunatic.webp"
+}, us = {
   reimu: "/assets/taisei/portraits/dialog/reimu.webp",
   marisa: "/assets/taisei/portraits/dialog/marisa.webp",
   youmu: "/assets/taisei/portraits/dialog/youmu.webp",
@@ -11265,7 +11277,7 @@ const tn = {
   scuttle: "/assets/taisei/portraits/dialog/scuttle.webp",
   wriggle: "/assets/taisei/portraits/dialog/wriggle.webp",
   yumemi: "/assets/taisei/portraits/dialog/yumemi.webp"
-}, qe = {
+}, ws = {
   霊夢: "reimu",
   reimu: "reimu",
   魔理沙: "marisa",
@@ -11297,13 +11309,23 @@ const tn = {
   幽々子: "yuyuko",
   yuyuko: "yuyuko"
 };
-function en(s, A) {
-  const t = _r(s, A);
-  if (t) return t;
-  const e = qe[s] ?? qe[s.toLowerCase()];
-  return e ? tn[e] : void 0;
+function zn(s) {
+  return s.split("-")[0];
 }
-class _t {
+function xa(s) {
+  const A = ya(zn(s)) ?? Rn[s] ?? "/assets/player/" + s.split("-")[0] + ".png";
+  return Y(A);
+}
+function Hn(s) {
+  return ya(s.split("-")[1]) ?? xa(s);
+}
+function Yn(s, A) {
+  const t = dn(s, A);
+  if (t) return Y(t);
+  const e = ws[s] ?? ws[s.toLowerCase()];
+  return e && us[e] ? Y(us[e]) : void 0;
+}
+class Lt {
   constructor(A = 3600) {
     r(this, "frame", 0);
     r(this, "cycleFrames");
@@ -11362,7 +11384,7 @@ class _t {
     };
   }
 }
-const sn = [
+const Ln = [
   {
     name: "th08_01",
     file: "/assets/th08/bgm/th08_01.ogg",
@@ -11510,7 +11532,7 @@ const sn = [
     loopSeconds: 85.1338,
     totalSeconds: 91.39739999999999
   }
-], an = {
+], On = {
   1: { stage: "th08_00", boss: "th08_03" },
   2: { stage: "th08_04", boss: "th08_05" },
   3: { stage: "th08_06", boss: "th08_07" },
@@ -11520,10 +11542,10 @@ const sn = [
   7: { stage: "th08_13", boss: "th08_15" },
   8: { stage: "th08_18", boss: "th08_19" }
 };
-function Ze(s) {
-  return sn.find((A) => A.name === s);
+function ms(s) {
+  return Ln.find((A) => A.name === s);
 }
-const Wi = [
+const Da = [
   {
     rects: [
       { page: "/assets/th08/anm/stg1bg_t0.png", x: 1, y: 1, w: 254, h: 254 },
@@ -11688,7 +11710,7 @@ const Wi = [
       "AwAMAAAAAAAEAAAACQAUAAAAAAAAAAAAAAAAAAAAAAAIAAwAAAAAAAAAAAACAAgAcBcAAA=="
     ]
   }
-], Bt = {
+], vt = {
   stage1: {
     objects: [
       {
@@ -14913,23 +14935,23 @@ const Wi = [
     pack: 7
   }
 };
-function on(s) {
+function Nn(s) {
   return (s.split(/[\\/]/).pop() ?? "").replace(/\.(mid|wav)$/i, "").trim();
 }
-function rn(s) {
+function Jn(s) {
   return !!s && s.trim() !== "";
 }
-function Vi(s, A, t) {
+function Qa(s, A, t) {
   var a;
-  const e = s ? (a = Bt[s]) == null ? void 0 : a.songPaths[A] : void 0;
-  if (rn(e)) {
-    const o = Ze(on(e));
+  const e = s ? (a = vt[s]) == null ? void 0 : a.songPaths[A] : void 0;
+  if (Jn(e)) {
+    const o = ms(Nn(e));
     if (o) return o;
   }
-  const i = an[t];
-  return i ? Ze(A <= 0 ? i.stage : i.boss) ?? null : null;
+  const i = On[t];
+  return i ? ms(A <= 0 ? i.stage : i.boss) ?? null : null;
 }
-const M = "/assets/th08/raw", nn = [
+const M = "/assets/th08/raw", Vn = [
   `${M}/se_plst00.wav`,
   `${M}/se_enep00.wav`,
   `${M}/se_pldead00.wav`,
@@ -14971,7 +14993,7 @@ const M = "/assets/th08/raw", nn = [
   // hangs them off the end of the range instead of inventing retail indices.
   `${M}/se_bonus.wav`,
   `${M}/se_border.wav`
-], pn = [
+], Wn = [
   { buffer: 0, mb: -1900 },
   //  0 SOUND_SHOOT - also the pause-menu cursor
   { buffer: 0, mb: -2100 },
@@ -15069,7 +15091,7 @@ const M = "/assets/th08/raw", nn = [
   // 46 spell-bonus chime
   { buffer: 37, mb: -1200 }
   // 47 pushed against the playfield edge
-], T = {
+], U = {
   /**
    * The ship's firing sound, and the one number in this table that is not inferred
    * from a call site: every firing entry in all eight shipped `.sht` files carries
@@ -15106,34 +15128,34 @@ const M = "/assets/th08/raw", nn = [
   /** Our own two, above the retail range. */
   bonus: 46,
   border: 47
-}, ln = {
-  shoot: T.shot,
-  bomb: T.bomb,
-  pldead: T.playerDeath,
-  "enemy-hit": T.enemyDamage,
-  graze: T.graze,
-  spellcard: T.spellDeclare,
-  item: T.item,
-  bonus: T.bonus,
-  cardget: T.spellCapture,
-  border: T.border,
-  timeout: T.timeout,
-  cancel: T.menuBack,
-  ok: T.menuConfirm,
-  select: T.menuMove,
-  pause: T.pause,
-  powerup: T.powerUp,
-  extend: T.extend
+}, Kn = {
+  shoot: U.shot,
+  bomb: U.bomb,
+  pldead: U.playerDeath,
+  "enemy-hit": U.enemyDamage,
+  graze: U.graze,
+  spellcard: U.spellDeclare,
+  item: U.item,
+  bonus: U.bonus,
+  cardget: U.spellCapture,
+  border: U.border,
+  timeout: U.timeout,
+  cancel: U.menuBack,
+  ok: U.menuConfirm,
+  select: U.menuMove,
+  pause: U.pause,
+  powerup: U.powerUp,
+  extend: U.extend
 };
-function $e(s) {
+function fs(s) {
   return Number.isFinite(s) ? Math.max(-1, Math.min(1, (s - 192) / 192)) : 0;
 }
-const cn = {
-  files: nn,
-  entries: pn,
-  names: ln
+const Xn = {
+  files: Vn,
+  entries: Wn,
+  names: Kn
 };
-class hn {
+class Zn {
   constructor(A = 0) {
     r(this, "seed");
     r(this, "seedBackup");
@@ -15186,31 +15208,31 @@ class hn {
     return this.generationCount;
   }
 }
-const wA = {
+const BA = {
   easy: 0,
   normal: 1,
   hard: 2,
   lunatic: 3,
   extra: 4
-}, dn = {
+}, qn = {
   easy: 1,
   normal: 2,
   hard: 4,
   lunatic: 8,
   extra: 16
-}, un = {
+}, $n = {
   easy: 2,
   normal: 4,
   hard: 8,
   lunatic: 16,
   extra: 32
-}, gn = [6e4, 1e5, 2e5, 3e5, 3e5], kt = [
+}, A0 = [6e4, 1e5, 2e5, 3e5, 3e5], Ot = [
   [10, 8, 16],
   [10, 8, 16],
   [8, 8, 12],
   [8, 8, 12],
   [16, 15, 16]
-], mn = [
+], t0 = [
   [2e3, 2500, 2700, 3e3],
   // STAGE1
   [6500, 7200, 7200, 7200],
@@ -15230,22 +15252,22 @@ const wA = {
   [0, 0, 0, 0]
   // EXTRASTAGE
 ];
-function wn(s, A) {
-  const t = mn[s];
-  return t ? t[Math.min(wA[A], t.length - 1)] : Number.POSITIVE_INFINITY;
+function e0(s, A) {
+  const t = t0[s];
+  return t ? t[Math.min(BA[A], t.length - 1)] : Number.POSITIVE_INFINITY;
 }
-const $t = 100;
-function _A(s, A) {
-  for (s.subRank += A; s.subRank >= $t; )
-    s.rank++, s.subRank -= $t;
+const we = 100;
+function jA(s, A) {
+  for (s.subRank += A; s.subRank >= we; )
+    s.rank++, s.subRank -= we;
   s.rank > s.maxRank && (s.rank = s.maxRank);
 }
-function Ae(s, A) {
+function me(s, A) {
   for (s.subRank -= A; s.subRank < 0; )
-    s.rank--, s.subRank += $t;
+    s.rank--, s.subRank += we;
   s.rank < s.minRank && (s.rank = s.minRank);
 }
-const Ft = [100, 250, 500, 800, 1100, 9999], As = [200, 666, 9999], qi = [
+const Nt = [100, 250, 500, 800, 1100, 9999], Bs = [200, 666, 9999], Ea = [
   "reimu-yukari",
   "marisa-alice",
   "sakuya-remilia",
@@ -15259,28 +15281,28 @@ const Ft = [100, 250, 500, 800, 1100, 9999], As = [200, 666, 9999], qi = [
   "youmu",
   "yuyuko"
 ];
-function fn(s) {
+function s0(s) {
   const A = s.pointItemExtendsSoFar;
   if (s.difficultyId >= 4) {
-    s.nextPointItemExtendThreshold = A < As.length ? As[A] : 99999;
+    s.nextPointItemExtendThreshold = A < Bs.length ? Bs[A] : 99999;
     return;
   }
-  s.nextPointItemExtendThreshold = A < Ft.length ? Ft[A] : (A - 5) * 500 + Ft[5];
+  s.nextPointItemExtendThreshold = A < Nt.length ? Nt[A] : (A - 5) * 500 + Nt[5];
 }
-function pt(s, A) {
+function ft(s, A) {
   if (A < 0 && s.timeOrbs < -A) {
     s.timeOrbs = 0;
     return;
   }
   s.timeOrbs += A, s.totalTimeOrbs += A, A > 0 && (s.pointItemValue += 10 * Math.floor((A + (s.totalTimeOrbs & 1)) / 2));
 }
-function yn(s = "normal", A = 0) {
+function i0(s = "normal", A = 0) {
   return {
-    rng: new hn(A),
+    rng: new Zn(A),
     frame: 0,
     difficulty: s,
-    difficultyId: wA[s],
-    difficultyMask: dn[s],
+    difficultyId: BA[s],
+    difficultyMask: qn[s],
     shotType: 0,
     character: "reimu-yukari",
     score: 0,
@@ -15289,10 +15311,10 @@ function yn(s = "normal", A = 0) {
     power: 0,
     maxPower: 128,
     graze: 0,
-    rank: kt[wA[s]][0],
+    rank: Ot[BA[s]][0],
     subRank: 0,
-    minRank: kt[wA[s]][1],
-    maxRank: kt[wA[s]][2],
+    minRank: Ot[BA[s]][1],
+    maxRank: Ot[BA[s]][2],
     youkaiGauge: 0,
     playerIsYoukai: !1,
     // `ECL_GAME_TIME_SCALE` in `src/th08/core/EclRegisters.ts` is the same 1.
@@ -15303,7 +15325,7 @@ function yn(s = "normal", A = 0) {
     timeOrbs: 0,
     totalTimeOrbs: 0,
     lastSpellTimeOrbThreshold: Number.POSITIVE_INFINITY,
-    pointItemValue: gn[wA[s]],
+    pointItemValue: A0[BA[s]],
     pointItemsCollected: 0,
     pointItemsCollectedInStage: 0,
     maxValuePointItemsCollected: 0,
@@ -15327,19 +15349,19 @@ function yn(s = "normal", A = 0) {
     antiTamperRng4: [0, 0, 0]
   };
 }
-const ts = 1e5, es = 6543;
-function bn(s) {
+const ys = 1e5, bs = 6543;
+function a0(s) {
   for (let A = 0; A < 5; A++)
-    s.antiTamperRng1[A] = s.rng.randomU32InRange(ts) + es;
+    s.antiTamperRng1[A] = s.rng.randomU32InRange(ys) + bs;
   for (let A = 0; A < 3; A++)
-    s.antiTamperRng4[A] = s.rng.randomF32InRange(ts) + es;
+    s.antiTamperRng4[A] = s.rng.randomF32InRange(ys) + bs;
 }
-const vl = (s) => ({ reg: s }), gt = (s) => typeof s == "object" && s !== null;
-function mt(s) {
+const Nc = (s) => ({ reg: s }), xt = (s) => typeof s == "object" && s !== null;
+function Dt(s) {
   const A = new DataView(new ArrayBuffer(8));
   return A.setFloat32(0, s, !0), A.getInt32(0, !0);
 }
-const Zi = (s) => (s & 65535) * 65536, Bn = [
+const Ca = (s) => (s & 65535) * 65536, o0 = [
   "aimedFan",
   "fixedFan",
   "aimedRing",
@@ -15349,7 +15371,7 @@ const Zi = (s) => (s & 65535) * 65536, Bn = [
   "randomBand",
   "ringRandomSpeed",
   "randomAngleSpeed"
-], AA = {
+], eA = {
   type: 1,
   color: 2,
   count: 4,
@@ -15359,23 +15381,23 @@ const Zi = (s) => (s & 65535) * 65536, Bn = [
   angle: 64,
   angleStep: 128
 };
-function In(s) {
+function r0(s) {
   let A = 0;
-  const t = (o, n) => gt(o) ? (A |= n, o.reg) : o | 0, e = (o, n) => gt(o) ? (A |= n, mt(o.reg)) : mt(o), i = t(s.type, AA.type), a = t(s.color, AA.color);
+  const t = (o, n) => xt(o) ? (A |= n, o.reg) : o | 0, e = (o, n) => xt(o) ? (A |= n, Dt(o.reg)) : Dt(o), i = t(s.type, eA.type), a = t(s.color, eA.color);
   return [
-    Bn.indexOf(s.mode),
-    i & 65535 | Zi(a),
-    t(s.count, AA.count),
-    t(s.rings, AA.rings),
-    e(s.speed, AA.speed),
-    e(s.speed2, AA.speed2),
-    e(s.angle, AA.angle),
-    e(s.angleStep, AA.angleStep),
+    o0.indexOf(s.mode),
+    i & 65535 | Ca(a),
+    t(s.count, eA.count),
+    t(s.rings, eA.rings),
+    e(s.speed, eA.speed),
+    e(s.speed2, eA.speed2),
+    e(s.angle, eA.angle),
+    e(s.angleStep, eA.angleStep),
     s.transform | 0,
     A
   ];
 }
-const K = {
+const X = {
   color: 2,
   angle: 4,
   speed: 8,
@@ -15387,32 +15409,32 @@ const K = {
   duration: 512,
   despawn: 1024
 };
-function Mn(s) {
+function n0(s) {
   let A = 0;
-  const t = (i, a) => gt(i) ? (A |= a, i.reg | 0) : i | 0, e = (i, a) => gt(i) ? (A |= a, mt(i.reg)) : mt(i);
+  const t = (i, a) => xt(i) ? (A |= a, i.reg | 0) : i | 0, e = (i, a) => xt(i) ? (A |= a, Dt(i.reg)) : Dt(i);
   return [
     s.aimed ? 115 : 114,
-    s.type & 65535 | Zi(t(s.color, K.color)),
-    e(s.angle, K.angle),
-    e(s.speed, K.speed),
-    e(s.tail, K.tail),
-    e(s.head, K.head),
-    e(s.startLength, K.startLength),
-    e(s.width, K.width),
-    t(s.startTime, K.startTime),
-    t(s.duration, K.duration),
-    t(s.despawn, K.despawn),
+    s.type & 65535 | Ca(t(s.color, X.color)),
+    e(s.angle, X.angle),
+    e(s.speed, X.speed),
+    e(s.tail, X.tail),
+    e(s.head, X.head),
+    e(s.startLength, X.startLength),
+    e(s.width, X.width),
+    t(s.startTime, X.startTime),
+    t(s.duration, X.duration),
+    t(s.despawn, X.despawn),
     s.hitboxStart | 0,
     s.hitboxEnd | 0,
     s.flags | 0,
     A
   ];
 }
-const _ = PA, k = Xt, xn = _ / 2, VA = xn, qA = k - 64;
-function $i(s, A, t, e) {
-  return t / 2 + s < 0 || s - t / 2 > _ || e / 2 + A < 0 || A - e / 2 > k;
+const F = RA, _ = ne, p0 = F / 2, et = p0, st = _ - 64;
+function Sa(s, A, t, e) {
+  return t / 2 + s < 0 || s - t / 2 > F || e / 2 + A < 0 || A - e / 2 > _;
 }
-const Dn = {
+const l0 = {
   /** Wriggle Nightbug -- 隠蟲「永夜蟄居」. */
   stage1: [10, 11, 12],
   /** Mystia Lorelei. */
@@ -15452,17 +15474,17 @@ const Dn = {
   ],
   /** Fujiwara no Mokou (Extra, not reachable here). */
   extra: [204]
-}, En = new Set(Object.values(Dn).flat());
-function Sn(s) {
-  return Number.isInteger(s) && En.has(s);
+}, c0 = new Set(Object.values(l0).flat());
+function h0(s) {
+  return Number.isInteger(s) && c0.has(s);
 }
-function z(s) {
+function R(s) {
   if (!Number.isFinite(s)) return 0;
   let A = s % (Math.PI * 2);
   return A > Math.PI ? A -= Math.PI * 2 : A < -Math.PI && (A += Math.PI * 2), A;
 }
-const Qn = 8, Cn = 7, Aa = 10042, ta = 10043, ea = 10044;
-function ss() {
+const d0 = 8, g0 = 7, Fa = 10042, _a = 10043, Pa = 10044;
+function Is() {
   return {
     live: !1,
     variable: 0,
@@ -15476,7 +15498,7 @@ function ss() {
     p3: 0
   };
 }
-function _n(s, A) {
+function u0(s, A) {
   switch (s) {
     case 1:
       return A * A;
@@ -15500,21 +15522,21 @@ function _n(s, A) {
       return A;
   }
 }
-function kn(s, A, t) {
+function w0(s, A, t) {
   const e = s.resolve(A.p0), i = s.resolve(A.p1);
   s.write(A.variable, (i - e) * t + e);
 }
-function Fn(s, A, t) {
+function m0(s, A, t) {
   const e = s.resolve(A.p0), i = s.resolve(A.p1), a = s.resolve(A.p2), o = s.resolve(A.p3), n = (t - 1) * (t - 1) * (2 * t + 1), p = t * t * (3 - 2 * t), l = (1 - t) * (1 - t) * t, c = (t - 1) * t * t;
   s.write(A.variable, n * e + p * i + l * a + c * o);
 }
-class Pn {
+class f0 {
   constructor() {
-    r(this, "slots", Array.from({ length: Qn }, ss));
+    r(this, "slots", Array.from({ length: d0 }, Is));
   }
   /** `EnemyManager` zeroes the context with the enemy. */
   reset() {
-    for (const A of this.slots) Object.assign(A, ss());
+    for (const A of this.slots) Object.assign(A, Is());
   }
   /** A slot is running while its callback pointer is set. */
   get activeCount() {
@@ -15547,22 +15569,22 @@ class Pn {
     for (const e of this.slots) {
       if (!e.live) continue;
       e.timer++, e.timer >= e.duration && (e.timer = e.duration);
-      const i = e.duration > 0 ? _n(e.easing, e.timer / e.duration) : 1;
-      e.callback === Cn ? Fn(A, e, i) : kn(A, e, i), e.timer >= e.duration && (e.live = !1);
+      const i = e.duration > 0 ? u0(e.easing, e.timer / e.duration) : 1;
+      e.callback === g0 ? m0(A, e, i) : w0(A, e, i), e.timer >= e.duration && (e.live = !1);
       const a = Math.trunc(e.variable);
-      (a === Aa || a === ta || a === ea) && (t = !0);
+      (a === Fa || a === _a || a === Pa) && (t = !0);
     }
     return t;
   }
 }
-const ge = 18;
-function jn() {
+const ve = 18;
+function B0() {
   return { kind: 0, allowWhileActive: 0, int0: 0, int1: 0, float0: 0, float1: 0 };
 }
-function ZA() {
-  return Array.from({ length: ge }, jn);
+function it() {
+  return Array.from({ length: ve }, B0);
 }
-const Q = {
+const S = {
   /** 16-frame outward push added to the bullet's own speed at birth. */
   BIRTH_PUSH: 1,
   /** Constant acceleration along a fixed heading. */
@@ -15595,11 +15617,11 @@ const Q = {
   WRAP_Y: 8388608,
   /** Split: fire a nested pattern from the bullet and fade the parent. */
   FORK: 16777216
-}, vn = 4096, Tn = 14, fA = 1, BA = 5;
-function sa(s) {
-  return s.state === fA;
+}, y0 = 4096, b0 = 14, yA = 1, xA = 5;
+function ka(s) {
+  return s.state === yA;
 }
-function ia(s = {}) {
+function va(s = {}) {
   return {
     aimMode: 0,
     type: 0,
@@ -15611,24 +15633,24 @@ function ia(s = {}) {
     angle: 0,
     angleStep: 0,
     transformFlags: 0,
-    records: zn,
+    records: I0,
     startIndex: 0,
     transformSound: -1,
     radius: 3,
     halfSize: 8,
-    appearFrames: me,
+    appearFrames: je,
     tag: "enemy",
     ...s
   };
 }
-const zn = [], me = 8, is = 8;
-function aa(s, A, t, e, i) {
+const I0 = [], je = 8, Ms = 8;
+function ja(s, A, t, e, i) {
   const a = Math.atan2(A.playerY - i, A.playerX - e), o = Math.PI * 2;
   let n = 0;
   for (let p = 0; p < t.count2; p++) {
     const l = t.count2 > 1 ? t.speed1 - (t.speed1 - t.speed2) * p / t.count2 : t.speed1;
     for (let c = 0; c < t.count1; c++) {
-      let h = 0, u = l;
+      let h = 0, d = l;
       switch (t.aimMode) {
         case 0:
         case 1: {
@@ -15651,26 +15673,26 @@ function aa(s, A, t, e, i) {
           h = A.rng.randomF32InRange(t.angle - t.angleStep) + t.angleStep;
           break;
         case 7:
-          u = A.rng.randomF32InRange(t.speed1 - t.speed2) + t.speed2, h += c * o / t.count1, h += p * t.angleStep + t.angle;
+          d = A.rng.randomF32InRange(t.speed1 - t.speed2) + t.speed2, h += c * o / t.count1, h += p * t.angleStep + t.angle;
           break;
         case 8:
-          h = A.rng.randomF32InRange(t.angle - t.angleStep) + t.angleStep, u = A.rng.randomF32InRange(t.speed1 - t.speed2) + t.speed2;
+          h = A.rng.randomF32InRange(t.angle - t.angleStep) + t.angleStep, d = A.rng.randomF32InRange(t.speed1 - t.speed2) + t.speed2;
           break;
         default:
           h += t.angle;
           break;
       }
-      const m = s.launch(t, e, i, z(h), u);
-      if (!m) return n;
-      we(m, A, s), n++;
+      const w = s.launch(t, e, i, R(h), d);
+      if (!w) return n;
+      Te(w, A, s), n++;
     }
   }
   return n;
 }
-function we(s, A, t) {
+function Te(s, A, t) {
   let e = null;
   for (; ; ) {
-    if (s.tfIndex >= ge || (e = s.tfRecords[s.tfIndex] ?? null, !e || e.kind === 0) || e.allowWhileActive === 0 && s.tfActive !== 0) return;
+    if (s.tfIndex >= ve || (e = s.tfRecords[s.tfIndex] ?? null, !e || e.kind === 0) || e.allowWhileActive === 0 && s.tfActive !== 0) return;
     if ((s.tfFlags & e.kind) === 0) {
       s.tfIndex++;
       continue;
@@ -15678,50 +15700,50 @@ function we(s, A, t) {
     break;
   }
   const i = e, a = () => {
-    s.tfIndex++, we(s, A, t);
+    s.tfIndex++, Te(s, A, t);
   };
   switch (i.kind) {
-    case Q.BIRTH_PUSH:
-      s.tfActive |= Q.BIRTH_PUSH, s.h1 = 0;
+    case S.BIRTH_PUSH:
+      s.tfActive |= S.BIRTH_PUSH, s.h1 = 0;
       break;
-    case Q.ACCELERATE: {
-      s.tfActive |= Q.ACCELERATE;
+    case S.ACCELERATE: {
+      s.tfActive |= S.ACCELERATE;
       const o = i.float1 > -990 ? i.float1 : s.angle, n = (A.timeScale ?? 1) * i.float0;
       s.h10ax = Math.cos(o) * n, s.h10ay = Math.sin(o) * n, s.h10t = 0, s.h10dur = i.int0, s.tfIndex !== 0 && s.tSound >= 0 && A.onSound(s.tSound, s.x);
       break;
     }
-    case Q.CURL:
-      s.tfActive |= Q.CURL, s.h20ds = i.float0, s.h20da = i.float1, s.h20t = 0, s.h20dur = i.int0, s.tfIndex !== 0 && s.tSound >= 0 && A.onSound(s.tSound, s.x);
+    case S.CURL:
+      s.tfActive |= S.CURL, s.h20ds = i.float0, s.h20da = i.float1, s.h20t = 0, s.h20dur = i.int0, s.tfIndex !== 0 && s.tSound >= 0 && A.onSound(s.tSound, s.x);
       break;
-    case Q.RAMP_TURN:
-    case Q.RAMP_HOME:
-    case Q.RAMP_SET:
+    case S.RAMP_TURN:
+    case S.RAMP_HOME:
+    case S.RAMP_SET:
       s.tfActive |= i.kind, s.h40a = i.float0, s.h40s = i.float1 > -999 ? i.float1 : s.speed, s.h40t = 0, s.h40dur = i.int0, s.h40rep = i.int1, s.h40cnt = 0;
       break;
-    case Q.BOUNCE:
-    case Q.BOUNCE_X:
+    case S.BOUNCE:
+    case S.BOUNCE_X:
       s.tfActive |= i.kind, s.hBounceSpeed = i.float0 >= 0 ? i.float0 : s.speed, s.hBounceMax = i.int0, s.hBounceDone = 0;
       break;
-    case Q.WAIT:
-      s.tfActive |= Q.WAIT, s.hWait = i.int0;
+    case S.WAIT:
+      s.tfActive |= S.WAIT, s.hWait = i.int0;
       break;
-    case Q.WRAP_X:
-    case Q.WRAP_Y:
+    case S.WRAP_X:
+    case S.WRAP_Y:
       s.tfActive |= i.kind, s.hWrap = i.int0;
       break;
-    case Q.HOLD:
+    case S.HOLD:
       s.hold = i.int0, a();
       return;
-    case Q.RESPRITE:
+    case S.RESPRITE:
       s.type = i.int0 | 0, s.color = i.int1 | 0, s.radius = A.radiusFor(s.type), s.fieldW = A.sizeFor(s.type, s.color) * 2, s.fieldH = s.fieldW, a();
       return;
-    case Q.SOUND:
+    case S.SOUND:
       A.onSound(i.int0, s.x), a();
       return;
-    case Q.FADE_OUT:
-      s.state = BA, s.animLeft = is, s.tfIndex++;
+    case S.FADE_OUT:
+      s.state = xA, s.animLeft = Ms, s.tfIndex++;
       return;
-    case Q.FORK: {
+    case S.FORK: {
       if (!t) {
         s.tfIndex++;
         return;
@@ -15747,22 +15769,22 @@ function we(s, A, t) {
         transformSound: -1,
         radius: A.radiusFor(n >>> 16 & 255),
         halfSize: A.sizeFor(n >>> 16 & 255, n >>> 8 & 255),
-        appearFrames: me,
+        appearFrames: je,
         tag: "enemy"
       };
-      s.tfIndex += 2, aa(t, A, p, s.x, s.y), i.int0 < 0 && (s.state = BA, s.animLeft = is);
+      s.tfIndex += 2, ja(t, A, p, s.x, s.y), i.int0 < 0 && (s.state = xA, s.animLeft = Ms);
       return;
     }
   }
   s.tfIndex++;
 }
-function Rn(s, A) {
+function M0(s, A) {
   const t = s.tfActive;
   if (t === 0) return;
   const e = A.timeScale ?? 1;
-  t & Q.BIRTH_PUSH && Un(s, e), t & Q.ACCELERATE && Hn(s, e), t & Q.CURL && Gn(s, e), t & 64 && Pt(s, 64, "relative", A), t & 256 && Pt(s, 256, "absolute", A), t & 128 && Pt(s, 128, "home", A), t & 3072 && On(s, A), t & 131072 && (s.hWait <= 0 ? s.tfActive &= -131073 : s.hWait--), t & 4194304 && (as(s, "x"), s.hWrap <= 0 ? s.tfActive &= -4194305 : s.hWrap--), t & 8388608 && (as(s, "y"), s.hWrap <= 0 ? s.tfActive &= -8388609 : s.hWrap--);
+  t & S.BIRTH_PUSH && x0(s, e), t & S.ACCELERATE && D0(s, e), t & S.CURL && Q0(s, e), t & 64 && Jt(s, 64, "relative", A), t & 256 && Jt(s, 256, "absolute", A), t & 128 && Jt(s, 128, "home", A), t & 3072 && E0(s, A), t & 131072 && (s.hWait <= 0 ? s.tfActive &= -131073 : s.hWait--), t & 4194304 && (xs(s, "x"), s.hWrap <= 0 ? s.tfActive &= -4194305 : s.hWrap--), t & 8388608 && (xs(s, "y"), s.hWrap <= 0 ? s.tfActive &= -8388609 : s.hWrap--);
 }
-function Un(s, A) {
+function x0(s, A) {
   if (s.h1 <= 16) {
     const e = (5 - s.h1 * 5 / 16 + s.speed) * A;
     s.vx = Math.cos(s.angle) * e, s.vy = Math.sin(s.angle) * e;
@@ -15770,62 +15792,62 @@ function Un(s, A) {
     s.tfActive &= -2;
   s.h1++;
 }
-function Hn(s, A) {
+function D0(s, A) {
   s.h10t >= s.h10dur ? s.tfActive &= -17 : (s.vx += s.h10ax * A, s.vy += s.h10ay * A, (Math.abs(s.vx) > 1e-4 || Math.abs(s.vy) > 1e-4) && (s.angle = Math.atan2(s.vy, s.vx))), s.h10t++;
 }
-function Gn(s, A) {
-  s.h20t >= s.h20dur ? s.tfActive &= -33 : (s.angle = z(s.angle + A * s.h20da), s.speed += A * s.h20ds, s.vx = Math.cos(s.angle) * (A * s.speed), s.vy = Math.sin(s.angle) * (A * s.speed)), s.h20t++;
+function Q0(s, A) {
+  s.h20t >= s.h20dur ? s.tfActive &= -33 : (s.angle = R(s.angle + A * s.h20da), s.speed += A * s.h20ds, s.vx = Math.cos(s.angle) * (A * s.speed), s.vy = Math.sin(s.angle) * (A * s.speed)), s.h20t++;
 }
-function Pt(s, A, t, e) {
+function Jt(s, A, t, e) {
   let i;
-  s.h40t >= s.h40dur ? (s.tSound >= 0 && e.onSound(s.tSound, s.x), s.h40cnt++, s.h40cnt >= s.h40rep && (s.tfActive &= ~A), t === "relative" ? s.angle = z(s.angle + s.h40a) : t === "absolute" ? s.angle = s.h40a : s.angle = z(Math.atan2(e.playerY - s.y, e.playerX - s.x) + s.h40a), s.speed = s.h40s, i = s.speed, s.h40t = 0) : i = s.speed - s.h40t * s.speed / s.h40dur;
+  s.h40t >= s.h40dur ? (s.tSound >= 0 && e.onSound(s.tSound, s.x), s.h40cnt++, s.h40cnt >= s.h40rep && (s.tfActive &= ~A), t === "relative" ? s.angle = R(s.angle + s.h40a) : t === "absolute" ? s.angle = s.h40a : s.angle = R(Math.atan2(e.playerY - s.y, e.playerX - s.x) + s.h40a), s.speed = s.h40s, i = s.speed, s.h40t = 0) : i = s.speed - s.h40t * s.speed / s.h40dur;
   const a = e.timeScale ?? 1;
   s.vx = Math.cos(s.angle) * (i * a), s.vy = Math.sin(s.angle) * (i * a), s.h40t++;
 }
-function On(s, A) {
-  if (!$i(s.x, s.y, s.fieldW, s.fieldH)) return;
-  s.tSound >= 0 && A.onSound(s.tSound, s.x), (s.x < 0 || s.x >= _) && (s.angle = z(-s.angle - Math.PI)), (s.y < 0 || s.y >= k && (s.tfActive & Q.BOUNCE) !== 0) && (s.angle = z(-s.angle)), s.speed = s.hBounceSpeed;
+function E0(s, A) {
+  if (!Sa(s.x, s.y, s.fieldW, s.fieldH)) return;
+  s.tSound >= 0 && A.onSound(s.tSound, s.x), (s.x < 0 || s.x >= F) && (s.angle = R(-s.angle - Math.PI)), (s.y < 0 || s.y >= _ && (s.tfActive & S.BOUNCE) !== 0) && (s.angle = R(-s.angle)), s.speed = s.hBounceSpeed;
   const t = A.timeScale ?? 1;
   s.vx = Math.cos(s.angle) * (s.speed * t), s.vy = Math.sin(s.angle) * (s.speed * t), s.hBounceDone++, s.hBounceDone >= s.hBounceMax && (s.tfActive &= -3073);
 }
-function as(s, A) {
-  A === "x" ? s.x < 0 ? s.x += _ : s.x > _ && (s.x -= _) : s.y < 0 ? s.y += k : s.y > k && (s.y -= k);
+function xs(s, A) {
+  A === "x" ? s.x < 0 ? s.x += F : s.x > F && (s.x -= F) : s.y < 0 ? s.y += _ : s.y > _ && (s.y -= _);
 }
-const os = 70, rs = 7, Ln = 5, Yn = 106, Nn = 9, Jn = 1.7, Xn = 6.5, Kn = 27, Wn = 40, Vn = [3, 11];
-function qn(s, A) {
+const Ds = 70, Qs = 7, C0 = 5, S0 = 106, F0 = 9, _0 = 1.7, P0 = 6.5, k0 = 27, v0 = 40, j0 = [3, 11];
+function T0(s, A) {
   if (!A) return s;
-  const t = Math.trunc(s / Ln);
+  const t = Math.trunc(s / C0);
   return t !== 0 ? t : 1;
 }
-function Zn(s, A) {
-  return !A || s === 0 ? s : Math.trunc(s * Yn / 100);
+function U0(s, A) {
+  return !A || s === 0 ? s : Math.trunc(s * S0 / 100);
 }
-function $n(s) {
-  return Vn.includes(s) ? Xn : Jn;
+function R0(s) {
+  return j0.includes(s) ? P0 : _0;
 }
-function A0(s, A, t) {
-  return Math.trunc(s + A / $n(t));
+function G0(s, A, t) {
+  return Math.trunc(s + A / R0(t));
 }
-function t0(s, A, t, e = !1) {
+function z0(s, A, t, e = !1) {
   let i = s;
   if (i <= 0) return { damage: 0, score: 0, timeOrbs: 0 };
-  i >= os && (i = os);
+  i >= Ds && (i = Ds);
   const a = 10 * Math.trunc(i / 5);
-  return A.damageable ? (t.spellActive && (e ? i = 0 : i = i > rs ? Math.trunc(i / rs) : 1), A.freezeFrames > 0 && (i = A.boss ? Math.trunc(i / Nn) : 0), { damage: i, score: a, timeOrbs: 0 }) : { damage: 0, score: a, timeOrbs: 0 };
+  return A.damageable ? (t.spellActive && (e ? i = 0 : i = i > Qs ? Math.trunc(i / Qs) : 1), A.freezeFrames > 0 && (i = A.boss ? Math.trunc(i / F0) : 0), { damage: i, score: a, timeOrbs: 0 }) : { damage: 0, score: a, timeOrbs: 0 };
 }
-function e0(s, A, t, e) {
+function H0(s, A, t, e) {
   let i = s + (A > 50 ? 50 : A), a = 0;
   for (; i >= t; )
     i -= t, e && (a += 3);
   return { accumulator: i, timeOrbs: a };
 }
-function s0(s) {
+function Y0(s) {
   return s >= 4 && (s & 1) === 0;
 }
-function oa(s) {
-  return s0(s) ? Kn : Wn;
+function Ta(s) {
+  return Y0(s) ? k0 : v0;
 }
-const ra = {
+const Ua = {
   1e4: "i0",
   10001: "i1",
   10002: "i2",
@@ -15925,7 +15947,7 @@ const ra = {
   10089: "phase1",
   10090: "phase2",
   10091: "phase3"
-}, te = {
+}, fe = {
   1e4: "i0",
   10001: "i1",
   10002: "i2",
@@ -16031,7 +16053,7 @@ const ra = {
   // `EclOperandsFloat.cpp:122-123`: the second context float pair, +0x68.
   10094: "cf0",
   10095: "cf1"
-}, i0 = {
+}, L0 = {
   10016: "f0",
   10017: "f1",
   10018: "f2",
@@ -16074,8 +16096,8 @@ const ra = {
   10081: "tweenDZ",
   10094: "cf0",
   10095: "cf1"
-}, a0 = 4, o0 = 4, r0 = 36, n0 = 32, ns = [], p0 = 512;
-class v {
+}, O0 = 4, N0 = 4, J0 = 36, V0 = 32, Es = [], W0 = 512;
+class T {
   constructor(A) {
     // --- Active flag ---
     r(this, "active", !1);
@@ -16554,21 +16576,21 @@ class v {
      * its two sound ids, and `FUN_0042f5f0` copies both into each bullet, so the
      * records a bullet carries are the ones that were in place when it was fired.
      */
-    r(this, "shotRecords", ZA());
+    r(this, "shotRecords", it());
     /** Frozen copy handed to spawned bullets; refreshed only after op 111 writes. */
-    r(this, "shotRecordsFrozen", ZA());
+    r(this, "shotRecordsFrozen", it());
     r(this, "shotRecordsDirty", !0);
     r(this, "shotTransformSound", -1);
     r(this, "shotSpawnSound", 0);
     /** Reused operand vector: the launcher reads it synchronously. */
-    r(this, "shotPattern", ia());
+    r(this, "shotPattern", va());
     r(this, "bulletWorldCache", null);
     /**
      * The eight ECL interpolators at `context + 0x9C`, which op 36 installs and the
      * tail of `RunEcl` steps. This is the machine that glides a boss between
      * positions; ops 63..78 only drive the polar producer.
      */
-    r(this, "interpolators", new Pn());
+    r(this, "interpolators", new f0());
     r(this, "interpWorldCache", null);
     /** Frames on which a slot ran, so a sweep can prove the tail is wired. */
     r(this, "interpSteps", 0);
@@ -16731,9 +16753,9 @@ class v {
    * would otherwise spend its whole frame budget building strings.
    */
   refuse(A, t) {
-    if (ns.length >= p0) return;
+    if (Es.length >= W0) return;
     const e = new Error().stack ?? "";
-    ns.push({
+    Es.push({
       op: A,
       slot: this.slotIndex,
       sub: this.subId,
@@ -16764,7 +16786,7 @@ class v {
     var a;
     this.active = !0, this._x = A, this._y = t, this._z = 0, this.motorX = 0, this.motorY = 0, this.parentOffX = 0, this.parentOffY = 0, this.heading = 0, this.headingVel = 0, this.moveSpeed = 0, this.speedAccel = 0, this.orbitAngle = 0, this.orbitAngleVel = 0, this.orbitRadius = 0, this.orbitRadiusVel = 0, this.tweenDX = 0, this.tweenDY = 0, this.tweenDZ = 0, this.observedX = 0, this.observedY = 0, this.observedZ = 0, this.lastFrameX = A, this.lastFrameY = t, this.lastFrameZ = 0, this.motionTimer = 0, this.motionDuration = 0, this.clampMinX = 0, this.clampMinY = 0, this.clampMaxX = 0, this.clampMaxY = 0, this._hp = e, this._maxHp = e, this._timer = 0, this.waitFrames = 0, this.invulnerable = !1, this.damageEnabled = !0, this.flags = 0, this.flags2 = 0, this.generator = null;
     for (let o = 0; o < this.lanes.length; o++) this.lanes[o] = null;
-    this.secondaryTime = 0, this.gs = i, this.f0 = 0, this.f1 = 0, this.f2 = 0, this.f3 = 0, this.f4 = 0, this.f5 = 0, this.f6 = 0, this.f7 = 0, this.i0 = 0, this.i1 = 0, this.i2 = 0, this.i3 = 0, this.i4 = 0, this.i5 = 0, this.i6 = 0, this.i7 = 0, this.ei0 = 0, this.ei1 = 0, this.ei2 = 0, this.ei3 = 0, this.ei4 = 0, this.ei5 = 0, this.ei6 = 0, this.ei7 = 0, this.ef0 = 0, this.ef1 = 0, this.ef2 = 0, this.ef3 = 0, this.ef4 = 0, this.ef5 = 0, this.ef6 = 0, this.ef7 = 0, this.ci0 = 0, this.ci1 = 0, this.ci2 = 0, this.ci3 = 0, this.cxi0 = 0, this.cxi1 = 0, this.cxi2 = 0, this.cxi3 = 0, this.cxf0 = 0, this.cxf1 = 0, this.cxf2 = 0, this.cxf3 = 0, this.cf0 = 0, this.cf1 = 0, this.lastDamage = 0, this.boundsW = 24, this.boundsH = 24, this.altBoundsW = 0, this.altBoundsH = 0, this.freezeFrames = 0, this.lastFrameDamage = 0, this.noDamageDuringStop = !1, this.pauseTimer = !1, this.hitAccumulator = oa(i.shotType), this.anmScript = 0, this.anmScripts = [-1, -1, -1, -1, -1, -1], this.anmDirection = -1, this.anmUseStagePack = !1, (a = this.anm) == null || a.reset(), this.anmSprite = null, this.anmScale = 1, this.anmFlipX = !1, this.anmAlpha = 255, this.hasBeenInBounds = !1, this.linkedChild = !1, this.parentSlotIndex = -1, this.followParentPosition = !1, this.childCount = 0, this.ownX = A, this.ownY = t, this.scoreValue = 100, this.dropType = -2, this.pointDrops = 0, this.powerDrops = 0, this.shotOriginX = 0, this.shotOriginY = 0, this.shotNoFireRadiusSq = 1024, this.youkaiForm = !1, this.shotRepeatFrames = 0, this.shotRepeatTimer = 0, this.shotsHeld = !1, this.mirrorMovement = !1, this.heldShot = null, this.shotRecords = ZA(), this.shotRecordsFrozen = ZA(), this.shotRecordsDirty = !0, this.shotTransformSound = -1, this.shotSpawnSound = 0, this.interpolators.reset(), this.rotAngle = 0, this.rotationRate = 0, this.originX = A, this.originY = t, this.originZ = 0, this.bossLives = 0, this.bossPhase = 0, this.bossMarker = 255, this.isBoss = !1, this.cardBonusFrozen = !1, this.spellTimeout = 0, this.spellHp = 0, this.dropSpecId = 0, this.hasGauge = !1, this.gaugePips = 0, this.gaugeSlices = [], this.gaugeTimerFrames = 0, this.spriteColor = -1, this.extraAnmScript = -1, this.deathPending = !1, this.barBreakFrame = -1, this.fxRequests.length = 0, this.sfxRequests.length = 0, this.animAuto = !1, this.orbitEffects.length = 0, this.youkaiEffect = null, this.deathEffect1 = 0, this.deathEffect2 = 0;
+    this.secondaryTime = 0, this.gs = i, this.f0 = 0, this.f1 = 0, this.f2 = 0, this.f3 = 0, this.f4 = 0, this.f5 = 0, this.f6 = 0, this.f7 = 0, this.i0 = 0, this.i1 = 0, this.i2 = 0, this.i3 = 0, this.i4 = 0, this.i5 = 0, this.i6 = 0, this.i7 = 0, this.ei0 = 0, this.ei1 = 0, this.ei2 = 0, this.ei3 = 0, this.ei4 = 0, this.ei5 = 0, this.ei6 = 0, this.ei7 = 0, this.ef0 = 0, this.ef1 = 0, this.ef2 = 0, this.ef3 = 0, this.ef4 = 0, this.ef5 = 0, this.ef6 = 0, this.ef7 = 0, this.ci0 = 0, this.ci1 = 0, this.ci2 = 0, this.ci3 = 0, this.cxi0 = 0, this.cxi1 = 0, this.cxi2 = 0, this.cxi3 = 0, this.cxf0 = 0, this.cxf1 = 0, this.cxf2 = 0, this.cxf3 = 0, this.cf0 = 0, this.cf1 = 0, this.lastDamage = 0, this.boundsW = 24, this.boundsH = 24, this.altBoundsW = 0, this.altBoundsH = 0, this.freezeFrames = 0, this.lastFrameDamage = 0, this.noDamageDuringStop = !1, this.pauseTimer = !1, this.hitAccumulator = Ta(i.shotType), this.anmScript = 0, this.anmScripts = [-1, -1, -1, -1, -1, -1], this.anmDirection = -1, this.anmUseStagePack = !1, (a = this.anm) == null || a.reset(), this.anmSprite = null, this.anmScale = 1, this.anmFlipX = !1, this.anmAlpha = 255, this.hasBeenInBounds = !1, this.linkedChild = !1, this.parentSlotIndex = -1, this.followParentPosition = !1, this.childCount = 0, this.ownX = A, this.ownY = t, this.scoreValue = 100, this.dropType = -2, this.pointDrops = 0, this.powerDrops = 0, this.shotOriginX = 0, this.shotOriginY = 0, this.shotNoFireRadiusSq = 1024, this.youkaiForm = !1, this.shotRepeatFrames = 0, this.shotRepeatTimer = 0, this.shotsHeld = !1, this.mirrorMovement = !1, this.heldShot = null, this.shotRecords = it(), this.shotRecordsFrozen = it(), this.shotRecordsDirty = !0, this.shotTransformSound = -1, this.shotSpawnSound = 0, this.interpolators.reset(), this.rotAngle = 0, this.rotationRate = 0, this.originX = A, this.originY = t, this.originZ = 0, this.bossLives = 0, this.bossPhase = 0, this.bossMarker = 255, this.isBoss = !1, this.cardBonusFrozen = !1, this.spellTimeout = 0, this.spellHp = 0, this.dropSpecId = 0, this.hasGauge = !1, this.gaugePips = 0, this.gaugeSlices = [], this.gaugeTimerFrames = 0, this.spriteColor = -1, this.extraAnmScript = -1, this.deathPending = !1, this.barBreakFrame = -1, this.fxRequests.length = 0, this.sfxRequests.length = 0, this.animAuto = !1, this.orbitEffects.length = 0, this.youkaiEffect = null, this.deathEffect1 = 0, this.deathEffect2 = 0;
   }
   /** Reinterpret int32 bits as float32. */
   static i2f(A) {
@@ -16786,7 +16808,7 @@ class v {
   }
   /** Copy the slot's register fields into a bank. */
   captureRegs() {
-    const A = v.blankRegs(), t = this;
+    const A = T.blankRegs(), t = this;
     for (let e = 0; e < 8; e++)
       A.f[e] = t["f" + e], A.ef[e] = t["ef" + e], A.i[e] = t["i" + e], A.ei[e] = t["ei" + e];
     for (let e = 0; e < 4; e++)
@@ -16833,7 +16855,7 @@ class v {
    */
   callSubAlloc(A, t) {
     const e = A | 0;
-    if (e < 0 || e >= a0) return;
+    if (e < 0 || e >= O0) return;
     if (t < 0) {
       this.lanes[e] = null;
       return;
@@ -16842,7 +16864,7 @@ class v {
     if (!i) return;
     const a = i.makeSub(t, this);
     if (!a) return;
-    const o = v.blankRegs(), n = this.lanes[e];
+    const o = T.blankRegs(), n = this.lanes[e];
     this.lanes[e] = { generator: a, waitFrames: 0, regs: n ? n.regs : o, dead: !1 };
   }
   /** Remote variant (op 88): `lane` is the target enemy slot index. */
@@ -16921,7 +16943,7 @@ class v {
    * so an enemy hanging over an edge still counts as on screen.
    */
   static isWithinPlayfield(A, t, e, i) {
-    return !(A + e / 2 < 0 || A - e / 2 > _ || t + i / 2 < 0 || t - i / 2 > k);
+    return !(A + e / 2 < 0 || A - e / 2 > F || t + i / 2 < 0 || t - i / 2 > _);
   }
   /**
    * `EnemyManagerUpdate.cpp:550-590`. The retire is two-stage: a slot only
@@ -16932,7 +16954,7 @@ class v {
    * no animation VM attached (the ECL-only paths used by the tests).
    */
   stepBoundsRetire() {
-    const A = this.anm, t = A !== null && A.sprite === 0, e = A && !t ? A.spriteSize.x : this.boundsW, i = A && !t ? A.spriteSize.y : this.boundsH, a = v.isWithinPlayfield(this._x, this._y, e, i);
+    const A = this.anm, t = A !== null && A.sprite === 0, e = A && !t ? A.spriteSize.x : this.boundsW, i = A && !t ? A.spriteSize.y : this.boundsH, a = T.isWithinPlayfield(this._x, this._y, e, i);
     if (!t && !this.hasBeenInBounds && a) {
       this.hasBeenInBounds = !0;
       return;
@@ -17410,7 +17432,7 @@ class v {
     if (!t) return;
     const e = t.words(A);
     if (!e) return;
-    const i = this.anm ?? (this.anm = new hA(this.gs.rng));
+    const i = this.anm ?? (this.anm = new rA(this.gs.rng));
     i.pos.x = this._x, i.pos.y = this._y, i.rotation.z = this.rotAngle, i.angleVel.z = this.rotationRate, i.attach(e), this.anmSprite = i.visible ? i.sprite : null;
   }
   /** Let the renderer drive the assigned ANM scripts instead of holding frame 0. */
@@ -17447,7 +17469,7 @@ class v {
    * going this way". This is not the sprite rotation -- that lives in the ANM VM.
    */
   setHeadingSpeed(A, t) {
-    this.finiteArgs("setHeadingSpeed", A, t) && (this.heading = z(A), this.moveSpeed = t, this.interpMode = 1, this.motionDuration = 0, this.motionTimer = 0);
+    this.finiteArgs("setHeadingSpeed", A, t) && (this.heading = R(A), this.moveSpeed = t, this.interpMode = 1, this.motionDuration = 0, this.motionTimer = 0);
   }
   /**
    * op 66 (`:752-764`): a straight segment. Without a duration it degrades to
@@ -17473,7 +17495,7 @@ class v {
   }
   /** `EclHelpers::ConfigurePolarMotion` (0x420D10), shared by ops 66, 67 and 69. */
   configurePolarMotion(A, t, e, i) {
-    const a = z(e);
+    const a = R(e);
     this.tweenDX = Math.cos(a) * i * A, this.tweenDY = Math.sin(a) * i * A, this.originX = this.renderX, this.originY = this.renderY, this.originZ = 0, this.motionTimer = A, this.motionDuration = A, this.easingMode = t, this.interpMode = 2, this.mirrorX && (this.tweenDX = -this.tweenDX);
   }
   /**
@@ -17485,12 +17507,12 @@ class v {
   moveBounce(A, t, e) {
     if (!this.finiteArgs("moveBounce", A, t, e)) return;
     const i = Math.PI / 2, a = this.gs.rng.randomF32InRange(i);
-    let o = this.playerX < this._x ? z(a + 3 * Math.PI / 4) : a - Math.PI / 4;
+    let o = this.playerX < this._x ? R(a + 3 * Math.PI / 4) : a - Math.PI / 4;
     this._x < this.clampMinX + 96 && (o > i ? o = Math.PI - o : o < -i && (o = -Math.PI - o)), this._x > this.clampMaxX - 96 && (o < i && o >= 0 ? o = Math.PI - this.heading : o > -i && o <= 0 && (o = -Math.PI - o)), this._y < this.clampMinY + 48 && o < 0 && (o = -o), this._y > this.clampMaxY - 48 && o > 0 && (o = -o), A <= 0 ? (this.heading = o, this.moveSpeed = e, this.interpMode = 1, this.motionDuration = 0, this.motionTimer = 0) : this.configurePolarMotion(A, t, o, e);
   }
   /** op 68 (`:772-781`): aim along the heading to the player. Mode untouched. */
   moveToPlayer(A, t) {
-    this.finiteArgs("moveToPlayer", A, t) && (this.heading = z(A + this.angleToPlayer), this.moveSpeed = t);
+    this.finiteArgs("moveToPlayer", A, t) && (this.heading = R(A + this.angleToPlayer), this.moveSpeed = t);
   }
   /**
    * op 69 (`:782-802`): op 66 with the angle measured from the player. Note the
@@ -17621,7 +17643,7 @@ class v {
   stepInterpolators() {
     if (this._hp <= 0 || this.interpolators.activeCount === 0) return;
     const A = this._x, t = this._y, e = this._z;
-    this.interpSteps++, this.interpolators.step(this.interpWorld()) && (this.motorX = this._x - A, this.motorY = this._y - t, this.heading = z(Math.atan2(this.motorY, this.motorX)), this._x = A, this._y = t, this._z = e);
+    this.interpSteps++, this.interpolators.step(this.interpWorld()) && (this.motorX = this._x - A, this.motorY = this._y - t, this.heading = R(Math.atan2(this.motorY, this.motorX)), this._x = A, this._y = t, this._z = e);
   }
   /** The accessor pair the callbacks run against, built once per slot. */
   interpWorld() {
@@ -17638,17 +17660,17 @@ class v {
    */
   resolveInterpFloat(A) {
     const t = Math.trunc(A);
-    if (t === Aa) return this.renderX;
-    if (t === ta) return this.renderY;
-    if (t === ea) return this._z;
-    const e = te[t];
+    if (t === Fa) return this.renderX;
+    if (t === _a) return this.renderY;
+    if (t === Pa) return this._z;
+    const e = fe[t];
     if (!e) return A;
     const i = this[e];
     return typeof i == "number" ? i : A;
   }
   /** `ResolveFloatLValue`: only a register the switch knows is a destination. */
   writeInterpRegister(A, t) {
-    const e = i0[Math.trunc(A)];
+    const e = L0[Math.trunc(A)];
     e && (this[e] = t);
   }
   /** Fill `enemy+0x2D4C` from whichever producer bits 12-13 selected. */
@@ -17657,17 +17679,17 @@ class v {
       case 0:
         break;
       case 1: {
-        this.heading = z(this.heading + A * this.headingVel), this.moveSpeed = A * this.speedAccel + this.moveSpeed, this.motorX = Math.cos(this.heading) * this.moveSpeed, this.motorY = Math.sin(this.heading) * this.moveSpeed, this.motionDuration > 0 && --this.motionTimer <= 0 && (this.interpMode = 0);
+        this.heading = R(this.heading + A * this.headingVel), this.moveSpeed = A * this.speedAccel + this.moveSpeed, this.motorX = Math.cos(this.heading) * this.moveSpeed, this.motorY = Math.sin(this.heading) * this.moveSpeed, this.motionDuration > 0 && --this.motionTimer <= 0 && (this.interpMode = 0);
         break;
       }
       case 2: {
         this.motionTimer--;
         let t = this.motionDuration > 0 ? 1 - this.motionTimer / this.motionDuration : 1;
-        t < 0 && (t = 0), t = v.applyEasing(t, this.easingMode), this.motorX = this.originX + this.tweenDX * t - this._x, this.motorY = this.originY + this.tweenDY * t - this._y, this.mirrorX && (this.motorX = -this.motorX), this.heading = Math.atan2(this.motorY, this.motorX), this.motionTimer <= 0 && (this.interpMode = 0, this._x = this.originX + this.tweenDX, this._y = this.originY + this.tweenDY, this.motorX = 0, this.motorY = 0);
+        t < 0 && (t = 0), t = T.applyEasing(t, this.easingMode), this.motorX = this.originX + this.tweenDX * t - this._x, this.motorY = this.originY + this.tweenDY * t - this._y, this.mirrorX && (this.motorX = -this.motorX), this.heading = Math.atan2(this.motorY, this.motorX), this.motionTimer <= 0 && (this.interpMode = 0, this._x = this.originX + this.tweenDX, this._y = this.originY + this.tweenDY, this.motorX = 0, this.motorY = 0);
         break;
       }
       case 3: {
-        this.orbitAngle = z(this.orbitAngle + A * this.orbitAngleVel), this.orbitRadius = A * this.orbitRadiusVel + this.orbitRadius;
+        this.orbitAngle = R(this.orbitAngle + A * this.orbitAngleVel), this.orbitRadius = A * this.orbitRadiusVel + this.orbitRadius;
         const t = Math.cos(this.orbitAngle) * this.orbitRadius, e = Math.sin(this.orbitAngle) * this.orbitRadius;
         this.motorX = t + this.originX - this._x, this.motorY = e + this.originY - this._y, this.heading = Math.atan2(this.motorY, this.motorX), this.motionDuration > 0 && --this.motionTimer <= 0 && (this.interpMode = 0);
         break;
@@ -17780,7 +17802,7 @@ class v {
    */
   linkChild(A, t, e, i, a, o, n) {
     const p = this.enemyManager;
-    if (this.playSfx(r0), !p || this._hp <= 0 || this.linkedChild) return;
+    if (this.playSfx(J0), !p || this._hp <= 0 || this.linkedChild) return;
     const l = A === 1, c = l ? this._x + e : e, h = l ? this._y + i : i;
     this.finiteArgs("linkChild", c, h, a) && (this.fxRequests.push({
       kind: "burst",
@@ -17789,7 +17811,7 @@ class v {
       angle: 0,
       color: -1,
       scale: 1,
-      script: n0
+      script: V0
     }), p.spawnLinkedChild({
       subId: t | 0,
       x: c,
@@ -17915,7 +17937,7 @@ class v {
       elapsedFrames: this.cardElapsedFrames,
       noTimeoutPenalty: this.noTimeoutPenalty,
       captured: A,
-      isLastSpell: Sn(this.gs.spellNumber)
+      isLastSpell: h0(this.gs.spellNumber)
     });
   }
   // Shots / bullets (ECL ops 82, 96..110)
@@ -17924,7 +17946,7 @@ class v {
    * naming a register reads that register, anything else is the literal.
    */
   resolveIntOperand(A) {
-    const t = ra[A];
+    const t = Ua[A];
     if (!t) return A;
     const e = this[t];
     return typeof e == "number" ? Math.trunc(e) : A;
@@ -17934,7 +17956,7 @@ class v {
    * register, so `10016.0` means `f0` while an ordinary speed stays as it is.
    */
   resolveFloatOperand(A) {
-    const t = v.i2f(A), e = te[Math.trunc(t)];
+    const t = T.i2f(A), e = fe[Math.trunc(t)];
     if (!e) return t;
     const i = this[e];
     return typeof i == "number" ? i : t;
@@ -17953,7 +17975,7 @@ class v {
    */
   spawnShot(A) {
     if (this._hp <= 0) return;
-    const t = In(A);
+    const t = r0(A);
     if (this.shotsHeld) {
       this.heldShot = t;
       return;
@@ -17979,23 +18001,23 @@ class v {
       l,
       c,
       h
-    ] = A, u = this.bulletPool;
-    if (!u) return;
-    const m = c >>> 0;
-    if ((m & 32768) !== 0 && !this.youkaiForm || (m & 65536) !== 0 && this.youkaiForm) return;
-    const f = this.shotNoFireRadiusSq;
-    if (f > 0) {
-      const V = this._x - this.playerX, aA = this._y - this.playerY;
-      if (V * V + aA * aA < f) return;
+    ] = A, d = this.bulletPool;
+    if (!d) return;
+    const w = c >>> 0;
+    if ((w & 32768) !== 0 && !this.youkaiForm || (w & 65536) !== 0 && this.youkaiForm) return;
+    const m = this.shotNoFireRadiusSq;
+    if (m > 0) {
+      const q = this._x - this.playerX, pA = this._y - this.playerY;
+      if (q * q + pA * pA < m) return;
     }
-    const g = (h & 1) !== 0 ? this.resolveIntOperand(e << 16 >> 16) : e << 16 >> 16, d = (h & 2) !== 0 ? this.resolveIntOperand(e >> 16) : e >> 16;
-    let y = (h & 4) !== 0 ? this.resolveIntOperand(i) : i | 0, b = (h & 8) !== 0 ? this.resolveIntOperand(a) : a | 0, B = (h & 16) !== 0 ? this.resolveFloatOperand(o) : v.i2f(o), D = (h & 32) !== 0 ? this.resolveFloatOperand(n) : v.i2f(n);
-    const x = (h & 64) !== 0 ? this.resolveFloatOperand(p) : v.i2f(p), F = (h & 128) !== 0 ? this.resolveFloatOperand(l) : v.i2f(l);
-    this.inSpellCard || (y <= 0 && (y = 1), b <= 0 && (b = 1), B !== 0 && B < 0.3 && (B = 0.3), D < 0.3 && (D = 0.3));
-    const G = this.bulletRadiusFor ? this.bulletRadiusFor(g) : o0, W = this._x + this.shotOriginX, gA = this._y + this.shotOriginY;
-    this.shotRecordsDirty && (this.shotRecordsFrozen = this.shotRecords.map((V) => ({ ...V })), this.shotRecordsDirty = !1);
-    const C = this.shotPattern;
-    C.aimMode = t, C.type = g, C.color = d, C.count1 = y, C.count2 = b, C.speed1 = B, C.speed2 = D, C.angle = x, C.angleStep = F, C.transformFlags = m, C.records = this.shotRecordsFrozen, C.startIndex = 0, C.transformSound = this.shotTransformSound, C.radius = G, C.halfSize = this.bulletSizeFor ? this.bulletSizeFor(g, d) : G * 2, C.appearFrames = me, C.tag = "enemy", (m & 512) !== 0 && this.playSfx(this.shotSpawnSound), aa(u, this.shotWorld(), C, W, gA);
+    const u = (h & 1) !== 0 ? this.resolveIntOperand(e << 16 >> 16) : e << 16 >> 16, g = (h & 2) !== 0 ? this.resolveIntOperand(e >> 16) : e >> 16;
+    let B = (h & 4) !== 0 ? this.resolveIntOperand(i) : i | 0, y = (h & 8) !== 0 ? this.resolveIntOperand(a) : a | 0, b = (h & 16) !== 0 ? this.resolveFloatOperand(o) : T.i2f(o), D = (h & 32) !== 0 ? this.resolveFloatOperand(n) : T.i2f(n);
+    const x = (h & 64) !== 0 ? this.resolveFloatOperand(p) : T.i2f(p), Q = (h & 128) !== 0 ? this.resolveFloatOperand(l) : T.i2f(l);
+    this.inSpellCard || (B <= 0 && (B = 1), y <= 0 && (y = 1), b !== 0 && b < 0.3 && (b = 0.3), D < 0.3 && (D = 0.3));
+    const j = this.bulletRadiusFor ? this.bulletRadiusFor(u) : N0, Z = this._x + this.shotOriginX, mA = this._y + this.shotOriginY;
+    this.shotRecordsDirty && (this.shotRecordsFrozen = this.shotRecords.map((q) => ({ ...q })), this.shotRecordsDirty = !1);
+    const P = this.shotPattern;
+    P.aimMode = t, P.type = u, P.color = g, P.count1 = B, P.count2 = y, P.speed1 = b, P.speed2 = D, P.angle = x, P.angleStep = Q, P.transformFlags = w, P.records = this.shotRecordsFrozen, P.startIndex = 0, P.transformSound = this.shotTransformSound, P.radius = j, P.halfSize = this.bulletSizeFor ? this.bulletSizeFor(u, g) : j * 2, P.appearFrames = je, P.tag = "enemy", (w & 512) !== 0 && this.playSfx(this.shotSpawnSound), ja(d, this.shotWorld(), P, Z, mA);
   }
   /** Replay the held shot instruction once every `shotRepeatFrames` frames. */
   tickShotRepeat() {
@@ -18034,31 +18056,31 @@ class v {
       l,
       c,
       h,
-      u,
-      m,
-      f,
-      g,
       d,
-      y
-    ] = Mn(A), b = (Ma) => (y & 1 << Ma) !== 0, B = i << 16 >> 16, D = b(1) ? this.resolveIntOperand(i >> 16) : i >> 16, x = b(2) ? this.resolveFloatOperand(a) : v.i2f(a), F = b(3) ? this.resolveFloatOperand(o) : v.i2f(o), G = b(4) ? this.resolveFloatOperand(n) : v.i2f(n), W = b(5) ? this.resolveFloatOperand(p) : v.i2f(p), gA = b(6) ? this.resolveFloatOperand(l) : v.i2f(l), C = b(7) ? this.resolveFloatOperand(c) : v.i2f(c), V = b(8) ? this.resolveIntOperand(h) : h | 0, aA = b(9) ? this.resolveIntOperand(u) : u | 0, zA = b(10) ? this.resolveIntOperand(m) : m | 0, RA = f | 0, DA = g | 0, UA = d | 0, mA = this._x + this.shotOriginX, xe = this._y + this.shotOriginY;
+      w,
+      m,
+      u,
+      g,
+      B
+    ] = n0(A), y = (ao) => (B & 1 << ao) !== 0, b = i << 16 >> 16, D = y(1) ? this.resolveIntOperand(i >> 16) : i >> 16, x = y(2) ? this.resolveFloatOperand(a) : T.i2f(a), Q = y(3) ? this.resolveFloatOperand(o) : T.i2f(o), j = y(4) ? this.resolveFloatOperand(n) : T.i2f(n), Z = y(5) ? this.resolveFloatOperand(p) : T.i2f(p), mA = y(6) ? this.resolveFloatOperand(l) : T.i2f(l), P = y(7) ? this.resolveFloatOperand(c) : T.i2f(c), q = y(8) ? this.resolveIntOperand(h) : h | 0, pA = y(9) ? this.resolveIntOperand(d) : d | 0, LA = y(10) ? this.resolveIntOperand(w) : w | 0, OA = m | 0, SA = u | 0, NA = g | 0, fA = this._x + this.shotOriginX, Le = this._y + this.shotOriginY;
     t.spawn({
-      x: mA,
-      y: xe,
+      x: fA,
+      y: Le,
       // `aimMode == 0` is op 115: the beam is relative to the ship direction.
-      angle: z(e === 115 ? Math.atan2(this.playerY - xe, this.playerX - mA) + x : x),
-      tail: G,
-      head: W,
-      startLength: gA,
-      width: C,
-      speed: F,
-      startTime: V,
-      hitboxStartTime: RA,
-      duration: aA,
-      despawnDuration: zA,
-      hitboxEndDelay: DA,
-      flags: UA,
+      angle: R(e === 115 ? Math.atan2(this.playerY - Le, this.playerX - fA) + x : x),
+      tail: j,
+      head: Z,
+      startLength: mA,
+      width: P,
+      speed: Q,
+      startTime: q,
+      hitboxStartTime: OA,
+      duration: pA,
+      despawnDuration: LA,
+      hitboxEndDelay: SA,
+      flags: NA,
       color: D,
-      bulletType: B
+      bulletType: b
     });
   }
   /** Repeat interval for the held shot (op 105). */
@@ -18136,10 +18158,10 @@ class v {
    */
   spawnEffect(...A) {
     const t = {
-      x: v.i2f(A[1] ?? 0),
-      y: v.i2f(A[2] ?? 0),
-      z: v.i2f(A[3] ?? 0)
-    }, e = v.i2f(A[4] ?? 0), i = this.effectPool;
+      x: T.i2f(A[1] ?? 0),
+      y: T.i2f(A[2] ?? 0),
+      z: T.i2f(A[3] ?? 0)
+    }, e = T.i2f(A[4] ?? 0), i = this.effectPool;
     if (!i) {
       const o = Number.isFinite(e) && e > 0 ? e : 160;
       this.fxRequests.push({
@@ -18305,7 +18327,7 @@ class v {
    */
   setShotRecord(A, t, e, i, a, o, n) {
     const p = A | 0;
-    if (p < 0 || p >= ge) return;
+    if (p < 0 || p >= ve) return;
     const l = this.shotRecords[p];
     l.kind = t >>> 0, l.allowWhileActive = e | 0, l.int0 = i | 0, l.int1 = a | 0, l.float0 = o, l.float1 = n, this.shotRecordsDirty = !0;
   }
@@ -18503,7 +18525,7 @@ class v {
     this.noDamageDuringStop = (A[0] ?? 0) !== 0;
   }
 }
-const na = {
+const Ra = {
   humanLimit: -1e4,
   youkaiLimit: 1e4,
   extremeHuman: -8e3,
@@ -18511,25 +18533,25 @@ const na = {
   moderateHuman: -2e3,
   moderateYoukai: 2e3
 };
-function l0(s) {
-  const A = { ...na };
+function K0(s) {
+  const A = { ...Ra };
   return s === 3 ? (A.humanLimit = -5e3, A.extremeHuman = -3e3, A.moderateHuman = -2e3) : s === 10 ? (A.humanLimit = -5e3, A.extremeHuman = -3e3, A.moderateHuman = -2e3, A.youkaiLimit = 5e3, A.extremeYoukai = 3e3, A.moderateYoukai = 2e3) : s >= 4 && (s % 2 === 0 ? (A.youkaiLimit = 2e3, A.extremeYoukai = 8e3, A.moderateYoukai = 2001) : (A.humanLimit = -2e3, A.extremeHuman = -8e3, A.moderateHuman = -2001)), A;
 }
-function $A(s, A) {
+function at(s, A) {
   return s <= A.extremeHuman;
 }
-function ps(s, A) {
+function Cs(s, A) {
   return s <= A.moderateHuman;
 }
-function ls(s, A) {
+function Ss(s, A) {
   return s >= A.moderateYoukai;
 }
-function jt(s, A) {
+function Vt(s, A) {
   return s >= A.extremeYoukai;
 }
-const c0 = 300, h0 = 21, d0 = 20, u0 = 4, cs = 30, g0 = 9;
-class m0 {
-  constructor(A = na) {
+const X0 = 300, Z0 = 21, q0 = 20, $0 = 4, Fs = 30, A1 = 9;
+class t1 {
+  constructor(A = Ra) {
     /** Signed meter value in retail units. */
     r(this, "value", 0);
     /**
@@ -18563,28 +18585,28 @@ class m0 {
   }
   /** One frame of `Player.cpp:924-967`. */
   tick({ shooting: A, isYoukai: t, timeScale: e = 1 }) {
-    if (A && this.shootTimer < 0 && (this.shootTimer = 0), this.shootTimer >= 0 && (this.shootTimer++, this.shootTimer >= d0 && (this.shootTimer = -1)), this.shootTimer >= 0) {
+    if (A && this.shootTimer < 0 && (this.shootTimer = 0), this.shootTimer >= 0 && (this.shootTimer++, this.shootTimer >= q0 && (this.shootTimer = -1)), this.shootTimer >= 0) {
       if (this.idle > 0)
         this.idle--;
       else {
-        const i = this.charge > c0 ? h0 : Math.floor(this.charge / 15);
+        const i = this.charge > X0 ? Z0 : Math.floor(this.charge / 15);
         this.add(i * e * (t ? 1 : -1)), this.charge++;
       }
       return;
     }
-    this.idle >= u0 && (this.charge = 0), this.idle >= cs ? Math.abs(this.value) <= g0 ? this.value = 0 : this.add(this.relaxDelta() * e) : this.idle++;
+    this.idle >= $0 && (this.charge = 0), this.idle >= Fs ? Math.abs(this.value) <= A1 ? this.value = 0 : this.add(this.relaxDelta() * e) : this.idle++;
   }
   /** The relaxation step, whose size grows with how extreme the meter is. */
   relaxDelta() {
     const A = this.bounds;
-    return jt(this.value, A) ? -5 : ls(this.value, A) ? -3 : this.value > 0 ? -2 : ps(this.value, A) ? $A(this.value, A) ? 5 : 3 : 2;
+    return Vt(this.value, A) ? -5 : Ss(this.value, A) ? -3 : this.value > 0 ? -2 : Cs(this.value, A) ? at(this.value, A) ? 5 : 3 : 2;
   }
   /**
    * `EnemyManager.cpp:363-369` — killing a boss-attached enemy drags the meter a
    * twelfth of the way back to neutral and forces the relaxation branch.
    */
   onEnemyDeath() {
-    this.add(-this.value / 12), this.charge = 0, this.idle = cs;
+    this.add(-this.value / 12), this.charge = 0, this.idle = Fs;
   }
   /**
    * `ItemManager.cpp:638-643` — a 时符 pushes the meter toward whichever form is
@@ -18598,7 +18620,7 @@ class m0 {
    * more on the youkai side, and grazing in youkai form feeds the meter.
    */
   onGraze() {
-    const A = this.bounds, t = $A(this.value, A) ? 3 : ps(this.value, A) ? 2 : 1, e = ls(this.value, A) ? 4e3 : 2e3;
+    const A = this.bounds, t = at(this.value, A) ? 3 : Cs(this.value, A) ? 2 : 1, e = Ss(this.value, A) ? 4e3 : 2e3;
     return { grazeGain: t, score: e, gaugeGain: 100 };
   }
   /** `Player.cpp:550` — dying always resets the meter to neutral. */
@@ -18613,14 +18635,14 @@ class m0 {
   /** True while retail paints the extreme aura behind the ship (`Player.cpp:969`). */
   isExtreme() {
     const A = this.bounds;
-    return $A(this.value, A) || jt(this.value, A);
+    return at(this.value, A) || Vt(this.value, A);
   }
   /**
    * `GameManager::GaugeIsExtremelyHuman` — the meter is pinned deep enough on the
    * human side that every 点 item pays double (`ItemManager.cpp:476,537`).
    */
   isExtremelyHuman() {
-    return $A(this.value, this.bounds);
+    return at(this.value, this.bounds);
   }
   /**
    * `GameManager::GaugeIsExtremelyYoukai` (`GameManager.hpp:180-183`). The youkai
@@ -18628,11 +18650,11 @@ class m0 {
    * damage comes from (`Player.cpp:3495-3496`).
    */
   isExtremelyYoukai() {
-    return jt(this.value, this.bounds);
+    return Vt(this.value, this.bounds);
   }
 }
-const w0 = Si, f0 = Ua, y0 = Ha, hs = 3, b0 = 16, B0 = 16, ee = 128, I0 = 10, M0 = 0.825, x0 = 1.4, D0 = 12, ds = [8, 24, 48, 80, 128], E0 = 7, S0 = 4, Q0 = 30, C0 = 20, _0 = 20, k0 = 14;
-class F0 {
+const e1 = Aa, s1 = bo, i1 = Io, _s = 3, a1 = 16, o1 = 16, Be = 128, r1 = 10, n1 = 0.825, p1 = 1.4, l1 = 12, Ps = [8, 24, 48, 80, 128], c1 = 7, h1 = 4, d1 = 30, g1 = 20, u1 = 20, w1 = 14;
+class m1 {
   constructor(A) {
     r(this, "x");
     r(this, "y");
@@ -18695,7 +18717,7 @@ class F0 {
     r(this, "lives");
     r(this, "bombs");
     r(this, "power", 0);
-    r(this, "maxPower", ee);
+    r(this, "maxPower", Be);
     r(this, "powerLost", 0);
     r(this, "score", 0);
     r(this, "graze", 0);
@@ -18715,7 +18737,7 @@ class F0 {
     /** Per-axis component of a diagonal move while focused (`+ 0x30`). */
     r(this, "slowDiagonalSpeed", 2 * Math.SQRT1_2);
     /** `plyNNa.sht + 0x14`: how fast a grabbed item flies at the ship. */
-    r(this, "itemGrabSpeed", I0);
+    r(this, "itemGrabSpeed", r1);
     /**
      * `plyNNa.sht + 0x34`: the clock on items that are still falling freely, read
      * off the primary table while unfocused (`ItemManager.cpp:207-209`).
@@ -18724,11 +18746,11 @@ class F0 {
     /** The same float off the partner's table, used while focused. */
     r(this, "itemTimeScaleFocused", 0.9);
     /** Half of the hit box (`plyNNa.sht + 0x0C / 2`); the stage overwrites it per team. */
-    r(this, "hitboxHalfExtent", M0);
+    r(this, "hitboxHalfExtent", n1);
     /** Half of the graze box (`plyNNa.sht + 0x10 / 2`). */
-    r(this, "grazeHalfExtent", x0);
+    r(this, "grazeHalfExtent", p1);
     /** Half of the item box (`plyNNa.sht + 0x18 / 2`); items carry the same box. */
-    r(this, "itemPickupHalfExtent", D0);
+    r(this, "itemPickupHalfExtent", l1);
     /**
      * `Player.cpp:791-872` picks the ship's animation from the *intended* horizontal
      * speed (`field_0xE2A9C`), never from how far the sprite actually travelled. The
@@ -18783,7 +18805,7 @@ class F0 {
      */
     r(this, "shotWindowTimer", -1);
     r(this, "gs");
-    this.gs = A, this.gauge = new m0(l0(A.shotType)), this.x = VA, this.y = qA, this.lives = A.lives, this.bombs = A.bombs, this.power = A.power, this.score = A.score, this.graze = A.graze;
+    this.gs = A, this.gauge = new t1(K0(A.shotType)), this.x = et, this.y = st, this.lives = A.lives, this.bombs = A.bombs, this.power = A.power, this.score = A.score, this.graze = A.graze;
   }
   /** The red half of that flash, `timer % 8 < 2`. */
   get bombStateFlash() {
@@ -18825,7 +18847,7 @@ class F0 {
    * of skipping the entrance animation (`unk3ddc0 < 20` at `:3292`).
    */
   stepShotWindow(A) {
-    A && this.shotWindowTimer < 0 && (this.shotWindowTimer = 0), !(this.gs.frame < _0 || this.shotWindowTimer < 0) && (this.shotWindowTimer++, this.shotWindowTimer >= C0 && (this.shotWindowTimer = -1), A && this.shotWindowTimer < 0 && (this.shotWindowTimer = 0), (this.state === "dying" || this.state === "respawning") && (this.shotWindowTimer = -1));
+    A && this.shotWindowTimer < 0 && (this.shotWindowTimer = 0), !(this.gs.frame < u1 || this.shotWindowTimer < 0) && (this.shotWindowTimer++, this.shotWindowTimer >= g1 && (this.shotWindowTimer = -1), A && this.shotWindowTimer < 0 && (this.shotWindowTimer = 0), (this.state === "dying" || this.state === "respawning") && (this.shotWindowTimer = -1));
   }
   /** Sync state back to GameState. */
   syncToGameState() {
@@ -18834,7 +18856,7 @@ class F0 {
   /** Update shot level from power thresholds. */
   updateShotLevel() {
     let A = 0;
-    for (; A < ds.length && this.power >= ds[A]; ) A++;
+    for (; A < Ps.length && this.power >= Ps[A]; ) A++;
     this.shotLevel = A;
   }
   /** Process one frame of input + state machine. */
@@ -18843,11 +18865,11 @@ class F0 {
       this.tickDying(), this.tryBomb(A.bomb), this.updateShotLevel(), this.syncToGameState();
       return;
     }
-    if (this.state === "respawning" && (this.stateTimer--, this.stateTimer <= 0 && (this.state = "alive", this.graceTimer = va(this.gs.shotType))), this.cancelTimer > 0 && this.cancelTimer--, this.invulnTimer > 0 && this.invulnTimer--, this.bombStateTimer > 0 && this.bombStateTimer--, this.state !== "alive" && this.state !== "respawning") return;
+    if (this.state === "respawning" && (this.stateTimer--, this.stateTimer <= 0 && (this.state = "alive", this.graceTimer = mo(this.gs.shotType))), this.cancelTimer > 0 && this.cancelTimer--, this.invulnTimer > 0 && this.invulnTimer--, this.bombStateTimer > 0 && this.bombStateTimer--, this.state !== "alive" && this.state !== "respawning") return;
     const t = this.gs.bombRunning ? this.gs.bombForcedFocus : A.slow;
-    this.focusEntered = !1, this.focusExited = !1, t !== this.isSlow ? (this.stanceTimer >= S0 && (t ? this.focusEntered = !0 : this.focusExited = !0), this.isSlow = t, this.stanceTimer = 0) : this.stanceTimer++, this.stanceTimer >= E0 && (this.hitboxVisible = this.isSlow);
+    this.focusEntered = !1, this.focusExited = !1, t !== this.isSlow ? (this.stanceTimer >= h1 && (t ? this.focusEntered = !0 : this.focusExited = !0), this.isSlow = t, this.stanceTimer = 0) : this.stanceTimer++, this.stanceTimer >= c1 && (this.hitboxVisible = this.isSlow);
     const e = this.isSlow ? 1 : 0;
-    e !== this.memberIndex ? (this.memberIndex = e, this.switchFlash = k0) : this.switchFlash > 0 && this.switchFlash--, this.gauge.frameStop = this.gs.bombRunning, this.stanceTimer >= Q0 && !this.gs.bombRunning && !this.holdGauge && this.gauge.tick({
+    e !== this.memberIndex ? (this.memberIndex = e, this.switchFlash = w1) : this.switchFlash > 0 && this.switchFlash--, this.gauge.frameStop = this.gs.bombRunning, this.stanceTimer >= d1 && !this.gs.bombRunning && !this.holdGauge && this.gauge.tick({
       shooting: A.shoot,
       isYoukai: this.isSlow,
       timeScale: this.gs.timeScale
@@ -18857,19 +18879,19 @@ class F0 {
     if (A.moveTarget) {
       const l = A.moveTarget.x - this.x, c = A.moveTarget.y - this.y, h = Math.hypot(l, c);
       if (h > 1) {
-        const u = Math.min(h, i) * o;
-        this.x += l / h * u, this.y += c / h * u, this.leanX = l / h * u, this.leanY = c / h * u, n = De(
-          (this.leanY < 0 ? Y.up : 0) | (this.leanY > 0 ? Y.down : 0) | (this.leanX < 0 ? Y.left : 0) | (this.leanX > 0 ? Y.right : 0)
+        const d = Math.min(h, i) * o;
+        this.x += l / h * d, this.y += c / h * d, this.leanX = l / h * d, this.leanY = c / h * d, n = Oe(
+          (this.leanY < 0 ? J.up : 0) | (this.leanY > 0 ? J.down : 0) | (this.leanX < 0 ? J.left : 0) | (this.leanX > 0 ? J.right : 0)
         ), p = !0;
       } else
         this.leanX = 0, this.leanY = 0;
     } else {
-      const l = A.dirBits ?? (A.dy < 0 ? Y.up : 0) | (A.dy > 0 ? Y.down : 0) | (A.dx < 0 ? Y.left : 0) | (A.dx > 0 ? Y.right : 0);
-      n = De(l);
-      const [c, h] = Ta(n, i, a);
+      const l = A.dirBits ?? (A.dy < 0 ? J.up : 0) | (A.dy > 0 ? J.down : 0) | (A.dx < 0 ? J.left : 0) | (A.dx > 0 ? J.right : 0);
+      n = Oe(l);
+      const [c, h] = fo(n, i, a);
       this.x += c * o, this.y += h * o, this.leanX = c * o, this.leanY = h * o, p = c !== 0 || h !== 0;
     }
-    this.movementDirection = n, this.moving = p, this.x = Math.max(8, Math.min(_ - 8, this.x)), this.y = Math.max(16, Math.min(k - 16, this.y)), this.shootCooldown > 0 && this.shootCooldown--, this.tryBomb(A.bomb), this.updateShotLevel(), this.syncToGameState();
+    this.movementDirection = n, this.moving = p, this.x = Math.max(8, Math.min(F - 8, this.x)), this.y = Math.max(16, Math.min(_ - 16, this.y)), this.shootCooldown > 0 && this.shootCooldown--, this.tryBomb(A.bomb), this.updateShotLevel(), this.syncToGameState();
   }
   /**
    * The dying clock: the grace window first, then the 30-frame dissolve.
@@ -18879,20 +18901,20 @@ class F0 {
    */
   tickDying() {
     if (this.graceTimer > 0) {
-      pt(this.gs, za), this.graceTimer--, this.deathbombArmed = this.graceTimer > 0, this.graceTimer === 0 && this.settleDeath();
+      ft(this.gs, Bo), this.graceTimer--, this.deathbombArmed = this.graceTimer > 0, this.graceTimer === 0 && this.settleDeath();
       return;
     }
-    this.stateTimer--, this.deathTimer = Si - Math.max(0, this.stateTimer), this.stateTimer <= 0 && this.respawn();
+    this.stateTimer--, this.deathTimer = Aa - Math.max(0, this.stateTimer), this.stateTimer <= 0 && this.respawn();
   }
   /** Take a hit. Returns true if the hit connected. */
   hit() {
-    return this.invulnTimer > 0 || this.state !== "alive" ? !1 : (bn(this.gs), this.gauge.onDeath(), this.deathSettled = !1, this.state = "dying", this.deathTimer = 0, this.graceTimer = Ra({
+    return this.invulnTimer > 0 || this.state !== "alive" ? !1 : (a0(this.gs), this.gauge.onDeath(), this.deathSettled = !1, this.state = "dying", this.deathTimer = 0, this.graceTimer = yo({
       bombs: this.bombs,
       timeOrbs: this.gs.timeOrbs,
       lastSpellTimeOrbThreshold: this.gs.lastSpellTimeOrbThreshold,
       spellCardActive: this.gs.spellName !== null,
       shotType: this.gs.shotType
-    }), this.deathbombArmed = this.graceTimer > 0, this.stateTimer = w0, this.invulnTimer = 0, !0);
+    }), this.deathbombArmed = this.graceTimer > 0, this.stateTimer = e1, this.invulnTimer = 0, !0);
   }
   /**
    * The frame the death stops being cancellable (`Player.cpp:1318-1369`).
@@ -18905,14 +18927,14 @@ class F0 {
     if (this.lives <= 0)
       this.powerLost += this.power, this.power = 0;
     else {
-      const A = this.power <= B0 ? this.power : b0;
+      const A = this.power <= o1 ? this.power : a1;
       this.power -= A, this.powerLost += A;
     }
-    this.deathSettled = !0, Ae(this.gs, 1600);
+    this.deathSettled = !0, me(this.gs, 1600);
   }
   /** Spend a life and fly back in. Returns false on game over. */
   respawn() {
-    return this.lives <= 0 ? (this.state = "dead", this.gs.showRetryMenu = !0, !1) : (this.lives--, this.bombs = this.deathbombRefill, this.x = VA, this.y = qA, this.state = "respawning", this.stateTimer = f0, this.cancelTimer = y0, this.graceTimer = 0, this.deathTimer = 0, this.deathbombArmed = !1, this.invulnTimer = 0, !0);
+    return this.lives <= 0 ? (this.state = "dead", this.gs.showRetryMenu = !0, !1) : (this.lives--, this.bombs = this.deathbombRefill, this.x = et, this.y = st, this.state = "respawning", this.stateTimer = s1, this.cancelTimer = i1, this.graceTimer = 0, this.deathTimer = 0, this.deathbombArmed = !1, this.invulnTimer = 0, !0);
   }
   /**
    * Spend a bomb. Retail buys no invulnerability with it (`acceptBomb` never
@@ -18927,23 +18949,23 @@ class F0 {
     if (this.deathbomb = !1, !A || this.bombs <= 0) return !1;
     const t = this.state === "dying" && this.deathbombArmed && this.graceTimer > 0;
     if (!t && this.state !== "alive") return !1;
-    const e = Ee(t, this.bombs);
-    return e <= 0 ? !1 : (this.bombs -= e, this.graceTimer = Ga(this.graceTimer, this.gs.shotType), this.deathbomb = t, this.bombTriggered = !0, Ae(this.gs, 200), !0);
+    const e = Ne(t, this.bombs);
+    return e <= 0 ? !1 : (this.bombs -= e, this.graceTimer = Mo(this.graceTimer, this.gs.shotType), this.deathbomb = t, this.bombTriggered = !0, me(this.gs, 200), !0);
   }
   /** Bombs the card that would fire right now costs (`acceptBomb:1244-1271`). */
   get bombCost() {
-    return Ee(this.deathbombArmed, this.bombs);
+    return Ne(this.deathbombArmed, this.bombs);
   }
   /** What `respawn()` refills the bomb count to: `plyNNa.sht + 4`. */
   get deathbombRefill() {
-    return hs;
+    return _s;
   }
   /**
    * The ship's scale/blend pose for the grace window, the dissolve and the
    * spawn-in, or null when it draws as usual.
    */
   get shipPose() {
-    const A = Oa(this.state, this.stateTimer, this.graceTimer);
+    const A = xo(this.state, this.stateTimer, this.graceTimer);
     return A.alpha >= 1 && A.scaleX === 1 && A.scaleY === 1 && !A.whiteout ? null : A;
   }
   /**
@@ -18986,7 +19008,7 @@ class F0 {
     const A = this.gauge.onGraze();
     this.isYoukai && this.gauge.add(A.gaugeGain);
     const t = this.gs.bombRunning ? 0 : A.grazeGain;
-    return this.graze = Math.min(999999, this.graze + t), this.addScore(A.score), _A(this.gs, 6), { grazeGain: t, score: A.score };
+    return this.graze = Math.min(999999, this.graze + t), this.addScore(A.score), jA(this.gs, 6), { grazeGain: t, score: A.score };
   }
   /**
    * `GameManager::AddScore` (`GameManager.cpp:191-194`), the one door every point in
@@ -19027,11 +19049,11 @@ class F0 {
   }
   /** Continue (retry): reset resources, keep stage. */
   continue_() {
-    this.lives = 3, this.bombs = hs, this.power = 0, this.score = 0, this.state = "alive", this.stateTimer = 0, this.graceTimer = 0, this.deathTimer = 0, this.deathbombArmed = !1, this.invulnTimer = 0, this.x = VA, this.y = qA;
+    this.lives = 3, this.bombs = _s, this.power = 0, this.score = 0, this.state = "alive", this.stateTimer = 0, this.graceTimer = 0, this.deathTimer = 0, this.deathbombArmed = !1, this.invulnTimer = 0, this.x = et, this.y = st;
   }
   /** Reset for next stage (carry resources). */
   resetForStage() {
-    this.x = VA, this.y = qA, this.state = "alive", this.stateTimer = 0, this.cancelTimer = 0, this.graceTimer = 0, this.deathTimer = 0, this.deathbombArmed = !1, this.invulnTimer = 0;
+    this.x = et, this.y = st, this.state = "alive", this.stateTimer = 0, this.cancelTimer = 0, this.graceTimer = 0, this.deathTimer = 0, this.deathbombArmed = !1, this.invulnTimer = 0;
   }
   get isFlying() {
     return this.state === "alive" || this.state === "respawning";
@@ -19044,11 +19066,11 @@ class F0 {
     return this.invulnTimer > 0 && this.gs.frame % 8 < 2;
   }
 }
-const P0 = 0.03, us = 3, gs = 24, j0 = 8, ms = k + 48, v0 = -0.9, T0 = -0.5, z0 = -0.7, R0 = -2.2, U0 = -2, H0 = 0.2, G0 = 0.6, O0 = -0.9, ws = 0.05, fs = 60, L0 = 48, Y0 = 288, N0 = -64, J0 = 192, ys = 64, bs = [8, 24, 48, 80, 128, 999], Bs = (s) => {
+const f1 = 0.03, ks = 3, vs = 24, B1 = 8, js = _ + 48, y1 = -0.9, b1 = -0.5, I1 = -0.7, M1 = -2.2, x1 = -2, D1 = 0.2, Q1 = 0.6, E1 = -0.9, Ts = 0.05, Us = 60, C1 = 48, S1 = 288, F1 = -64, _1 = 192, Rs = 64, Gs = [8, 24, 48, 80, 128, 999], zs = (s) => {
   let A = 0;
-  for (; A < bs.length && s >= bs[A]; ) A++;
+  for (; A < Gs.length && s >= Gs[A]; ) A++;
   return A;
-}, X0 = 512, Is = [
+}, P1 = 512, Hs = [
   0,
   0,
   1,
@@ -19081,7 +19103,7 @@ const P0 = 0.03, us = 3, gs = 24, j0 = 8, ms = k + 48, v0 = -0.9, T0 = -0.5, z0 
   1,
   0,
   0
-], vt = {
+], Wt = {
   0: "powerSmall",
   1: "point",
   2: "powerBig",
@@ -19094,7 +19116,7 @@ const P0 = 0.03, us = 3, gs = 24, j0 = 8, ms = k + 48, v0 = -0.9, T0 = -0.5, z0 
   9: "pointSmall",
   10: "timeOrb"
 };
-class K0 {
+class k1 {
   constructor(A) {
     r(this, "items");
     r(this, "gs");
@@ -19104,7 +19126,7 @@ class K0 {
      * it in once a frame -- retail reads the same global from inside the spawner.
      */
     r(this, "shipDying", !1);
-    this.gs = A, this.items = Array.from({ length: X0 }, () => ({
+    this.gs = A, this.items = Array.from({ length: P1 }, () => ({
       active: !1,
       kind: "powerSmall",
       x: 0,
@@ -19121,12 +19143,12 @@ class K0 {
     }));
   }
   spawn(A, t, e, i = "normal") {
-    if (t < -ys || t > _ + ys) return null;
+    if (t < -Rs || t > F + Rs) return null;
     const a = this.items.find((n) => !n.active);
     if (!a) return null;
-    a.active = !0, a.kind = this.gs.power >= ee && (A === "powerSmall" || A === "powerBig") ? "pointSmall" : A, a.x = t, a.y = e, a.timer = 0, a.magnetized = !1;
+    a.active = !0, a.kind = this.gs.power >= Be && (A === "powerSmall" || A === "powerBig") ? "pointSmall" : A, a.x = t, a.y = e, a.timer = 0, a.magnetized = !1;
     const o = a.kind === "timeOrb";
-    return a.rise = o ? i === "orbDouble" ? "hoverDouble" : "hover" : i === "scatter" ? "scatter" : "none", a.rise === "scatter" ? (a.sx = t, a.sy = e, a.tx = this.gs.rng.randomF32InRange(Y0) + L0, a.ty = this.gs.rng.randomF32InRange(J0) + N0, a.vx = 0, a.vy = 0) : o && !this.shipDying ? (a.vy = U0 - this.gs.rng.randomF32InRange(H0), a.vx = this.gs.rng.randomF32SignedInRange(G0)) : o ? (a.rise = "none", a.vx = 0, a.vy = O0) : (a.vx = 0, a.vy = R0), a;
+    return a.rise = o ? i === "orbDouble" ? "hoverDouble" : "hover" : i === "scatter" ? "scatter" : "none", a.rise === "scatter" ? (a.sx = t, a.sy = e, a.tx = this.gs.rng.randomF32InRange(S1) + C1, a.ty = this.gs.rng.randomF32InRange(_1) + F1, a.vx = 0, a.vy = 0) : o && !this.shipDying ? (a.vy = x1 - this.gs.rng.randomF32InRange(D1), a.vx = this.gs.rng.randomF32SignedInRange(Q1)) : o ? (a.rise = "none", a.vx = 0, a.vy = E1) : (a.vx = 0, a.vy = M1), a;
   }
   /**
    * Advance all items one frame and return what the player picked up.
@@ -19143,48 +19165,48 @@ class K0 {
    * whole clause collapses to the position test. That is why this file has no focus
    * argument: the shortcut is provable, not assumed.
    */
-  tick(A, t, e, i, a, o = !1, n = !0, p = j0, l = 1, c = 1, h = !0) {
-    const u = [], m = a || t <= i, f = l * c;
-    for (const g of this.items) {
-      if (!g.active) continue;
-      let d = !1, y = !1;
-      if (g.rise === "scatter")
-        if (g.timer < fs) {
-          const x = g.timer / fs;
-          g.x = g.tx * x + g.sx * (1 - x), g.y = g.ty * x + g.sy * (1 - x), d = !0;
+  tick(A, t, e, i, a, o = !1, n = !0, p = B1, l = 1, c = 1, h = !0) {
+    const d = [], w = a || t <= i, m = l * c;
+    for (const u of this.items) {
+      if (!u.active) continue;
+      let g = !1, B = !1;
+      if (u.rise === "scatter")
+        if (u.timer < Us) {
+          const x = u.timer / Us;
+          u.x = u.tx * x + u.sx * (1 - x), u.y = u.ty * x + u.sy * (1 - x), g = !0;
         } else
-          g.vx = 0, g.vy = 0, g.rise = "none";
-      else if (g.rise === "hover")
-        g.vy += ws * c, (g.vy > 0 || !h) && (y = !0);
-      else if (g.rise === "hoverDouble")
-        if (g.vy += ws * c, g.x += g.vx * f, g.y += g.vy * f, g.vy > 0) y = !0;
+          u.vx = 0, u.vy = 0, u.rise = "none";
+      else if (u.rise === "hover")
+        u.vy += Ts * c, (u.vy > 0 || !h) && (B = !0);
+      else if (u.rise === "hoverDouble")
+        if (u.vy += Ts * c, u.x += u.vx * m, u.y += u.vy * m, u.vy > 0) B = !0;
         else {
-          g.timer++;
+          u.timer++;
           continue;
         }
-      if (!g.magnetized && !y && g.rise !== "hover" && g.rise !== "hoverDouble" && m && (g.rise = "none", g.magnetized = !0), g.magnetized && !y && !n && g.rise === "none" && (g.magnetized = !1, g.vy = z0), g.magnetized && !y) {
-        const x = A - g.x, F = t - g.y, G = Math.sqrt(x * x + F * F);
-        G > 1 && (g.vx = x / G * p, g.vy = F / G * p);
+      if (!u.magnetized && !B && u.rise !== "hover" && u.rise !== "hoverDouble" && w && (u.rise = "none", u.magnetized = !0), u.magnetized && !B && !n && u.rise === "none" && (u.magnetized = !1, u.vy = I1), u.magnetized && !B) {
+        const x = A - u.x, Q = t - u.y, j = Math.sqrt(x * x + Q * Q);
+        j > 1 && (u.vx = x / j * p, u.vy = Q / j * p);
       } else {
-        const x = A - g.x, F = t - g.y;
-        x * x + F * F < gs * gs && g.rise !== "hover" && (g.magnetized = !0), g.vy < us ? g.vy += P0 * f : g.vy = us;
+        const x = A - u.x, Q = t - u.y;
+        x * x + Q * Q < vs * vs && u.rise !== "hover" && (u.magnetized = !0), u.vy < ks ? u.vy += f1 * m : u.vy = ks;
       }
-      if (!d) {
-        const x = g.magnetized && !y ? c : f;
-        if (g.x += g.vx * x, g.y += g.vy * x, g.y > ms || g.x < -32 || g.x > _ + 32) {
-          g.y > ms && !g.magnetized && g.rise === "none" && Ae(this.gs, 3), g.active = !1;
+      if (!g) {
+        const x = u.magnetized && !B ? c : m;
+        if (u.x += u.vx * x, u.y += u.vy * x, u.y > js || u.x < -32 || u.x > F + 32) {
+          u.y > js && !u.magnetized && u.rise === "none" && me(this.gs, 3), u.active = !1;
           continue;
         }
       }
-      y && (g.magnetized = !0, g.rise = "none");
-      const b = A - g.x, B = t - g.y, D = e * 2;
-      if (g.rise !== "hover" && Math.abs(b) < D && Math.abs(B) < D) {
-        u.push(this.collect(g, i, o)), g.active = !1;
+      B && (u.magnetized = !0, u.rise = "none");
+      const y = A - u.x, b = t - u.y, D = e * 2;
+      if (u.rise !== "hover" && Math.abs(y) < D && Math.abs(b) < D) {
+        d.push(this.collect(u, i, o)), u.active = !1;
         continue;
       }
-      g.timer++;
+      u.timer++;
     }
-    return u;
+    return d;
   }
   /**
    * Process one item collection, returning what it pays.
@@ -19201,7 +19223,7 @@ class K0 {
       case "powerBig":
         return this.result(A, { power: 8, popup: 10 });
       case "powerFull":
-        return this.result(A, { power: ee, popup: 1e3, fillsPower: !0 });
+        return this.result(A, { power: Be, popup: 1e3, fillsPower: !0 });
       case "point":
         return this.point(A, t, e, i, !1);
       case "pointSmall":
@@ -19231,11 +19253,11 @@ class K0 {
    */
   point(A, t, e, i, a) {
     const o = this.pointValue(A, t, e, i, a), n = this.result(A, o);
-    return !a && n.maxValue ? _A(this.gs, 10) : a || _A(this.gs, 3), n;
+    return !a && n.maxValue ? jA(this.gs, 10) : a || jA(this.gs, 3), n;
   }
   /** Shared tail: bank a rank payment for one collect branch. */
   subrank(A, t) {
-    return _A(this.gs, t), A;
+    return jA(this.gs, t), A;
   }
   /** `Item::CollectPoint` / `Item::CollectPointSmall` value maths. */
   pointValue(A, t, e, i, a) {
@@ -19258,7 +19280,7 @@ class K0 {
     };
     if (t.fillsPower && (a.fillsPower = !0), t.life && (a.life = !0), t.bomb && (a.bomb = !0), t.extend && (a.extend = !0), t.timeOrb && (a.timeOrb = !0), t.timeOrb && (a.orbPaid = t.orbPaid === !0), t.pointItem)
       for (e.pointItemsCollected++, e.pointItemsCollectedInStage++, a.maxValue && e.maxValuePointItemsCollected++; e.pointItemsCollected >= e.nextPointItemExtendThreshold; )
-        e.pointItemExtendsSoFar++, fn(e), a.extend = !0;
+        e.pointItemExtendsSoFar++, s0(e), a.extend = !0;
     return a;
   }
   /** Force-collect all active items (stage clear, etc.). */
@@ -19310,7 +19332,7 @@ class K0 {
     this.spawn("powerBig", A, t, "scatter");
     for (let o = 0; o < 5; o++)
       this.spawn("powerSmall", A, t, "scatter");
-    La(e) === 2 && i && this.spawn("bomb", A, t, "scatter");
+    Do(e) === 2 && i && this.spawn("bomb", A, t, "scatter");
   }
   /**
    * `ItemManager::AutoCollectAllItems` (`:647-656`): every item on the field starts
@@ -19319,7 +19341,7 @@ class K0 {
    */
   autoCollectAll() {
     for (const A of this.items)
-      A.active && (A.magnetized = !0, A.rise = "none", A.vx = 0, A.vy = T0);
+      A.active && (A.magnetized = !0, A.rise = "none", A.vx = 0, A.vy = b1);
   }
   /**
    * `ItemManager::CancelAutoCollect` (`:682-693`): drop the grab on anything that had
@@ -19329,7 +19351,7 @@ class K0 {
    */
   cancelAutoCollect() {
     for (const A of this.items)
-      !A.active || !A.magnetized || (A.magnetized = !1, A.rise = "none", A.vx = 0, A.vy = v0);
+      !A.active || !A.magnetized || (A.magnetized = !1, A.rise = "none", A.vx = 0, A.vy = y1);
   }
   get activeCount() {
     let A = 0;
@@ -19347,8 +19369,8 @@ class K0 {
     return A;
   }
 }
-const Ms = 480, W0 = 8, V0 = 9, q0 = -987121;
-class Z0 {
+const Ys = 480, v1 = 8, j1 = 9, T1 = -987121;
+class U1 {
   constructor(A, t) {
     r(this, "slots");
     r(this, "gs");
@@ -19390,8 +19412,8 @@ class Z0 {
     r(this, "frameSpellResults", []);
     /** Counts op 179 so the host can start the stage background sequence. */
     r(this, "stageBgRequests", 0);
-    this.gs = A, this.subFactory = t, this.slots = Array.from({ length: Ms }, () => new v(A));
-    for (let e = 0; e < Ms; e++) this.slots[e].slotIndex = e;
+    this.gs = A, this.subFactory = t, this.slots = Array.from({ length: Ys }, () => new T(A));
+    for (let e = 0; e < Ys; e++) this.slots[e].slotIndex = e;
   }
   /** Spawn an enemy running ECL sub `subId` at position (x, y) with given HP. */
   spawn(A, t, e, i = 0) {
@@ -19422,11 +19444,11 @@ class Z0 {
     const t = this.itemPool, e = this.gs.rng;
     if (t) {
       if (A.dropType >= 0)
-        t.spawn(vt[A.dropType] ?? "point", A.posX, A.posY);
+        t.spawn(Wt[A.dropType] ?? "point", A.posX, A.posY);
       else if (A.dropType === -1) {
         if (this.dropCounter % 3 === 0) {
-          const a = Is[this.dropScheduleIndex];
-          t.spawn(vt[a] ?? "point", A.posX, A.posY), this.dropScheduleIndex = (this.dropScheduleIndex + 1) % Is.length;
+          const a = Hs[this.dropScheduleIndex];
+          t.spawn(Wt[a] ?? "point", A.posX, A.posY), this.dropScheduleIndex = (this.dropScheduleIndex + 1) % Hs.length;
         }
         this.dropCounter = this.dropCounter + 1 & 65535;
       }
@@ -19494,7 +19516,7 @@ class Z0 {
   tick(A = !1, t = !1) {
     this.frameFx.length = 0, this.frameSfx.length = 0, this.frameSpellResults.length = 0, this.clockStopped = A || t;
     const e = 2400 - this.gs.lives * 4 * 60;
-    if (e > 0 && (this.rankTimer++, this.rankTimer % e === 0 && _A(this.gs, 100)), !t) {
+    if (e > 0 && (this.rankTimer++, this.rankTimer % e === 0 && jA(this.gs, 100)), !t) {
       for (const i of this.slots)
         A && i.pauseTimer || (i.tick(), i.drainFx(this.frameFx), i.drainSfx(this.frameSfx), i.drainSpellResults(this.frameSpellResults));
       this.gs.isBossPresent && this.bossAtMarker(0) === null && (this.gs.isBossPresent = !1), this.recountLinkedChildren();
@@ -19552,32 +19574,32 @@ class Z0 {
       (l) => l.active && l.linkedChild && l.parentSlotIndex === A.slotIndex
     ), i = e.length;
     if (i > 0) {
-      const l = i < 2 ? -1 : i < 6 ? -48 : i < 10 ? -80 : -128, h = A.isBoss ? "timeOrb" : vt[V0], u = this.gs.shotType, f = u >= 4 ? (u & 1) !== 0 ? i >= 10 ? 26 : i * 2 + 6 : i >= 4 ? 40 : i * 6 + 16 : i >= 8 ? 26 : i * 2 + 10;
-      let g = i;
-      if (e.forEach((d) => {
-        var b, B, D, x;
-        if (d.detachFromParent(A.posX, A.posY), t === 0) return;
-        this.clockStopped && (g = Math.trunc(g / 3)), this.popup(d, g, l);
-        const y = ((b = this.bulletPool) == null ? void 0 : b.clearInRadius(d.posX, d.posY, 48)) ?? 0;
-        for (let F = 0; F < y; F++) (B = this.itemPool) == null || B.spawn(h, d.posX, d.posY);
-        for (let F = 0; F < f; F++) {
-          const G = this.gs.rng.randomF32SignedInRange(Math.PI), W = this.gs.rng.randomF32InRange(f * 2);
+      const l = i < 2 ? -1 : i < 6 ? -48 : i < 10 ? -80 : -128, h = A.isBoss ? "timeOrb" : Wt[j1], d = this.gs.shotType, m = d >= 4 ? (d & 1) !== 0 ? i >= 10 ? 26 : i * 2 + 6 : i >= 4 ? 40 : i * 6 + 16 : i >= 8 ? 26 : i * 2 + 10;
+      let u = i;
+      if (e.forEach((g) => {
+        var y, b, D, x;
+        if (g.detachFromParent(A.posX, A.posY), t === 0) return;
+        this.clockStopped && (u = Math.trunc(u / 3)), this.popup(g, u, l);
+        const B = ((y = this.bulletPool) == null ? void 0 : y.clearInRadius(g.posX, g.posY, 48)) ?? 0;
+        for (let Q = 0; Q < B; Q++) (b = this.itemPool) == null || b.spawn(h, g.posX, g.posY);
+        for (let Q = 0; Q < m; Q++) {
+          const j = this.gs.rng.randomF32SignedInRange(Math.PI), Z = this.gs.rng.randomF32InRange(m * 2);
           (D = this.itemPool) == null || D.spawn(
             "timeOrb",
-            d.posX + Math.cos(G) * W,
-            d.posY + Math.sin(G) * W
+            g.posX + Math.cos(j) * Z,
+            g.posY + Math.sin(j) * Z
           );
         }
-        (!this.bucketsHoldEnemies() || (((x = this.chainSink) == null ? void 0 : x.spellCardActive()) ?? !1)) && (d.dropType = W0, this.dropOnDeath(d)), d.dropType = -2;
+        (!this.bucketsHoldEnemies() || (((x = this.chainSink) == null ? void 0 : x.spellCardActive()) ?? !1)) && (g.dropType = v1, this.dropOnDeath(g)), g.dropType = -2;
       }), t !== 0) {
-        this.popup(A, A.childCount, q0, 2);
-        const d = 2 * A.childCount;
-        for (let y = 0; y < d; y++) {
-          const b = this.gs.rng.randomF32SignedInRange(Math.PI), B = this.gs.rng.randomF32InRange(128);
+        this.popup(A, A.childCount, T1, 2);
+        const g = 2 * A.childCount;
+        for (let B = 0; B < g; B++) {
+          const y = this.gs.rng.randomF32SignedInRange(Math.PI), b = this.gs.rng.randomF32InRange(128);
           (a = this.itemPool) == null || a.spawn(
             "timeOrb",
-            A.posX + Math.cos(b) * B,
-            A.posY + Math.sin(b) * B
+            A.posX + Math.cos(y) * b,
+            A.posY + Math.sin(y) * b
           );
         }
         (o = this.bulletPool) == null || o.clearInRadius(A.posX, A.posY, 48);
@@ -19677,12 +19699,12 @@ class Z0 {
   /** Remote int register read (op 86). */
   readIntSlot(A, t) {
     const e = this.slots[A];
-    return !e || !e.active ? 0 : e.readField(t, ra);
+    return !e || !e.active ? 0 : e.readField(t, Ua);
   }
   /** Remote float register read (op 87). */
   readFloatSlot(A, t) {
     const e = this.slots[A];
-    return !e || !e.active ? 0 : e.readField(t, te);
+    return !e || !e.active ? 0 : e.readField(t, fe);
   }
   /** Called by op 179; the host reads `stageBgRequests` to advance the stage art. */
   notifyStageBg() {
@@ -19699,8 +19721,8 @@ class Z0 {
     return this.slots.filter((A) => A.active);
   }
 }
-const tA = (s) => new Float32Array(new Int32Array([s]).buffer)[0];
-class $0 {
+const sA = (s) => new Float32Array(new Int32Array([s]).buffer)[0];
+class R1 {
   constructor(A, t, e) {
     r(this, "timeline");
     r(this, "cursor", 0);
@@ -19720,7 +19742,7 @@ class $0 {
      * the only state `op 14` will write into, and `op 13` consumes every match at once.
      */
     r(this, "messageSlots", [0, 0, 0, 0]);
-    this.timeline = A, this.gs = t, this.enemies = e, this.timelineMask = un[t.difficulty];
+    this.timeline = A, this.gs = t, this.enemies = e, this.timelineMask = $n[t.difficulty];
   }
   /**
    * The script's own clock. It stops while a waiting case holds, so it drifts
@@ -19765,7 +19787,7 @@ class $0 {
       case 1:
       // spawn, mirrored
       case 15:
-        return A.opcode !== 15 && this.spawnBlocked() || this.enemies.spawnFromTimeline(t[0], tA(t[1]), tA(t[2]), t[3] ?? 0, {
+        return A.opcode !== 15 && this.spawnBlocked() || this.enemies.spawnFromTimeline(t[0], sA(t[1]), sA(t[2]), t[3] ?? 0, {
           dropType: t[4],
           score: t[5],
           mirror: A.opcode === 1
@@ -19776,8 +19798,8 @@ class $0 {
       // spawn in an x range
       case 4: {
         if (this.spawnBlocked()) return !0;
-        const e = tA(t[1]), i = tA(t[2]), a = this.gs.rng.randomF32InRange(i - e) + e;
-        return this.enemies.spawnFromTimeline(t[0], a, tA(t[3]), t[4] ?? 0, {
+        const e = sA(t[1]), i = sA(t[2]), a = this.gs.rng.randomF32InRange(i - e) + e;
+        return this.enemies.spawnFromTimeline(t[0], a, sA(t[3]), t[4] ?? 0, {
           dropType: t[5],
           score: t[6],
           mirror: A.opcode === 4
@@ -19789,8 +19811,8 @@ class $0 {
       case 5:
         return this.spawnBlocked() || this.enemies.spawnFromTimeline(
           t[0],
-          this.gs.rng.randomF32InRange(_),
-          tA(t[1]),
+          this.gs.rng.randomF32InRange(F),
+          sA(t[1]),
           t[2] ?? 0,
           { dropType: t[3], score: t[4], mirror: A.opcode === 5 }
         ), !0;
@@ -19799,7 +19821,7 @@ class $0 {
       // are queued on top of it (`EnemyTimeline.cpp:180-199`).
       case 11:
       case 12:
-        return this.spawnBlocked() || this.enemies.spawnFromTimeline(t[0], tA(t[1]), tA(t[2]), t[3] ?? 0, {
+        return this.spawnBlocked() || this.enemies.spawnFromTimeline(t[0], sA(t[1]), sA(t[2]), t[3] ?? 0, {
           dropType: -1,
           score: t[6],
           pointDrops: t[4],
@@ -19852,8 +19874,8 @@ class $0 {
     return this.gs.isBossPresent || this.gs.spawnPaused;
   }
 }
-const A1 = [];
-function t1() {
+const G1 = [];
+function z1() {
   return {
     active: !1,
     x: 0,
@@ -19876,7 +19898,7 @@ function t1() {
     tfActive: 0,
     tfFlags: 0,
     tfIndex: 0,
-    tfRecords: A1,
+    tfRecords: G1,
     tSound: -1,
     age: 0,
     age2: 0,
@@ -19906,8 +19928,8 @@ function t1() {
     touchedPlayer: !1
   };
 }
-const e1 = 1536, s1 = 128, i1 = 3520, a1 = 8;
-class o1 {
+const H1 = 1536, Y1 = 128, L1 = 3520, O1 = 8;
+class N1 {
   constructor() {
     r(this, "bullets");
     r(this, "cursor", 0);
@@ -19927,7 +19949,7 @@ class o1 {
      * that needs it without a `BulletWorld` in hand.
      */
     r(this, "timeScale", 1);
-    this.bullets = Array.from({ length: e1 }, t1);
+    this.bullets = Array.from({ length: H1 }, z1);
   }
   /**
    * `BulletManager::FUN_0042f5f0`: take a free slot and arm it.
@@ -19947,8 +19969,8 @@ class o1 {
   }
   /** Fill one slot the way the original initialises a bullet. */
   arm(A, t, e, i, a, o) {
-    A.active = !0, A.state = fA, A.tag = t.tag ?? "enemy", A.type = t.type, A.color = t.color, A.angle = a, A.speed = o, A.vx = Math.cos(a) * (o * this.timeScale), A.vy = Math.sin(a) * (o * this.timeScale), A.x = e, A.y = i, A.radius = t.radius, A.fieldW = t.halfSize * 2, A.fieldH = t.halfSize * 2, A.damage = 1, A.lifetime = 0, A.grazed = !1, A.hitLatch = !1, A.touchedPlayer = !1, A.hold = 0, A.oob = 0, A.animLeft = 0, A.tfFlags = t.transformFlags >>> 0, A.tfActive = 0, A.tfRecords = t.records, A.tfIndex = t.startIndex, t.records.length > 0 && this.stats.recorded++, A.tSound = t.transformSound, A.age = 0, A.age2 = 0, A.h1 = 0, A.h10t = 0, A.h10ax = 0, A.h10ay = 0, A.h10dur = 0, A.h20t = 0, A.h20ds = 0, A.h20da = 0, A.h20dur = 0, A.h40t = 0, A.h40s = 0, A.h40a = 0, A.h40dur = 0, A.h40rep = 0, A.h40cnt = 0, A.hBounceSpeed = 0, A.hBounceDone = 0, A.hBounceMax = 0, A.hWait = 0, A.hWrap = 0;
-    const n = A.tfFlags & Tn;
+    A.active = !0, A.state = yA, A.tag = t.tag ?? "enemy", A.type = t.type, A.color = t.color, A.angle = a, A.speed = o, A.vx = Math.cos(a) * (o * this.timeScale), A.vy = Math.sin(a) * (o * this.timeScale), A.x = e, A.y = i, A.radius = t.radius, A.fieldW = t.halfSize * 2, A.fieldH = t.halfSize * 2, A.damage = 1, A.lifetime = 0, A.grazed = !1, A.hitLatch = !1, A.touchedPlayer = !1, A.hold = 0, A.oob = 0, A.animLeft = 0, A.tfFlags = t.transformFlags >>> 0, A.tfActive = 0, A.tfRecords = t.records, A.tfIndex = t.startIndex, t.records.length > 0 && this.stats.recorded++, A.tSound = t.transformSound, A.age = 0, A.age2 = 0, A.h1 = 0, A.h10t = 0, A.h10ax = 0, A.h10ay = 0, A.h10dur = 0, A.h20t = 0, A.h20ds = 0, A.h20da = 0, A.h20dur = 0, A.h40t = 0, A.h40s = 0, A.h40a = 0, A.h40dur = 0, A.h40rep = 0, A.h40cnt = 0, A.hBounceSpeed = 0, A.hBounceDone = 0, A.hBounceMax = 0, A.hWait = 0, A.hWrap = 0;
+    const n = A.tfFlags & b0;
     n !== 0 && (A.state = (n & 2) !== 0 ? 2 : (n & 4) !== 0 ? 3 : 4, A.animLeft = t.appearFrames, A.x -= A.vx * 4, A.y -= A.vy * 4);
   }
   /**
@@ -19964,31 +19986,31 @@ class o1 {
    * the rng for the random aim modes, and the sound sink.
    */
   tick(A = !1, t = null) {
-    const e = t ?? r1;
+    const e = t ?? J1;
     for (const i of this.bullets)
       if (i.active) {
         if (i.tag === "player") {
           i.x += i.vx, i.y += i.vy, i.lifetime++, this.outOfField(i) && (i.active = !1);
           continue;
         }
-        if (i.state === fA) {
-          if (we(i, e, this), !i.active) continue;
+        if (i.state === yA) {
+          if (Te(i, e, this), !i.active) continue;
           const a = i.tfActive;
-          Rn(i, e), a !== 0 && this.stats.handlerFrames++, i.hold > 0 && i.hold--, i.state === fA ? (A || (i.x += i.vx, i.y += i.vy), i.age++, i.age2++) : i.age++;
+          M0(i, e), a !== 0 && this.stats.handlerFrames++, i.hold > 0 && i.hold--, i.state === yA ? (A || (i.x += i.vx, i.y += i.vy), i.age++, i.age2++) : i.age++;
         }
-        if (i.state === BA) {
+        if (i.state === xA) {
           if (i.x += i.vx / 2, i.y += i.vy / 2, --i.animLeft <= 0) {
             i.active = !1, i.state = 0;
             continue;
           }
-        } else if (i.state > fA) {
+        } else if (i.state > yA) {
           const a = i.state === 2 ? 0.5 : i.state === 3 ? 0.4 : 0.3333333333333333;
-          i.x += i.vx * a, i.y += i.vy * a, i.age2--, --i.animLeft <= 0 && (i.state = fA);
+          i.x += i.vx * a, i.y += i.vy * a, i.age2--, --i.animLeft <= 0 && (i.state = yA);
         }
         if (i.hold <= 0)
           if (this.outOfField(i))
-            if ((i.tfActive & i1) !== 0) {
-              if (++i.oob >= s1) {
+            if ((i.tfActive & L1) !== 0) {
+              if (++i.oob >= Y1) {
                 i.active = !1, i.state = 0;
                 continue;
               }
@@ -20008,7 +20030,7 @@ class o1 {
    * the frame, and a pellet keeps going a few pixels further.
    */
   outOfField(A) {
-    return $i(A.x, A.y, A.fieldW, A.fieldH);
+    return Sa(A.x, A.y, A.fieldW, A.fieldH);
   }
   /** `BulletManager::RemoveAllBullets` with a mode that is not 4: the slot is
    *  zeroed on the spot, and the host turns the bullet into an item. */
@@ -20026,7 +20048,7 @@ class o1 {
     const i = e * e;
     let a = 0;
     for (const o of this.bullets) {
-      if (!o.active || o.state === BA) continue;
+      if (!o.active || o.state === xA) continue;
       const n = o.x - A, p = o.y - t;
       n * n + p * p > i || (o.active = !1, o.state = 0, a++);
     }
@@ -20043,7 +20065,7 @@ class o1 {
    * the ship's own shot -- only the enemy channel is walked by that switch.
    */
   cancelOne(A) {
-    return !A.active || A.tag !== "enemy" || A.state === BA || (A.tfFlags & vn) !== 0 ? !1 : (this.beginDeath(A), !0);
+    return !A.active || A.tag !== "enemy" || A.state === xA || (A.tfFlags & y0) !== 0 ? !1 : (this.beginDeath(A), !0);
   }
   /** The `slot->radius != 0` branch of `FUN_00449ff0`: a circle. */
   cancelInCircle(A, t, e) {
@@ -20064,8 +20086,8 @@ class o1 {
     let p = 0;
     const l = Math.cos(-a), c = Math.sin(-a);
     for (const h of this.bullets) {
-      const u = h.x - A, m = h.y - t, f = a === 0 ? u : u * l - m * c, g = a === 0 ? m : u * c + m * l;
-      Math.abs(f) > o || Math.abs(g) > n || this.cancelOne(h) && p++;
+      const d = h.x - A, w = h.y - t, m = a === 0 ? d : d * l - w * c, u = a === 0 ? w : d * c + w * l;
+      Math.abs(m) > o || Math.abs(u) > n || this.cancelOne(h) && p++;
     }
     return p;
   }
@@ -20084,7 +20106,7 @@ class o1 {
   /** Count of live enemy bullets that can actually hurt the ship. */
   get collidableCount() {
     let A = 0;
-    for (const t of this.bullets) t.active && sa(t) && t.tag === "enemy" && A++;
+    for (const t of this.bullets) t.active && ka(t) && t.tag === "enemy" && A++;
     return A;
   }
   /** Get all active bullets (for rendering). */
@@ -20096,15 +20118,15 @@ class o1 {
    * than a whole shot pattern. It arms the same slot the launcher does.
    */
   spawn(A, t, e, i, a = 0, o = 0, n = 3, p = 1, l = "enemy") {
-    const c = this.launch(ia({ type: a, color: o, radius: n, tag: l }), A, t, e, i);
+    const c = this.launch(va({ type: a, color: o, radius: n, tag: l }), A, t, e, i);
     return c && (c.damage = p), c;
   }
   /** Start a bullet's death animation; used by the collision pass. */
   beginDeath(A) {
-    A.state = BA, A.animLeft = a1, A.tfActive = 0;
+    A.state = xA, A.animLeft = O1, A.tfActive = 0;
   }
 }
-const r1 = {
+const J1 = {
   playerX: 0,
   playerY: 0,
   rng: { randomF32InRange: (s) => Math.random() * s },
@@ -20112,8 +20134,8 @@ const r1 = {
   sizeFor: () => 8,
   onSound: () => {
   }
-}, n1 = 256, xs = 1, p1 = 640;
-function l1() {
+}, V1 = 256, Ls = 1, W1 = 640;
+function K1() {
   return {
     active: !1,
     x: 0,
@@ -20144,7 +20166,7 @@ function l1() {
     graze: !1
   };
 }
-class c1 {
+class X1 {
   constructor() {
     r(this, "lasers");
     /**
@@ -20152,7 +20174,7 @@ class c1 {
      * growth at `BulletManager.cpp:1046`. The host keeps it in step once a frame.
      */
     r(this, "timeScale", 1);
-    this.lasers = Array.from({ length: n1 }, l1);
+    this.lasers = Array.from({ length: V1 }, K1);
   }
   /**
    * `SpawnLaserPattern`: take the first free slot and copy the descriptor in.
@@ -20183,7 +20205,7 @@ class c1 {
     A.head += A.speed * this.timeScale, A.head - A.tail > A.startLength && (A.tail = A.head - A.startLength), A.tail < 0 && (A.tail = 0);
     const t = A.head - A.tail;
     if (A.sizeY = A.width / 2, A.sizeX = A.tail <= 0 ? t : t * 0.7, A.centerX = t / 2 + A.tail, A.centerY = 0, A.lethal = !1, A.graze = !1, A.state === 0) {
-      if ((A.flags & xs) !== 0)
+      if ((A.flags & Ls) !== 0)
         A.alpha = Math.min(1, A.timer * 255 / Math.max(1, A.startTime) / 255);
       else {
         const e = Math.min(A.startTime, 30);
@@ -20205,7 +20227,7 @@ class c1 {
         return;
       }
     }
-    if ((A.flags & xs) !== 0 ? A.alpha = Math.min(1, A.timer * 255 / Math.max(1, A.startTime) / 255) : A.despawnDuration > 0 && (A.currentWidth = A.width - A.timer * A.width / A.despawnDuration, A.sizeX = A.currentWidth / 2), A.lethal = A.timer < A.hitboxEndDelay, A.timer < A.despawnDuration) {
+    if ((A.flags & Ls) !== 0 ? A.alpha = Math.min(1, A.timer * 255 / Math.max(1, A.startTime) / 255) : A.despawnDuration > 0 && (A.currentWidth = A.width - A.timer * A.width / A.despawnDuration, A.sizeX = A.currentWidth / 2), A.lethal = A.timer < A.hitboxEndDelay, A.timer < A.despawnDuration) {
       this.finishFrame(A);
       return;
     }
@@ -20216,7 +20238,7 @@ class c1 {
    * stayed alive through the switch.
    */
   finishFrame(A) {
-    if (A.tail >= p1) {
+    if (A.tail >= W1) {
       A.active = !1;
       return;
     }
@@ -20239,24 +20261,24 @@ class c1 {
     return A;
   }
 }
-const h1 = 20, At = 48;
-function d1(s, A, t, e, i) {
+const Z1 = 20, ot = 48;
+function q1(s, A, t, e, i) {
   const a = [], o = [];
   if (!A.isFlying) return { hits: a, grazes: o };
   for (const n of s) {
-    if (!n.active || n.tag !== "enemy" || !sa(n)) continue;
+    if (!n.active || n.tag !== "enemy" || !ka(n)) continue;
     i && i.checks++;
     const p = Math.abs(n.x - A.x), l = Math.abs(n.y - A.y);
     if (p < t + n.radius && l < t + n.radius) {
       A.bombImmune || a.push(n);
       continue;
     }
-    const c = e + n.radius + h1;
+    const c = e + n.radius + Z1;
     !n.grazed && p < c && l < c && (n.grazed = !0, o.push(n));
   }
   return { hits: a, grazes: o };
 }
-function u1(s, A, t, e) {
+function $1(s, A, t, e) {
   const i = [], a = [];
   if (!A.isFlying) return { hits: i, grazes: a };
   const o = Math.cos;
@@ -20265,18 +20287,18 @@ function u1(s, A, t, e) {
     const p = n.lethal, l = n.graze;
     if (!p && !l) continue;
     e && e.checks++;
-    const c = A.x - n.x, h = A.y - n.y, u = o(-n.angle), m = Math.sin(-n.angle), f = u * c - m * h, g = u * h + m * c, d = n.sizeX / 2, y = n.sizeY / 2, b = n.centerX - d, B = n.centerX + d, D = n.centerY - y, x = n.centerY + y;
-    if (f + t > b && f - t < B && g + t > D && g - t < x && p) {
+    const c = A.x - n.x, h = A.y - n.y, d = o(-n.angle), w = Math.sin(-n.angle), m = d * c - w * h, u = d * h + w * c, g = n.sizeX / 2, B = n.sizeY / 2, y = n.centerX - g, b = n.centerX + g, D = n.centerY - B, x = n.centerY + B;
+    if (m + t > y && m - t < b && u + t > D && u - t < x && p) {
       A.bombImmune || i.push(n);
       continue;
     }
     if (!l) continue;
-    f + t > b - At && f - t < B + At && g + t > D - At && g - t < x + At && a.push(n);
+    m + t > y - ot && m - t < b + ot && u + t > D - ot && u - t < x + ot && a.push(n);
   }
   return { hits: i, grazes: a };
 }
-const kA = 4, tt = 16;
-function et(s) {
+const TA = 4, rt = 16;
+function nt(s) {
   return {
     x: 0,
     y: 0,
@@ -20291,13 +20313,13 @@ function et(s) {
     orbitAngle: 0,
     facingAngle: 0,
     scaleSign: 1,
-    vm: new hA(s)
+    vm: new rA(s)
   };
 }
-function g1(s) {
+function Ap(s) {
   return s === 3 ? 2 : null;
 }
-const m1 = [
+const tp = [
   /* 0  霊夢&紫     */
   ["e3a0", "none", "none", "none"],
   /* 1  魔理沙&爱丽丝 */
@@ -20323,15 +20345,15 @@ const m1 = [
   /* 11 妖妖 solo    */
   ["f930", "f930", "none", "none"]
 ];
-function pa(s) {
-  return m1[Math.max(0, Math.min(11, s | 0))];
+function Ga(s) {
+  return tp[Math.max(0, Math.min(11, s | 0))];
 }
-function w1(s) {
-  const A = pa(s), t = [];
-  for (let e = 0; e < kA; e++) A[e] !== "none" && t.push(e);
+function ep(s) {
+  const A = Ga(s), t = [];
+  for (let e = 0; e < TA; e++) A[e] !== "none" && t.push(e);
   return t;
 }
-const f1 = {
+const sp = {
   none: -1,
   e3a0: 18,
   ea40: 29,
@@ -20340,7 +20362,7 @@ const f1 = {
   f2d0: 21,
   f5e0: 21,
   f930: 21
-}, Ds = 96, Tt = 32, y1 = 10, b1 = 3, B1 = 0.05, zt = Math.PI / 60, Es = 6, Ss = 8, Qs = 0.05, Cs = 0.09, _s = 32, I1 = 47, M1 = 2153783376, ks = 2151698560, x1 = 4293939328, D1 = [
+}, Os = 96, Kt = 32, ip = 10, ap = 3, op = 0.05, Xt = Math.PI / 60, Ns = 6, Js = 8, Vs = 0.05, Ws = 0.09, Ks = 32, rp = 47, np = 2153783376, Xs = 2151698560, pp = 4293939328, lp = [
   0,
   Math.PI / 2,
   -Math.PI / 2,
@@ -20351,20 +20373,20 @@ const f1 = {
   -Math.PI / 4,
   -3 * Math.PI / 4
 ];
-function Fs(s, A) {
+function Zs(s, A) {
   s.color1.a = A >>> 24 & 255, s.color1.r = A >> 16 & 255, s.color1.g = A >> 8 & 255, s.color1.b = A & 255;
 }
-function Ps(s, A, t) {
+function qs(s, A, t) {
   const e = (A - s.x) / 16, i = (t - s.y) / 16;
-  s.vx += (e - s.vx) * 0.2, s.vy += (i - s.vy) * 0.2, s.x += s.vx, s.y += s.vy, Math.abs(s.vx) < B1 && (s.vx = 0);
+  s.vx += (e - s.vx) * 0.2, s.vy += (i - s.vy) * 0.2, s.x += s.vx, s.y += s.vy, Math.abs(s.vx) < op && (s.vx = 0);
 }
-function E1(s, A, t) {
+function cp(s, A, t) {
   let e = s === null || s.id === void 0 ? s : A.find((i) => i.id === s.id) ?? null;
   for (const i of A)
     Math.abs(i.x - t) >= 64 || i.hasAttached || i.skipsCombat || (e === null || e.y > i.y) && (e = i);
   return e;
 }
-class S1 {
+class hp {
   constructor(A) {
     r(this, "options");
     /** The RNG the body scripts draw through - retail shares one `g_Rng` with everything. */
@@ -20405,18 +20427,18 @@ class S1 {
      * ship rather than at the origin.
      */
     r(this, "trailSeed", !0);
-    this.rng = A, this.options = Array.from({ length: kA }, () => et(A));
+    this.rng = A, this.options = Array.from({ length: TA }, () => nt(A));
   }
   /** `vectors2CC[15]`, the oldest sample. Zeroed until the first tick fills it. */
   get trailAnchorX() {
-    return this.trail.length ? this.trail[(tt - 1) * 2] : 0;
+    return this.trail.length ? this.trail[(rt - 1) * 2] : 0;
   }
   get trailAnchorY() {
-    return this.trail.length ? this.trail[(tt - 1) * 2 + 1] : 0;
+    return this.trail.length ? this.trail[(rt - 1) * 2 + 1] : 0;
   }
   /** Drop everything, the way a stage reset does. */
   clear() {
-    for (const A of this.options) Object.assign(A, et(this.rng));
+    for (const A of this.options) Object.assign(A, nt(this.rng));
     this.homingTarget = null, this.focused = !1, this.focusFrames = 0, this.trail.length = 0, this.trailSeed = !0;
   }
   /**
@@ -20450,10 +20472,10 @@ class S1 {
   }
   /** The shared body of both arming paths: `memset`, install, start if non-NULL. */
   install(A) {
-    const t = pa(A);
-    for (let e = 0; e < kA; e++) {
+    const t = Ga(A);
+    for (let e = 0; e < TA; e++) {
       const i = this.options[e];
-      Object.assign(i, et(this.rng)), i.substate = 0, i.route = t[e], t[e] !== "none" && (i.state = 1, i.timer = 0);
+      Object.assign(i, nt(this.rng)), i.substate = 0, i.route = t[e], t[e] !== "none" && (i.state = 1, i.timer = 0);
     }
     this.homingTarget = null;
   }
@@ -20469,14 +20491,14 @@ class S1 {
    */
   release(A) {
     if (A > 3) return;
-    for (const e of w1(A)) {
+    for (const e of ep(A)) {
       const i = this.options[e];
       i.state !== 0 && i.state !== 3 && (i.state = 3, i.timer = 0);
     }
-    const t = g1(A);
+    const t = Ap(A);
     if (t !== null) {
       const e = this.options[t];
-      Object.assign(e, et(this.rng)), e.route = "f2d0", e.state = 1, e.timer = 0, this.trailSeed = !0;
+      Object.assign(e, nt(this.rng)), e.route = "f2d0", e.state = 1, e.timer = 0, this.trailSeed = !0;
     }
   }
   /**
@@ -20489,9 +20511,9 @@ class S1 {
   tick(A) {
     var o;
     this.aimX = A.playerX, this.trailSeed && this.seedTrail(A);
-    const t = A.homingCandidates(), e = (o = this.homingTarget) == null ? void 0 : o.id, i = e === void 0 ? null : t.find((n) => n.id === e) ?? null, a = E1(i, t, this.aimX);
+    const t = A.homingCandidates(), e = (o = this.homingTarget) == null ? void 0 : o.id, i = e === void 0 ? null : t.find((n) => n.id === e) ?? null, a = cp(i, t, this.aimX);
     a ? (this.heldTarget.x = a.x, this.heldTarget.y = a.y, this.heldTarget.hasAttached = a.hasAttached, this.heldTarget.id = a.id, this.homingTarget = this.heldTarget) : this.homingTarget = null;
-    for (let n = 0; n < kA; n++) {
+    for (let n = 0; n < TA; n++) {
       const p = this.options[n];
       if (p.route !== "none" && p.state !== 0) {
         switch (p.route) {
@@ -20525,7 +20547,7 @@ class S1 {
    * immediately, which is what {@link AnmVm.attach} does.
    */
   startBody(A, t, e) {
-    const i = f1[t];
+    const i = sp[t];
     if (i < 0) return;
     const a = e.anmPack ? e.anmPack.words(i) : null;
     a && A.vm.attach(a);
@@ -20542,7 +20564,7 @@ class S1 {
    */
   stepChaser(A, t) {
     if (A.state === 1) {
-      this.startBody(A, "e3a0", t), A.state = 2, A.x = t.playerX, A.y = Math.max(Tt, t.playerY - Ds), A.vx = 0, A.vy = 0, this.homingTarget = null;
+      this.startBody(A, "e3a0", t), A.state = 2, A.x = t.playerX, A.y = Math.max(Kt, t.playerY - Os), A.vx = 0, A.vy = 0, this.homingTarget = null;
       return;
     }
     if (A.state === 3) {
@@ -20551,12 +20573,12 @@ class S1 {
     }
     switch (A.substate) {
       case 3: {
-        this.homingTarget !== null && Ps(A, this.homingTarget.x, Math.max(Tt, this.homingTarget.y + 32)), (!t.shotWindowOpen && !t.fireHeld || this.homingTarget === null) && (this.homingTarget = null, A.vm.setInterrupt(1), A.substate = 0);
+        this.homingTarget !== null && qs(A, this.homingTarget.x, Math.max(Kt, this.homingTarget.y + 32)), (!t.shotWindowOpen && !t.fireHeld || this.homingTarget === null) && (this.homingTarget = null, A.vm.setInterrupt(1), A.substate = 0);
         break;
       }
       default: {
         const e = A.substate;
-        Ps(A, t.playerX, Math.max(Tt, t.playerY - Ds)), t.shotWindowOpen && this.homingTarget !== null && A.timer >= y1 ? (A.vm.setInterrupt(b1), A.substate = 3) : this.homingTarget = null, this.faceAlongTravel(A, e);
+        qs(A, t.playerX, Math.max(Kt, t.playerY - Os)), t.shotWindowOpen && this.homingTarget !== null && A.timer >= ip ? (A.vm.setInterrupt(ap), A.substate = 3) : this.homingTarget = null, this.faceAlongTravel(A, e);
         break;
       }
     }
@@ -20609,7 +20631,7 @@ class S1 {
       return;
     }
     const i = Math.PI / 120, a = Math.PI / 90, o = t === 0 ? i : t === 1 ? -a : t === 2 ? a : -i;
-    A.timer > 12 && (A.orbitAngle = SA(A.orbitAngle + o)), A.x = A.targetX + Math.cos(A.orbitAngle) * 8, A.y = A.targetY + Math.sin(A.orbitAngle) * 8;
+    A.timer > 12 && (A.orbitAngle = _A(A.orbitAngle + o)), A.x = A.targetX + Math.cos(A.orbitAngle) * 8, A.y = A.targetY + Math.sin(A.orbitAngle) * 8;
   }
   /**
    * `FUN_0044f930` (`:2574-2632`), 妖妖's route: two blades, one on each side of the
@@ -20629,7 +20651,7 @@ class S1 {
     }
     if (A.state !== 2) return;
     let i = e.playerX;
-    t === 0 ? (i -= _s, A.orbitAngle = SA(A.orbitAngle + zt)) : (i += _s, A.orbitAngle = SA(A.orbitAngle - zt)), A.targetX += (i - A.targetX) * Cs, A.targetY += (e.playerY - A.targetY) * Cs, A.x = A.targetX + Math.cos(A.orbitAngle) * Es, A.y = A.targetY + Math.sin(A.orbitAngle) * Es, (a = e.onTrail) == null || a.call(e, A.x, A.y, M1);
+    t === 0 ? (i -= Ks, A.orbitAngle = _A(A.orbitAngle + Xt)) : (i += Ks, A.orbitAngle = _A(A.orbitAngle - Xt)), A.targetX += (i - A.targetX) * Ws, A.targetY += (e.playerY - A.targetY) * Ws, A.x = A.targetX + Math.cos(A.orbitAngle) * Ns, A.y = A.targetY + Math.sin(A.orbitAngle) * Ns, (a = e.onTrail) == null || a.call(e, A.x, A.y, np);
   }
   /**
    * `FUN_0044f2d0` (`:2387-2472`), the blade 妖梦&妖妖 let go with.
@@ -20647,7 +20669,7 @@ class S1 {
       this.leaveBody(A), A.timer > 16 && (A.state = 0);
       return;
     }
-    A.state === 2 && (this.swingOnTrail(A, Ss), (e = t.onTrail) == null || e.call(t, A.x, A.y, ks), this.faceMovement(A, t));
+    A.state === 2 && (this.swingOnTrail(A, Js), (e = t.onTrail) == null || e.call(t, A.x, A.y, Xs), this.faceMovement(A, t));
   }
   /**
    * `FUN_0044f5e0` (`:2474-2572`), solo 妖梦's blade: the same swing as the exit blade,
@@ -20667,11 +20689,11 @@ class S1 {
       return;
     }
     if (A.state === 2)
-      if (this.swingOnTrail(A, Ss), Fs(A.vm, 4294934656), t.modeFlag === 0) {
-        if (Fs(A.vm, 4294967295), t.movementDirection === 0) return;
-        this.faceMovement(A, t), (e = t.onTrail) == null || e.call(t, A.x, A.y, ks);
+      if (this.swingOnTrail(A, Js), Zs(A.vm, 4294934656), t.modeFlag === 0) {
+        if (Zs(A.vm, 4294967295), t.movementDirection === 0) return;
+        this.faceMovement(A, t), (e = t.onTrail) == null || e.call(t, A.x, A.y, Xs);
       } else
-        (i = t.onTrail) == null || i.call(t, A.x, A.y, x1);
+        (i = t.onTrail) == null || i.call(t, A.x, A.y, pp);
   }
   /**
    * The swing both 妖梦 routes share: `:2402-2405` and `:2491-2494` are the same four
@@ -20682,7 +20704,7 @@ class S1 {
    * blade cut inside the trail instead of trailing it by a constant eight pixels.
    */
   swingOnTrail(A, t) {
-    A.orbitAngle = SA(A.orbitAngle + zt), A.targetX += (this.trailAnchorX - A.targetX) * Qs, A.targetY += (this.trailAnchorY - A.targetY) * Qs, A.x = A.targetX + Math.cos(A.orbitAngle) * t, A.y = A.targetY + Math.sin(A.orbitAngle) * t;
+    A.orbitAngle = _A(A.orbitAngle + Xt), A.targetX += (this.trailAnchorX - A.targetX) * Vs, A.targetY += (this.trailAnchorY - A.targetY) * Vs, A.x = A.targetX + Math.cos(A.orbitAngle) * t, A.y = A.targetY + Math.sin(A.orbitAngle) * t;
   }
   /**
    * `:2410-2456`, the blade's own turn.
@@ -20696,13 +20718,13 @@ class S1 {
   faceMovement(A, t) {
     const e = t.movementDirection;
     if (e < 1 || e > 8) return;
-    let i = D1[e], a = Math.abs(A.facingAngle - i);
-    a > Math.PI && (i += A.facingAngle > i ? Math.PI * 2 : -Math.PI * 2, a = Math.abs(A.facingAngle - i)), A.facingAngle = a > Math.PI / 2 ? i : SA(A.facingAngle + (i - A.facingAngle) * 0.07);
+    let i = lp[e], a = Math.abs(A.facingAngle - i);
+    a > Math.PI && (i += A.facingAngle > i ? Math.PI * 2 : -Math.PI * 2, a = Math.abs(A.facingAngle - i)), A.facingAngle = a > Math.PI / 2 ? i : _A(A.facingAngle + (i - A.facingAngle) * 0.07);
   }
   /** `:756-757` / `:1702`: every history entry becomes where the ship stands now. */
   seedTrail(A) {
     this.trail.length = 0;
-    for (let t = 0; t < tt; t++)
+    for (let t = 0; t < rt; t++)
       this.trail.push(A.playerX, A.playerY);
     this.trailSeed = !1;
   }
@@ -20715,18 +20737,18 @@ class S1 {
    */
   rollTrail(A) {
     if (this.trail.length && A.moving) {
-      for (let t = tt - 1; t > 0; t--)
+      for (let t = rt - 1; t > 0; t--)
         this.trail[t * 2] = this.trail[(t - 1) * 2], this.trail[t * 2 + 1] = this.trail[(t - 1) * 2 + 1];
       this.trail[0] = A.playerX, this.trail[1] = A.playerY;
     }
   }
 }
-function SA(s) {
+function _A(s) {
   const A = Math.PI * 2;
   let t = s % A;
   return t > Math.PI ? t -= A : t < -Math.PI && (t += A), t;
 }
-const Q1 = {
+const dp = {
   ply00a: "AAAGAAAAQEASAAAAMzPTPzMzM0AAACBBAADAQQAAAENAHwAAAACAQAAAAEDzBDVA8wS1P2ZmZj9oAAAACAAAAKQAAAAYAAAAUAEAADAAAAD8AQAAUAAAABgDAACAAAAANAQAAOcDAAAFAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAIBBMADO/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8FAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAEBBJADY/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAAkEEAAJBBkgoGwAAAIEEOAOL/AAABAAIA//8AAAAAAQAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAACQQQAAkEGSCoa/AAAgQQ4A4v8AAAEAAgD//wAAAAABAAAAAAAAAAAAAAD/////BQAAAAAAAAAAAAAAAACQQQAAQELbD8m/AABAQR4A2P8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAJBBAACQQZIKBsAAACBBDgDi/wAAAQACAP//AAAAAAEAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAAkEEAAJBBkgqGvwAAIEEOAOL/AAABAAIA//8AAAAAAQAAAAAAAAAAAAAA/////wUAAAAAAIBAAAAAAAAAkEEAAEBClDC3vwAAQEEWAOL/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAQELbD8m/AABAQSAA2P8AAAAAAAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAACAwAAAAAAAAJBBAABAQiHv2r8AAEBBFgDi/wAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAkEEAAJBBkgoGwAAAIEENAOz/AAABAAIA//8AAAAAAQAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAACQQQAAkEGSCoa/AAAgQQ0A7P8AAAEAAgD//wAAAAABAAAAAAAAAAAAAAD/////BQAAAAAAgEAAAAAAAACQQQAAQEKUMLe/AABAQRYA4v8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAEBBIADY/wAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAUAAAAAAIDAAAAAAAAAkEEAAEBCIe/avwAAQEEWAOL/AAAAAAAA//8AAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAkEGSCgbAAAAgQQwA7P8AAAEAAgD//wAAAAABAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAACQQZIKhr8AACBBDADs/wAAAQACAP//AAAAAAEAAAAAAAAAAAAAAP////8FAAAAAACAQAAAAAAAAJBBAABAQpQwt78AAEBBFgDi/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAEBC2w/JvwAAQEEgANj/AAAAAAAA//8AAAAAAAAAAAAAAAAAAAAABQAAAAAAgMAAAAAAAACQQQAAQEIh79q/AABAQRYA4v8AAAAAAAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAACQQZIKBsAAACBBCwDs/wAAAQACAP//AAAAAAEAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAJBBkgqGvwAAIEELAOz/AAABAAIA//8AAAAAAQAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAACQQQAAkEHkyxbAAAAgQQoA7P8AAAEAAgD//wAAAAABAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAJBBAACQQdsPSb8AACBBCgDs/wAAAQACAP//AAAAAAEAAAAAAAAAAAAAAP////8=",
   ply00as: "AAAGAAAAQEASAAAAMzPTPzMzM0AAACBBAADAQQAAAENAHwAAAACAQAAAAEDzBDVA8wS1P2ZmZj9oAAAACAAAANwAAAAYAAAAUAEAADAAAAD8AQAAUAAAAOACAACAAAAA/AMAAOcDAAAFAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAEBBMAAyAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAJBB2w/JvwAAIEEYAB4AAQABAAYA//8BAAAAAAAAAAAAAAAAAAAA/////wUAAAAAAAAAAAAAAAAAkEEAAEBC2w/JvwAAQEEwADIAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAkEHbD8m/AAAgQRgAHgABAAEABgD//wEAAAAAAAAAAAAAAAAAAAD/////BQAAAAAAAMEAAAAAAACQQQAAQELbD8m/AABAQR4AGQAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAQQAAAAAAAJBBAABAQtsPyb8AAEBBHgAZAAAAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAJBB2w/JvwAAIEEYAB4AAQABAAYA//8BAAAAAAAAAAAAAAAAAAAA/////wUAAAAAAADBAAAAAAAAkEEAAEBC2w/JvwAAQEEeABkAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAABQAAAAAAAEEAAAAAAACQQQAAQELbD8m/AABAQR4AGQAAAAAABAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAACQQQmYxL8AACBBEwAPAAEAAQAGAP//AQAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAJBBrIfNvwAAIEETAA8AAQABAAYA//8BAAAAAAAAAAAAAAAAAAAA/////wUAAAAAAIDBAAAAAAAAkEEAAEBC2w/JvwAAQEEWABQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAQELbD8m/AABAQRgAFAAAAAAABAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAACAQQAAAAAAAJBBAABAQtsPyb8AAEBBFgAUAAAAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAJBBCZjEvwAAIEETAA8AAQABAAYA//8BAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAkEGsh82/AAAgQRMADwABAAEABgD//wEAAAAAAAAAAAAAAAAAAAD/////BQAAAAAAwMEAAAAAAACQQQAAQELbD8m/AABAQRQAFAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAwQAAAAAAAJBBAABAQiBcwr8AAEBBFgAUAAAAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAUAAAAAAABBAAAAAAAAkEEAAEBClcPPvwAAQEEWABQAAAAAAAQA//8AAAAAAAAAAAAAAAAAAAAABQAAAAAAwEEAAAAAAACQQQAAQELbD8m/AABAQRQAFAAAAAAABAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAACQQTcgwL8AACBBDAAKAAEAAQAGAP//AQAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAJBB2w/JvwAAIEEUAA8AAQABAAYA//8BAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAkEF+/9G/AAAgQQwACgABAAEABgD//wEAAAAAAAAAAAAAAAAAAAD/////",
   ply01a: "AAAGAAAAQEAKAAAAAAAAQDMzM0AAAEBBAAAAQgAAIENAHwAAAACgQM3MDEAwRmJADB/HP2ZmZj9oAAAACAAAAKQAAAAYAAAAGAEAADAAAADEAQAAUAAAAKgCAACAAAAAxAMAAOcDAAAFAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAMBBMADO/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAP////8FAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAMBBJADE/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAQEEAAEBC2w/JvwAAAMAgAMT/AAADAAIA//8CAAAAAwAAAAAAAAABAAAA/////wUAAAAAAMBAAAAAAAAAkEEAAEBC2w/JvwAAwEEVAMT/AAAAAAAAAAADAAAAAAAAAAAAAAAAAAAABQAAAAAAwMAAAAAAAACQQQAAQELbD8m/AADAQRUAxP8AAAAAAAD//wMAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAEBBAABAQtsPyb8AAADAGADE/wAAAwAEAP//AgAAAAMAAAAAAAAAAQAAAP////8FAAEAAABAQQAAAAAAAJBBAABAQtsPyb8AAMBBEADE/wAAAAAAAP//AwAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAEBC2w/JvwAAwEERAMT/AAAAAAAAAAADAAAAAAAAAAAAAAAAAAAABQABAAAAQMEAAAAAAACQQQAAQELbD8m/AADAQRAAxP8AAAAAAAD//wMAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAMBBAABAQtsPyb8AAADAFgDE/wAAAwAGAP//AgAAAAMAAAAAAAAAAQAAAP////8FAAEAAACQQQAAAAAAAJBBAABAQtsPyb8AAMBBDwDE/wAAAAAAAP//AwAAAAAAAAAAAAAAAAAAAAUAAAAAAMBAAAAAAAAAkEEAAEBC2w/JvwAAwEERAMT/AAAAAAAAAAADAAAAAAAAAAAAAAAAAAAABQAAAAAAwMAAAAAAAACQQQAAQELbD8m/AADAQREAxP8AAAAAAAD//wMAAAAAAAAAAAAAAAAAAAAFAAEAAACQwQAAAAAAAJBBAABAQtsPyb8AAMBBDwDE/wAAAAAAAP//AwAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAwEEAAEBC2w/JvwAAAMAWAMT/AAADAAgA//8CAAAAAwAAAAAAAAABAAAA/////wUAAgAAAJBBAAAAAAAAkEEAAEBCfWy5vwAAwEEOAMT/AAAAAAAA//8DAAAAAAAAAAAAAAAAAAAABQABAAAAkEEAAAAAAACQQQAAQELbD8m/AADAQQ8AxP8AAAAAAAD//wMAAAAAAAAAAAAAAAAAAAAFAAAAAADAQAAAAAAAAJBBAABAQtsPyb8AAMBBEADE/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAUAAAAAAMDAAAAAAAAAkEEAAEBC2w/JvwAAwEEQAMT/AAAAAAAA//8DAAAAAAAAAAAAAAAAAAAABQABAAAAkMEAAAAAAACQQQAAQELbD8m/AADAQQ8AxP8AAAAAAAD//wMAAAAAAAAAAAAAAAAAAAAFAAIAAACQwQAAAAAAAJBBAABAQjiz2L8AAMBBDgDE/wAAAAAAAP//AwAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAwEEAAEBC2w/JvwAAAMAWAMT/AAADAAoA//8CAAAAAwAAAAAAAAABAAAA/////w==",
@@ -20735,31 +20757,31 @@ const Q1 = {
   ply02as: "AAAIAAAAQEAKAAAAAAAAQAAAwEAAACBBAADAQQAAAENAHwAAAACgQDMzE0AwRmJAGCzQP2ZmZj94AAAACAAAACQBAAAYAAAA0AEAADAAAADsAgAAUAAAAAgEAACAAAAAJAUAAOcDAAB4BgAA5wMAAPwJAADnAwAABQAAAAAAAAAAAAAAAACQQQAAQELbD8m/AACgQSQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAMBBAACAQdsPyb8AAEBBGgAAAAIAAAAEAP//BwAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAwEEAAIBB2w/JvwAAQEEaAAAAAwAAAAQA//8HAAAAAAAAAAAAAAAAAAAA/////wUAAAAAAAAAAAAAAAAAkEEAAEBC2w/JvwAAoEEkAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAADAQQAAgEHbD8m/AABAQRoAAAACAAAABAD//wcAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAMBBAACAQdsPyb8AAEBBGgAAAAMAAAAEAP//BwAAAAAAAAAAAAAAAAAAAP////8DAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAKBBGQAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAwEEAAIBB2w/JvwAAQEEeAAAAAQAAAAQA//8HAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAADAQQAAgEHbD8m/AABAQRQAAAACAAAABAD//wcAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAMBBAACAQdsPyb8AAEBBFAAAAAMAAAAEAP//BwAAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAwEEAAIBB2w/JvwAAQEEeAAAABAAAAAQA//8HAAAAAAAAAAAAAAAAAAAA/////wMAAAAAAAAAAAAAAAAAkEEAAEBC2w/JvwAAoEEZAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAADAQQAAgEHbD8m/AABAQRcAAAABAAAABAD//wcAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAMBBAACAQdsPyb8AAEBBFAAAAAIAAAAEAP//BwAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAwEEAAIBB2w/JvwAAQEEUAAAAAwAAAAQA//8HAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAADAQQAAgEHbD8m/AABAQRcAAAAEAAAABAD//wcAAAAAAAAAAAAAAAAAAAD/////AwAAAAAAAAAAAAAAAACQQQAAQELbD8m/AACgQRkAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAKAAUAAAAAAAAAAAAAAMBBAACAQdsPyb8AAEBBFgAAAAEAAAAEAP//BwAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAwEEAAIBB2w/JvwAAQEEVAAAAAgAAAAQA//8HAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAADAQQAAgEHbD8m/AABAQRUAAAADAAAABAD//wcAAAAAAAAAAAAAAAAAAAAKAAUAAAAAAAAAAAAAAMBBAACAQdsPyb8AAEBBFgAAAAQAAAAEAP//BwAAAAAAAAAAAAAAAAAAAP////8DAAAAAADAwAAAAAAAAJBBAABAQtsPyb8AAKBBFAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAMBAAAAAAAAAkEEAAEBC2w/JvwAAoEEUAAAAAAAAAAIA//8AAAAAAAAAAAAAAAAAAAAABQADAAAAAAAAAAAAAADAQQAAgEHbD8m/AABAQRUAAAABAAAABAD//wcAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAMBBAACAQdsPyb8AAEBBFQAAAAIAAAAEAP//BwAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAwEEAAIBB2w/JvwAAQEEVAAAAAwAAAAQA//8HAAAAAAAAAAAAAAAAAAAABQADAAAAAAAAAAAAAADAQQAAgEHbD8m/AABAQRUAAAAEAAAABAD//wcAAAAAAAAAAAAAAAAAAAD/////AwAAAAAAAAAAAAAAAAAAQgAAgEHbD8m/AACgQS0AAAABAAYACAAAAAAAAAAAAAAAAAAAAAAAAAAKAAEAAAAAAAAAAAAAAABCAACAQdsPyb8AAKBBLQAAAAIABgAIAP//AAAAAAAAAAAAAAAAAAAAAAoAAgAAAAAAAAAAAAAAAEIAAIBB2w/JvwAAoEEtAAAAAwAGAAgA//8AAAAAAAAAAAAAAAAAAAAABQADAAAAAAAAAAAAAAAAQgAAgEHbD8m/AACgQS0AAAAEAAYACAD//wAAAAAAAAAAAAAAAAAAAAAKAAEAAAAAAAAAAAAAAABCAACAQdsPSUAAAKBBLQAAAAEABgAIAAAAAAAAAAAAAAAAAAAAAAAAAAMAAgAAAAAAAAAAAAAAAEIAAIBB2w9JQAAAoEEtAAAAAgAGAAgA//8AAAAAAAAAAAAAAAAAAAAABQADAAAAAAAAAAAAAAAAQgAAgEHbD0lAAACgQS0AAAADAAYACAD//wAAAAAAAAAAAAAAAAAAAAAKAAQAAAAAAAAAAAAAAABCAACAQdsPSUAAAKBBLQAAAAQABgAIAP//AAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAAEIAAIBBAAAAAAAAoEEtAAAAAQAGAAgAAAAAAAAAAAAAAAAAAAAAAAAABQABAAAAAAAAAAAAAAAAQgAAgEEAAAAAAACgQS0AAAACAAYACAD//wAAAAAAAAAAAAAAAAAAAAADAAIAAAAAAAAAAAAAAABCAACAQQAAAAAAAKBBLQAAAAMABgAIAP//AAAAAAAAAAAAAAAAAAAAAAoAAwAAAAAAAAAAAAAAAEIAAIBBAAAAAAAAoEEtAAAABAAGAAgA//8AAAAAAAAAAAAAAAAAAAAABQABAAAAAAAAAAAAAAAAQgAAgEHbD8k/AACgQS0AAAABAAYACAAAAAAAAAAAAAAAAAAAAAAAAAAKAAIAAAAAAAAAAAAAAABCAACAQdsPyT8AAKBBLQAAAAIABgAIAP//AAAAAAAAAAAAAAAAAAAAAAoAAwAAAAAAAAAAAAAAAEIAAIBB2w/JPwAAoEEtAAAAAwAGAAgA//8AAAAAAAAAAAAAAAAAAAAAAwAEAAAAAAAAAAAAAAAAQgAAgEHbD8k/AACgQS0AAAAEAAYACAD//wAAAAAAAAAAAAAAAAAAAAD/////BQAAAAAAAAAAAAAAAAAAQgAAgEHkyxbAAACgQS0AAAAAAAYACAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAABCAACAQdsPSb8AAKBBLQAAAAAABgAIAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAEIAAIBB2w/JvwAAoEEtAAAAAQAGAAgAAAAAAAAAAAAAAAAAAAAAAAAACgABAAAAAAAAAAAAAAAAQgAAgEHbD8m/AACgQS0AAAACAAYACAD//wAAAAAAAAAAAAAAAAAAAAAKAAIAAAAAAAAAAAAAAABCAACAQdsPyb8AAKBBLQAAAAMABgAIAP//AAAAAAAAAAAAAAAAAAAAAAUAAwAAAAAAAAAAAAAAAEIAAIBB2w/JvwAAoEEtAAAABAAGAAgA//8AAAAAAAAAAAAAAAAAAAAACgABAAAAAAAAAAAAAAAAQgAAgEHbD0lAAACgQS0AAAABAAYACAAAAAAAAAAAAAAAAAAAAAAAAAADAAIAAAAAAAAAAAAAAABCAACAQdsPSUAAAKBBLQAAAAIABgAIAP//AAAAAAAAAAAAAAAAAAAAAAUAAwAAAAAAAAAAAAAAAEIAAIBB2w9JQAAAoEEtAAAAAwAGAAgA//8AAAAAAAAAAAAAAAAAAAAACgAEAAAAAAAAAAAAAAAAQgAAgEHbD0lAAACgQS0AAAAEAAYACAD//wAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAABCAACAQQAAAAAAAKBBLQAAAAEABgAIAAAAAAAAAAAAAAAAAAAAAAAAAAUAAQAAAAAAAAAAAAAAAEIAAIBBAAAAAAAAoEEtAAAAAgAGAAgA//8AAAAAAAAAAAAAAAAAAAAAAwACAAAAAAAAAAAAAAAAQgAAgEEAAAAAAACgQS0AAAADAAYACAD//wAAAAAAAAAAAAAAAAAAAAAKAAMAAAAAAAAAAAAAAABCAACAQQAAAAAAAKBBLQAAAAQABgAIAP//AAAAAAAAAAAAAAAAAAAAAAUAAQAAAAAAAAAAAAAAAEIAAIBB2w/JPwAAoEEtAAAAAQAGAAgAAAAAAAAAAAAAAAAAAAAAAAAACgACAAAAAAAAAAAAAAAAQgAAgEHbD8k/AACgQS0AAAACAAYACAD//wAAAAAAAAAAAAAAAAAAAAAKAAMAAAAAAAAAAAAAAABCAACAQdsPyT8AAKBBLQAAAAMABgAIAP//AAAAAAAAAAAAAAAAAAAAAAMABAAAAAAAAAAAAAAAAEIAAIBB2w/JPwAAoEEtAAAABAAGAAgA//8AAAAAAAAAAAAAAAAAAAAA/////w==",
   ply03a: "AAAGAAAAQEAMAAAAAAAAQAAAQEAAACBBAADAQQAAAEO4CwAAAACgQDMz8z8wRmJA5/erP2ZmZj9oAAAACAAAANwAAAAYAAAAUAEAADAAAADEAQAAUAAAAHACAACAAAAAjAMAAOcDAAAFAAAAAAAAAAAAAAAAAJBBAABAQtsPyb8AAIBBMADO/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAkEEAAEBCAAAAAAAAgEEgAPb/AwAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA/////wUAAAAAAAAAAAAAAAAAkEEAAEBC2w/JvwAAgEEwANj/AAAAAAAAAAADAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAACQQQAAQEIAAAAAAACAQSAA9v8DAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAD/////AwAAAAAAAAAAAAAAAACQQQAAQELbD8m/AACAQR4A2P8AAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAABAQgAAAAAAAIBBIAD2/wMAAAAAAAAACAAAAAAAAAAAAAAAAAAAAP////8DAAAAAAAAwQAAAAAAAJBBAABAQgmYxL8AAIBBFADY/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAMAAAAAAABBAAAAAAAAkEEAAEBCrIfNvwAAgEEUANj/AAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAACQQQAAQEIAAAAAAACAQRcA9v8DAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAD/////AwAAAAAAAMEAAAAAAACQQQAAQEIJmMS/AACAQRQA2P8AAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAADAAAAAAAAQQAAAAAAAJBBAABAQqyHzb8AAIBBFADY/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAkEEAAEBCUHfWvQAAgEEXAPb/AwAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAACQQQAAQEIAAAAAAACAQRQA9v8DAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAJBBAABAQlB31j0AAIBBFwD2/wMAAAAAAAAACAAAAAAAAAAAAAAAAAAAAP////8PAAAAAAAAwQAAAAAAAJBBAABAQpXDz78AAIBBGADY/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAMAAAAAAADBAAAAAAAAkEEAAEBCCZjEvwAAgEEVANj/AAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAwAAAAAAAEEAAAAAAACQQQAAQEKsh82/AACAQRUA2P8AAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAPAAAAAAAAQQAAAAAAAJBBAABAQiBcwr8AAIBBGADY/wAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAkEEAAEBCUHfWvQAAgEEXAPb/AwAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAACQQQAAQEIAAAAAAACAQRQA9v8DAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAABAQlB31j0AAIBBFwD2/wMAAAAAAAAACAAAAAAAAAAAAAAAAAAAAP////8=",
   ply03as: "AAAGAAAAQEAMAAAAAAAAQAAAQEAAACBBAADAQQAAAEO4CwAAAACAQDMz8z/zBDVA5/erP2ZmZj9oAAAACAAAABQBAAAYAAAAwAEAADAAAADcAgAAUAAAAGgEAACAAAAAZAYAAOcDAAAFAAAAAAAAAAAAAAAAAJBBAACQQdsPyb8AAEBBMAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAkEEAAJBBIe/avwAAQEEkAAAAAQAAAAQA//8AAAAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAACQQQAAkEGUMLe/AABAQSQAAAACAAAABAD//wAAAAAAAAAAAAAAAAAAAAD/////BQAAAAAAAAAAAAAAAACQQQAAkEHbD8m/AABAQTAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAJBBAACQQSHv2r8AAEBBIAAAAAEAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAkEEAAJBBlDC3vwAAQEEgAAAAAgAAAAQA//8AAAAAAAAAAAAAAAAAAAAA/////woAAAAAAMDAAAAAAAAAkEEAAJBBUHfWvwAAQEEcAAAAAAAAAAIA//8AAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAkEHbD8m/AABAQSAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAADAQAAAAAAAAJBBAACQQWaou78AAEBBHAAAAAAAAAACAP//AAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAkEEAAJBBIe/avwAAQEEgAAAAAQAAAAQA//8AAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAACQQQAAkEGUMLe/AABAQSAAAAACAAAABAD//wAAAAAAAAAAAAAAAAAAAAD/////BQAAAAAAwMAAAAAAAACQQQAAkEFQd9a/AABAQRgAAAAAAAAAAgD//wAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAJBBAACQQdsPyb8AAEBBHgAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAMBAAAAAAAAAkEEAAJBBZqi7vwAAQEEYAAAAAAAAAAIA//8AAAAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAACQQQAAkEFozuy/AABAQSAAAAABAAAABgD//wAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAJBBAACQQSHv2r8AAEBBFgAAAAEAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAkEEAAJBBlDC3vwAAQEEWAAAAAgAAAAQA//8AAAAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAACQQQAAkEFNUaW/AABAQSAAAAACAAAABgD//wAAAAAAAAAAAAAAAAAAAAD/////CgAAAAAAQMEAAAAAAACQQQAAkEHF3uO/AABAQRgAAAAAAAAABAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAADAwAAAAAAAAJBBAACQQVB31r8AAEBBGgAAAAAAAAACAP//AAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAkEEAAJBB2w/JvwAAQEEeAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAABQAAAAAAwEAAAAAAAACQQQAAkEFmqLu/AABAQRoAAAAAAAAAAgD//wAAAAAAAAAAAAAAAAAAAAAKAAAAAABAQQAAAAAAAJBBAACQQfFArr8AAEBBGAAAAAAAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAkEEAAJBBaM7svwAAQEEWAAAAAQAAAAYA//8AAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAkEEh79q/AABAQRgAAAABAAAABAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAACQQZQwt78AAEBBGAAAAAIAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAkEEAAJBBTVGlvwAAQEEWAAAAAgAAAAYA//8AAAAAAAAAAAAAAAAAAAAA/////wYAAAAAAEDBAAAAAAAAkEEAAJBBxd7jvwAAQEEYAAAAAAAAAAQA//8AAAAAAAAAAAAAAAAAAAAABQAAAAAAwMAAAAAAAACQQQAAkEFQd9a/AABAQRoAAAAAAAAAAgD//wAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAJBBAACQQdsPyb8AAEBBHgAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAMBAAAAAAAAAkEEAAJBBZqi7vwAAQEEaAAAAAAAAAAIA//8AAAAAAAAAAAAAAAAAAAAABgAAAAAAQEEAAAAAAACQQQAAkEHxQK6/AABAQRgAAAAAAAAABAD//wAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAJBBAACQQa+t/r8AAEBBEgAAAAEAAAAGAP//AAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAkEEAAJBBaM7svwAAQEEWAAAAAQAAAAYA//8AAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAACQQQAAkEEh79q/AABAQRgAAAABAAAABAD//wAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAJBBAACQQZQwt78AAEBBGAAAAAIAAAAEAP//AAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAkEEAAJBBTVGlvwAAQEEWAAAAAgAAAAYA//8AAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAACQQQAAkEEHcpO/AABAQRIAAAACAAAABgD//wAAAAAAAAAAAAAAAAAAAAD/////"
-}, C1 = ["ply00a", "ply01a", "ply02a", "ply03a", "ply00a", "ply00as", "ply01a", "ply01as", "ply02a", "ply02as", "ply03a", "ply03as"], _1 = ["ply00as", "ply01as", "ply02as", "ply03as", "ply00a", "ply00as", "ply01a", "ply01as", "ply02a", "ply02as", "ply03a", "ply03as"];
-function k1(s) {
+}, gp = ["ply00a", "ply01a", "ply02a", "ply03a", "ply00a", "ply00as", "ply01a", "ply01as", "ply02a", "ply02as", "ply03a", "ply03as"], up = ["ply00as", "ply01as", "ply02as", "ply03as", "ply00a", "ply00as", "ply01a", "ply01as", "ply02a", "ply02as", "ply03a", "ply03as"];
+function wp(s) {
   const A = atob(s), t = new Uint8Array(A.length);
   for (let e = 0; e < A.length; e++) t[e] = A.charCodeAt(e);
   return t;
 }
-const js = /* @__PURE__ */ new Map();
-function vs(s) {
-  const A = js.get(s);
+const $s = /* @__PURE__ */ new Map();
+function Ai(s) {
+  const A = $s.get(s);
   if (A) return A;
-  const t = Q1[s], e = t ? Jo(k1(t)) : [];
-  return js.set(s, e), e;
+  const t = dp[s], e = t ? Cr(wp(t)) : [];
+  return $s.set(s, e), e;
 }
-function F1(s) {
+function mp(s) {
   const A = Math.max(0, Math.min(11, s | 0));
   return {
-    primary: vs(C1[A]),
-    secondary: vs(_1[A])
+    primary: Ai(gp[A]),
+    secondary: Ai(up[A])
   };
 }
-const Ts = /* @__PURE__ */ new Map();
-function P1(s) {
-  const A = Ts.get(s);
+const ti = /* @__PURE__ */ new Map();
+function fp(s) {
+  const A = ti.get(s);
   if (A) return A;
-  const t = dt[s];
+  const t = Mt[s];
   if (!t) return null;
   const e = /* @__PURE__ */ new Map(), i = {
     pack: {
@@ -20768,7 +20790,7 @@ function P1(s) {
         const o = t.bytes[a] ?? null;
         let n = null;
         try {
-          o && (n = dA(o));
+          o && (n = nA(o));
         } catch {
           n = null;
         }
@@ -20780,49 +20802,49 @@ function P1(s) {
       return o ? { x: o.w, y: o.h } : null;
     }
   };
-  return Ts.set(s, i), i;
+  return ti.set(s, i), i;
 }
-const j1 = [0, 1, 2, 3, 0, 0, 1, 1, 2, 2, 3, 3];
-function vA(s, A, t, e = 0, i = 0, a = !1) {
+const Bp = [0, 1, 2, 3, 0, 0, 1, 1, 2, 2, 3, 3];
+function HA(s, A, t, e = 0, i = 0, a = !1) {
   return { x: s, y: A, radius: t, radiusGrowth: e, w: 0, h: 0, angle: 0, lifetime: i, follow: a, spent: !1 };
 }
-function MA(s, A, t, e, i = 0, a = 0, o = !1) {
+function QA(s, A, t, e, i = 0, a = 0, o = !1) {
   return { x: s, y: A, radius: 0, radiusGrowth: 0, w: t, h: e, angle: a, lifetime: i, follow: o, spent: !1 };
 }
-const TA = -Math.PI / 2, zs = 5, v1 = 26e3, st = 60, T1 = 8421504, la = 128 / 255;
-function z1(s, A, t) {
+const YA = -Math.PI / 2, ei = 5, yp = 26e3, pt = 60, bp = 8421504, za = 128 / 255;
+function Ip(s, A, t) {
   const e = Math.max(0, Math.min(1, t)), i = (a) => Math.round((s >> a & 255) * (1 - e) + (A >> a & 255) * e);
   return i(16) << 16 | i(8) << 8 | i(0);
 }
-function wt(s, A, t) {
-  const e = A < st ? A / st : A >= t - st ? (t - A) / st : 1;
-  return { color: z1(T1, s, e), alpha: la };
+function Qt(s, A, t) {
+  const e = A < pt ? A / pt : A >= t - pt ? (t - A) / pt : 1;
+  return { color: Ip(bp, s, e), alpha: za };
 }
-function sA(s) {
-  return (A, t) => ({ plate: wt(s, A, t), flash: null });
+function aA(s) {
+  return (A, t) => ({ plate: Qt(s, A, t), flash: null });
 }
-function Rs(s, A) {
-  const t = wt(s >= 70 ? 48 : 4210752, s, A);
+function si(s, A) {
+  const t = Qt(s >= 70 ? 48 : 4210752, s, A);
   if (s < 70) return { plate: t, flash: null };
   const e = s < 100 ? 1 : (255 - Math.floor(255 * (s - 100) / 60)) / 255;
   return { plate: t, flash: e > 0 ? { color: 16777215, alpha: e } : null };
 }
-function R1(s, A) {
+function Mp(s, A) {
   if (s >= 90 && s <= 120) {
     const t = Math.floor(208 * (s - 90) / 30);
     return {
-      plate: { color: Math.floor(t / 5) + 208 << 16 | t + 32 << 8 | t + 32, alpha: la },
+      plate: { color: Math.floor(t / 5) + 208 << 16 | t + 32 << 8 | t + 32, alpha: za },
       flash: { color: 16777215, alpha: Math.floor(255 * (s - 90) / 30) / 255 }
     };
   }
-  return s > 120 && s <= 220 ? { plate: null, flash: { color: 16777215, alpha: 112 / 255 } } : sA(2105552)(s, A);
+  return s > 120 && s <= 220 ? { plate: null, flash: { color: 16777215, alpha: 112 / 255 } } : aA(2105552)(s, A);
 }
-const U1 = 18;
-function $(s) {
+const xp = 18;
+function tA(s) {
   return {
     x: 0,
     y: 0,
-    angle: TA,
+    angle: YA,
     radius: 24,
     width: 10,
     color: 16777215,
@@ -20850,13 +20872,13 @@ function $(s) {
     ...s
   };
 }
-function fe(s) {
+function Ue(s) {
   let A = s;
   for (; A > Math.PI; ) A -= Math.PI * 2;
   for (; A < -Math.PI; ) A += Math.PI * 2;
   return A;
 }
-function H1(s, A, t, e = U1) {
+function Dp(s, A, t, e = xp) {
   const i = A - s.x, a = t - s.y;
   switch (s.shape) {
     case "beam":
@@ -20865,7 +20887,7 @@ function H1(s, A, t, e = U1) {
       return p > -e && p <= s.radius && l <= s.width + e * 0.5;
     }
     case "slash":
-      return Math.hypot(i, a) > s.radius + e ? !1 : Math.abs(fe(Math.atan2(a, i) - s.angle)) <= s.width;
+      return Math.hypot(i, a) > s.radius + e ? !1 : Math.abs(Ue(Math.atan2(a, i) - s.angle)) <= s.width;
     case "wave": {
       const o = s.width + e;
       return Math.abs(Math.hypot(i, a) - s.radius) <= o;
@@ -20878,7 +20900,7 @@ function H1(s, A, t, e = U1) {
     }
   }
 }
-function It(s, A, t) {
+function jt(s, A, t) {
   let e = null, i = Number.POSITIVE_INFINITY;
   for (const a of s.targets) {
     if (!a.active) continue;
@@ -20887,21 +20909,21 @@ function It(s, A, t) {
   }
   return e;
 }
-function G1(s, A, t, e) {
+function Qp(s, A, t, e) {
   const i = Math.hypot(s.vx, s.vy);
   if (i < 1e-3) return;
-  const a = Math.atan2(s.vy, s.vx), o = fe(Math.atan2(t - s.y, A - s.x) - a), n = Math.atan2(e, i), p = Math.max(-n, Math.min(n, o)), l = a + p;
+  const a = Math.atan2(s.vy, s.vx), o = Ue(Math.atan2(t - s.y, A - s.x) - a), n = Math.atan2(e, i), p = Math.max(-n, Math.min(n, o)), l = a + p;
   s.vx = Math.cos(l) * i, s.vy = Math.sin(l) * i, s.angle = l;
 }
-function ca(s) {
+function Ha(s) {
   const A = Math.min(1, (s.age - s.delay) / 5), t = s.life < 0 ? 1 : Math.min(1, s.life / 12);
   return Math.max(0, A) * Math.max(0, t);
 }
-function uA(s, A) {
+function wA(s, A) {
   for (const t of s.zones) {
     if (t.follow && (t.x = A.player.x, t.y = A.player.y), t.home > 0) {
-      const e = It(A, t.x, t.y);
-      G1(t, e ? e.posX : A.player.x, e ? e.posY : 0, t.home);
+      const e = jt(A, t.x, t.y);
+      Qp(t, e ? e.posX : A.player.x, e ? e.posY : 0, t.home);
     }
     if (t.x += t.vx, t.y += t.vy, t.curve !== 0) {
       const e = Math.cos(t.curve), i = Math.sin(t.curve), a = t.vx * e - t.vy * i, o = t.vx * i + t.vy * e;
@@ -20910,14 +20932,14 @@ function uA(s, A) {
     t.spin += t.spinRate, t.age++, t.life > 0 && t.life--;
   }
   s.zones = s.zones.filter((t) => t.life !== 0 && t.hitsLeft > 0);
-  for (const t of s.zones) t.alpha = ca(t);
+  for (const t of s.zones) t.alpha = Ha(t);
 }
-function it(s, A, t, e) {
+function lt(s, A, t, e) {
   const i = [], a = e.spacing ?? 0, o = e.start ?? 0, n = e.radius ?? 0;
   for (let p = 0; p < A; p++) {
-    const l = TA + (p - (A - 1) / 2) * (e.spread ?? 0);
+    const l = YA + (p - (A - 1) / 2) * (e.spread ?? 0);
     i.push(
-      $({
+      tA({
         ...t,
         x: s.x + Math.cos(l) * n,
         y: s.y + Math.sin(l) * n,
@@ -20930,7 +20952,7 @@ function it(s, A, t, e) {
   }
   return i;
 }
-function R(s) {
+function G(s) {
   const A = {
     id: s.id,
     name: s.name,
@@ -20951,8 +20973,8 @@ function R(s) {
     slots: s.slots,
     freezes: s.freezes ?? !1,
     accent: s.accent ?? 16777215,
-    backdrop: s.backdrop ?? sA(4210752),
-    step: s.step ?? uA,
+    backdrop: s.backdrop ?? aA(4210752),
+    step: s.step ?? wA,
     create: (t, e) => ({
       spec: A,
       timer: 0,
@@ -20971,41 +20993,41 @@ function R(s) {
   };
   return A;
 }
-function O1(s) {
+function Ep(s) {
   return s.zones.filter((A) => A.age >= A.delay && A.alpha > 0.01);
 }
-function L1(s, A, t, e = []) {
+function Cp(s, A, t, e = []) {
   if (s.finished) return [];
   s.timer++, s.connected = !1;
-  const i = e.filter((c) => c.active), a = { player: A, gs: s.gs, bullets: t, targets: i }, o = Math.min(1, s.timer / zs), n = s.timer <= s.spec.cancelLife, p = s.spec.cancelRadius * o;
+  const i = e.filter((c) => c.active), a = { player: A, gs: s.gs, bullets: t, targets: i }, o = Math.min(1, s.timer / ei), n = s.timer <= s.spec.cancelLife, p = s.spec.cancelRadius * o;
   s.cancelRadius = n && o < 1 ? p : 0, s.cancelRadius > 0 && t.cancelInCircle(A.x, A.y, s.cancelRadius);
   for (const c of s.zones)
     c.cancel <= 0 || c.age < c.delay || c.hitsLeft <= 0 || t.cancelInCircle(c.x, c.y, c.cancel);
   s.spec.slots && s.slots.push(...s.spec.slots(s, a));
   for (const c of s.slots)
     c.follow && (c.x = A.x, c.y = A.y), c.radius > 0 ? t.cancelInCircle(c.x, c.y, c.radius) : t.cancelInRect(c.x, c.y, c.w, c.h, c.angle), c.lifetime >= 0 && (c.lifetime--, c.lifetime <= 0 && (c.spent = !0)), c.radius += c.radiusGrowth;
-  s.slots = s.slots.filter((c) => !c.spent), s.spec.clearScreen && s.timer === zs && t.cancelAllEnemy(), s.freeze = s.spec.freezes && s.timer <= s.duration - 16, s.spec.step(s, a);
+  s.slots = s.slots.filter((c) => !c.spent), s.spec.clearScreen && s.timer === ei && t.cancelAllEnemy(), s.freeze = s.spec.freezes && s.timer <= s.duration - 16, s.spec.step(s, a);
   for (const c of s.zones)
     if (!(c.age < c.delay || c.interval <= 0 || c.hitsLeft <= 0) && !(s.timer - c.lastHit < c.interval)) {
       for (const h of i)
-        if (!(!h.active || !H1(c, h.posX, h.posY)) && (h.applyDamage(c.damage), c.hitsLeft--, c.lastHit = s.timer, s.connected = !0, c.hitsLeft <= 0))
+        if (!(!h.active || !Dp(c, h.posX, h.posY)) && (h.applyDamage(c.damage), c.hitsLeft--, c.lastHit = s.timer, s.connected = !0, c.hitsLeft <= 0))
           break;
     }
   const l = (s.spec.phase & 1) === 1 ? 1 : -1;
-  return s.gaugeDrift = s.spec.phase < 4 ? l * v1 / s.duration : 0, s.backdrop = s.spec.backdrop(s.timer, s.duration), s.timer >= s.duration ? (s.finished = !0, s.freeze = !1, s.cancelRadius = 0, s.zones = [], s.slots = [], []) : O1(s);
+  return s.gaugeDrift = s.spec.phase < 4 ? l * yp / s.duration : 0, s.backdrop = s.spec.backdrop(s.timer, s.duration), s.timer >= s.duration ? (s.finished = !0, s.freeze = !1, s.cancelRadius = 0, s.zones = [], s.slots = [], []) : Ep(s);
 }
-function Us(s, A, t, e) {
+function ii(s, A, t, e) {
   return (i, a) => {
     const o = i.zones[0], n = i.timer;
-    o && (n < t ? o.width = s + (A - s) * (n / t) : n < t * 2 ? o.width = A - (A - s) * ((n - t) / t) : o.width = A, o.life = n < e ? -1 : e - n + 12), uA(i, a), !(!o || i.zones.indexOf(o) < 0) && (o.x = a.player.x, o.y = a.player.y, o.angle = TA, o.radius = a.player.y + 40);
+    o && (n < t ? o.width = s + (A - s) * (n / t) : n < t * 2 ? o.width = A - (A - s) * ((n - t) / t) : o.width = A, o.life = n < e ? -1 : e - n + 12), wA(i, a), !(!o || i.zones.indexOf(o) < 0) && (o.x = a.player.x, o.y = a.player.y, o.angle = YA, o.radius = a.player.y + 40);
   };
 }
-function Hs(s, A, t, e) {
+function ai(s, A, t, e) {
   return (i, a) => {
-    uA(i, a);
+    wA(i, a);
     const o = i.zones.reduce((n, p) => n + (p.shape === "wave" ? 1 : 0), 0);
     i.timer % s === 0 && o < t && i.zones.push(
-      $({
+      tA({
         shape: "wave",
         x: a.player.x,
         y: a.player.y,
@@ -21022,12 +21044,12 @@ function Hs(s, A, t, e) {
     for (const n of i.zones) n.shape === "wave" && (n.radius += A);
   };
 }
-function Gs(s, A, t, e, i) {
+function oi(s, A, t, e, i) {
   return (a, o) => {
     if (a.timer % s === 1 && Math.floor((a.timer - 1) / s) < A) {
-      const p = It(o, o.player.x, o.player.y), l = p ? p.posX : o.player.x + o.gs.rng.randomF32SignedInRange(160), c = p ? p.posY : o.player.y - 200, h = Math.atan2(c - o.player.y, l - o.player.x);
+      const p = jt(o, o.player.x, o.player.y), l = p ? p.posX : o.player.x + o.gs.rng.randomF32SignedInRange(160), c = p ? p.posY : o.player.y - 200, h = Math.atan2(c - o.player.y, l - o.player.x);
       a.zones.push(
-        $({
+        tA({
           shape: "knife",
           x: o.player.x,
           y: o.player.y,
@@ -21049,41 +21071,41 @@ function Gs(s, A, t, e, i) {
         })
       );
     }
-    uA(a, o);
+    wA(a, o);
     for (const n of a.zones)
       n.shape === "knife" && (n.angle = Math.atan2(n.vy, n.vx));
   };
 }
-function Os(s, A) {
-  uA(s, A);
+function ri(s, A) {
+  wA(s, A);
   for (const t of s.zones)
-    t.angle = TA, t.alpha = Math.min(1, Math.max(0, (t.age - t.delay) / 18));
+    t.angle = YA, t.alpha = Math.min(1, Math.max(0, (t.age - t.delay) / 18));
 }
-function Ls(s, A) {
+function ni(s, A) {
   for (const t of s.zones) {
     t.vx += A.gs.rng.randomF32SignedInRange(0.12), t.vy += A.gs.rng.randomF32SignedInRange(0.12);
     const e = Math.hypot(t.vx, t.vy);
     e > 1.5 && (t.vx = t.vx / e * 1.5, t.vy = t.vy / e * 1.5);
   }
-  uA(s, A);
+  wA(s, A);
   for (const t of s.zones)
-    (t.x < 16 || t.x > _ - 16) && (t.vx *= -1), (t.y < 24 || t.y > k - 24) && (t.vy *= -1), t.angle = Math.atan2(t.vy, t.vx), t.spin = t.age * 0.35;
+    (t.x < 16 || t.x > F - 16) && (t.vx *= -1), (t.y < 24 || t.y > _ - 24) && (t.vy *= -1), t.angle = Math.atan2(t.vy, t.vx), t.spin = t.age * 0.35;
 }
-function Ys(s) {
+function pi(s) {
   return (A, t) => {
     for (const e of A.zones)
       e.radius += s, e.angle += e.turn, e.x = t.player.x, e.y = t.player.y, e.age++, e.life > 0 && e.life--;
     A.zones = A.zones.filter((e) => e.life !== 0 && e.hitsLeft > 0);
-    for (const e of A.zones) e.alpha = ca(e);
+    for (const e of A.zones) e.alpha = Ha(e);
   };
 }
-function Y1(s) {
+function Sp(s) {
   return (A, t) => {
     for (const e of A.zones) e.age > s && (e.home = 3.5);
-    uA(A, t);
+    wA(A, t);
   };
 }
-const ye = 40, Ns = 0.05235987901687622, N1 = [
+const Re = 40, li = 0.05235987901687622, Fp = [
   16777215,
   255,
   16711935,
@@ -21092,12 +21114,12 @@ const ye = 40, Ns = 0.05235987901687622, N1 = [
   65280,
   65535
 ];
-function Js(s, A, t) {
+function ci(s, A, t) {
   const e = [];
   for (let i = 0; i < A; i++) {
     const a = -Math.PI + i * (Math.PI * 2 / A);
     e.push(
-      $({
+      tA({
         shape: "orb",
         x: s.x,
         y: s.y,
@@ -21117,9 +21139,9 @@ function Js(s, A, t) {
   }
   return e;
 }
-function Xs(s) {
+function hi(s) {
   return (A, t) => {
-    const e = A.timer <= ye;
+    const e = A.timer <= Re;
     for (let i = 0; i < A.zones.length; i++) {
       const a = A.zones[i];
       if (!(!a || a.pieceMode === 0)) {
@@ -21127,11 +21149,11 @@ function Xs(s) {
           a.age++, a.life > 0 && a.life--, a.cancel = 64 + 4.266666889190674 * (30 - Math.max(0, a.life)), a.alpha = Math.max(0, Math.min(1, a.life / 10)), a.life <= 0 && (a.pieceMode = 0);
           continue;
         }
-        if (a.angle = fe(a.angle + ((i & 1) === 1 ? Ns : -Ns)), e) {
+        if (a.angle = Ue(a.angle + ((i & 1) === 1 ? li : -li)), e) {
           const o = a.x, n = a.y;
           a.reach += s.accel(i), a.x = a.originX + Math.cos(a.angle) * a.reach, a.y = a.originY + Math.sin(a.angle) * a.reach, a.vx = a.x - o, a.vy = a.y - n;
         } else if (s.seek === "ship") {
-          const o = It(t, t.player.x, t.player.y), n = o ? o.posX : t.player.x, p = o ? o.posY : t.player.y;
+          const o = jt(t, t.player.x, t.player.y), n = o ? o.posX : t.player.x, p = o ? o.posY : t.player.y;
           let l = n - a.x, c = p - a.y, h = Math.hypot(l, c) / (a.reach / 8);
           h < 1 && (h = 1), l = l / h + a.vx, c = c / h + a.vy, h = Math.hypot(l, c) || 1, a.reach = h > 10 ? 10 : h < 1 ? 1 : h, a.vx = l * a.reach / h, a.vy = c * a.reach / h, a.x += a.vx, a.y += a.vy;
         } else
@@ -21142,50 +21164,50 @@ function Xs(s) {
     s.second && A.zones.push(...s.second(A, t)), A.zones = A.zones.filter((i) => i.pieceMode !== 0);
   };
 }
-const J1 = (s, A) => {
+const _p = (s, A) => {
   const t = s.zones[A];
   return !!t && (t.hitsLeft <= 0 || s.timer >= s.duration - 30);
 };
-function X1(s) {
-  if (s.timer - 1 < ye) return [];
+function Pp(s) {
+  if (s.timer - 1 < Re) return [];
   const A = [];
-  for (const t of s.zones) t.pieceMode === 1 && A.push(vA(t.x, t.y, 128, 0, 0));
+  for (const t of s.zones) t.pieceMode === 1 && A.push(HA(t.x, t.y, 128, 0, 0));
   return A;
 }
-function Ks(s, A) {
+function di(s, A) {
   if ((s.timer - 1) % 4 === 0) return [];
   const e = A.player.y;
-  return [MA(_ / 2, e / 2, _, e, 0)];
+  return [QA(F / 2, e / 2, F, e, 0)];
 }
-function Ws(s, A) {
+function gi(s, A) {
   const t = s.timer - 1, e = A.player;
-  return t < 60 ? [vA(e.x, e.y, 96, 0, 0)] : [MA(e.x, e.y, 96, 800, 0), MA(e.x, e.y, 800, 96, 0)];
+  return t < 60 ? [HA(e.x, e.y, 96, 0, 0)] : [QA(e.x, e.y, 96, 800, 0), QA(e.x, e.y, 800, 96, 0)];
 }
-function Vs(s) {
+function ui(s) {
   return (A, t) => {
     const e = A.timer - 1;
     if (e < 70 || (e - 70) % 10 !== 0) return [];
     const i = (e - 70) / 10;
     if (i >= s) return [];
-    const a = k / 2;
-    return i === 0 ? [MA(t.player.x, a, 96, k, 60)] : [
-      MA(t.player.x - 32 * i, a, 96, k, 60),
-      MA(t.player.x + 32 * i, a, 96, k, 60)
+    const a = _ / 2;
+    return i === 0 ? [QA(t.player.x, a, 96, _, 60)] : [
+      QA(t.player.x - 32 * i, a, 96, _, 60),
+      QA(t.player.x + 32 * i, a, 96, _, 60)
     ];
   };
 }
-function qs(s) {
+function wi(s) {
   return (A, t) => {
     const e = A.timer - 1;
-    return e > 30 || e % 10 !== 0 ? [] : [vA(t.player.x, t.player.y, 100, 1, s[e / 10])];
+    return e > 30 || e % 10 !== 0 ? [] : [HA(t.player.x, t.player.y, 100, 1, s[e / 10])];
   };
 }
-function Zs(s, A) {
-  const t = s.timer - 1, e = _ / 2, i = k / 2;
+function mi(s, A) {
+  const t = s.timer - 1, e = F / 2, i = _ / 2;
   if (t < 60) {
     const a = t / 60 * (t / 60);
     return [
-      vA(
+      HA(
         (e - A.player.x) * a + A.player.x,
         (i - A.player.y) * a + A.player.y,
         32,
@@ -21194,10 +21216,10 @@ function Zs(s, A) {
       )
     ];
   }
-  return t === 90 ? [vA(e, i, 1, 5, 110)] : [];
+  return t === 90 ? [HA(e, i, 1, 5, 110)] : [];
 }
-const ft = [
-  R({
+const Et = [
+  G({
     id: "reimu-1",
     name: 'Spirit Sign "Fantasy Seal"',
     nameJp: "霊符「夢想妙珠」",
@@ -21208,17 +21230,17 @@ const ft = [
     face: 0,
     retailFn: "0040c010",
     cancelRadius: 96,
-    slots: X1,
+    slots: Pp,
     accent: 16767212,
-    zones: (s) => Js(s, 16, 16767212),
-    step: Xs({
+    zones: (s) => ci(s, 16, 16767212),
+    step: hi({
       accel: () => 3.2,
       seek: "ship",
       turnReach: 8,
-      retireAt: J1
+      retireAt: _p
     })
   }),
-  R({
+  G({
     id: "reimu-2",
     name: 'Divine Spirit "Fantasy Seal: Blink"',
     nameJp: "神霊「夢想封印　瞬」",
@@ -21228,11 +21250,11 @@ const ft = [
     stateTimer: 260,
     face: 0,
     retailFn: "0040c910",
-    backdrop: sA(2105552),
+    backdrop: aA(2105552),
     cancelRadius: 128,
     accent: 16774336,
-    zones: (s) => Js(s, 16, 16774336),
-    step: Xs({
+    zones: (s) => ci(s, 16, 16774336),
+    step: hi({
       // Odd pieces accelerate at half the rate of even ones, so the rosette
       // shears into a fan (`:422-428`).
       accel: (s) => (s & 1) === 1 ? 1.2 : 2.4,
@@ -21243,10 +21265,10 @@ const ft = [
       // `:462-487`: a coloured seal every 20 frames from 40, on the aim point or a
       // random field spot, cycling the seven `g_PlayerDreamSealColors`.
       second: (s, A) => {
-        if (s.timer < ye || s.timer % 20 !== 0) return [];
-        const t = N1[Math.floor(s.timer / 20) % 7], e = It(A, A.player.x, A.player.y), i = e ? e.posX : A.gs.rng.randomF32InRange(_ - 64) + 32, a = e ? e.posY : A.gs.rng.randomF32InRange(k - 64) + 32;
+        if (s.timer < Re || s.timer % 20 !== 0) return [];
+        const t = Fp[Math.floor(s.timer / 20) % 7], e = jt(A, A.player.x, A.player.y), i = e ? e.posX : A.gs.rng.randomF32InRange(F - 64) + 32, a = e ? e.posY : A.gs.rng.randomF32InRange(_ - 64) + 32;
         return [
-          $({
+          tA({
             shape: "orb",
             x: i,
             y: a,
@@ -21267,7 +21289,7 @@ const ft = [
     })
   }),
   // 紫 — card 1: four barriers walk across the field from the edges.
-  R({
+  G({
     id: "yukari-1",
     name: 'Boundary Sign "Quadruple Barrier"',
     nameJp: "境符「四重結界」",
@@ -21278,13 +21300,13 @@ const ft = [
     face: 1,
     retailFn: "00410c40",
     cancelRadius: 96,
-    slots: qs([40, 40, 40, 40]),
+    slots: wi([40, 40, 40, 40]),
     accent: 16751314,
-    zones: () => Ai(4, { damage: 16, interval: 5, color: 16751314 }),
-    step: Os
+    zones: () => Bi(4, { damage: 16, interval: 5, color: 16751314 }),
+    step: ri
   }),
   // 紫 — card 2: eight barriers, both diagonals, and the field is cleared.
-  R({
+  G({
     id: "yukari-2",
     name: 'Boundary "Eternal Night Quadruple Barrier"',
     nameJp: "境界「永夜四重結界」",
@@ -21294,15 +21316,15 @@ const ft = [
     stateTimer: 300,
     face: 1,
     retailFn: "00410fe0",
-    backdrop: sA(2105552),
+    backdrop: aA(2105552),
     cancelRadius: 128,
-    slots: qs([100, 40, 100, 100]),
+    slots: wi([100, 40, 100, 100]),
     accent: 14264063,
-    zones: () => Ai(8, { damage: 10, interval: 5, color: 14264063 }),
-    step: Os
+    zones: () => Bi(8, { damage: 10, interval: 5, color: 14264063 }),
+    step: ri
   }),
   // 魔理沙 — card 1: Master Spark, a breathing pillar straight up.
-  R({
+  G({
     id: "marisa-1",
     name: 'Love Sign "Master Spark"',
     nameJp: "恋符「マスタースパーク」",
@@ -21313,13 +21335,13 @@ const ft = [
     face: 0,
     retailFn: "0040e3b0",
     cancelRadius: 64,
-    slots: Ks,
+    slots: di,
     accent: 16773258,
-    zones: (s) => [at(s, 20, 9, 16773258)],
-    step: Us(14, 34, 44, 150)
+    zones: (s) => [ct(s, 20, 9, 16773258)],
+    step: ii(14, 34, 44, 150)
   }),
   // 魔理沙 — card 2: Final Spark, twice the pillar for twice the bombs.
-  R({
+  G({
     id: "marisa-2",
     name: 'Magic Cannon "Final Spark"',
     nameJp: "魔砲「ファイナルスパーク」",
@@ -21330,13 +21352,13 @@ const ft = [
     face: 0,
     retailFn: "0040e780",
     cancelRadius: 96,
-    slots: Ks,
+    slots: di,
     accent: 12575743,
-    zones: (s) => [at(s, 30, 13, 12575743)],
-    step: Us(26, 54, 55, 190)
+    zones: (s) => [ct(s, 30, 13, 12575743)],
+    step: ii(26, 54, 55, 190)
   }),
   // アリス — card 1: dolls spiral outwards over the whole field.
-  R({
+  G({
     id: "alice-1",
     name: 'Magic Sign "Artful Sacrifice"',
     nameJp: "魔符「アーティフルサクリファイス」",
@@ -21347,9 +21369,9 @@ const ft = [
     face: 1,
     retailFn: "0040d430",
     cancelRadius: 96,
-    slots: Zs,
+    slots: mi,
     accent: 10217727,
-    zones: (s) => it(
+    zones: (s) => lt(
       s,
       16,
       {
@@ -21369,7 +21391,7 @@ const ft = [
     )
   }),
   // アリス — card 2: the dolls sweep out and then come back to hit.
-  R({
+  G({
     id: "alice-2",
     name: 'Magic Control "Return Inanimateness"',
     nameJp: "魔操「リターンイナニメトネス」",
@@ -21379,11 +21401,11 @@ const ft = [
     stateTimer: 280,
     face: 1,
     retailFn: "0040d970",
-    backdrop: R1,
+    backdrop: Mp,
     cancelRadius: 128,
-    slots: Zs,
+    slots: mi,
     accent: 16765168,
-    zones: (s) => it(
+    zones: (s) => lt(
       s,
       20,
       {
@@ -21400,10 +21422,10 @@ const ft = [
       },
       { speed: 2.4, spacing: 3 }
     ),
-    step: Y1(70)
+    step: Sp(70)
   }),
   // 咲夜 — card 1: stop the clock and let 24 knives do the counting.
-  R({
+  G({
     id: "sakuya-1",
     name: 'Illusion Sign "Killing Doll"',
     nameJp: "幻符「殺人ドール」",
@@ -21417,10 +21439,10 @@ const ft = [
     freezes: !0,
     accent: 13625599,
     zones: () => [],
-    step: Gs(6, 24, 13, 26, 13625599)
+    step: oi(6, 24, 13, 26, 13625599)
   }),
   // 咲夜 — card 2: a whole night-mist of knives, 40 of them.
-  R({
+  G({
     id: "sakuya-2",
     name: 'Phantom Funeral "Night Mist Phantom Murderer"',
     nameJp: "幻葬「夜霧の幻影殺人鬼」",
@@ -21430,15 +21452,15 @@ const ft = [
     stateTimer: 350,
     face: 0,
     retailFn: "004103f0",
-    backdrop: sA(2105472),
+    backdrop: aA(2105472),
     cancelRadius: 128,
     freezes: !0,
     accent: 10474239,
     zones: () => [],
-    step: Gs(5, 40, 15, 30, 10474239)
+    step: oi(5, 40, 15, 30, 10474239)
   }),
   // レミリア — card 1: Gungnir down the centre, shockwaves off both sides.
-  R({
+  G({
     id: "remilia-1",
     name: 'Scarlet Sign "Nightless Castle Red"',
     nameJp: "紅符「不夜城レッド」",
@@ -21448,15 +21470,15 @@ const ft = [
     stateTimer: 290,
     face: 1,
     retailFn: "0040ee10",
-    backdrop: sA(13639712),
+    backdrop: aA(13639712),
     cancelRadius: 96,
-    slots: Ws,
+    slots: gi,
     accent: 16743052,
-    zones: (s) => [at(s, 22, 8, 16743052), ...$s(s)],
-    step: Hs(34, 9, 6, { damage: 12, width: 26, color: 16743052, rise: 1.1 })
+    zones: (s) => [ct(s, 22, 8, 16743052), ...fi(s)],
+    step: ai(34, 9, 6, { damage: 12, width: 26, color: 16743052, rise: 1.1 })
   }),
   // レミリア — card 2: the scarlet devil sweeps bands of crimson down the field.
-  R({
+  G({
     id: "remilia-2",
     name: 'Scarlet Devil "Devil of the Night"',
     nameJp: "紅魔「スカーレットデビル」",
@@ -21466,15 +21488,15 @@ const ft = [
     stateTimer: 320,
     face: 1,
     retailFn: "0040f570",
-    backdrop: sA(15728640),
+    backdrop: aA(15728640),
     cancelRadius: 128,
-    slots: Ws,
+    slots: gi,
     accent: 16731498,
-    zones: (s) => [at(s, 34, 10, 16731498), ...$s(s)],
-    step: Hs(26, 11, 9, { damage: 15, width: 32, color: 16731498, rise: 1.4 })
+    zones: (s) => [ct(s, 34, 10, 16731498), ...fi(s)],
+    step: ai(26, 11, 9, { damage: 15, width: 32, color: 16731498, rise: 1.4 })
   }),
   // 妖夢 — card 1: eight slashes of the present world, radial.
-  R({
+  G({
     id: "youmu-1",
     name: 'Human Sign "Slash of the Present Life"',
     nameJp: "人符「現世斬」",
@@ -21484,11 +21506,11 @@ const ft = [
     stateTimer: 270,
     face: 0,
     retailFn: "00411b10",
-    backdrop: Rs,
+    backdrop: si,
     cancelRadius: 96,
-    slots: Vs(4),
+    slots: ui(4),
     accent: 11141072,
-    zones: (s) => it(
+    zones: (s) => lt(
       s,
       8,
       {
@@ -21504,10 +21526,10 @@ const ft = [
       },
       { speed: 0, spread: 0.785, start: 0 }
     ),
-    step: Ys(11)
+    step: pi(11)
   }),
   // 妖夢 — card 2: twenty dense upward cuts, the eternity slash.
-  R({
+  G({
     id: "youmu-2",
     name: 'Human Ghost "Slash of Eternity"',
     nameJp: "人鬼「未来永劫斬」",
@@ -21517,11 +21539,11 @@ const ft = [
     stateTimer: 300,
     face: 0,
     retailFn: "004123d0",
-    backdrop: Rs,
+    backdrop: si,
     cancelRadius: 128,
-    slots: Vs(7),
+    slots: ui(7),
     accent: 14090224,
-    zones: (s) => it(
+    zones: (s) => lt(
       s,
       20,
       {
@@ -21537,10 +21559,10 @@ const ft = [
       },
       { speed: 0, spread: 0.11, start: 0 }
     ),
-    step: Ys(13)
+    step: pi(13)
   }),
   // 幽幽子 — card 1: butterflies settle over the field and reap in ticks.
-  R({
+  G({
     id: "yuyuko-1",
     name: 'Death Sign "Ghastly Dream"',
     nameJp: "死符「ギャストリドリーム」",
@@ -21552,7 +21574,7 @@ const ft = [
     retailFn: "00413140",
     cancelRadius: 96,
     accent: 10475720,
-    zones: (s, A) => ti(A, 14, {
+    zones: (s, A) => yi(A, 14, {
       shape: "butterfly",
       radius: 36,
       width: 24,
@@ -21564,10 +21586,10 @@ const ft = [
       life: 200,
       spinRate: 0.1
     }),
-    step: Ls
+    step: ni
   }),
   // 幽幽子 — card 2: a dense field of death butterflies, and the screen clears.
-  R({
+  G({
     id: "yuyuko-2",
     name: 'Death Butterflies "Eternal Sleep Among Flowers"',
     nameJp: "死蝶「華胥の永眠」",
@@ -21577,10 +21599,10 @@ const ft = [
     stateTimer: 350,
     face: 1,
     retailFn: "00413990",
-    backdrop: sA(8396832),
+    backdrop: aA(8396832),
     cancelRadius: 128,
     accent: 12576984,
-    zones: (s, A) => ti(A, 22, {
+    zones: (s, A) => yi(A, 22, {
       shape: "butterfly",
       radius: 42,
       width: 26,
@@ -21592,9 +21614,9 @@ const ft = [
       life: 250,
       spinRate: 0.12
     }),
-    step: Ls
+    step: ni
   })
-], K1 = R({
+], kp = G({
   id: "dissolve",
   name: '"Dissolve Spell"',
   nameJp: "「ディゾルブスペル」",
@@ -21605,7 +21627,7 @@ const ft = [
   face: -1,
   retailFn: "0040d100",
   backdrop: (s, A) => ({
-    plate: s < 60 ? wt(4210752, s, A) : wt(15790320, s, A),
+    plate: s < 60 ? Qt(4210752, s, A) : Qt(15790320, s, A),
     flash: null
   }),
   cancelRadius: 96,
@@ -21613,12 +21635,12 @@ const ft = [
   accent: 15790320,
   zones: () => []
 });
-function at(s, A, t, e) {
-  return $({
+function ct(s, A, t, e) {
+  return tA({
     shape: "beam",
     x: s.x,
     y: s.y,
-    angle: TA,
+    angle: YA,
     radius: s.y + 40,
     width: A,
     damage: t,
@@ -21629,9 +21651,9 @@ function at(s, A, t, e) {
     life: -1
   });
 }
-function $s(s) {
+function fi(s) {
   return [
-    $({
+    tA({
       shape: "wave",
       x: s.x,
       y: s.y,
@@ -21646,19 +21668,19 @@ function $s(s) {
     })
   ];
 }
-function Ai(s, A) {
-  const t = _ / 2, e = k / 2, i = (o) => o / 2;
+function Bi(s, A) {
+  const t = F / 2, e = _ / 2, i = (o) => o / 2;
   return [
     { x: t, y: 34, w: t, h: 34, vx: 0, vy: 1.6 },
-    { x: t, y: k - 34, w: t, h: 34, vx: 0, vy: -1.6 },
+    { x: t, y: _ - 34, w: t, h: 34, vx: 0, vy: -1.6 },
     { x: 34, y: e, w: 34, h: e, vx: 1.6, vy: 0 },
-    { x: _ - 34, y: e, w: 34, h: e, vx: -1.6, vy: 0 },
-    { x: t, y: i(k), w: i(_), h: i(k), vx: 0, vy: 0 },
+    { x: F - 34, y: e, w: 34, h: e, vx: -1.6, vy: 0 },
+    { x: t, y: i(_), w: i(F), h: i(_), vx: 0, vy: 0 },
     { x: 96, y: 112, w: 96, h: 112, vx: 0.9, vy: 1.1 },
-    { x: _ - 96, y: k - 112, w: 96, h: 112, vx: -0.9, vy: -1.1 },
-    { x: t, y: e - 90, w: i(_), h: 90, vx: 0, vy: 1.2 }
+    { x: F - 96, y: _ - 112, w: 96, h: 112, vx: -0.9, vy: -1.1 },
+    { x: t, y: e - 90, w: i(F), h: 90, vx: 0, vy: 1.2 }
   ].slice(0, s).map(
-    (o, n) => $({
+    (o, n) => tA({
       shape: "barrier",
       x: o.x,
       y: o.y,
@@ -21675,12 +21697,12 @@ function Ai(s, A) {
     })
   );
 }
-function ti(s, A, t) {
+function yi(s, A, t) {
   const e = [];
   for (let i = 0; i < A; i++) {
-    const a = 40 + s.rng.randomF32InRange(_ - 80), o = 60 + s.rng.randomF32InRange(k - 160);
+    const a = 40 + s.rng.randomF32InRange(F - 80), o = 60 + s.rng.randomF32InRange(_ - 160);
     e.push(
-      $({
+      tA({
         ...t,
         x: a,
         y: o,
@@ -21692,33 +21714,33 @@ function ti(s, A, t) {
   }
   return e;
 }
-function W1(s, A, t) {
-  const e = s >= 4, a = (e ? Ya(s) : s) * 4, n = ((e ? (s & 1) === 1 : A) ? 2 : 0) + (t - 1);
-  return ft[a + n] ?? ft[0];
+function vp(s, A, t) {
+  const e = s >= 4, a = (e ? Qo(s) : s) * 4, n = ((e ? (s & 1) === 1 : A) ? 2 : 0) + (t - 1);
+  return Et[a + n] ?? Et[0];
 }
-function ha(s, A, t = !1) {
-  return W1(s, A, t ? 2 : 1);
+function Ya(s, A, t = !1) {
+  return vp(s, A, t ? 2 : 1);
 }
-function V1() {
-  for (let s = 0; s < ft.length; s++) {
-    const A = ft[s];
+function jp() {
+  for (let s = 0; s < Et.length; s++) {
+    const A = Et[s];
     A && (A.phase = (s & 1) << 1 | s >> 1 & 1);
   }
 }
-V1();
-K1.phase = 4;
-const q1 = 896;
-function ei(s, A, t, e, i) {
+jp();
+kp.phase = 4;
+const Tp = 896;
+function bi(s, A, t, e, i) {
   let a = 0, o = A.posX, n = A.posY;
   for (const p of s) {
     if (!p.active) continue;
     t.stats && t.stats.checks++;
     const l = e + (p.halfWidth ?? p.radius ?? 0), c = i + (p.halfHeight ?? p.radius ?? 0);
-    Math.abs(p.x - A.posX) > l || Math.abs(p.y - A.posY) > c || (a += qn(p.damage, t.frameStop), o = p.x, n = p.y, p.active = !1);
+    Math.abs(p.x - A.posX) > l || Math.abs(p.y - A.posY) > c || (a += T0(p.damage, t.frameStop), o = p.x, n = p.y, p.active = !1);
   }
-  return a > 0 && (a = Zn(a, t.extremelyYoukai)), { raw: a, x: o, y: n, bombHit: !1 };
+  return a > 0 && (a = U0(a, t.extremelyYoukai)), { raw: a, x: o, y: n, bombHit: !1 };
 }
-function Z1(s) {
+function Up(s) {
   const A = [];
   for (const t of s)
     !t.active || t.tag !== "player" || A.push({
@@ -21738,8 +21760,8 @@ function Z1(s) {
     });
   return A;
 }
-const da = 22, $1 = 2, Ap = 29, tp = 28, ep = -2130739072, sp = -2139062017, ip = 4;
-class ap {
+const La = 22, Rp = 2, Gp = 29, zp = 28, Hp = -2130739072, Yp = -2139062017, Lp = 4;
+class Op {
   constructor(A) {
     r(this, "gs");
     r(this, "enemies");
@@ -21773,7 +21795,7 @@ class ap {
     /** The `playerNN.anm` pack whose scripts the shot VMs run. */
     r(this, "anm");
     /** `Player.tailPosition0`, the point 霊夢's charms bend toward (`FUN_00450320`). */
-    r(this, "tailPosition", { ..._e });
+    r(this, "tailPosition", { ...Ke });
     /** Shot sounds the firing layer asked for this frame, in `entry+0x28` order. */
     r(this, "lastShotSounds", []);
     r(this, "pointItemValueLine");
@@ -21871,9 +21893,9 @@ class ap {
     r(this, "glowFocused", !1);
     /** `Player+8`: frames since the last focus edge, counting in whichever state we are in. */
     r(this, "focusEdgeFrames", 0);
-    this.gs = A.gs, this.enemies = new Z0(A.gs, A.subFactory), this.bullets = new o1(), this.lasers = new c1(), this.player = new F0(A.gs), this.items = new K0(A.gs);
+    this.gs = A.gs, this.enemies = new U1(A.gs, A.subFactory), this.bullets = new N1(), this.lasers = new X1(), this.player = new m1(A.gs), this.items = new k1(A.gs);
     const t = Math.max(0, Math.min(11, A.gs.shotType | 0));
-    this.weapon = F1(t), this.anm = P1(j1[t]), this.shots = new tr(A.gs.rng), this.options = new S1(A.gs.rng), this.options.initShotType(t), this.timeline = new $0(
+    this.weapon = mp(t), this.anm = fp(Bp[t]), this.shots = new Ur(A.gs.rng), this.options = new hp(A.gs.rng), this.options.initShotType(t), this.timeline = new R1(
       A.ecl.timelines[A.timelineIndex ?? 0],
       A.gs,
       this.enemies
@@ -21930,27 +21952,27 @@ class ap {
       spellActive: this.gs.spellName !== null,
       shotType: this.gs.shotType,
       stats: this.collisionStats
-    }, i = this.player.gauge.isExtremelyHuman(), a = oa(this.gs.shotType);
+    }, i = this.player.gauge.isExtremelyHuman(), a = Ta(this.gs.shotType);
     for (const o of this.enemies.getActive()) {
       if (!o.active || o.invulnerable || !o.damageEnabled || t && o.noDamageDuringStop) continue;
-      const n = ei(A, o, e, o.hitboxHalfWidth, o.hitboxHalfHeight);
+      const n = bi(A, o, e, o.hitboxHalfWidth, o.hitboxHalfHeight);
       let p = n.raw;
       if (p > 0 && o.hasSecondaryHitbox) {
-        const h = ei(
+        const h = bi(
           A,
           o,
           e,
           o.secondaryHitboxHalfWidth,
           o.secondaryHitboxHalfHeight
         );
-        h.raw > 0 && (p = A0(p, h.raw, e.shotType));
+        h.raw > 0 && (p = G0(p, h.raw, e.shotType));
       }
       if (p <= 0) continue;
-      const l = e0(o.hitAccumulator, p, a, i);
+      const l = H0(o.hitAccumulator, p, a, i);
       if (o.hitAccumulator = l.accumulator, l.timeOrbs > 0)
         for (let h = 0; h < l.timeOrbs; h++)
           this.items.spawn("timeOrb", n.x, n.y);
-      const c = t0(
+      const c = z0(
         p,
         {
           boss: o.isBoss,
@@ -21986,7 +22008,7 @@ class ap {
       A.bonus > 0 && this.player.addScore(A.bonus);
       const t = A.timerFrames - Math.trunc(A.timerFrames / 7);
       let e = 100;
-      A.noTimeoutPenalty ? e = 700 : t <= 0 || A.remainingFrames >= t ? e = 1e3 : A.remainingFrames >= 180 && (e = Math.trunc(900 * (A.remainingFrames - 180) / (t - 180)) + 100), pt(this.gs, e);
+      A.noTimeoutPenalty ? e = 700 : t <= 0 || A.remainingFrames >= t ? e = 1e3 : A.remainingFrames >= 180 && (e = Math.trunc(900 * (A.remainingFrames - 180) / (t - 180)) + 100), ft(this.gs, e);
     }
   }
   /** Visual requests the scripts made during the current frame. */
@@ -22038,7 +22060,7 @@ class ap {
       let c = i[n];
       c || (c = i[n] = { x: 0, y: 0, hasAttached: !1, skipsCombat: !1 }), c.x = p.posX, c.y = p.posY, c.skipsCombat = p.noSprite || p.invulnerable || !p.damageEnabled || this.gs.bombRunning && p.noDamageDuringStop, c.hasAttached = p.linkedChild, c.id = p.slotIndex;
     }
-    if (e.length = t.length, i.length = t.length, this.tailPosition = Ar(_e, this.player.x, e), !this.worldFreeze) {
+    if (e.length = t.length, i.length = t.length, this.tailPosition = Tr(Ke, this.player.x, e), !this.worldFreeze) {
       const n = this.player.gauge;
       (n.isExtremelyHuman() || n.isExtremelyYoukai()) && this.player.addScore(100);
     }
@@ -22067,21 +22089,21 @@ class ap {
    */
   tickFocusEdgeEffects(A) {
     var o, n, p;
-    const t = A && !this.glowFocused, e = !A && this.glowFocused, i = t || e, a = this.gs.shotType < 4 && this.focusEdgeFrames >= ip;
+    const t = A && !this.glowFocused, e = !A && this.glowFocused, i = t || e, a = this.gs.shotType < 4 && this.focusEdgeFrames >= Lp;
     if (i && a) {
-      const l = t ? Ap : tp, c = t ? ep : sp;
+      const l = t ? Gp : zp, c = t ? Hp : Yp;
       (o = this.effectPool) == null || o.spawn(l, this.player.x, this.player.y, { count: 1, color: c });
     }
-    t ? (this.hitboxGlow = ((n = this.effectPool) == null ? void 0 : n.spawn(da, this.player.x, this.player.y, {
+    t ? (this.hitboxGlow = ((n = this.effectPool) == null ? void 0 : n.spawn(La, this.player.x, this.player.y, {
       count: 1,
       color: -1,
-      slotIndex: $1,
+      slotIndex: Rp,
       ownerPos: () => ({ x: this.player.x, y: this.player.y })
     })) ?? null, this.focusEdgeFrames = 0) : e ? ((p = this.hitboxGlow) == null || p.interrupt(1), this.hitboxGlow = null, this.focusEdgeFrames = 0) : this.focusEdgeFrames++, this.glowFocused = A;
   }
   /** The four option positions, nulled out for slots retail leaves inactive. */
   optionPositions() {
-    for (let A = 0; A < kA; A++) {
+    for (let A = 0; A < TA; A++) {
       const t = this.options.options[A], e = this.optionPositionsView[A];
       if (t.state === 0) {
         this.optionPositionsView[A] = null;
@@ -22123,7 +22145,7 @@ class ap {
       homingCandidates: () => A.candidateViews,
       onTrail: (t, e, i) => {
         var a;
-        (a = A.effectPool) == null || a.spawn(I1, t, e, { count: 1, color: i });
+        (a = A.effectPool) == null || a.spawn(rp, t, e, { count: 1, color: i });
       },
       get anmPack() {
         return A.anm ? A.anm.pack : null;
@@ -22200,7 +22222,7 @@ class ap {
       get bladeAngle() {
         return A.options.options[2].facingAngle;
       },
-      bounds: { left: 0, right: _, top: 0, bottom: k },
+      bounds: { left: 0, right: F, top: 0, bottom: _ },
       get timeScale() {
         return A.gs.timeScale;
       },
@@ -22223,7 +22245,7 @@ class ap {
   shotViews() {
     const A = this, t = [];
     for (const e of this.shots.shots) {
-      if (e.state === eA) continue;
+      if (e.state === iA) continue;
       const i = e.type;
       t.push({
         get x() {
@@ -22234,7 +22256,7 @@ class ap {
         },
         damage: e.damage,
         get active() {
-          return e.state !== IA ? i === 3 && e.state === ae : !((i === 4 || i === 5) && e.timer % 2 !== 0);
+          return e.state !== DA ? i === 3 && e.state === xe : !((i === 4 || i === 5) && e.timer % 2 !== 0);
         },
         set active(a) {
           var o;
@@ -22257,22 +22279,22 @@ class ap {
     t && !this.lastWorldFreeze && (this.bullets.cancelAllEnemy(), this.lasers.clearAll(), this.enemies.wipeNonBossEnemies(-1), this.items.autoCollectAll()), this.lastWorldFreeze = t, t && (A = { ...A, shoot: !1, bomb: !1 }), this.shootHeld = A.shoot, this.gs.frame++, this.lastCollected = [], this.items.shipDying = this.player.state === "dying", this.lastGraze = 0, this.lastDeaths = [], this.lastSpellResults.length = 0, this.lastPopups.length = 0, this.bombConnected = !1, this.fullPowerTriggered = !1, this.fullPowerSparkles = 0, this.collisionStats.checks = 0, this.lastShotSounds.length = 0, this.gs.bombRunning = this.activeBomb !== null, this.gs.bombForcedFocus = this.activeBomb ? (this.activeBomb.spec.phase & 1) === 1 : !1, this.gs.bombStatePhase = ((p = this.activeBomb) == null ? void 0 : p.spec.phase) ?? 0;
     const e = this.gs.bombRunning, i = ((l = this.activeBomb) == null ? void 0 : l.freeze) === !0 || t;
     if (this.frameStopClock = i, this.gs.spellName && !i && this.gs.spellFrames++, this.bullets.timeScale = this.gs.timeScale, this.lasers.timeScale = this.gs.timeScale, t || this.timeline.tick(), this.enemies.tick(e, i), this.bullets.tick(i, this.bulletWorld()), this.lasers.tick(i), this.effectPool && !i && this.effectPool.update(), this.player.holdGauge = t, this.player.tick(A), this.gs.playerIsYoukai = this.player.isYoukai, this.player.bombTriggered) {
-      const h = ha(this.gs.shotType, this.player.isSlow, this.player.deathbomb);
+      const h = Ya(this.gs.shotType, this.player.isSlow, this.player.deathbomb);
       this.activeBomb = h.create(this.player, this.gs, this.bombTargets()), this.player.bombStateTimer = h.stateTimer, this.enemies.voidLiveCardBonus(), this.items.autoCollectAll();
     }
-    this.lastBombZones = this.activeBomb ? L1(this.activeBomb, this.player, this.bullets, this.bombTargets()) : [], this.activeBomb ? (this.player.gauge.add(this.activeBomb.gaugeDrift, !0), this.bombConnected = this.activeBomb.connected, this.bombCancel = this.activeBomb.cancelRadius > 0 ? {
+    this.lastBombZones = this.activeBomb ? Cp(this.activeBomb, this.player, this.bullets, this.bombTargets()) : [], this.activeBomb ? (this.player.gauge.add(this.activeBomb.gaugeDrift, !0), this.bombConnected = this.activeBomb.connected, this.bombCancel = this.activeBomb.cancelRadius > 0 ? {
       x: this.player.x,
       y: this.player.y,
       radius: this.activeBomb.cancelRadius,
       alpha: 1 - this.activeBomb.cancelRadius / Math.max(1, this.activeBomb.spec.cancelRadius)
-    } : null, this.bombBackdrop = this.activeBomb.backdrop) : (this.bombCancel = null, this.bombBackdrop = { plate: null, flash: null }), this.player.cancelTimer > 0 && this.bullets.clearInRadius(this.player.x, this.player.y, q1), this.tickShipWeapon();
-    const { hits: a, grazes: o } = t ? { hits: [], grazes: [] } : d1(
+    } : null, this.bombBackdrop = this.activeBomb.backdrop) : (this.bombCancel = null, this.bombBackdrop = { plate: null, flash: null }), this.player.cancelTimer > 0 && this.bullets.clearInRadius(this.player.x, this.player.y, Tp), this.tickShipWeapon();
+    const { hits: a, grazes: o } = t ? { hits: [], grazes: [] } : q1(
       this.bullets.bullets,
       this.player,
       this.player.hitboxHalfExtent,
       this.player.grazeHalfExtent,
       this.collisionStats
-    ), n = t ? { hits: [], grazes: [] } : u1(
+    ), n = t ? { hits: [], grazes: [] } : $1(
       this.lasers.getActive(),
       this.player,
       this.player.hitboxHalfExtent,
@@ -22281,20 +22303,20 @@ class ap {
     this.lastGraze = 0;
     for (let h = 0; h < o.length; h++) {
       this.lastGraze += this.player.grazeReward().grazeGain;
-      const u = o[h], m = this.player.grazeTimeOrbs(this.gs.isBossPresent, this.enemies.hasGaugeOwner(), !1);
-      for (let f = 0; f < m; f++) this.items.spawn("timeOrb", u.x, u.y, "orbDouble");
+      const d = o[h], w = this.player.grazeTimeOrbs(this.gs.isBossPresent, this.enemies.hasGaugeOwner(), !1);
+      for (let m = 0; m < w; m++) this.items.spawn("timeOrb", d.x, d.y, "orbDouble");
     }
     for (let h = 0; h < n.grazes.length; h++) {
       this.lastGraze += this.player.grazeReward().grazeGain;
-      const u = this.player.grazeTimeOrbs(this.gs.isBossPresent, this.enemies.hasGaugeOwner(), !0);
-      for (let m = 0; m < u; m++)
+      const d = this.player.grazeTimeOrbs(this.gs.isBossPresent, this.enemies.hasGaugeOwner(), !0);
+      for (let w = 0; w < d; w++)
         this.items.spawn("timeOrb", this.player.x, this.player.y, "orbDouble");
     }
     if (this.lastHits = a, this.lastLaserHits = n.hits, (a.length > 0 || n.hits.length > 0) && !this.player.isInvulnerable && !t) {
-      for (const u of a) u.active = !1;
+      for (const d of a) d.active = !1;
       (this.debugNoFail ? !1 : this.player.hit()) && (this.bullets.clearByTag("enemy"), this.items.cancelAutoCollect());
     }
-    this.player.deathSettled && (this.player.deathSettled = !1, this.enemies.voidLiveCardBonus(), pt(this.gs, this.gs.timeOrbs > 5e3 ? -500 : -Math.trunc(this.gs.timeOrbs / 10)), this.items.spawnDeathDrops(
+    this.player.deathSettled && (this.player.deathSettled = !1, this.enemies.voidLiveCardBonus(), ft(this.gs, this.gs.timeOrbs > 5e3 ? -500 : -Math.trunc(this.gs.timeOrbs / 10)), this.items.spawnDeathDrops(
       this.player.x,
       this.player.y,
       this.gs.shotType,
@@ -22302,7 +22324,7 @@ class ap {
       // `Player.cpp:1341` branches on the lives still banked, which the dying
       // ship has not spent yet -- the debit lands in `respawn()`.
       this.player.lives <= 0
-    ), this.items.cancelAutoCollect(), this.player.powerLost = 0), this.damageEnemiesAt([...this.shotViews(), ...Z1(this.bullets.bullets)]), (c = this.activeBomb) != null && c.finished && (this.activeBomb = null), this.settleDeaths(), this.bankSpellResults(), this.lastCollected = this.items.tick(
+    ), this.items.cancelAutoCollect(), this.player.powerLost = 0), this.damageEnemiesAt([...this.shotViews(), ...Up(this.bullets.bullets)]), (c = this.activeBomb) != null && c.finished && (this.activeBomb = null), this.settleDeaths(), this.bankSpellResults(), this.lastCollected = this.items.tick(
       this.player.x,
       this.player.y,
       this.itemPickupHalfExtent,
@@ -22347,7 +22369,7 @@ class ap {
         const e = this.player.power;
         this.player.addPower(t.power), e < 128 && this.player.power >= 128 && (this.bullets.clearByTag("enemy"), this.raiseFullPower());
       }
-      t.life && (this.player.lives = Math.min(8, this.player.lives + 1)), t.bomb && (this.player.bombs = Math.min(8, this.player.bombs + 1)), t.extend && (this.player.lives < 8 ? this.player.lives++ : this.player.bombs < 8 && this.player.bombs++), this.player.score += t.score, t.timeOrb && (pt(this.gs, 1), this.player.onTimeOrbCollected());
+      t.life && (this.player.lives = Math.min(8, this.player.lives + 1)), t.bomb && (this.player.bombs = Math.min(8, this.player.bombs + 1)), t.extend && (this.player.lives < 8 ? this.player.lives++ : this.player.bombs < 8 && this.player.bombs++), this.player.score += t.score, t.timeOrb && (ft(this.gs, 1), this.player.onTimeOrbCollected());
     }
   }
   get isFinished() {
@@ -22362,13 +22384,13 @@ class ap {
     return this.player.gauge.isExtreme();
   }
 }
-function op(s) {
+function Np(s) {
   return (A) => {
     const t = s[A];
     return t ? (e) => t(e) : null;
   };
 }
-function rp(s) {
+function Jp(s) {
   const A = [];
   for (const [t, e] of Object.entries(s)) {
     const i = t.match(/^sub_(\d+)$/);
@@ -22376,30 +22398,30 @@ function rp(s) {
   }
   return A;
 }
-const np = 512, pp = 128, lp = 16, cp = 0.3, hp = 0.031415928, si = 16, ii = Math.PI * 2;
-function N(s, A) {
+const Vp = 512, Wp = 128, Kp = 16, Xp = 0.3, Zp = 0.031415928, Ii = 16, Mi = Math.PI * 2;
+function V(s, A) {
   return (s.randomF32InRange(2) - 1) * A;
 }
-function ai(s, A, t, e, i = !1) {
+function xi(s, A, t, e, i = !1) {
   const a = e.camera();
-  return s.depthScale = 1, a ? (s.sx = a.at.x + a.eye.x + N(t, 60) - a.at.x / 2, s.sy = a.at.y + a.eye.y + N(t, i ? 200 : 100) + (i ? -200 : -50) - a.at.y / 2, s.sz = a.at.z + a.eye.z + t.randomF32InRange(100) - 100 - a.at.z / 2, s.vx = N(t, 1e-3) + s.vAng, s.vy = i ? N(t, 0.03) + 0.4 : N(t, 0.03) + s.vY, s.vz = -t.randomF32InRange(0.1) - 0.3 + s.vZ, s.ax = N(t, 1e-4), s.ay = N(t, 1e-4), s.az = -3e-4, !0) : (s.vx = N(t, 1e-3) + s.vAng, s.vy = N(t, 0.03) + s.vY, s.ax = N(t, 1e-4), s.ay = N(t, 1e-4), s.sx = s.x, s.sy = s.y, !0);
+  return s.depthScale = 1, a ? (s.sx = a.at.x + a.eye.x + V(t, 60) - a.at.x / 2, s.sy = a.at.y + a.eye.y + V(t, i ? 200 : 100) + (i ? -200 : -50) - a.at.y / 2, s.sz = a.at.z + a.eye.z + t.randomF32InRange(100) - 100 - a.at.z / 2, s.vx = V(t, 1e-3) + s.vAng, s.vy = i ? V(t, 0.03) + 0.4 : V(t, 0.03) + s.vY, s.vz = -t.randomF32InRange(0.1) - 0.3 + s.vZ, s.ax = V(t, 1e-4), s.ay = V(t, 1e-4), s.az = -3e-4, !0) : (s.vx = V(t, 1e-3) + s.vAng, s.vy = V(t, 0.03) + s.vY, s.ax = V(t, 1e-4), s.ay = V(t, 1e-4), s.sx = s.x, s.sy = s.y, !0);
 }
-function oi(s, A, t, e) {
+function Di(s, A, t, e) {
   s.vx += s.ax, s.vy += s.ay, s.vz += s.az;
   const i = e.camera();
-  return i ? (s.sx += s.vx, s.sy += s.vy, s.sz += s.vz, dp(s, i)) : (s.sx += s.vx, s.sy += s.vy, s.x = s.sx, s.y = s.sy, !0);
+  return i ? (s.sx += s.vx, s.sy += s.vy, s.sz += s.vz, qp(s, i)) : (s.sx += s.vx, s.sy += s.vy, s.x = s.sx, s.y = s.sy, !0);
 }
-function dp(s, A) {
+function qp(s, A) {
   const t = s.sx - A.eye.x, e = s.sy - A.eye.y, i = s.sz - A.eye.z, a = Math.hypot(t, e, i);
-  if (!(a > 0) || (A.dir.x * t + A.dir.y * e + A.dir.z * i) / a < up) return !1;
+  if (!(a > 0) || (A.dir.x * t + A.dir.y * e + A.dir.z * i) / a < $p) return !1;
   const n = A.project(s.sx, s.sy, s.sz);
-  return n ? (s.x = n.x, s.y = n.y, s.z = s.sz, s.depthScale = mp(n.scale), !0) : !1;
+  return n ? (s.x = n.x, s.y = n.y, s.z = s.sz, s.depthScale = tl(n.scale), !0) : !1;
 }
-const up = 0.94, ri = 0.25, gp = 2;
-function mp(s) {
-  return !Number.isFinite(s) || s <= 0 ? ri : Math.min(gp, Math.max(ri, s));
+const $p = 0.94, Qi = 0.25, Al = 2;
+function tl(s) {
+  return !Number.isFinite(s) || s <= 0 ? Qi : Math.min(Al, Math.max(Qi, s));
 }
-const ni = {
+const Ei = {
   // `EffectManager.cpp:445-453`: an orbit starts pinned to its axis with no radius.
   EffectOrbitInit: {
     init: (s) => (s.radius = 0, s.angle = 0, s.dying = !1, s.fade = 0, !0)
@@ -22409,11 +22431,11 @@ const ni = {
     update: (s, A) => {
       var o;
       const t = (o = s.ownerPos) == null ? void 0 : o.call(s);
-      t && (s.ox = t.x, s.oy = t.y, s.radius = Math.min(s.target, s.radius + cp), s.angle = z(s.angle + hp));
-      const e = pi(s.axisX, s.axisY, s.axisZ), i = pi(e.y, -e.x, 0), a = fp(i, s.radius, e, s.angle);
+      t && (s.ox = t.x, s.oy = t.y, s.radius = Math.min(s.target, s.radius + Xp), s.angle = R(s.angle + Zp));
+      const e = Ci(s.axisX, s.axisY, s.axisZ), i = Ci(e.y, -e.x, 0), a = sl(i, s.radius, e, s.angle);
       if (s.x = s.ox + a.x, s.y = s.oy + a.y, s.z = a.z * 6, s.dying) {
-        if (s.fade++, s.fade >= si) return !1;
-        const n = 1 - s.fade / si;
+        if (s.fade++, s.fade >= Ii) return !1;
+        const n = 1 - s.fade / Ii;
         A.scale.x = 2 - n, A.scale.y = 2 - n, A.color1.a = Math.trunc(n * 255);
       }
       return !0;
@@ -22423,7 +22445,7 @@ const ni = {
   FUN_00426b20: {
     init: (s, A, t) => {
       s.ox = s.x, s.oy = s.y;
-      const e = t.randomF32InRange(ii) - Math.PI;
+      const e = t.randomF32InRange(Mi) - Math.PI;
       return s.dx = Math.cos(e), s.dy = Math.sin(e), !0;
     }
   },
@@ -22452,7 +22474,7 @@ const ni = {
   // ease-out curve over 90 frames. This is the id every shipped launcher uses for its flare.
   FUN_004270c0: {
     init: (s, A, t) => {
-      const e = s.vAng > -990 ? z(s.vAng) : t.randomF32InRange(ii) - Math.PI;
+      const e = s.vAng > -990 ? R(s.vAng) : t.randomF32InRange(Mi) - Math.PI;
       s.ox = s.x, s.oy = s.y;
       const i = t.randomF32InRange(1.5);
       return s.dx = Math.cos(e) * i, s.dy = Math.sin(e) * i, !0;
@@ -22468,24 +22490,24 @@ const ni = {
   FUN_00427260: {
     init: (s, A) => {
       const t = s.vAng || 0;
-      return s.x += Math.cos(t) * 256, s.y += Math.sin(t) * 256, A.rotation.z = z(t + Math.PI / 2), !0;
+      return s.x += Math.cos(t) * 256, s.y += Math.sin(t) * 256, A.rotation.z = R(t + Math.PI / 2), !0;
     }
   },
-  FUN_00426280: { init: (s, A, t, e) => ai(s, A, t, e) },
-  FUN_004264f0: { update: oi },
+  FUN_00426280: { init: (s, A, t, e) => xi(s, A, t, e) },
+  FUN_004264f0: { update: Di },
   // `EffectManager.cpp:582-609`: the rising variant, scattered 200 lower and
   // drifting 0.4 up on its own rather than off the spawn velocity.
-  FUN_00426720: { init: (s, A, t, e) => ai(s, A, t, e, !0) },
-  FUN_00426990: { update: oi }
+  FUN_00426720: { init: (s, A, t, e) => xi(s, A, t, e, !0) },
+  FUN_00426990: { update: Di }
 };
-function pi(s, A, t) {
+function Ci(s, A, t) {
   const e = Math.hypot(s, A, t);
   return !Number.isFinite(e) || e < 1e-6 ? { x: 1, y: 0, z: 0 } : { x: s / e, y: A / e, z: t / e };
 }
-function wp(s) {
+function el(s) {
   return (s.r & 255) << 16 | (s.g & 255) << 8 | s.b & 255;
 }
-function fp(s, A, t, e) {
+function sl(s, A, t, e) {
   const i = { x: s.x * A, y: s.y * A, z: s.z * A }, a = Math.cos(e), o = Math.sin(e), n = t.x * i.x + t.y * i.y + t.z * i.z;
   return {
     x: i.x * a + (t.y * i.z - t.z * i.y) * o + t.x * n * (1 - a),
@@ -22493,7 +22515,7 @@ function fp(s, A, t, e) {
     z: i.z * a + (t.x * i.y - t.y * i.x) * o + t.z * n * (1 - a)
   };
 }
-const ua = {
+const Oa = {
   x: 0,
   y: 0,
   z: 0,
@@ -22531,7 +22553,7 @@ const ua = {
   color: -1,
   ownerPos: null
 };
-class yp {
+class il {
   constructor(A) {
     r(this, "rng");
     r(this, "templates");
@@ -22550,7 +22572,7 @@ class yp {
     r(this, "dropped", 0);
     /** Template ids whose script was not in the pack, which should stay empty. */
     r(this, "missingScript", 0);
-    this.rng = A.rng, this.templates = A.templates, this.scriptBytes = A.scriptBytes, this.main = Rt(A, np), this.secondary = Rt(A, pp), this.dedicated = Rt(A, lp), this.mover = { camera: A.camera ?? (() => null) };
+    this.rng = A.rng, this.templates = A.templates, this.scriptBytes = A.scriptBytes, this.main = Zt(A, Vp), this.secondary = Zt(A, Wp), this.dedicated = Zt(A, Kp), this.mover = { camera: A.camera ?? (() => null) };
   }
   /** What to draw this frame, in pool order. */
   get views() {
@@ -22580,7 +22602,7 @@ class yp {
       return this.missingScript++, null;
     if (i.slotIndex !== void 0) {
       const c = this.dedicated[i.slotIndex];
-      return c ? (this.start(c, A, a, t, e, i, o), this.spawned++, li(c, c.generation)) : null;
+      return c ? (this.start(c, A, a, t, e, i, o), this.spawned++, Si(c, c.generation)) : null;
     }
     const n = i.secondary ? this.secondary : this.main;
     let p = null;
@@ -22593,7 +22615,7 @@ class yp {
       }
       this.start(h, A, a, t, e, i, o), p = h, this.spawned++;
     }
-    return p ? li(p, p.generation) : null;
+    return p ? Si(p, p.generation) : null;
   }
   /** Advance every live effect by one frame and rebuild the draw list. */
   update() {
@@ -22625,7 +22647,7 @@ class yp {
           scaleX: n.scale.x * o.depthScale,
           scaleY: n.scale.y * o.depthScale,
           alpha: n.color1.a / 255,
-          tint: wp(n.color1),
+          tint: el(n.color1),
           additive: n.blendMode !== 0
         });
       }
@@ -22641,7 +22663,7 @@ class yp {
     let t = null;
     const e = this.scriptBytes[A];
     try {
-      e && (t = dA(e));
+      e && (t = nA(e));
     } catch {
       t = null;
     }
@@ -22662,39 +22684,39 @@ class yp {
     return null;
   }
   start(A, t, e, i, a, o, n) {
-    var h, u, m, f, g, d, y;
-    const p = Object.assign({}, ua, {
+    var h, d, w, m, u, g, B;
+    const p = Object.assign({}, Oa, {
       id: t,
       x: i,
       y: a,
       color: o.color ?? -1,
       ownerPos: o.ownerPos ?? null,
       vAng: ((h = o.velocity) == null ? void 0 : h.x) ?? 0,
-      vY: ((u = o.velocity) == null ? void 0 : u.y) ?? 0,
-      vZ: ((m = o.velocity) == null ? void 0 : m.z) ?? 0,
-      axisX: ((f = o.axis) == null ? void 0 : f.x) ?? 0,
-      axisY: ((g = o.axis) == null ? void 0 : g.y) ?? 0,
-      axisZ: ((d = o.axis) == null ? void 0 : d.z) ?? 0,
+      vY: ((d = o.velocity) == null ? void 0 : d.y) ?? 0,
+      vZ: ((w = o.velocity) == null ? void 0 : w.z) ?? 0,
+      axisX: ((m = o.axis) == null ? void 0 : m.x) ?? 0,
+      axisY: ((u = o.axis) == null ? void 0 : u.y) ?? 0,
+      axisZ: ((g = o.axis) == null ? void 0 : g.z) ?? 0,
       target: o.radius ?? 0
     });
-    A.state = p, A.active = !0, A.generation++, A.update = e.update ? ni[e.update] ?? null : null;
+    A.state = p, A.active = !0, A.generation++, A.update = e.update ? Ei[e.update] ?? null : null;
     const l = A.vm;
     l.attach(n), l.color1.r = p.color >> 16 & 255, l.color1.g = p.color >> 8 & 255, l.color1.b = p.color & 255, l.color1.a = p.color >>> 24 & 255, o.interrupt && l.setInterrupt(o.interrupt), A.vm = l, A.attached = !0;
-    const c = e.init ? ni[e.init] : null;
-    ((y = c == null ? void 0 : c.init) == null ? void 0 : y.call(c, p, l, this.rng, this.mover)) === !1 && (A.active = !1);
+    const c = e.init ? Ei[e.init] : null;
+    ((B = c == null ? void 0 : c.init) == null ? void 0 : B.call(c, p, l, this.rng, this.mover)) === !1 && (A.active = !1);
   }
 }
-function Rt(s, A) {
+function Zt(s, A) {
   return Array.from({ length: A }, () => ({
     active: !1,
-    state: { ...ua, id: 0 },
-    vm: new hA(s.rng),
+    state: { ...Oa, id: 0 },
+    vm: new rA(s.rng),
     update: null,
     attached: !1,
     generation: 0
   }));
 }
-function li(s, A) {
+function Si(s, A) {
   return {
     fade: () => {
       s.active && s.generation === A && (s.state.dying = !0);
@@ -22707,7 +22729,7 @@ function li(s, A) {
     }
   };
 }
-const bp = [
+const al = [
   { scriptIdx: 28, update: null, init: null },
   { scriptIdx: 29, update: null, init: null },
   { scriptIdx: 30, update: null, init: null },
@@ -22774,7 +22796,7 @@ const bp = [
   { scriptIdx: 74, update: "FUN_00426990", init: "FUN_00426720" },
   { scriptIdx: 77, update: "FUN_00427b50", init: "FUN_004272e0" },
   { scriptIdx: 98, update: "FUN_004279d0", init: "FUN_00427970" }
-], Bp = [
+], ol = [
   "AwAMAAAAAAAAAAAAAgAIAAAAAAA=",
   "AwAMAAAAAAAQAAAAAgAIAAAAAAA=",
   "AwAMAAAAAAAgAAAAGQAMAAAAAAABAAAAAgAIAAAAAAA=",
@@ -22891,7 +22913,7 @@ const bp = [
   "AwAMAAAAAAA+AQAAGQAMAAAAAAABAAAAAgAIAAAAAAA=",
   "GQAMAAAAAAABAAAAEAAMAAAAAAABAAAAAwAMAAAAAABGAQAAAwAMAAMAAABHAQAAAwAMAAYAAABIAQAAAwAMAAkAAABJAQAABAAQAAwAAAAYAAAAAAAAAA==",
   "AwAMAAAAAABKAQAAGQAMAAAAAAABAAAAAgAIADB1AAA="
-], be = {
+], Ge = {
   stg1enm: {
     pageOf: [
       "stg1enm_t0",
@@ -24706,8 +24728,8 @@ const bp = [
     ]
   }
 };
-function Ip(s, A, t) {
-  const e = be[s], i = e == null ? void 0 : e.scripts[A];
+function rl(s, A, t) {
+  const e = Ge[s], i = e == null ? void 0 : e.scripts[A];
   if (!i || i.total === 0) return null;
   let a = t % i.total;
   for (const o of i.frames) {
@@ -24716,10 +24738,10 @@ function Ip(s, A, t) {
   }
   return null;
 }
-const Mp = (s, A) => {
+const nl = (s, A) => {
   var t;
-  return ((t = be[s]) == null ? void 0 : t.bytes[A]) ?? null;
-}, ga = [
+  return ((t = Ge[s]) == null ? void 0 : t.bytes[A]) ?? null;
+}, EA = [
   "stage1",
   "stage2",
   "stage3",
@@ -24728,44 +24750,56 @@ const Mp = (s, A) => {
   "stage5",
   "stage6a",
   "stage6b"
-];
-function ma(s) {
-  return ga.indexOf(s);
+], pl = {
+  stage1: "STAGE 1",
+  stage2: "STAGE 2",
+  stage3: "STAGE 3",
+  stage4a: "STAGE 4-1",
+  stage4b: "STAGE 4-2",
+  stage5: "STAGE 5",
+  stage6a: "STAGE 6-1",
+  stage6b: "STAGE 6-2"
+};
+function ll(s) {
+  return pl[s];
 }
-function Ut(s) {
-  const A = ma(s);
+function Na(s) {
+  return EA.indexOf(s);
+}
+function Bt(s) {
+  const A = Na(s);
   return A <= 2 ? A + 1 : A <= 4 ? 4 : A === 5 ? 5 : 6;
 }
-function wa(s) {
+function Ja(s) {
   const A = s < 4 ? s : Math.floor((s - 4) / 2);
   return A === 1 || A === 2 ? "stage4a" : "stage4b";
 }
-function xp(s) {
+function cl(s) {
   return s >= 4;
 }
-function fa(s) {
-  return s.continued ? "stage6a" : xp(s.shotType) || s.clearedStage6BNoContinue || s.clearedStage6A ? "stage6b" : "stage6a";
+function Va(s) {
+  return s.continued ? "stage6a" : cl(s.shotType) || s.clearedStage6BNoContinue || s.clearedStage6A ? "stage6b" : "stage6a";
 }
-function ci(s, A) {
+function Fi(s, A) {
   switch (s) {
     case "stage1":
       return "stage2";
     case "stage2":
       return "stage3";
     case "stage3":
-      return wa(A.shotType);
+      return Ja(A.shotType);
     case "stage4a":
     case "stage4b":
       return "stage5";
     case "stage5":
-      return fa(A);
+      return Va(A);
     case "stage6a":
       return "stage6b";
     case "stage6b":
       return null;
   }
 }
-function Dp(s, A) {
+function hl(s, A) {
   switch (s) {
     case 1:
       return "stage1";
@@ -24774,35 +24808,35 @@ function Dp(s, A) {
     case 3:
       return "stage3";
     case 4:
-      return wa(A.shotType);
+      return Ja(A.shotType);
     case 5:
       return "stage5";
     case 6:
-      return fa(A);
+      return Va(A);
   }
 }
-const ya = {
-  stage1: () => import("./index-DzZ1y230.js").then((s) => s.STAGE1_SCRIPT),
-  stage2: () => import("./index-3CFVKa6A.js").then((s) => s.STAGE2_SCRIPT),
-  stage3: () => import("./index-D_Ds_uwh.js").then((s) => s.STAGE3_SCRIPT),
-  stage4a: () => import("./index-CQJuzyMY.js").then((s) => s.STAGE4A_SCRIPT),
-  stage4b: () => import("./index-Co-gscK8.js").then((s) => s.STAGE4B_SCRIPT),
-  stage5: () => import("./index-CnLrfOsI.js").then((s) => s.STAGE5_SCRIPT),
+const Wa = {
+  stage1: () => import("./index-BAidw-Lu.js").then((s) => s.STAGE1_SCRIPT),
+  stage2: () => import("./index-Y-JMB9w4.js").then((s) => s.STAGE2_SCRIPT),
+  stage3: () => import("./index-C4FE8FXK.js").then((s) => s.STAGE3_SCRIPT),
+  stage4a: () => import("./index-C7c3giVO.js").then((s) => s.STAGE4A_SCRIPT),
+  stage4b: () => import("./index-DyRyVWeU.js").then((s) => s.STAGE4B_SCRIPT),
+  stage5: () => import("./index-B6ABr0Wi.js").then((s) => s.STAGE5_SCRIPT),
   // 6A is ecldata6, the true final 6B is ecldata7 -- the facade hides that, which is
   // exactly the point: nothing downstream has to know retail's file numbering.
-  stage6a: () => import("./index-D0oG81jy.js").then((s) => s.STAGE6A_SCRIPT),
-  stage6b: () => import("./index-CqXN7OAu.js").then((s) => s.STAGE6B_SCRIPT)
-}, hi = /* @__PURE__ */ new Map();
-function Ep(s) {
-  if (!s || !(s in be)) return null;
-  let A = hi.get(s);
-  return A || hi.set(s, A = /* @__PURE__ */ new Map()), {
+  stage6a: () => import("./index-CE_D-gjH.js").then((s) => s.STAGE6A_SCRIPT),
+  stage6b: () => import("./index-DNyWg92E.js").then((s) => s.STAGE6B_SCRIPT)
+}, _i = /* @__PURE__ */ new Map();
+function dl(s) {
+  if (!s || !(s in Ge)) return null;
+  let A = _i.get(s);
+  return A || _i.set(s, A = /* @__PURE__ */ new Map()), {
     words(t) {
       if (A.has(t)) return A.get(t) ?? null;
       let e = null;
       try {
-        const i = Mp(s, t);
-        i && (e = dA(i));
+        const i = nl(s, t);
+        i && (e = nA(i));
       } catch {
         e = null;
       }
@@ -24810,7 +24844,7 @@ function Ep(s) {
     }
   };
 }
-const di = {
+const Pi = {
   stage1: "stg1enm",
   stage2: "stg2enm",
   stage3: "stg3enm",
@@ -24819,38 +24853,38 @@ const di = {
   stage5: "stg5enm",
   stage6a: "stg6enm",
   stage6b: "stg7enm"
-}, Ht = /* @__PURE__ */ new Map(), Sp = {
+}, qt = /* @__PURE__ */ new Map(), gl = {
   words(s) {
-    if (Ht.has(s)) return Ht.get(s) ?? null;
+    if (qt.has(s)) return qt.get(s) ?? null;
     let A = null;
     try {
-      const t = ar(s);
-      t && (A = dA(t));
+      const t = Hr(s);
+      t && (A = nA(t));
     } catch {
       A = null;
     }
-    return Ht.set(s, A), A;
+    return qt.set(s, A), A;
   }
 };
-async function Qp(s) {
-  const A = ya[s.route];
+async function ul(s) {
+  const A = Wa[s.route];
   if (!A) return null;
   try {
-    const t = await A(), e = rp(t.scripts);
+    const t = await A(), e = Jp(t.scripts);
     if (e.length === 0) return null;
-    const i = op(e), a = yn(s.difficulty, s.seed ?? 0);
-    a.lives = s.lives ?? 3, a.bombs = s.bombs ?? 3, a.power = s.power ?? 0, a.currentStage = s.stageNumber ?? 1, a.lastSpellTimeOrbThreshold = wn(ma(s.route), s.difficulty);
+    const i = Np(e), a = i0(s.difficulty, s.seed ?? 0);
+    a.lives = s.lives ?? 3, a.bombs = s.bombs ?? 3, a.power = s.power ?? 0, a.currentStage = s.stageNumber ?? 1, a.lastSpellTimeOrbThreshold = e0(Na(s.route), s.difficulty);
     const o = s.carry;
     o && (a.score = o.score, a.graze = o.graze, a.timeOrbs = o.timeOrbs, a.totalTimeOrbs = o.totalTimeOrbs, a.pointItemValue = o.pointItemValue, a.clockTime = o.clockTime);
-    const n = qi.indexOf(s.character);
+    const n = Ea.indexOf(s.character);
     a.shotType = n >= 0 ? n : 0, a.character = s.character;
-    const p = t.waves, l = new yp({
+    const p = t.waves, l = new il({
       rng: a.rng,
-      templates: bp,
-      scriptBytes: Bp,
+      templates: al,
+      scriptBytes: ol,
       camera: s.stdCamera
-    }), c = Qi(s.character);
-    return new ap({
+    }), c = ta(s.character);
+    return new Op({
       gs: a,
       ecl: p,
       subFactory: i,
@@ -24865,39 +24899,39 @@ async function Qp(s) {
       itemGrabSpeed: c.itemGrabSpeed,
       itemTimeScale: c.itemTimeScale,
       itemTimeScaleFocused: c.itemTimeScaleFocused,
-      anmPack: Sp,
+      anmPack: gl,
       effectPool: l,
-      anmPackAlt: Ep(di[s.route] ?? null) ?? void 0,
-      anmStageName: di[s.route] ?? "",
-      bulletRadiusFor: (u) => Li(u) * (s.bulletRadiusScale ?? 1),
-      bulletSizeFor: Oi
+      anmPackAlt: dl(Pi[s.route] ?? null) ?? void 0,
+      anmStageName: Pi[s.route] ?? "",
+      bulletRadiusFor: (d) => ma(d) * (s.bulletRadiusScale ?? 1),
+      bulletSizeFor: wa
     });
   } catch (t) {
     return console.warn("Failed to load ECL stage", s.route, t), null;
   }
 }
-function Cp(s) {
-  return s in ya;
+function wl(s) {
+  return s in Wa;
 }
-const _p = 384, kp = 448, ot = 30, rt = 1800, Fp = 5, j = (s = 0, A = 0, t = 0) => ({ x: s, y: A, z: t }), xA = (s) => {
+const ml = 384, fl = 448, ht = 30, dt = 1800, Bl = 5, v = (s = 0, A = 0, t = 0) => ({ x: s, y: A, z: t }), CA = (s) => {
   const A = new Int32Array([s | 0]);
   return new Float32Array(A.buffer)[0];
-}, QA = () => ({
-  v0: j(0, 0, 1e3),
-  v1: j(0, 0, 0),
-  v2: j(0, 1, 0),
-  v3: j(0, 0, 0),
-  v5: j(0, 0, 0),
+}, PA = () => ({
+  v0: v(0, 0, 1e3),
+  v1: v(0, 0, 0),
+  v2: v(0, 1, 0),
+  v3: v(0, 0, 0),
+  v5: v(0, 0, 0),
   fov: 0.5235987901687622
 });
-let ui = 305419896;
-const ba = {
-  randomU32InRange: (s) => s > 0 ? (ui = ui * 1103515245 + 12345 >>> 0) % s : 0,
-  randomF32InRange: (s) => ba.randomU32InRange(65536) / 65536 * s
-}, Gt = (s, A, t, e, i) => {
+let ki = 305419896;
+const Ka = {
+  randomU32InRange: (s) => s > 0 ? (ki = ki * 1103515245 + 12345 >>> 0) % s : 0,
+  randomF32InRange: (s) => Ka.randomU32InRange(65536) / 65536 * s
+}, $t = (s, A, t, e, i) => {
   const a = (i - 1) * (i - 1) * (2 * i + 1), o = i * i * (3 - 2 * i), n = (1 - i) * (1 - i) * i, p = (i - 1) * i * i;
   return a * s + o * A + n * t + p * e;
-}, gi = (s, A) => {
+}, vi = (s, A) => {
   switch (s) {
     case 1:
       return 1 - (1 - A) * (1 - A);
@@ -24914,7 +24948,7 @@ const ba = {
     default:
       return A;
   }
-}, H = (s) => j(xA(s[0]), xA(s[1]), xA(s[2])), Ot = (s, A, t, e, i) => (i[0] = A * s[0] + t * s[4] + e * s[8] + s[12], i[1] = A * s[1] + t * s[5] + e * s[9] + s[13], i[2] = A * s[2] + t * s[6] + e * s[10] + s[14], i[3] = A * s[3] + t * s[7] + e * s[11] + s[15], i), Pp = (s, A, t) => {
+}, H = (s) => v(CA(s[0]), CA(s[1]), CA(s[2])), Ae = (s, A, t, e, i) => (i[0] = A * s[0] + t * s[4] + e * s[8] + s[12], i[1] = A * s[1] + t * s[5] + e * s[9] + s[13], i[2] = A * s[2] + t * s[6] + e * s[10] + s[14], i[3] = A * s[3] + t * s[7] + e * s[11] + s[15], i), yl = (s, A, t) => {
   for (let e = 0; e < 4; e++)
     for (let i = 0; i < 4; i++) {
       let a = 0;
@@ -24922,20 +24956,20 @@ const ba = {
       t[i * 4 + e] = a;
     }
   return t;
-}, jp = (s, A, t, e) => {
+}, bl = (s, A, t, e) => {
   let i = A.x - s.x, a = A.y - s.y, o = A.z - s.z;
   const n = Math.hypot(i, a, o) || 1;
   i /= n, a /= n, o /= n;
   let p = t.y * o - t.z * a, l = t.z * i - t.x * o, c = t.x * a - t.y * i;
   const h = Math.hypot(p, l, c) || 1;
   p /= h, l /= h, c /= h;
-  const u = a * c - o * l, m = o * p - i * c, f = i * l - a * p;
-  return e[0] = p, e[1] = u, e[2] = i, e[3] = 0, e[4] = l, e[5] = m, e[6] = a, e[7] = 0, e[8] = c, e[9] = f, e[10] = o, e[11] = 0, e[12] = -(p * s.x + l * s.y + c * s.z), e[13] = -(u * s.x + m * s.y + f * s.z), e[14] = -(i * s.x + a * s.y + o * s.z), e[15] = 1, e;
-}, vp = (s, A, t, e, i) => {
+  const d = a * c - o * l, w = o * p - i * c, m = i * l - a * p;
+  return e[0] = p, e[1] = d, e[2] = i, e[3] = 0, e[4] = l, e[5] = w, e[6] = a, e[7] = 0, e[8] = c, e[9] = m, e[10] = o, e[11] = 0, e[12] = -(p * s.x + l * s.y + c * s.z), e[13] = -(d * s.x + w * s.y + m * s.z), e[14] = -(i * s.x + a * s.y + o * s.z), e[15] = 1, e;
+}, Il = (s, A, t, e, i) => {
   const a = 1 / Math.tan(s / 2);
   return i.fill(0), i[0] = a / A, i[5] = a, i[10] = e / (e - t), i[11] = 1, i[14] = -t * e / (e - t), i;
 };
-class Tp {
+class Ml {
   constructor(A) {
     r(this, "stage");
     r(this, "pack");
@@ -24943,11 +24977,11 @@ class Tp {
     r(this, "viewH");
     r(this, "cullDistSq");
     /** Current, target, start and the two hermite control sets, as in the original. */
-    r(this, "cur", QA());
-    r(this, "target", QA());
-    r(this, "start", QA());
-    r(this, "ctrl2", QA());
-    r(this, "ctrl3", QA());
+    r(this, "cur", PA());
+    r(this, "target", PA());
+    r(this, "start", PA());
+    r(this, "ctrl2", PA());
+    r(this, "ctrl3", PA());
     r(this, "duration", [0, 0, 0, 0, 0]);
     r(this, "timers", [0, 0, 0, 0, 0]);
     r(this, "modes", [0, 0, 0, 0, 0]);
@@ -24959,7 +24993,7 @@ class Tp {
     /** The clear colour the game paints behind the backdrop (`Background + 0x830`). */
     r(this, "clearColor", 0);
     /** Scroll offset: how far down the corridor this frame's camera has travelled. */
-    r(this, "scroll", j());
+    r(this, "scroll", v());
     r(this, "swayMode", 0);
     r(this, "insn", 0);
     r(this, "frame", 0);
@@ -24975,9 +25009,9 @@ class Tp {
     r(this, "spellBackgroundState", 0);
     r(this, "spellTimer", 0);
     r(this, "scratch", [0, 0, 0, 0]);
-    const t = Bt[A.key];
+    const t = vt[A.key];
     if (!t) throw new Error(`no .std data for ${A.key}`);
-    this.stage = t, this.pack = t.pack >= 0 ? Wi[t.pack] ?? null : null, this.viewW = A.viewWidth ?? _p, this.viewH = A.viewHeight ?? kp, this.cullDistSq = zp(A.key);
+    this.stage = t, this.pack = t.pack >= 0 ? Da[t.pack] ?? null : null, this.viewW = A.viewWidth ?? ml, this.viewH = A.viewHeight ?? fl, this.cullDistSq = xl(A.key);
     let e = 0;
     for (const i of this.stage.objects)
       this.quadBase.push(e), e += i.quads.length;
@@ -25002,8 +25036,8 @@ class Tp {
       for (const i of e.quads) {
         const a = A.scripts[i.anmScript];
         if (a) {
-          const o = new hA(ba), n = A.rects[i.anmScript] ?? null;
-          o.attach(dA(a), n ? { x: n.w, y: n.h } : void 0), this.vms[t] = o;
+          const o = new rA(Ka), n = A.rects[i.anmScript] ?? null;
+          o.attach(nA(a), n ? { x: n.w, y: n.h } : void 0), this.vms[t] = o;
         }
         t++;
       }
@@ -25018,7 +25052,7 @@ class Tp {
       quads: this.quads,
       clearColor: this.clearColor >>> 0,
       fade: this.spellBackgroundState >= 1 ? this.spellTimer / 60 : 0,
-      fog: { color: Ba(this.fog.color), near: this.fog.near, far: this.fog.far }
+      fog: { color: Xa(this.fog.color), near: this.fog.near, far: this.fog.far }
     };
   }
   /**
@@ -25047,11 +25081,11 @@ class Tp {
    */
   projectEffect(A) {
     const t = [0, 0, 0, 0];
-    Ot(this.viewProj, A.x, A.y, A.z, t);
+    Ae(this.viewProj, A.x, A.y, A.z, t);
     const e = t[3];
     if (!(e > 0)) return null;
     const i = (t[0] / e + 1) * 0.5 * this.viewW, a = (1 - t[1] / e) * 0.5 * this.viewH, o = [0, 0, 0, 0];
-    Ot(this.viewProj, A.x + 1, A.y, A.z, o);
+    Ae(this.viewProj, A.x + 1, A.y, A.z, o);
     const n = o[3] > 0 ? Math.abs((o[0] / o[3] - t[0] / e) * 0.5 * this.viewW) : 0;
     return { x: i, y: a, scale: n };
   }
@@ -25070,7 +25104,7 @@ class Tp {
           break;
         }
         case 1:
-          this.fog = { color: i[0] >>> 0, near: xA(i[1]), far: xA(i[2]) }, this.fogTo = { ...this.fog };
+          this.fog = { color: i[0] >>> 0, near: CA(i[1]), far: CA(i[2]) }, this.fogTo = { ...this.fog };
           break;
         case 2:
           this.fogFrom = { ...this.fog }, this.fogTo = { ...this.fog }, this.fogDuration = i[0], this.fogTimer = 0;
@@ -25090,7 +25124,7 @@ class Tp {
           this.setTarget("v2", i);
           break;
         case 11:
-          this.start.fov = this.target.fov, this.target.fov = xA(i[0]), this.duration[3] === 0 && (this.cur.fov = this.target.fov);
+          this.start.fov = this.target.fov, this.target.fov = CA(i[0]), this.duration[3] === 0 && (this.cur.fov = this.target.fov);
           break;
         case 6:
           this.setInterp(0, i);
@@ -25175,15 +25209,15 @@ class Tp {
     const A = ["v0", "v1", "v2"];
     for (let o = 0; o < 3; o++) {
       if (this.duration[o] === 0) continue;
-      const n = A[o], p = this.advance(o), l = this.modes[o] === 7 ? p : gi(this.modes[o], p), c = this.start[n], h = this.target[n], u = this.cur[n];
-      this.modes[o] === 7 ? (u.x = Gt(c.x, h.x, this.ctrl2[n].x, this.ctrl3[n].x, l), u.y = Gt(c.y, h.y, this.ctrl2[n].y, this.ctrl3[n].y, l), u.z = Gt(c.z, h.z, this.ctrl2[n].z, this.ctrl3[n].z, l)) : (u.x = (h.x - c.x) * l + c.x, u.y = (h.y - c.y) * l + c.y, u.z = (h.z - c.z) * l + c.z);
+      const n = A[o], p = this.advance(o), l = this.modes[o] === 7 ? p : vi(this.modes[o], p), c = this.start[n], h = this.target[n], d = this.cur[n];
+      this.modes[o] === 7 ? (d.x = $t(c.x, h.x, this.ctrl2[n].x, this.ctrl3[n].x, l), d.y = $t(c.y, h.y, this.ctrl2[n].y, this.ctrl3[n].y, l), d.z = $t(c.z, h.z, this.ctrl2[n].z, this.ctrl3[n].z, l)) : (d.x = (h.x - c.x) * l + c.x, d.y = (h.y - c.y) * l + c.y, d.z = (h.z - c.z) * l + c.z);
     }
     if (this.duration[3] !== 0) {
-      const o = gi(this.modes[3], this.advance(3));
+      const o = vi(this.modes[3], this.advance(3));
       this.cur.fov = (this.target.fov - this.start.fov) * o + this.start.fov;
     }
     const t = this.cur.v1.x, e = this.cur.v1.y, i = this.cur.v1.z, a = Math.hypot(t, e, i) || 1;
-    this.cur.v3 = j(t / a, e / a, i / a);
+    this.cur.v3 = v(t / a, e / a, i / a);
   }
   advance(A) {
     return this.timers[A] < this.duration[A] ? (this.timers[A]++, this.timers[A] / this.duration[A]) : (this.timers[A] = this.duration[A], this.duration[A] = 0, 1);
@@ -25215,36 +25249,36 @@ class Tp {
   /** `RenderObjects` for all four passes, far to near, in one list. */
   build() {
     if (this.quads.length = 0, !this.pack) return;
-    const t = j(
+    const t = v(
       this.cur.v0.x + this.cur.v5.x,
       this.cur.v0.y + this.cur.v5.y,
       this.cur.v0.z + this.cur.v5.z
-    ), e = j(
+    ), e = v(
       this.cur.v0.x + this.cur.v1.x,
       this.cur.v0.y + this.cur.v1.y,
       this.cur.v0.z + this.cur.v1.z
     );
-    jp(t, e, this.cur.v2, this.viewMatrix), vp(this.cur.fov, this.viewW / this.viewH, ot, rt, this.proj), Pp(this.viewMatrix, this.proj, this.viewProj);
-    const i = j(this.viewMatrix[0], this.viewMatrix[1], this.viewMatrix[2]), a = Math.hypot(i.x, i.y, i.z) || 1, o = j(i.x / a, i.y / a, i.z / a);
+    bl(t, e, this.cur.v2, this.viewMatrix), Il(this.cur.fov, this.viewW / this.viewH, ht, dt, this.proj), yl(this.viewMatrix, this.proj, this.viewProj);
+    const i = v(this.viewMatrix[0], this.viewMatrix[1], this.viewMatrix[2]), a = Math.hypot(i.x, i.y, i.z) || 1, o = v(i.x / a, i.y / a, i.z / a);
     for (const n of [2, 3, 0, 1])
       for (const p of this.stage.instances) {
         const l = this.objectIndexOf(p.objectId);
         if (l < 0) continue;
         const c = this.stage.objects[l];
         if (c.zLevel !== n) continue;
-        const h = this.quadBase[l], u = j(
+        const h = this.quadBase[l], d = v(
           c.position[0] + p.position[0] - this.scroll.x + c.size[0] / 2,
           c.position[1] + p.position[1] - this.scroll.y + c.size[1] / 2,
           c.position[2] + p.position[2] - this.scroll.z + c.size[2] / 2
         );
-        if (u.x -= t.x, u.y -= t.y, u.z -= t.z, this.cullDistSq < u.x ** 2 + u.y ** 2 + u.z ** 2) continue;
-        const m = u.x * this.cur.v3.x + u.y * this.cur.v3.y + u.z * this.cur.v3.z, f = Math.hypot(c.size[0], c.size[1], c.size[2]) / 2 + 960;
-        if (!(m > f || m < 80))
-          for (let g = 0; g < c.quads.length; g++) {
-            const d = c.quads[g], y = this.vms[h + g];
-            if (!y || !y.visible) continue;
-            const b = this.rectFor(y, d.anmScript);
-            b && this.emitQuad(y, d, p, b, o, t);
+        if (d.x -= t.x, d.y -= t.y, d.z -= t.z, this.cullDistSq < d.x ** 2 + d.y ** 2 + d.z ** 2) continue;
+        const w = d.x * this.cur.v3.x + d.y * this.cur.v3.y + d.z * this.cur.v3.z, m = Math.hypot(c.size[0], c.size[1], c.size[2]) / 2 + 960;
+        if (!(w > m || w < 80))
+          for (let u = 0; u < c.quads.length; u++) {
+            const g = c.quads[u], B = this.vms[h + u];
+            if (!B || !B.visible) continue;
+            const y = this.rectFor(B, g.anmScript);
+            y && this.emitQuad(B, g, p, y, o, t);
           }
       }
   }
@@ -25261,7 +25295,7 @@ class Tp {
     return t && t.id === A ? A : this.stage.objects.findIndex((e) => e.id === A);
   }
   emitQuad(A, t, e, i, a, o) {
-    const n = j(
+    const n = v(
       A.pos2.x + t.position[0] + e.position[0] - this.scroll.x,
       A.pos2.y + t.position[1] + e.position[1] - this.scroll.y,
       A.pos2.z + t.position[2] + e.position[2] - this.scroll.z
@@ -25279,25 +25313,25 @@ class Tp {
       i.y + i.h
     ], c = i.page;
     if (A.uvScrollPos.x || A.uvScrollPos.y)
-      for (let b = 0; b < 8; b += 2)
-        l[b] += A.uvScrollPos.x * i.w, l[b + 1] += A.uvScrollPos.y * i.h;
-    const h = A.color1.a / 255, u = A.blendMode !== 0;
+      for (let y = 0; y < 8; y += 2)
+        l[y] += A.uvScrollPos.x * i.w, l[y + 1] += A.uvScrollPos.y * i.h;
+    const h = A.color1.a / 255, d = A.blendMode !== 0;
     if (t.type === 1 && t.position2) {
-      this.emitRibbon(A, t, e, i, h, u, a, o);
+      this.emitRibbon(A, t, e, i, h, d, a, o);
       return;
     }
     if ((A.renderType & 15) === 2) {
-      this.emitBillboard(A, n, i, p, l, c, h, u, a, o, t);
+      this.emitBillboard(A, n, i, p, l, c, h, d, a, o, t);
       return;
     }
-    const m = i.w * p.x / 2, f = i.h * p.y / 2, g = A.anchor & 1 ? n.x : n.x - m, d = A.anchor & 2 ? n.y : n.y - f, y = [
-      j(g, d, n.z),
-      j(g + m * 2, d, n.z),
-      j(g + m * 2, d + f * 2, n.z),
-      j(g, d + f * 2, n.z)
+    const w = i.w * p.x / 2, m = i.h * p.y / 2, u = A.anchor & 1 ? n.x : n.x - w, g = A.anchor & 2 ? n.y : n.y - m, B = [
+      v(u, g, n.z),
+      v(u + w * 2, g, n.z),
+      v(u + w * 2, g + m * 2, n.z),
+      v(u, g + m * 2, n.z)
     ];
     this.pushAuthoredQuad(
-      y,
+      B,
       [
         [l[0], l[1]],
         [l[2], l[3]],
@@ -25306,7 +25340,7 @@ class Tp {
       ],
       c,
       h,
-      u,
+      d,
       o,
       0
     );
@@ -25321,40 +25355,40 @@ class Tp {
    * what perspective division would have given.
    */
   pushAuthoredQuad(A, t, e, i, a, o, n) {
-    const p = A.map((y) => this.viewDepth(y)), l = Math.min(...p), c = Math.max(...p);
-    if (c < ot || l > rt) return;
-    if (l >= ot && c <= rt) {
+    const p = A.map((B) => this.viewDepth(B)), l = Math.min(...p), c = Math.max(...p);
+    if (c < ht || l > dt) return;
+    if (l >= ht && c <= dt) {
       this.pushProjectedQuad(A, t, e, i, a, p);
       return;
     }
-    if (n >= Fp) return;
-    const u = Math.abs(p[1] - p[0]) + Math.abs(p[2] - p[3]), m = Math.abs(p[3] - p[0]) + Math.abs(p[2] - p[1]), f = 2, g = (y, b, B) => j(y.x + (b.x - y.x) * B, y.y + (b.y - y.y) * B, y.z + (b.z - y.z) * B), d = (y, b, B) => [
-      y[0] + (b[0] - y[0]) * B,
-      y[1] + (b[1] - y[1]) * B
+    if (n >= Bl) return;
+    const d = Math.abs(p[1] - p[0]) + Math.abs(p[2] - p[3]), w = Math.abs(p[3] - p[0]) + Math.abs(p[2] - p[1]), m = 2, u = (B, y, b) => v(B.x + (y.x - B.x) * b, B.y + (y.y - B.y) * b, B.z + (y.z - B.z) * b), g = (B, y, b) => [
+      B[0] + (y[0] - B[0]) * b,
+      B[1] + (y[1] - B[1]) * b
     ];
-    for (let y = 0; y < f; y++) {
-      const b = y / f, B = (y + 1) / f;
+    for (let B = 0; B < m; B++) {
+      const y = B / m, b = (B + 1) / m;
       let D, x;
-      u >= m ? (D = [
-        g(A[0], A[1], b),
-        g(A[0], A[1], B),
-        g(A[3], A[2], B),
-        g(A[3], A[2], b)
+      d >= w ? (D = [
+        u(A[0], A[1], y),
+        u(A[0], A[1], b),
+        u(A[3], A[2], b),
+        u(A[3], A[2], y)
       ], x = [
-        d(t[0], t[1], b),
-        d(t[0], t[1], B),
-        d(t[3], t[2], B),
-        d(t[3], t[2], b)
+        g(t[0], t[1], y),
+        g(t[0], t[1], b),
+        g(t[3], t[2], b),
+        g(t[3], t[2], y)
       ]) : (D = [
-        g(A[0], A[3], b),
-        g(A[1], A[2], b),
-        g(A[1], A[2], B),
-        g(A[0], A[3], B)
+        u(A[0], A[3], y),
+        u(A[1], A[2], y),
+        u(A[1], A[2], b),
+        u(A[0], A[3], b)
       ], x = [
-        d(t[0], t[3], b),
-        d(t[1], t[2], b),
-        d(t[1], t[2], B),
-        d(t[0], t[3], B)
+        g(t[0], t[3], y),
+        g(t[1], t[2], y),
+        g(t[1], t[2], b),
+        g(t[0], t[3], b)
       ]), this.pushAuthoredQuad(D, x, e, i, a, o, n + 1);
     }
   }
@@ -25390,20 +25424,20 @@ class Tp {
    * tree keeps its size in the scene rather than on the screen.
    */
   emitBillboard(A, t, e, i, a, o, n, p, l, c, h) {
-    const u = this.project(t);
-    if (!u || u[2] < 0 || u[2] > 1) return;
-    const m = h.size && h.size[0] !== 0 ? h.size[0] : e.w, f = this.project(
-      j(
-        t.x + l.x * m * i.x,
-        t.y + l.y * m * i.x,
-        t.z + l.z * m * i.x
+    const d = this.project(t);
+    if (!d || d[2] < 0 || d[2] > 1) return;
+    const w = h.size && h.size[0] !== 0 ? h.size[0] : e.w, m = this.project(
+      v(
+        t.x + l.x * w * i.x,
+        t.y + l.y * w * i.x,
+        t.z + l.z * w * i.x
       )
     );
-    if (!f) return;
-    const g = Math.hypot(f[0] - u[0], f[1] - u[1]) / m, d = e.w * g, y = e.h * (m < 0 ? -g : g), b = A.anchor & 1 ? u[0] : u[0] - d / 2, B = A.anchor & 2 ? u[1] : u[1] - y / 2, D = this.viewDepth(t);
+    if (!m) return;
+    const u = Math.hypot(m[0] - d[0], m[1] - d[1]) / w, g = e.w * u, B = e.h * (w < 0 ? -u : u), y = A.anchor & 1 ? d[0] : d[0] - g / 2, b = A.anchor & 2 ? d[1] : d[1] - B / 2, D = this.viewDepth(t);
     this.quads.push({
       page: o,
-      screen: [b, B, b + d, B, b + d, B + y, b, B + y],
+      screen: [y, b, y + g, b, y + g, b + B, y, b + B],
       uv: a,
       alpha: n,
       depth: p ? void 0 : [D, D, D, D],
@@ -25417,32 +25451,32 @@ class Tp {
    * the projected centre line, so a ribbon keeps its pixel width in the scene.
    */
   emitRibbon(A, t, e, i, a, o, n, p) {
-    const l = t.position2 ?? t.position, c = this.ribbonEnd(A, t.position, e), h = this.ribbonEnd(A, l, e), u = this.project(c), m = this.project(h);
-    if (!u || !m || u[2] < 0 || u[2] > 1 || m[2] < 0 || m[2] > 1) return;
-    const f = t.width || i.w, g = (DA, UA) => {
-      const mA = this.project(
-        j(DA.x + n.x * f, DA.y + n.y * f, DA.z + n.z * f)
+    const l = t.position2 ?? t.position, c = this.ribbonEnd(A, t.position, e), h = this.ribbonEnd(A, l, e), d = this.project(c), w = this.project(h);
+    if (!d || !w || d[2] < 0 || d[2] > 1 || w[2] < 0 || w[2] > 1) return;
+    const m = t.width || i.w, u = (SA, NA) => {
+      const fA = this.project(
+        v(SA.x + n.x * m, SA.y + n.y * m, SA.z + n.z * m)
       );
-      return mA ? Math.hypot(mA[0] - UA[0], mA[1] - UA[1]) / 2 : 0;
-    }, d = g(c, u), y = g(h, m);
-    let b = m[0] - u[0], B = m[1] - u[1];
-    const D = Math.hypot(b, B);
+      return fA ? Math.hypot(fA[0] - NA[0], fA[1] - NA[1]) / 2 : 0;
+    }, g = u(c, d), B = u(h, w);
+    let y = w[0] - d[0], b = w[1] - d[1];
+    const D = Math.hypot(y, b);
     if (D < 1e-5) return;
-    b /= D, B /= D;
-    const x = this.viewDepth(c), F = this.viewDepth(h);
-    if (Math.max(x, F) < ot || Math.min(x, F) > rt) return;
-    const G = i.x, W = i.x + i.w, gA = i.y, C = i.y + i.h, V = [u[0] + B * d, u[1] - b * d], aA = [u[0] - B * d, u[1] + b * d], zA = [m[0] - B * y, m[1] + b * y], RA = [m[0] + B * y, m[1] - b * y];
+    y /= D, b /= D;
+    const x = this.viewDepth(c), Q = this.viewDepth(h);
+    if (Math.max(x, Q) < ht || Math.min(x, Q) > dt) return;
+    const j = i.x, Z = i.x + i.w, mA = i.y, P = i.y + i.h, q = [d[0] + b * g, d[1] - y * g], pA = [d[0] - b * g, d[1] + y * g], LA = [w[0] - b * B, w[1] + y * B], OA = [w[0] + b * B, w[1] - y * B];
     this.quads.push({
       page: i.page,
-      screen: [V[0], V[1], aA[0], aA[1], zA[0], zA[1], RA[0], RA[1]],
-      uv: [G, gA, W, gA, W, C, G, C],
+      screen: [q[0], q[1], pA[0], pA[1], LA[0], LA[1], OA[0], OA[1]],
+      uv: [j, mA, Z, mA, Z, P, j, P],
       alpha: a,
-      depth: o ? void 0 : [x, x, F, F],
+      depth: o ? void 0 : [x, x, Q, Q],
       additive: o
     });
   }
   ribbonEnd(A, t, e) {
-    return j(
+    return v(
       A.pos2.x + t[0] + e.position[0] - this.scroll.x,
       A.pos2.y + t[1] + e.position[1] - this.scroll.y,
       A.pos2.z + t[2] + e.position[2] - this.scroll.z
@@ -25468,15 +25502,15 @@ class Tp {
   }
   /** World point to playfield pixels, with the projected depth for the near/far test. */
   project(A) {
-    const t = Ot(this.viewProj, A.x, A.y, A.z, this.scratch), e = t[3];
+    const t = Ae(this.viewProj, A.x, A.y, A.z, this.scratch), e = t[3];
     return e > 0 ? [(t[0] / e + 1) * 0.5 * this.viewW, (1 - t[1] / e) * 0.5 * this.viewH, t[2] / e] : null;
   }
 }
-function zp(s) {
+function xl(s) {
   const A = s.replace(/_s$/, "");
   return A === "stage5" ? 1822500 : A === "stage6" || A === "stage7" ? 324e4 : 1322500;
 }
-const Rp = {
+const Dl = {
   stage1: "stage1",
   stage2: "stage2",
   stage3: "stage3",
@@ -25486,34 +25520,34 @@ const Rp = {
   stage6a: "stage6",
   stage6b: "stage7"
 };
-function Up(s) {
-  const A = Bt[s], t = A && A.pack >= 0 ? Wi[A.pack] : null;
+function Ql(s) {
+  const A = vt[s], t = A && A.pack >= 0 ? Da[A.pack] : null;
   if (!t) return [];
   const e = /* @__PURE__ */ new Set();
   for (const i of t.rects) i && e.add(i.page);
   return [...e];
 }
-const Ba = (s) => s >>> 0 & 16777215, mi = "***";
-function Hp() {
+const Xa = (s) => s >>> 0 & 16777215, ji = "***";
+function El() {
   try {
     return typeof localStorage > "u" ? null : localStorage;
   } catch {
     return null;
   }
 }
-function Lt(s, A) {
+function te(s, A) {
   return s + ":" + A;
 }
-class Be {
-  constructor(A = Hp()) {
+class ze {
+  constructor(A = El()) {
     r(this, "store");
     r(this, "flags");
-    this.store = A, this.flags = new Map(Be.read(A));
+    this.store = A, this.flags = new Map(ze.read(A));
   }
   static read(A) {
     if (!A) return [];
     try {
-      const t = A.getItem(mi);
+      const t = A.getItem(ji);
       if (!t) return [];
       const e = JSON.parse(t), i = [];
       for (const [a, o] of Object.entries(e))
@@ -25528,12 +25562,12 @@ class Be {
       try {
         const A = {};
         for (const [t, e] of this.flags) A[t] = e;
-        this.store.setItem(mi, JSON.stringify(A));
+        this.store.setItem(ji, JSON.stringify(A));
       } catch {
       }
   }
   flag(A, t) {
-    const e = Lt(A, t);
+    const e = te(A, t);
     let i = this.flags.get(e);
     return i || (i = { cleared: !1, noContinue: !1 }, this.flags.set(e, i)), i;
   }
@@ -25544,74 +25578,74 @@ class Be {
   }
   hasCleared(A, t) {
     var e;
-    return ((e = this.flags.get(Lt(A, t))) == null ? void 0 : e.cleared) ?? !1;
+    return ((e = this.flags.get(te(A, t))) == null ? void 0 : e.cleared) ?? !1;
   }
   hasClearedNoContinue(A, t) {
     var e;
-    return ((e = this.flags.get(Lt(A, t))) == null ? void 0 : e.noContinue) ?? !1;
+    return ((e = this.flags.get(te(A, t))) == null ? void 0 : e.noContinue) ?? !1;
   }
   /** Wipe every record — the "reset progress" option. */
   reset() {
     this.flags.clear(), this.persist();
   }
 }
-const CA = /* @__PURE__ */ new Map(), pA = [];
-let lA = 0;
-const lt = [];
-let yA = 0;
-function Gp(s) {
+const vA = /* @__PURE__ */ new Map(), dA = [];
+let gA = 0;
+const yt = [];
+let bA = 0;
+function Za(s) {
   if (s.anmUseStagePack && s.anmStageName) {
-    const t = s.anmStageName, e = s.anmSprite ?? Ip(t, s.anmScript, s.timer), i = e === null ? null : nr(t, e);
+    const t = s.anmStageName, e = s.anmSprite ?? rl(t, s.anmScript, s.timer), i = e === null ? null : Or(t, e);
     return i ? "enemy:stage-" + i : "enemy:stage-" + t + ":script" + s.anmScript;
   }
-  const A = s.anmSprite ?? or(s.anmScript, s.timer);
+  const A = s.anmSprite ?? Yr(s.anmScript, s.timer);
   return "enemy:" + (A === null ? "script" + s.anmScript : A);
 }
-function Op(s) {
+function Cl(s) {
   const A = [], t = /* @__PURE__ */ new Set();
   for (const e of s) {
     if (!e.active || e.noSprite) continue;
     t.add(e.slotIndex);
-    let i = CA.get(e.slotIndex);
-    i || (i = new Ci(
+    let i = vA.get(e.slotIndex);
+    i || (i = new ea(
       { x: e.posX, y: e.posY },
       { x: 0, y: 0 },
       { hp: e.maxHp || 100, radius: 14, color: 4500223 }
-    ), CA.set(e.slotIndex, i)), i.position.x = e.posX, i.position.y = e.posY, i.hp = e.hp, i.maxHp = e.maxHp || 100, i.isAlive = !0, i.alpha = e.anmAlpha / 255, i.spriteKey = Gp(e), i.rotation = e.rotAngle, i.drawScale = e.anmFlipX ? -e.anmScale : e.anmScale, A.push(i);
+    ), vA.set(e.slotIndex, i)), i.position.x = e.posX, i.position.y = e.posY, i.hp = e.hp, i.maxHp = e.maxHp || 100, i.isAlive = !0, i.alpha = e.anmAlpha / 255, i.spriteKey = Za(e), i.rotation = e.rotAngle, i.drawScale = e.anmFlipX ? -e.anmScale : e.anmScale, A.push(i);
   }
-  for (const [e, i] of CA)
-    t.has(e) || (i.isAlive = !1, CA.delete(e));
+  for (const [e, i] of vA)
+    t.has(e) || (i.isAlive = !1, vA.delete(e));
   return A;
 }
-function Lp(s) {
-  lA = 0;
+function Sl(s) {
+  gA = 0;
   for (const A of s) {
     if (!A.active) continue;
     let t;
-    lA < pA.length ? t = pA[lA] : (t = Na({
+    gA < dA.length ? t = dA[gA] : (t = Eo({
       position: { x: 0, y: 0 },
       velocity: { x: 0, y: 0 },
       damage: 1,
       radius: 3
-    }), t.tag = "enemy-bullet", pA.push(t)), t.position.x = A.x, t.position.y = A.y, t.velocity.x = A.vx, t.velocity.y = A.vy, t.isAlive = !0, t.grazed = A.grazed, t.tag = A.tag === "player" ? "player-bullet" : "enemy-bullet", t.color = Np(A.color), t.sprite = cr(A.type, A.color), t.drawRadius = Oi(A.type, A.color), t.hitbox.radius = Li(A.type), lA++;
+    }), t.tag = "enemy-bullet", dA.push(t)), t.position.x = A.x, t.position.y = A.y, t.velocity.x = A.vx, t.velocity.y = A.vy, t.isAlive = !0, t.grazed = A.grazed, t.tag = A.tag === "player" ? "player-bullet" : "enemy-bullet", t.color = _l(A.color), t.sprite = Vr(A.type, A.color), t.drawRadius = wa(A.type, A.color), t.hitbox.radius = ma(A.type), gA++;
   }
-  for (let A = lA; A < pA.length; A++)
-    pA[A].isAlive = !1;
-  return pA.slice(0, lA);
+  for (let A = gA; A < dA.length; A++)
+    dA[A].isAlive = !1;
+  return dA.slice(0, gA);
 }
-function Yp(s) {
-  yA = 0;
+function Fl(s) {
+  bA = 0;
   for (const A of s) {
     if (!A.active) continue;
     const t = Math.max(0, A.head - A.tail);
     if (t < 1 || A.currentWidth < 1) continue;
     const e = A.tail + t / 2;
-    let i = lt[yA];
-    i || (i = { x: 0, y: 0, angle: 0, length: 0, width: 0, sprite: "", alpha: 1 }, lt[yA] = i), i.x = A.x + Math.cos(A.angle) * e, i.y = A.y + Math.sin(A.angle) * e, i.angle = A.angle, i.length = t, i.width = A.currentWidth, i.sprite = dr(A.bulletType, A.color), i.alpha = A.alpha, yA++;
+    let i = yt[bA];
+    i || (i = { x: 0, y: 0, angle: 0, length: 0, width: 0, sprite: "", alpha: 1 }, yt[bA] = i), i.x = A.x + Math.cos(A.angle) * e, i.y = A.y + Math.sin(A.angle) * e, i.angle = A.angle, i.length = t, i.width = A.currentWidth, i.sprite = Kr(A.bulletType, A.color), i.alpha = A.alpha, bA++;
   }
-  return lt.slice(0, yA);
+  return yt.slice(0, bA);
 }
-function Np(s) {
+function _l(s) {
   const A = [
     16729156,
     16746564,
@@ -25632,27 +25666,27 @@ function Np(s) {
   ];
   return A[s % A.length] ?? 16777215;
 }
-function wi() {
-  CA.clear(), pA.length = 0, lA = 0, lt.length = 0, yA = 0;
+function Ti() {
+  vA.clear(), dA.length = 0, gA = 0, yt.length = 0, bA = 0;
 }
-const Ia = 128, Jp = 256;
-function Xp(s) {
+const qa = 128, Pl = 256;
+function kl(s) {
   return {
-    x: s > Ia ? -112 : 0,
+    x: s > qa ? -112 : 0,
     y: null
   };
 }
-function Kp(s) {
-  return s > Jp ? { x: -208, y: -50 } : s > Ia ? { x: -80, y: null } : { x: 0, y: null };
+function vl(s) {
+  return s > Pl ? { x: -208, y: -50 } : s > qa ? { x: -80, y: null } : { x: 0, y: null };
 }
-const Wp = {
+const jl = {
   randomU32InRange: () => 0,
   randomF32InRange: () => 0
-}, Vp = 48, qp = 60, fi = 16, yi = 208 / 255, Zp = 144 / 255, $p = 8, Al = 368;
-class tl {
+}, Tl = 48, Ul = 60, Ui = 16, Ri = 208 / 255, Rl = 144 / 255, Gl = 8, zl = 368;
+class Hl {
   constructor(A) {
-    r(this, "root", new Pi());
-    r(this, "box", new uo());
+    r(this, "root", new ra());
+    r(this, "box", new Xo());
     r(this, "slots", []);
     r(this, "texts", []);
     r(this, "options");
@@ -25661,9 +25695,9 @@ class tl {
     this.options = A, this.root.addChild(this.box);
     const t = A.slots ?? 4;
     for (let i = 0; i < t; i++) {
-      const a = new ji();
+      const a = new na();
       a.visible = !1, a.anchor.set(0, 0), this.root.addChild(a), this.slots.push({
-        vm: new hA(Wp),
+        vm: new rA(jl),
         sprite: a,
         pack: null,
         offsetX: 0,
@@ -25671,14 +25705,14 @@ class tl {
         pendingSprite: -1
       });
     }
-    const e = new go({
+    const e = new Zo({
       fontFamily: A.fontFamily ?? "'MS PGothic', 'Hiragino Kaku Gothic ProN', sans-serif",
       fontSize: A.fontSize ?? 15,
       fontWeight: "600",
       fill: 16777215
     });
     for (const i of A.lines) {
-      const a = new mo({ text: "", style: e });
+      const a = new qo({ text: "", style: e });
       a.anchor.set(0, 0), a.position.set(i.x, i.y), this.root.addChild(a), this.texts.push(a);
     }
     this.root.visible = !1;
@@ -25693,7 +25727,7 @@ class tl {
   }
   /** `:949-953` the box grows with the message timer over its first second. */
   set revealed(A) {
-    this.reveal = Math.max(0, Math.min(1, A / qp));
+    this.reveal = Math.max(0, Math.min(1, A / Ul));
   }
   /** Bind a slot to an ANM pack without running anything yet. */
   bind(A, t) {
@@ -25719,7 +25753,7 @@ class tl {
    */
   applyScriptOffset(A, t) {
     const e = this.slots[A];
-    e && (e.offsetX = Xp(t).x);
+    e && (e.offsetX = kl(t).x);
   }
   /**
    * `Gui.cpp:566-590`: op 2 re-pins `pos2` from the sprite it has just loaded,
@@ -25734,7 +25768,7 @@ class tl {
   applySpriteOffset(A, t) {
     const e = this.slots[A];
     if (!e) return;
-    const i = Kp(t);
+    const i = vl(t);
     e.offsetX = i.x, i.y !== null && (e.offsetY = i.y);
   }
   /** `AnmManager::SetSprite`: swap the bitmap, keep the motion. */
@@ -25817,11 +25851,11 @@ class tl {
    * gradient is rebuilt from bands; a partial box still fades like the full one.
    */
   drawBox() {
-    const A = this.options.arcade, t = Vp * this.reveal, e = A.x + fi, i = A.x + this.options.arcadeWidth - fi, a = A.y + Al;
+    const A = this.options.arcade, t = Tl * this.reveal, e = A.x + Ui, i = A.x + this.options.arcadeWidth - Ui, a = A.y + zl;
     if (this.box.clear(), t <= 0) return;
-    const o = Math.max(1, Math.min($p, Math.ceil(t))), n = t / o;
+    const o = Math.max(1, Math.min(Gl, Math.ceil(t))), n = t / o;
     for (let p = 0; p < o; p++) {
-      const l = (p + 0.5) / o, c = yi + (Zp - yi) * l;
+      const l = (p + 0.5) / o, c = Ri + (Rl - Ri) * l;
       this.box.beginFill(0, c).drawRect(e, a + p * n, i - e, n + 0.5).endFill();
     }
   }
@@ -25829,21 +25863,21 @@ class tl {
     this.root.destroy({ children: !0 });
   }
 }
-const el = {
+const Yl = {
   randomU32InRange: () => 0,
   randomF32InRange: () => 0
 };
-class sl {
+class Ll {
   constructor(A) {
-    r(this, "root", new Pi());
+    r(this, "root", new ra());
     r(this, "slots", []);
     r(this, "options");
     r(this, "pack", null);
     this.options = A;
     const t = A.slots ?? 4;
     for (let e = 0; e < t; e++) {
-      const i = new ji();
-      i.visible = !1, i.anchor.set(0.5, 0.5), this.root.addChild(i), this.slots.push({ vm: new hA(el), sprite: i, cell: -1 });
+      const i = new na();
+      i.visible = !1, i.anchor.set(0.5, 0.5), this.root.addChild(i), this.slots.push({ vm: new rA(Yl), sprite: i, cell: -1 });
     }
     this.root.visible = !1;
   }
@@ -25934,21 +25968,21 @@ class sl {
     this.root.destroy({ children: !0 });
   }
 }
-const il = "/assets/th08/manifest.json";
-class FA {
+const Ol = "/assets/th08/manifest.json";
+class UA {
   constructor(A) {
     r(this, "pages", /* @__PURE__ */ new Map());
     this.anm = A;
   }
   /** Fetch and parse the manifest. Resolves to an empty catalog without one. */
-  static async load(A = il) {
+  static async load(A = Ol) {
     try {
-      const t = await fetch(A);
-      if (!t.ok) return new FA({});
+      const t = await fetch(Y(A));
+      if (!t.ok) return new UA({});
       const e = await t.json();
-      return new FA(e.anm ?? {});
+      return new UA(e.anm ?? {});
     } catch {
-      return new FA({});
+      return new UA({});
     }
   }
   /** True when this pack was extracted, so callers can fall back quietly. */
@@ -25963,7 +25997,7 @@ class FA {
   /** Retail `SetAndExecuteScriptIdx` operand: the word stream of one script. */
   scriptWords(A, t) {
     const e = this.anm[A], i = e == null ? void 0 : e.scripts[t];
-    return i ? dA(i.base64) : null;
+    return i ? nA(i.base64) : null;
   }
   /**
    * Retail `SetSprite` operand: sprite ids are a flat numbering across a pack,
@@ -26001,8 +26035,8 @@ class FA {
     const i = new Float32Array(e.buffer, e.byteOffset, e.length);
     for (let a = 0; a + 4 < e.length; ) {
       const o = e[a], n = o << 16 >> 16, p = o >>> 16 & 65535;
-      if (n === w.END_OF_SCRIPT || n === w.DELETE) return null;
-      if (n === w.POS) return { x: i[a + 2], y: i[a + 3] };
+      if (n === f.END_OF_SCRIPT || n === f.DELETE) return null;
+      if (n === f.POS) return { x: i[a + 2], y: i[a + 3] };
       a += Math.max(2, p / 4);
     }
     return null;
@@ -26016,21 +26050,21 @@ class FA {
     if (!e) return null;
     const i = this.pageFile(A, e.page);
     if (!i) return null;
-    const a = await this.page(pe + "/" + i);
-    return a ? new yt({
+    const a = await this.page(Ce + "/" + i);
+    return a ? new Pt({
       source: a.source,
-      frame: new Fi(e.x, e.y, e.width, e.height)
+      frame: new oa(e.x, e.y, e.width, e.height)
     }) : null;
   }
   /** Load a page once and share it, nearest-filtered like all retail art. */
   async page(A) {
     const t = this.pages.get(A);
     if (t !== void 0) return t;
-    const e = await oe(A);
+    const e = await De(A);
     return this.pages.set(A, e), e;
   }
 }
-const al = 119, bA = 4, S = {
+const Nl = 119, IA = 4, C = {
   /** `:391` end of script; the VM reports -1 and the message slot goes idle. */
   end: 0,
   /** `:499` `{i16 portrait, i16 scriptIdx}` — run an ANM script on a face. */
@@ -26077,41 +26111,41 @@ const al = 119, bA = 4, S = {
   routeChoice: 21,
   /** `:715` store the route choice and jump to script `choice + 1`. */
   routeCommit: 22
-}, ol = new TextDecoder("shift_jis");
-function ct(s, A = 0) {
+}, Jl = new TextDecoder("shift_jis");
+function bt(s, A = 0) {
   const t = [];
   for (let e = A; e < s.length; e++) {
-    const i = s[e] ^ al;
+    const i = s[e] ^ Nl;
     if (i === 0) break;
     t.push(i);
   }
-  return ol.decode(Uint8Array.from(t));
+  return Jl.decode(Uint8Array.from(t));
 }
-function cA(s, A) {
+function uA(s, A) {
   return A + 1 >= s.length ? 0 : new DataView(s.buffer, s.byteOffset + A, 2).getInt16(0, !0);
 }
-function nA(s, A) {
+function hA(s, A) {
   return A + 3 >= s.length ? 0 : new DataView(s.buffer, s.byteOffset + A, 4).getInt32(0, !0);
 }
-const rl = (s) => cA(s, 0), nl = (s) => cA(s, 2), pl = (s) => ct(s, bA);
-function ll(s, A, t) {
+const Vl = (s) => uA(s, 0), Wl = (s) => uA(s, 2), Kl = (s) => bt(s, IA);
+function Xl(s, A, t) {
   const e = new DataView(s.buffer, s.byteOffset, s.byteLength), i = [];
   let a = A, o = !1;
-  for (; a + bA <= t; ) {
+  for (; a + IA <= t; ) {
     const n = e.getUint16(a, !0), p = s[a + 2], l = s[a + 3];
-    if (a + bA + l > t) {
+    if (a + IA + l > t) {
       o = !0;
       break;
     }
     if (i.push({
       time: n,
       opcode: p,
-      args: s.slice(a + bA, a + bA + l)
-    }), a += bA + l, p === S.end) break;
+      args: s.slice(a + IA, a + IA + l)
+    }), a += IA + l, p === C.end) break;
   }
   return { offset: A, instructions: i, truncated: o };
 }
-function cl(s) {
+function Zl(s) {
   const A = s instanceof Uint8Array ? s : new Uint8Array(s);
   if (A.length < 8) return { scripts: [] };
   const t = new DataView(A.buffer, A.byteOffset, A.byteLength), e = t.getInt32(0, !0);
@@ -26121,18 +26155,18 @@ function cl(s) {
   const a = [];
   for (let o = 0; o < e; o++) {
     const n = i[o], p = o + 1 < e ? i[o + 1] : A.length;
-    n < 0 || n > A.length || a.push(ll(A, n, Math.min(Math.max(p, n), A.length)));
+    n < 0 || n > A.length || a.push(Xl(A, n, Math.min(Math.max(p, n), A.length)));
   }
   return { scripts: a };
 }
-const bi = 4, Yt = 2, hl = 60, Bi = 60, Ii = 30, dl = 8, Mi = 6, ul = 17, xi = 16, E = 0, Nt = 1, Jt = 2, Di = 3;
-class gl {
+const Gi = 4, ee = 2, ql = 60, zi = 60, Hi = 30, $l = 8, Yi = 6, Ac = 17, Li = 16, E = 0, se = 1, ie = 2, Oi = 3;
+class tc {
   constructor(A) {
     r(this, "script", null);
     r(this, "cursor", 0);
     r(this, "timer", 0);
     r(this, "framesInPause", 0);
-    r(this, "waitThreshold", Mi);
+    r(this, "waitThreshold", Yi);
     r(this, "textPending", !1);
     r(this, "currentLine", 0);
     r(this, "skippable", !0);
@@ -26191,7 +26225,7 @@ class gl {
    * script is authored from frame 0.
    */
   playKeepingTimer(A, t, e = !0) {
-    this.messageId = A, this.script = t, this.cursor = 0, e && (this.timer = 0), this.framesInPause = 0, this.waitThreshold = Mi, this.textPending = !0, this.currentLine = 0, this.skippable = !0, this.ignoreWaitCounter = 0, this.messageFlag = 1, this.currentSide = 0, this.route = 0, this.currentPortrait = -1, this.lines[0] = "", this.lines[1] = "", this.host.clearLine(0), this.host.clearLine(1);
+    this.messageId = A, this.script = t, this.cursor = 0, e && (this.timer = 0), this.framesInPause = 0, this.waitThreshold = Yi, this.textPending = !0, this.currentLine = 0, this.skippable = !0, this.ignoreWaitCounter = 0, this.messageFlag = 1, this.currentSide = 0, this.route = 0, this.currentPortrait = -1, this.lines[0] = "", this.lines[1] = "", this.host.clearLine(0), this.host.clearLine(1);
   }
   /** `:392-393` the VM going idle, whether by op 0 or by the host. */
   stop() {
@@ -26204,18 +26238,18 @@ class gl {
     const e = t.instructions;
     for (this.ignoreWaitCounter > 0 && this.ignoreWaitCounter--, A.dying || this.host.autoCollectItems(), this.cursor < e.length && this.skippable && A.skip && (this.timer = e[this.cursor].time); this.cursor < e.length && this.timer >= e[this.cursor].time; ) {
       const i = e[this.cursor], a = this.exec(i, A);
-      if (a === Jt) {
+      if (a === ie) {
         this.stop();
         return;
       }
-      if (a === Nt || a === Di) return;
+      if (a === se || a === Oi) return;
       this.cursor++;
     }
     if (this.cursor >= e.length) {
       this.stop();
       return;
     }
-    this.timer++, this.timer < Bi && this.skippable && A.skip && (this.timer = Bi);
+    this.timer++, this.timer < zi && this.skippable && A.skip && (this.timer = zi);
   }
   /** True when a line currently holds text, i.e. `dialogueLines[i].scriptIndex >= 0`. */
   lineActive(A) {
@@ -26229,7 +26263,7 @@ class gl {
    */
   armPortraits(A) {
     if (this.currentPortrait !== A)
-      for (let t = 0; t < bi; t++)
+      for (let t = 0; t < Gi; t++)
         if (this.currentPortrait === t) {
           const e = Math.trunc(this.currentPortrait / 2) !== Math.trunc(A / 2);
           this.host.portraitInterrupt(t, e ? 6 : 4);
@@ -26237,11 +26271,11 @@ class gl {
           this.host.portraitInterrupt(t, 4);
   }
   draw(A, t, e) {
-    const i = A < Yt ? A : Yt - 1;
+    const i = A < ee ? A : ee - 1;
     this.lines[i] = e, this.host.drawLine(i, t, e);
   }
   wipe(A) {
-    A >= Yt || this.lines[A] !== "" && (this.lines[A] = "", this.host.clearLine(A));
+    A >= ee || this.lines[A] !== "" && (this.lines[A] = "", this.host.clearLine(A));
   }
   /**
    * The shared body of the two pausing opcodes. `minFrames` is the operand, and
@@ -26249,78 +26283,78 @@ class gl {
    * `waitThreshold` frames have passed inside this same pause.
    */
   pause(A, t, e) {
-    return this.skippable && A.skip ? E : A.shootPressed && this.framesInPause >= e ? (this.textPending = !0, this.waitThreshold = dl, E) : this.framesInPause >= t ? (this.textPending = !0, this.waitThreshold = Ii, E) : (this.framesInPause++, Nt);
+    return this.skippable && A.skip ? E : A.shootPressed && this.framesInPause >= e ? (this.textPending = !0, this.waitThreshold = $l, E) : this.framesInPause >= t ? (this.textPending = !0, this.waitThreshold = Hi, E) : (this.framesInPause++, se);
   }
   /** One `case` of the retail switch. */
   exec(A, t) {
     var i;
     const e = this.host;
     switch (A.opcode) {
-      case S.end:
-        return Jt;
-      case S.portraitScript:
-        return e.portraitScript(cA(A.args, 0), cA(A.args, 2)), E;
-      case S.portraitSprite:
-        return e.portraitSprite(cA(A.args, 0), cA(A.args, 2)), E;
-      case S.portraitInterrupt:
-        return e.portraitInterrupt(cA(A.args, 0), A.args[2] ?? 0), E;
-      case S.portraitScripts: {
-        const a = nA(A.args, 0);
+      case C.end:
+        return ie;
+      case C.portraitScript:
+        return e.portraitScript(uA(A.args, 0), uA(A.args, 2)), E;
+      case C.portraitSprite:
+        return e.portraitSprite(uA(A.args, 0), uA(A.args, 2)), E;
+      case C.portraitInterrupt:
+        return e.portraitInterrupt(uA(A.args, 0), A.args[2] ?? 0), E;
+      case C.portraitScripts: {
+        const a = hA(A.args, 0);
         this.armPortraits(a), e.portraitInterrupt(a, 3);
-        for (let o = 0; o < bi; o++) {
-          const n = nA(A.args, 4 + o * 4);
+        for (let o = 0; o < Gi; o++) {
+          const n = hA(A.args, 4 + o * 4);
           n >= 0 && e.portraitSprite(o, n);
         }
         return this.currentPortrait = a, this.currentSide = a, this.textPending = !0, E;
       }
-      case S.portraitOne: {
-        const a = nA(A.args, 0), o = nA(A.args, 4);
+      case C.portraitOne: {
+        const a = hA(A.args, 0), o = hA(A.args, 4);
         return this.armPortraits(a), e.portraitInterrupt(a, 3), o >= 0 && e.portraitSprite(a, o), this.currentPortrait = a, this.currentSide = a, this.textPending = !0, E;
       }
-      case S.text: {
-        const a = rl(A.args), o = nl(A.args);
-        return o === 0 && this.lineActive(1) && this.wipe(1), this.draw(o, a, pl(A.args)), this.framesInPause = 0, E;
+      case C.text: {
+        const a = Vl(A.args), o = Wl(A.args);
+        return o === 0 && this.lineActive(1) && this.wipe(1), this.draw(o, a, Kl(A.args)), this.framesInPause = 0, E;
       }
-      case S.textAppend:
-        return this.textPending && (this.lineActive(1) && this.wipe(1), this.currentLine = 0), this.draw(this.currentLine, this.side, ct(A.args)), this.currentLine++, this.framesInPause = 0, this.textPending = !1, E;
-      case S.textLine0:
-        return this.draw(0, 0, ct(A.args)), this.framesInPause = 0, E;
-      case S.textLine1:
-        return this.draw(1, 0, ct(A.args)), this.framesInPause = 0, E;
-      case S.wait:
-        return this.pause(t, nA(A.args, 0), this.waitThreshold);
-      case S.routeChoice: {
-        t.upPressed && this.route === 1 && e.sound(xi), t.downPressed && this.route === 0 && e.sound(xi), t.upPressed && (this.route = 0), t.downPressed && (this.route = 1);
-        const a = nA(A.args, 0);
-        return !t.shootPressed || this.framesInPause < hl ? this.framesInPause >= a ? (this.textPending = !0, this.waitThreshold = Ii, E) : (this.framesInPause++, Nt) : (e.sound(ul), E);
+      case C.textAppend:
+        return this.textPending && (this.lineActive(1) && this.wipe(1), this.currentLine = 0), this.draw(this.currentLine, this.side, bt(A.args)), this.currentLine++, this.framesInPause = 0, this.textPending = !1, E;
+      case C.textLine0:
+        return this.draw(0, 0, bt(A.args)), this.framesInPause = 0, E;
+      case C.textLine1:
+        return this.draw(1, 0, bt(A.args)), this.framesInPause = 0, E;
+      case C.wait:
+        return this.pause(t, hA(A.args, 0), this.waitThreshold);
+      case C.routeChoice: {
+        t.upPressed && this.route === 1 && e.sound(Li), t.downPressed && this.route === 0 && e.sound(Li), t.upPressed && (this.route = 0), t.downPressed && (this.route = 1);
+        const a = hA(A.args, 0);
+        return !t.shootPressed || this.framesInPause < ql ? this.framesInPause >= a ? (this.textPending = !0, this.waitThreshold = Hi, E) : (this.framesInPause++, se) : (e.sound(Ac), E);
       }
-      case S.routeCommit: {
+      case C.routeCommit: {
         const a = this.route + 1;
         e.routeChosen(this.route), e.requestMessage(a);
         const o = (i = e.branchScript) == null ? void 0 : i.call(e, a);
-        return o ? (this.playKeepingTimer(a, o, !1), Di) : Jt;
+        return o ? (this.playKeepingTimer(a, o, !1), Oi) : ie;
       }
-      case S.bgm: {
-        const a = nA(A.args, 0);
+      case C.bgm: {
+        const a = hA(A.args, 0);
         return a < 0 ? e.bgm(-1) : e.bgm(a), E;
       }
-      case S.fadeMusic:
+      case C.fadeMusic:
         return e.fadeBgm(), E;
-      case S.faceCutIn:
+      case C.faceCutIn:
         return e.faceCutIn(), this.framesInPause = 0, E;
-      case S.screenEffect:
+      case C.screenEffect:
         return e.screenEffect(), E;
-      case S.stageResult:
+      case C.stageResult:
         return e.stageResult(), E;
-      case S.stageClear:
+      case C.stageClear:
         return e.stageClear(), E;
-      case S.skippable:
+      case C.skippable:
         return this.skippable = (A.args[0] ?? 0) !== 0, E;
-      case S.messageFlag:
+      case C.messageFlag:
         return this.messageFlag = A.args[0] ?? 0, E;
-      case S.ignoreWait:
+      case C.ignoreWait:
         return this.ignoreWaitCounter++, E;
-      case S.nop:
+      case C.nop:
         return E;
       default:
         return E;
@@ -26333,7 +26367,7 @@ class gl {
     return this.ignoreWaitCounter;
   }
 }
-const ml = "/assets/th08/raw", wl = [
+const ec = "/assets/th08/raw", sc = [
   [
     "msg1a",
     "msg1b",
@@ -26461,18 +26495,18 @@ const ml = "/assets/th08/raw", wl = [
     "msg8d"
   ]
 ];
-function fl(s) {
-  return ga.indexOf(s);
+function ic(s) {
+  return EA.indexOf(s);
 }
-function yl(s, A) {
-  const t = wl[fl(s)];
+function ac(s, A) {
+  const t = sc[ic(s)];
   if (t)
     return t[A >= 0 && A < t.length ? A : 0];
 }
-function bl(s, A, t) {
+function oc(s, A, t) {
   return s === 10 && A === "stage5" ? t.retries > 0 ? { id: 1, routeChoice: 0 } : t.shotType > 3 ? { id: 3, routeChoice: 1 } : { id: 1, routeChoice: 0 } : s >= 6 && A === "stage6b" && t.clockHour >= 12 ? { id: 5, routeChoice: 0 } : { id: s, routeChoice: 0 };
 }
-class Ie {
+class He {
   constructor(A, t) {
     this.pack = A, this.file = t;
   }
@@ -26484,17 +26518,17 @@ class Ie {
   }
   /** Read a pack from the bytes `LoadMsg` (`Gui.cpp:2351-2368`) would map. */
   static fromBytes(A, t) {
-    return new Ie(A, cl(t));
+    return new He(A, Zl(t));
   }
 }
-class Me {
+class Ye {
   constructor(A) {
     r(this, "packs", /* @__PURE__ */ new Map());
     r(this, "pending", /* @__PURE__ */ new Map());
     this.catalog = A;
   }
   static create(A) {
-    return new Me(A);
+    return new Ye(A);
   }
   /** The ANM metadata behind the four portrait slots. */
   get anm() {
@@ -26506,9 +26540,9 @@ class Me {
     if (t) return Promise.resolve(t);
     const e = this.pending.get(A);
     if (e) return e;
-    const i = fetch(`${ml}/${A}.dat`).then((a) => a.ok ? a.arrayBuffer() : null).then((a) => {
+    const i = fetch(Y(`${ec}/${A}.dat`)).then((a) => a.ok ? a.arrayBuffer() : null).then((a) => {
       if (!a) return null;
-      const o = Ie.fromBytes(A, new Uint8Array(a));
+      const o = He.fromBytes(A, new Uint8Array(a));
       return this.packs.set(A, o), this.pending.delete(A), o;
     }).catch(() => (this.pending.delete(A), null));
     return this.pending.set(A, i), i;
@@ -26518,10 +26552,10 @@ class Me {
     return this.packs.get(A) ?? null;
   }
 }
-class Bl {
+class rc {
   constructor(A, t, e, i, a) {
     r(this, "vm");
-    this.source = A, this.overlay = t, this.effects = e, this.gs = i, this.pack = a, this.vm = new gl(this);
+    this.source = A, this.overlay = t, this.effects = e, this.gs = i, this.pack = a, this.vm = new tc(this);
   }
   /** The interpreter this host drives. */
   get messages() {
@@ -26608,12 +26642,12 @@ class Bl {
    * the boss and - where a route has one - the mid-boss on the right.
    */
   bindFaces(A, t) {
-    this.overlay.bind(0, ut[A[0]]), this.overlay.bind(1, ut[A[1]]);
-    const e = le[t], i = ce[t];
+    this.overlay.bind(0, zA[A[0]]), this.overlay.bind(1, zA[A[1]]);
+    const e = Se[t], i = Fe[t];
     this.overlay.bind(2, e), this.overlay.bind(3, i ?? e);
   }
 }
-function Il(s) {
+function nc(s) {
   return {
     shoot: s.shoot,
     shootPressed: s.shoot && !s.previousShoot,
@@ -26623,7 +26657,7 @@ function Il(s) {
     dying: s.dying
   };
 }
-class Ml {
+class pc {
   constructor(A) {
     r(this, "box", null);
     /** The `stgNNtxt` card that opens every stage (`Gui.cpp:2307`). */
@@ -26684,19 +26718,19 @@ class Ml {
   async setup() {
     const A = this.hooks.renderer();
     if (!A || this.box) return;
-    const t = await FA.load(), e = new sl({
-      scriptFor: (o, n) => Rr(o, n),
+    const t = await UA.load(), e = new Ll({
+      scriptFor: (o, n) => bn(o, n),
       cellFor: (o, n) => {
-        const p = A.assets.get(Ji(o, n));
+        const p = A.assets.get(ba(o, n));
         return p ? { texture: p } : null;
       }
     });
     e.mount(A.hudContainer), this.title = e;
     const i = [0, 1].map((o) => t.firstPos("text", o)).filter((o) => o !== null);
     if (i.length < 2) return;
-    const a = new tl({
-      arcade: { x: ki, y: _i, z: 0 },
-      arcadeWidth: PA,
+    const a = new Hl({
+      arcade: { x: ia, y: sa, z: 0 },
+      arcadeWidth: RA,
       lines: i,
       scriptFor: (o, n) => t.scriptWords(o, n),
       faceFor: async (o, n) => {
@@ -26704,7 +26738,7 @@ class Ml {
         return p ? { texture: p, width: p.width } : null;
       }
     });
-    a.mount(A.hudContainer), this.box = a, this.source = Me.create(t), this.bindStage();
+    a.mount(A.hudContainer), this.box = a, this.source = Ye.create(t), this.bindStage();
   }
   /**
    * Point the interpreter at the stage that is now playing.
@@ -26717,7 +26751,7 @@ class Ml {
     var o, n, p;
     const A = this.hooks.runner(), t = this.box, e = this.source;
     if (!A || !t || !e) return;
-    this.packName = yl(this.hooks.route(), this.hooks.shotType()), (o = this.title) == null || o.bind(zr(this.hooks.route())), (n = this.title) == null || n.start(), (p = this.hooks.renderer()) == null || p.clearScreenFade(), this.songFile = void 0;
+    this.packName = ac(this.hooks.route(), this.hooks.shotType()), (o = this.title) == null || o.bind(yn(this.hooks.route())), (n = this.title) == null || n.start(), (p = this.hooks.renderer()) == null || p.clearScreenFade(), this.songFile = void 0;
     const i = {
       stageMusic: (l) => {
         var c, h;
@@ -26746,8 +26780,8 @@ class Ml {
         (l = this.hooks.renderer()) == null || l.startScreenFade(442, 16777215);
       }
     };
-    this.host = new Bl(e, t, i, A.gs, () => this.packName);
-    const a = Qi(this.hooks.character()).members;
+    this.host = new rc(e, t, i, A.gs, () => this.packName);
+    const a = ta(this.hooks.character()).members;
     if (this.host.bindFaces([a[0].id, a[1].id], this.hooks.route()), this.packName) {
       this.packState = "loading";
       const l = this.packName;
@@ -26773,7 +26807,7 @@ class Ml {
     i >= 0 && (this.served++, this.playRequestedMessage(i) ? A.gs.stageMessageRequest = -1 : this.packState === "loading" ? a = !0 : A.gs.stageMessageRequest = -1);
     const o = this.hooks.input.isKeyDown("shoot") || this.hooks.autoShoot(), n = this.hooks.input.isKeyDown("up"), p = this.hooks.input.isKeyDown("down");
     e.messages.tick(
-      Il({
+      nc({
         shoot: o,
         previousShoot: this.prev.shoot,
         skip: this.hooks.input.isKeyDown("skip") || this.hooks.autoSkip(),
@@ -26824,7 +26858,7 @@ class Ml {
     var o, n, p;
     const t = this.host, e = this.packName ? (o = this.source) == null ? void 0 : o.loaded(this.packName) : null;
     if (!t || !e) return !1;
-    const i = bl(A, this.hooks.route(), {
+    const i = oc(A, this.hooks.route(), {
       shotType: this.hooks.shotType(),
       retries: this.hooks.retries(),
       // The clock is live: ECL op 181 tolls it one hour at a time
@@ -26847,7 +26881,7 @@ class Ml {
       this.songFile = void 0, this.hooks.audio.stopBGM();
       return;
     }
-    const t = Vi(this.hooks.stdKey(), A, this.hooks.stageNumber()), e = t ? t.file : null;
+    const t = Qa(this.hooks.stdKey(), A, this.hooks.stageNumber()), e = t ? t.file : null;
     e !== this.songFile && (this.songFile = e, this.hooks.audio.playBGM(e ?? void 0, {
       loop: !0,
       fadeIn: 1e3,
@@ -26855,8 +26889,8 @@ class Ml {
     }));
   }
 }
-const xl = se.riseStep, Dl = se.fallStep, Ei = se.opacityStep, El = 90, nt = 180, Sl = 130, Ql = 3;
-class Tl {
+const lc = Ie.riseStep, cc = Ie.fallStep, Ni = Ie.opacityStep, hc = 90, gt = 180, dc = 130, gc = 3;
+class uc {
   constructor(A = {}) {
     r(this, "player");
     r(this, "bulletSystem");
@@ -26869,7 +26903,7 @@ class Tl {
     r(this, "boss", null);
     r(this, "enemies", []);
     /** Collectible drops (P items, points, lives, bombs) using real Taisei art. */
-    r(this, "itemSystem", new Ja());
+    r(this, "itemSystem", new Co());
     r(this, "renderer");
     r(this, "stageNumber");
     /**
@@ -26882,10 +26916,10 @@ class Tl {
     /** Which art the ship wears; switchable live from the options menu. */
     r(this, "playerSkin");
     r(this, "timeSystem");
-    r(this, "replayRecorder", new xt());
+    r(this, "replayRecorder", new Ut());
     r(this, "leaderboard");
     /** Per-character clear flags, the stand-in for `score.dat`'s route fields. */
-    r(this, "progress", new Be());
+    r(this, "progress", new ze());
     /** Retail `numRetries`: any continue locks the campaign onto the long route. */
     r(this, "numRetries", 0);
     /**
@@ -27044,14 +27078,14 @@ class Tl {
      * The floating pickup numbers. `AsciiManager::CreateScorePopup` anchors one over
      * every item as it is taken, so the sim owns the values and this owns the motion.
      */
-    r(this, "popups", new Xa());
+    r(this, "popups", new So());
     /**
      * The two text slots retail keeps inside `Gui`: `formatted1` slides a notice
      * across the panel ("Full Power Mode!", "Spell Bonus Failed", ...) and
      * `formatted2` centres the card reward over the playfield. The sim decides when
      * they fire, this decides how long they live.
      */
-    r(this, "banners", new An());
+    r(this, "banners", new Un());
     /** The capture whose reward line is still waiting out its animation. */
     r(this, "pendingSpellBonus", 0);
     r(this, "pendingSpellBonusFrames", 0);
@@ -27096,13 +27130,14 @@ class Tl {
      * portraits. Null until `init` has the ANM manifest in hand.
      */
     r(this, "retail", null);
+    r(this, "isDestroyed", !1);
     /** Nearest live target for player homing shots, refreshed every frame. */
     r(this, "aimPoint", null);
     var t;
-    this.profile = A.profile ?? Co, ko(this.profile), this.headless = A.headless ?? !1, this.stageNumber = A.route ? Ut(A.route) : A.stage ?? 1, this.difficulty = A.difficulty ?? "normal", this.character = A.character ?? "reimu-yukari", this.route = A.route ?? Dp(this.stageNumber, this.routeContext()), this.playerSkin = A.playerSkin ?? "taisei", this.campaign = A.campaign ?? !1, this.timeSystem = new _t(A.timeCycleFrames ?? this.profile.stages[0].cycleFrames), this.onStageClear = A.onStageClear, this.assetManifest = A.assetManifest ?? vi, this.leaderboard = A.leaderboard ?? new Ka(), this.bulletSystem = new Wa(), this.bulletSystem.homingAim = () => this.aimPoint, this.bulletFactory = (e) => this.bulletSystem.createBullet(e), this.player = new Va(
-      { x: PA / 2, y: Xt - 64 },
-      { bulletFactory: this.bulletFactory, profile: yo(this.character) }
-    ), this.collisionSystem = new qa(48), this.input = new Za(), this.audio = new $a(), this.audio.configureSe(cn), this.monitor = new Ao(), this.monitor.isVisible = A.showPerformanceMonitor ?? !1, this.hud = new to(), this.hud.setStageInfo(this.stageNumber, this.stageInfo.title, this.difficulty), this.hud.maxPower = this.player.maxPower, (t = this.dialogue) == null || t.stop(), this.introPlayed = !1, this.stage = this.createStage(), this.tryLoadEcl(), A.recordReplay && this.startReplayRecording(), A.replayData && this.loadReplay(A.replayData), this.setupListeners();
+    this.profile = A.profile ?? cr, dr(this.profile), this.headless = A.headless ?? !1, this.stageNumber = A.route ? Bt(A.route) : A.stage ?? 1, this.difficulty = A.difficulty ?? "normal", this.character = A.character ?? "reimu-yukari", this.route = A.route ?? hl(this.stageNumber, this.routeContext()), this.playerSkin = A.playerSkin ?? "taisei", this.campaign = A.campaign ?? !1, this.timeSystem = new Lt(A.timeCycleFrames ?? this.profile.stages[0].cycleFrames), this.onStageClear = A.onStageClear, this.assetManifest = A.assetManifest ?? pa, this.leaderboard = A.leaderboard ?? new aa(), this.bulletSystem = new Fo(), this.bulletSystem.homingAim = () => this.aimPoint, this.bulletFactory = (e) => this.bulletSystem.createBullet(e), this.player = new _o(
+      { x: RA / 2, y: ne - 64 },
+      { bulletFactory: this.bulletFactory, profile: tr(this.character) }
+    ), this.collisionSystem = new Po(48), this.input = new ko(), this.audio = new vo(), this.audio.configureSe(Xn), this.monitor = new jo(), this.monitor.isVisible = A.showPerformanceMonitor ?? !1, this.hud = new To(), this.hud.setStageInfo(this.stageNumber, this.stageInfo.title, this.difficulty), this.hud.maxPower = this.player.maxPower, (t = this.dialogue) == null || t.stop(), this.introPlayed = !1, this.stage = this.createStage(), this.tryLoadEcl(), A.recordReplay && this.startReplayRecording(), A.replayData && this.loadReplay(A.replayData), this.setupListeners();
   }
   /** Continues spent, which retail also prints as the tenth score column. */
   get retries() {
@@ -27178,7 +27213,7 @@ class Tl {
     return this.replayRecorder.stop();
   }
   loadReplay(A) {
-    this.replayPlayer = new eo(A);
+    this.replayPlayer = new Uo(A);
   }
   /**
    * Where a pointer device wants the ship, in world (script) coordinates, or
@@ -27188,14 +27223,14 @@ class Tl {
     if (!this.input.isSteering) return null;
     const A = this.input.getPointerTarget();
     return A ? {
-      x: Math.max(0, Math.min(PA, io(A.x))),
-      y: Math.max(0, Math.min(Xt, so(A.y)))
+      x: Math.max(0, Math.min(RA, Go(A.x))),
+      y: Math.max(0, Math.min(ne, Ro(A.y)))
     } : null;
   }
   /** Metadata row for the stage currently loaded. */
   /** Retail shot index for this character: teams 0-3, solos 4-11. */
   get shotType() {
-    const A = qi.indexOf(this.character);
+    const A = Ea.indexOf(this.character);
     return A >= 0 ? A : 0;
   }
   /** Everything the stage router reads: the team, and how the run stands. */
@@ -27213,7 +27248,7 @@ class Tl {
    * player who finishes 6A can take the short route on their next run.
    */
   advanceCampaign() {
-    return this.progress.record(this.route, this.shotType, this.numRetries > 0), this.campaign ? ci(this.route, this.routeContext()) : null;
+    return this.progress.record(this.route, this.shotType, this.numRetries > 0), this.campaign ? Fi(this.route, this.routeContext()) : null;
   }
   get stageInfo() {
     return this.profile.stages[this.stageNumber - 1] ?? this.profile.stages[0];
@@ -27245,7 +27280,7 @@ class Tl {
       this.hud.showMessage("STAGE " + this.stageNumber + " CLEAR!", 300), this.stageTransitionFrames = 180;
       return;
     }
-    this.hud.showMessage(this.clearBanner, nt);
+    this.hud.showMessage(this.clearBanner, gt);
     const t = this.buildReport(!0);
     this.leaderboard.submit({
       name: this.player.characterName,
@@ -27254,7 +27289,7 @@ class Tl {
       difficulty: t.difficulty,
       character: t.character,
       numRetries: this.numRetries
-    }), this.pendingClearReport = t, this.stageTransitionFrames = nt;
+    }), this.pendingClearReport = t, this.stageTransitionFrames = gt;
   }
   /** What the transition timer releases: the next stage, or the parked results. */
   finishStageTransition() {
@@ -27314,7 +27349,7 @@ class Tl {
   }
   /** Serialized input recording for the results screen (null before any capture). */
   getReplayJson() {
-    return this.replayRecorder.frameCount === 0 ? null : xt.encode(this.replayRecorder.peek());
+    return this.replayRecorder.frameCount === 0 ? null : Ut.encode(this.replayRecorder.peek());
   }
   /**
    * Load the stored best for this character and difficulty into the HiScore row.
@@ -27328,7 +27363,7 @@ class Tl {
   /** Attempt to load ECL-driven stage data asynchronously. */
   tryLoadEcl() {
     var A, t, e;
-    !Cp(this.route) || this.eclLoading || (this.eclLoading = !0, Qp({
+    !wl(this.route) || this.eclLoading || (this.eclLoading = !0, ul({
       route: this.route,
       stageNumber: this.stageNumber,
       difficulty: this.difficulty,
@@ -27373,9 +27408,9 @@ class Tl {
    * the renderer already does for every other missing texture.
    */
   setupBackdrop() {
-    this.stdKey = Rp[this.route] ?? null;
+    this.stdKey = Dl[this.route] ?? null;
     const A = this.stdKey;
-    this.std = A && Bt[A] ? new Tp({ key: A }) : null, this.ensureBackdropPages();
+    this.std = A && vt[A] ? new Ml({ key: A }) : null, this.ensureBackdropPages();
   }
   /**
    * Fetch the sprite pages the current backdrop samples, skipping those already in.
@@ -27388,7 +27423,7 @@ class Tl {
     var e;
     const A = (e = this.renderer) == null ? void 0 : e.assets, t = this.stdKey;
     if (!(!A || !t))
-      for (const i of Up(t))
+      for (const i of Ql(t))
         A.has(i) || A.load(i, i).then((a) => {
           a && (a.source.style.scaleMode = "linear");
         });
@@ -27400,7 +27435,7 @@ class Tl {
     const t = A.view;
     return {
       quads: t.quads,
-      clearColor: Ba(t.clearColor),
+      clearColor: Xa(t.clearColor),
       // The mix target and its ramp: stage 4's `(240,192,192)` and stage 8's
       // `(48,48,240)` are most of what those backdrops look like, and the shader
       // needs the two ramp floats beside the colour to place them.
@@ -27472,7 +27507,7 @@ class Tl {
   }
   /** Tick the ECL runner and sync its state to the rendering layer. */
   tickEclRunner(A = 1) {
-    var c, h, u;
+    var c, h, d;
     const t = this.eclRunner;
     if (!t) return;
     if (this.popups.update(), this.eclOutcome !== "run") {
@@ -27486,7 +27521,7 @@ class Tl {
       // The same keys as raw bits, so the sim resolves them with retail's
       // eight-way priority chain instead of a vector difference. Holding left and
       // right together is a real thing people do under pressure.
-      dirBits: (this.input.isKeyDown("up") ? Y.up : 0) | (this.input.isKeyDown("down") ? Y.down : 0) | (this.input.isKeyDown("left") ? Y.left : 0) | (this.input.isKeyDown("right") ? Y.right : 0),
+      dirBits: (this.input.isKeyDown("up") ? J.up : 0) | (this.input.isKeyDown("down") ? J.down : 0) | (this.input.isKeyDown("left") ? J.left : 0) | (this.input.isKeyDown("right") ? J.right : 0),
       // Pointer steering pulls the trigger, which is the touch compromise the engine
       // has always made: a finger on the field is doing two jobs at once. The
       // steering case used to be handled by the presentation-layer fire block that
@@ -27502,13 +27537,13 @@ class Tl {
     this.eclPrevPower = t.player.power, this.debugMaxPower && (this.debugMaxPowerCooldown > 0 ? this.debugMaxPowerCooldown-- : (this.debugMaxPowerCooldown = 180, t.player.power = 120, t.items.spawn("powerFull", t.player.x, t.player.y))), t.worldFreeze = this.dialogPresent, t.tick(e);
     const a = t.player, o = this.player.position.x, n = this.player.position.y;
     if (this.player.position.x = a.x, this.player.position.y = a.y, this.player.velocity.x = a.x - o, this.player.velocity.y = a.y - n, this.player.leanX = a.leanX, this.player.lives = a.lives, this.player.bombs = a.bombs, this.player.power = a.power, this.player.score = a.score, this.player.graze = a.graze, this.player.isSlowMode = a.isSlow, this.player.hitboxVisible = a.hitboxVisible, this.player.memberIndex = a.memberIndex, this.player.state = a.state, this.player.stateTimer = a.stateTimer, this.player.isAlive = a.isFlying, this.player.isInvulnerable = a.isInvulnerable, this.player.invulnerabilityTimer = a.invulnTimer, this.player.bombStateFlash = a.bombStateFlash, this.player.switchFlash = a.switchFlash, this.player.powerLost = a.powerLost, this.hud.setMember(this.player.member.name, this.player.member.label, this.player.isSlowMode), a.bombTriggered) {
-      this.numBombsUsed++, this.audio.playSE("bomb"), (u = this.renderer) == null || u.triggerBombFlash(this.bombAccent()), this.spawnPointOfFade();
-      const m = kr(this.player.memberId);
-      m && this.hud.showCutIn(m, "player", 60);
+      this.numBombsUsed++, this.audio.playSE("bomb"), (d = this.renderer) == null || d.triggerBombFlash(this.bombAccent()), this.spawnPointOfFade();
+      const w = gn(this.player.memberId);
+      w && this.hud.showCutIn(w, "player", 60);
     }
     i === "alive" && a.state === "dying" && (this.numDeaths++, this.audio.playSE("pldead"), this.retailDeathEffect(a.x, a.y, 6, 16) || (this.spawnExplosion(a.x, a.y), this.spawnDeathBurst(a.x, a.y, 1.1)), this.spawnPointOfFade()), this.syncEclItems();
-    for (const m of t.lastShotSounds)
-      this.audio.queueSe(m.index, $e(m.x));
+    for (const w of t.lastShotSounds)
+      this.audio.queueSe(w.index, fs(w.x));
     this.bulletSystem.update(1), this.syncEclEnemies(), this.syncEclSpellCard(), this.tickEclFeedback(), this.tickHudBanners(), this.tickRetailEffects(), this.tickPlayerShots(), this.updateEclGauge(), this.hud.updateFromPlayer(this.player), this.hud.update(1);
     const p = t.bullets.activeCount, l = this.bulletSystem.getCount();
     this.monitor.updateMetrics(
@@ -27540,8 +27575,8 @@ class Tl {
         e,
         a,
         t.spellBonus,
-        El,
-        Fr(this.route),
+        hc,
+        un(this.route),
         "boss"
       );
     } else e ? i && i.timerFrames > 0 && (this.hud.spellCardTime = i.timerFrames / 60) : this.eclSpellName && (this.eclSpellName = null, this.hud.hideSpellCard());
@@ -27551,7 +27586,7 @@ class Tl {
     var t, e, i, a;
     const A = this.eclRunner;
     if (A) {
-      for (const o of A.frameSfx) this.audio.queueSe(o.id, $e(o.x));
+      for (const o of A.frameSfx) this.audio.queueSe(o.id, fs(o.x));
       for (const o of A.frameFx)
         if (!A.effectPool)
           if (o.kind === "aura") {
@@ -27586,7 +27621,7 @@ class Tl {
           this.banners.showPanel(o.isLastSpell ? "lastSpellFailed" : "spellBonusFailed");
           continue;
         }
-        o.bonus <= 0 || (this.spellBonus += o.bonus, this.hud.spellCardName === o.name && this.hud.markSpellCaptured(), this.popups.spawn(A.player.x, 108, o.bonus, Se), this.queueSpellBonus(o.bonus));
+        o.bonus <= 0 || (this.spellBonus += o.bonus, this.hud.spellCardName === o.name && this.hud.markSpellCaptured(), this.popups.spawn(A.player.x, 108, o.bonus, Je), this.queueSpellBonus(o.bonus));
       }
       for (const o of A.lastPopups)
         this.popups.spawn(o.x, o.y, o.value, o.color >>> 0, o.scale);
@@ -27594,10 +27629,10 @@ class Tl {
         this.audio.playSE("item"), A.player.power > this.eclPrevPower && this.hud.showMessage("POWER UP!", 60);
         for (const p of A.lastCollected) {
           if (p.popup <= 0) continue;
-          const l = p.orbPaid ? ao : p.maxValue ? oo : Se;
+          const l = p.orbPaid ? zo : p.maxValue ? Ho : Je;
           this.popups.spawn(p.x, p.y, p.popup, l);
         }
-        Bs(A.player.power) > Bs(this.eclPrevPower) && this.popups.spawn(A.player.x, A.player.y - 12, -1, ro);
+        zs(A.player.power) > zs(this.eclPrevPower) && this.popups.spawn(A.player.x, A.player.y - 12, -1, Yo);
         const n = A.lastCollected[A.lastCollected.length - 1];
         (i = this.renderer) == null || i.spawnEffect(
           "taisei:part:graze",
@@ -27636,7 +27671,7 @@ class Tl {
   }
   /** Advance the reward countdown and both banner lifetimes. */
   tickHudBanners() {
-    this.pendingSpellBonus > 0 && ++this.pendingSpellBonusFrames >= Sl && this.flushSpellBonus(), this.banners.tick();
+    this.pendingSpellBonus > 0 && ++this.pendingSpellBonusFrames >= dc && this.flushSpellBonus(), this.banners.tick();
   }
   /**
    * Draw the retail effect pool, one ANM atlas cell per live slot.
@@ -27652,9 +27687,9 @@ class Tl {
     if (!(!A || !t)) {
       t.setHitboxGlow(null);
       for (const i of A.views) {
-        const a = bt[i.sprite];
+        const a = kt[i.sprite];
         if (!(!a || i.alpha <= 0)) {
-          if (i.id === da) {
+          if (i.id === La) {
             t.setHitboxGlow({
               key: `th08:bullet:etama_t${a.page}:${i.sprite}`,
               width: a.w * i.scaleX,
@@ -27696,28 +27731,28 @@ class Tl {
   tickPlayerShots() {
     const A = this.eclRunner, t = this.renderer;
     if (!A) return;
-    const e = Yo(A.gs.shotType), i = dt[e];
+    const e = Qr(A.gs.shotType), i = Mt[e];
     if (!i) return;
     this.weaponAudit.live = 0, this.weaponAudit.spent = 0, this.weaponAudit.dropped = 0, this.weaponAudit.options.length = 0;
-    const a = (n) => i.rects[n] ?? null, o = (n, p, l, c, h, u) => {
+    const a = (n) => i.rects[n] ?? null, o = (n, p, l, c, h, d) => {
       if (!l.visible) return "hidden";
-      const m = a(l.sprite);
-      if (!m) return "nocell";
-      const f = l.color1.a / 255;
-      return f <= 0 ? "hidden" : (t == null || t.spawnEffectRect(
-        Ti(e, m.tex, l.sprite),
+      const w = a(l.sprite);
+      if (!w) return "nocell";
+      const m = l.color1.a / 255;
+      return m <= 0 ? "hidden" : (t == null || t.spawnEffectRect(
+        la(e, w.tex, l.sprite),
         n,
         p,
-        m.w * Math.abs(l.scale.x),
-        m.h * l.scale.y,
-        Math.min(1, f),
+        w.w * Math.abs(l.scale.x),
+        w.h * l.scale.y,
+        Math.min(1, m),
         c,
-        u ?? (l.color1.r & 255) << 16 | (l.color1.g & 255) << 8 | l.color1.b & 255,
+        d ?? (l.color1.r & 255) << 16 | (l.color1.g & 255) << 8 | l.color1.b & 255,
         l.blendMode !== 0,
         h
       ), "drawn");
     };
-    for (const n of [ae, IA])
+    for (const n of [xe, DA])
       for (const p of A.shots.shots) {
         if (p.state !== n) continue;
         const l = p.vm.renderType !== 0 ? p.angle : p.vm.rotation.z, c = o(
@@ -27728,7 +27763,7 @@ class Tl {
           !1,
           p.youkaiMark !== 0 ? 4210943 : void 0
         );
-        c === "nocell" ? this.weaponAudit.dropped++ : c === "drawn" && (n === IA ? this.weaponAudit.live++ : this.weaponAudit.spent++);
+        c === "nocell" ? this.weaponAudit.dropped++ : c === "drawn" && (n === DA ? this.weaponAudit.live++ : this.weaponAudit.spent++);
       }
     for (const n of A.options.options) {
       if (n.state === 0) continue;
@@ -27746,13 +27781,13 @@ class Tl {
   updateEclGauge() {
     var i;
     const A = (i = this.eclRunner) == null ? void 0 : i.bossGauge, t = A && A.maxHp > 0 ? A.hp / A.maxHp : 0, e = A ? 1 : 0;
-    this.eclGaugeRatio < t ? this.eclGaugeRatio = Math.min(t, this.eclGaugeRatio + xl) : this.eclGaugeRatio > t && (this.eclGaugeRatio = Math.max(t, this.eclGaugeRatio - Dl)), this.eclGaugeOpacity < e ? this.eclGaugeOpacity = Math.min(e, this.eclGaugeOpacity + Ei) : this.eclGaugeOpacity > e && (this.eclGaugeOpacity = Math.max(e, this.eclGaugeOpacity - Ei));
+    this.eclGaugeRatio < t ? this.eclGaugeRatio = Math.min(t, this.eclGaugeRatio + lc) : this.eclGaugeRatio > t && (this.eclGaugeRatio = Math.max(t, this.eclGaugeRatio - cc)), this.eclGaugeOpacity < e ? this.eclGaugeOpacity = Math.min(e, this.eclGaugeOpacity + Ni) : this.eclGaugeOpacity > e && (this.eclGaugeOpacity = Math.max(e, this.eclGaugeOpacity - Ni));
   }
   /** Gauge view for the renderer, or null while nothing owns a life bar. */
   eclGaugeState() {
     const A = this.eclRunner, t = A == null ? void 0 : A.bossGauge;
     if (!A || !t || this.eclGaugeOpacity <= 0) return null;
-    const e = Math.max(1, Math.min(no, t.pips + 1));
+    const e = Math.max(1, Math.min(Lo, t.pips + 1));
     return {
       gaugeOpacity: this.eclGaugeOpacity,
       gaugeDisplayRatio: this.eclGaugeRatio,
@@ -27769,10 +27804,10 @@ class Tl {
     this.eclOutcome = "clear", A.sweepItems(), A.bullets.clearByTag("enemy"), this.bulletSystem.clearAll("enemy-bullet"), A.lasers.clearAll(), this.applyStageClearBombPayout(), this.applyStageClearClock(A.gs), this.hud.updateFromPlayer(this.player);
     const t = this.advanceCampaign();
     if (this.pendingRoute = t, t) {
-      this.hud.showMessage("STAGE " + Ut(this.route) + " CLEAR!", 300), this.stageTransitionFrames = 180;
+      this.hud.showMessage("STAGE " + Bt(this.route) + " CLEAR!", 300), this.stageTransitionFrames = 180;
       return;
     }
-    this.hud.showMessage(this.clearBanner, nt);
+    this.hud.showMessage(this.clearBanner, gt);
     const e = this.buildReport(this.campaign);
     this.leaderboard.submit({
       name: this.player.characterName,
@@ -27781,7 +27816,7 @@ class Tl {
       difficulty: e.difficulty,
       character: e.character,
       numRetries: this.numRetries
-    }), this.pendingClearReport = e, this.stageTransitionFrames = nt;
+    }), this.pendingClearReport = e, this.stageTransitionFrames = gt;
   }
   /**
    * 妖怪名乗り pays one 灵击 back at the end of every stage. Retail arms the payout
@@ -27793,7 +27828,7 @@ class Tl {
    * new count is what gets painted.
    */
   applyStageClearBombPayout() {
-    this.route === "stage6a" || this.route === "stage6b" || this.character === "youmu-yuyuko" && (this.player.bombs >= Ql || (this.player.bombs += 1, this.audio.queueSe(T.spellCapture)));
+    this.route === "stage6a" || this.route === "stage6b" || this.character === "youmu-yuyuko" && (this.player.bombs >= gc || (this.player.bombs += 1, this.audio.queueSe(U.spellCapture)));
   }
   /**
    * The night clock moves at the end of every stage. Retail does it in the same place
@@ -27834,11 +27869,11 @@ class Tl {
   /** Sync ECL enemies/bullets into the legacy entity arrays for rendering. */
   syncEclEnemies() {
     if (!this.eclRunner) return;
-    const A = Op(this.eclRunner.enemies.getActive());
+    const A = Cl(this.eclRunner.enemies.getActive());
     this.enemies.length = 0;
     for (const e of A) this.enemies.push(e);
-    const t = Lp(this.eclRunner.bullets.getActive());
-    this.bulletSystem.syncFromEcl(t), this.laserViews = Yp(this.eclRunner.lasers.getActive());
+    const t = Sl(this.eclRunner.bullets.getActive());
+    this.bulletSystem.syncFromEcl(t), this.laserViews = Fl(this.eclRunner.lasers.getActive());
   }
   syncEclItems() {
     if (this.eclRunner) {
@@ -27852,17 +27887,17 @@ class Tl {
   }
   /** Play back a recorded run: input snapshots drive the game, AI stays live. */
   loadReplayJson(A) {
-    this.loadReplay(xt.decode(A));
+    this.loadReplay(Ut.decode(A));
   }
   /** Rebuild the current stage from scratch, keeping score and lives. */
   restartStage() {
     var A;
-    this.enemies.length = 0, this.boss = null, this.bulletSystem.clearAll(), this.itemSystem.clear(), this.bossSweepDone = !1, this.explosions.length = 0, this.pointOfFade.length = 0, this.stageTransitionFrames = 0, this.popups.reset(), this.spellBonus = 0, this.banners.clear(), this.pendingSpellBonus = 0, this.pendingSpellBonusFrames = 0, this.pendingRoute = null, this.pendingClearReport = null, this.eclRunner = null, this.eclOutcome = "run", this.eclGaugeRatio = 0, this.eclGaugeOpacity = 0, clearTimeout(this.gameOverTimer), wi(), this.timeSystem = new _t(this.stageInfo.cycleFrames), this.hud.setStageInfo(this.stageNumber, this.stageInfo.title, this.difficulty), this.hud.hideSpellCard(), this.refreshHiScore(), (A = this.dialogue) == null || A.stop(), this.introPlayed = !1, this.pendingStageSong = !0, this.stage = this.createStage(), this.tryLoadEcl(), this.resume();
+    this.enemies.length = 0, this.boss = null, this.bulletSystem.clearAll(), this.itemSystem.clear(), this.bossSweepDone = !1, this.explosions.length = 0, this.pointOfFade.length = 0, this.stageTransitionFrames = 0, this.popups.reset(), this.spellBonus = 0, this.banners.clear(), this.pendingSpellBonus = 0, this.pendingSpellBonusFrames = 0, this.pendingRoute = null, this.pendingClearReport = null, this.eclRunner = null, this.eclOutcome = "run", this.eclGaugeRatio = 0, this.eclGaugeOpacity = 0, clearTimeout(this.gameOverTimer), Ti(), this.timeSystem = new Lt(this.stageInfo.cycleFrames), this.hud.setStageInfo(this.stageNumber, this.stageInfo.title, this.difficulty), this.hud.hideSpellCard(), this.refreshHiScore(), (A = this.dialogue) == null || A.stop(), this.introPlayed = !1, this.pendingStageSong = !0, this.stage = this.createStage(), this.tryLoadEcl(), this.resume();
   }
   beginNextStage() {
     var t;
-    const A = this.pendingRoute ?? ci(this.route, this.routeContext());
-    this.pendingRoute = null, A && (this.route = A, this.stageNumber = Ut(A), this.enemies.length = 0, this.boss = null, this.bulletSystem.clearAll(), this.itemSystem.clear(), this.bossSweepDone = !1, this.explosions.length = 0, this.popups.reset(), this.spellBonus = 0, this.eclRunner = null, this.eclOutcome = "run", this.eclGaugeRatio = 0, this.eclGaugeOpacity = 0, wi(), this.player.resetForStage(!0), this.hud.maxPower = this.player.maxPower, this.timeSystem = new _t(this.stageInfo.cycleFrames), this.hud.setStageInfo(this.stageNumber, this.stageInfo.title, this.difficulty), this.refreshHiScore(), (t = this.dialogue) == null || t.stop(), this.introPlayed = !1, this.pendingStageSong = !0, this.stage = this.createStage(), this.hud.showMessage("STAGE " + this.stageNumber + ": " + this.stageInfo.title, 180), this.tryLoadEcl());
+    const A = this.pendingRoute ?? Fi(this.route, this.routeContext());
+    this.pendingRoute = null, A && (this.route = A, this.stageNumber = Bt(A), this.enemies.length = 0, this.boss = null, this.bulletSystem.clearAll(), this.itemSystem.clear(), this.bossSweepDone = !1, this.explosions.length = 0, this.popups.reset(), this.spellBonus = 0, this.eclRunner = null, this.eclOutcome = "run", this.eclGaugeRatio = 0, this.eclGaugeOpacity = 0, Ti(), this.player.resetForStage(!0), this.hud.maxPower = this.player.maxPower, this.timeSystem = new Lt(this.stageInfo.cycleFrames), this.hud.setStageInfo(this.stageNumber, this.stageInfo.title, this.difficulty), this.refreshHiScore(), (t = this.dialogue) == null || t.stop(), this.introPlayed = !1, this.pendingStageSong = !0, this.stage = this.createStage(), this.hud.showMessage("STAGE " + this.stageNumber + ": " + this.stageInfo.title, 180), this.tryLoadEcl());
   }
   /**
    * Roll and spawn the drop set for a killed enemy, returning how many items
@@ -27934,36 +27969,36 @@ class Tl {
     });
   }
   async init(A) {
-    this.headless || (this.renderer = new po(), await this.renderer.init({
+    this.headless || (this.renderer = new Oo(), await this.renderer.init({
       container: A,
       assetManifest: this.assetManifest,
       theme: this.stageInfo.bgTheme,
       playerSkin: this.playerSkin,
       backend: this.rendererBackend
-    }), this.ensureBackdropPages(), this.renderer.sprites.setBulletTextures({
-      palette: wo,
-      shapes: fo
-    }), this.proceduralSheets = Nr(this.renderer), this.taiseiSheets = zo(this.renderer), Oo(this.renderer).then((t) => {
+    }), !(this.isDestroyed || !this.renderer) && (this.ensureBackdropPages(), this.renderer.sprites.setBulletTextures({
+      palette: $o,
+      shapes: Ar
+    }), this.proceduralSheets = Cn(this.renderer), this.taiseiSheets = Br(this.renderer), xr(this.renderer).then((t) => {
       t > 0 && console.log("[th08] Registered", t, "original player sprites");
-    }), No(this.renderer).then((t) => {
+    }), Er(this.renderer).then((t) => {
       t > 0 && console.log("[th08] Registered", t, "ship-weapon cells");
-    }), pr(this.renderer).then((t) => {
+    }), Nr(this.renderer).then((t) => {
       t > 0 && console.log("[th08]", t, "enemy/boss sprites");
-    }), gr(this.renderer).then((t) => {
+    }), Zr(this.renderer).then((t) => {
       t > 0 && console.log("[th08]", t, "bullet sprites");
-    }), Br(this.renderer).then((t) => {
+    }), sn(this.renderer).then((t) => {
       t > 0 && console.log("[th08]", t, "background textures");
-    }), Qr(this.renderer).then((t) => {
+    }), cn(this.renderer).then((t) => {
       t > 0 && console.log("[th08]", t, "hud textures");
-    }), jr(this.renderer).then((t) => {
+    }), mn(this.renderer).then((t) => {
       this.facePages = t, t > 0 && console.log("[th08]", t, "face pages");
-    }), Ur(this.renderer).then((t) => {
+    }), In(this.renderer).then((t) => {
       t > 0 && console.log("[th08]", t, "stage-title cells");
-    }), this.retail = new Ml(this.retailHooks()), this.retail.setup(), this.dialogue = new Xr(A, {
-      faceResolver: (t, e) => en(t, e),
+    }), this.retail = new pc(this.retailHooks()), this.retail.setup(), this.dialogue = new Fn(A, {
+      faceResolver: (t, e) => Yn(t, e),
       charFrames: 1,
       holdFrames: 70
-    }), this.input.attach(A, { width: 640, height: 480 }));
+    }), this.input.attach(A, { width: 640, height: 480 })));
   }
   /**
    * Everything `RetailDialogue` reads back out of the game. Each value is a
@@ -28018,7 +28053,7 @@ class Tl {
       t.requestStageSong(A);
       return;
     }
-    const e = Vi(this.stdKey, A, this.stageNumber);
+    const e = Qa(this.stdKey, A, this.stageNumber);
     this.audio.playBGM(e == null ? void 0 : e.file, {
       loop: !0,
       fadeIn: 1e3,
@@ -28078,7 +28113,7 @@ class Tl {
   }
   destroy() {
     var A, t;
-    (A = this.dialogue) == null || A.stop(), this.stop(), clearTimeout(this.gameOverTimer), this.removeAudioUnlockListeners(), this.audio.destroy(), (t = this.renderer) == null || t.destroy(), this.renderer = void 0, this.std = null, this.stdKey = null;
+    this.isDestroyed = !0, (A = this.dialogue) == null || A.stop(), this.stop(), clearTimeout(this.gameOverTimer), this.removeAudioUnlockListeners(), this.audio.destroy(), (t = this.renderer) == null || t.destroy(), this.renderer = void 0, this.std = null, this.stdKey = null;
   }
   /**
    * Drain the Stage context queues (票据 08 StageContext API):
@@ -28087,7 +28122,7 @@ class Tl {
   consumeStageQueues() {
     if (this.stage.spawnedEntities.length > 0)
       for (const A of this.stage.spawnedEntities.splice(0))
-        A instanceof Ci && this.enemies.push(A);
+        A instanceof ea && this.enemies.push(A);
     if (this.stage.dialogueQueue.length > 0)
       for (const A of this.stage.dialogueQueue.splice(0))
         this.hud.showMessage(A.text, A.frames);
@@ -28137,14 +28172,14 @@ class Tl {
     }
     this.introPlayed || (this.introPlayed = !0, (o = this.dialogue) == null || o.play(this.profile.introDialogue(this.stageNumber, this.character))), (n = this.dialogue) != null && n.isActive ? this.dialogue.update(A) : this.stage.update(A), this.consumeStageQueues();
     for (let h = this.enemies.length - 1; h >= 0; h--) {
-      const u = this.enemies[h];
-      if (!u.isAlive) {
+      const d = this.enemies[h];
+      if (!d.isAlive) {
         this.enemies.splice(h, 1);
         continue;
       }
-      u.update(A);
-      const m = u.updateAI(A, this.player);
-      m.length > 0 && this.bulletSystem.add(...m), (u.position.y > 550 || u.position.x < -60 || u.position.x > 500) && (u.destroy(), this.enemies.splice(h, 1));
+      d.update(A);
+      const w = d.updateAI(A, this.player);
+      w.length > 0 && this.bulletSystem.add(...w), (d.position.y > 550 || d.position.x < -60 || d.position.x > 500) && (d.destroy(), this.enemies.splice(h, 1));
     }
     if (this.boss && (this.boss.isAlive || this.bossAlpha(this.boss) > 0)) {
       if (this.boss.update(A), this.boss.isAlive) {
@@ -28164,53 +28199,53 @@ class Tl {
     const i = this.bulletSystem.getBullets();
     for (const h of i) {
       if (!h.isAlive || h.tag !== "player-bullet") continue;
-      const u = this.collisionSystem.checkCollisions(h, ["enemy", "boss"]);
-      for (const m of u) {
-        const f = m.entity;
-        if (f.tag === "boss") {
-          f.takeDamage(h.damage), h.destroy(), this.player.score += 200, this.audio.playSE("enemy-hit");
+      const d = this.collisionSystem.checkCollisions(h, ["enemy", "boss"]);
+      for (const w of d) {
+        const m = w.entity;
+        if (m.tag === "boss") {
+          m.takeDamage(h.damage), h.destroy(), this.player.score += 200, this.audio.playSE("enemy-hit");
           break;
         }
-        if (f.isAlive) {
-          const g = f.takeDamage(h.damage);
-          if (h.destroy(), this.audio.playSE("enemy-hit"), g) {
-            const d = this.spawnEnemyDrops(f);
-            this.player.score += d * 10, this.spawnExplosion(f.position.x, f.position.y), this.spawnDeathBurst(
-              f.position.x,
-              f.position.y,
-              f.maxHp > 100 ? 1.25 : 0.8
+        if (m.isAlive) {
+          const u = m.takeDamage(h.damage);
+          if (h.destroy(), this.audio.playSE("enemy-hit"), u) {
+            const g = this.spawnEnemyDrops(m);
+            this.player.score += g * 10, this.spawnExplosion(m.position.x, m.position.y), this.spawnDeathBurst(
+              m.position.x,
+              m.position.y,
+              m.maxHp > 100 ? 1.25 : 0.8
             );
           }
-          this.player.score += g ? f.scoreValue : 100;
+          this.player.score += u ? m.scoreValue : 100;
           break;
         }
       }
     }
     if (this.applyItems(this.itemSystem.update(A, this.player, this.player.playfield)), this.player.isAlive) {
       if (!this.player.isInvulnerable) {
-        const u = this.collisionSystem.checkCollisions(this.player, "enemy-bullet");
-        for (const m of u)
-          if (m.entity.isAlive) {
-            this.player.hit(), m.entity.destroy();
+        const d = this.collisionSystem.checkCollisions(this.player, "enemy-bullet");
+        for (const w of d)
+          if (w.entity.isAlive) {
+            this.player.hit(), w.entity.destroy();
             break;
           }
       }
       const h = this.collisionSystem.queryNearby(this.player, 16, "enemy-bullet");
-      for (const u of h) {
-        const m = u.entity;
-        m.isAlive && !m.grazed && (m.grazed = !0, (p = this.renderer) == null || p.spawnEffect(
+      for (const d of h) {
+        const w = d.entity;
+        w.isAlive && !w.grazed && (w.grazed = !0, (p = this.renderer) == null || p.spawnEffect(
           "taisei:part:graze",
-          m.position.x,
-          m.position.y,
+          w.position.x,
+          w.position.y,
           26,
           0.9,
           Math.random() * Math.PI,
-          m.color,
+          w.color,
           !0
         ), Math.random() < 0.35 && ((l = this.renderer) == null || l.spawnEffect(
           Math.random() < 0.5 ? "taisei:part:stardust" : "taisei:part:stardust_green",
-          m.position.x,
-          m.position.y - 4,
+          w.position.x,
+          w.position.y - 4,
           18,
           0.8,
           Math.random() * Math.PI * 2,
@@ -28239,7 +28274,7 @@ class Tl {
   bombAccent() {
     var e;
     const A = this.eclRunner, t = (e = A == null ? void 0 : A.activeBomb) == null ? void 0 : e.spec.accent;
-    return t !== void 0 ? t : A ? ha(A.gs.shotType, A.player.isSlow, A.player.deathbomb).accent : 16777215;
+    return t !== void 0 ? t : A ? Ya(A.gs.shotType, A.player.isSlow, A.player.deathbomb).accent : 16777215;
   }
   /**
    * The QA auto-bomb's one-frame press. Fires every four seconds, and never on top
@@ -28363,8 +28398,8 @@ class Tl {
         scorePopups: this.popups.view(
           ((p = this.eclRunner) == null ? void 0 : p.player.x) ?? this.player.position.x,
           ((l = this.eclRunner) == null ? void 0 : l.player.y) ?? this.player.position.y,
-          ki,
-          _i
+          ia,
+          sa
         ),
         playerPose: this.player.isSlowMode ? "slow" : "normal",
         bossGauge: this.eclGaugeState()
@@ -28373,7 +28408,7 @@ class Tl {
     );
   }
 }
-class zl extends lo {
+class Jc extends No {
   constructor(t) {
     super({
       ...t,
@@ -28390,7 +28425,7 @@ class zl extends lo {
     r(this, "fadeFrames");
     r(this, "entranceFrame", 0);
     r(this, "aiFrame", 0);
-    r(this, "runtimeFactory", (t) => new co(t));
+    r(this, "runtimeFactory", (t) => new Jo(t));
     this.displayColor = t.displayColor, this.accentColor = t.accentColor, this.entranceFrames = t.entranceFrames ?? 60, this.entranceY = t.entranceY ?? -50, this.moveAmplitudeX = t.moveAmplitudeX ?? 105, this.moveAmplitudeY = t.moveAmplitudeY ?? 24, this.moveSpeed = t.moveSpeed ?? 0.018, this.fadeFrames = t.fadeFrames ?? 30;
   }
   withBulletFactory(t) {
@@ -28421,19 +28456,1826 @@ class zl extends lo {
     return n && Math.floor(this.aiFrame) % p === 0 && (n.withFactory(this.runtimeFactory), a.push(...n.spawn(this, this.aiFrame, e))), a;
   }
 }
+const ut = {
+  mouseControl: !1,
+  fog: !0,
+  playerSkin: "taisei",
+  touchControls: "auto",
+  bgmVolume: 0.7
+}, $a = "touhou-web-engine:prefs", Ao = () => typeof localStorage < "u" ? localStorage : void 0;
+function to() {
+  var A;
+  const s = (A = Ao()) == null ? void 0 : A.getItem($a);
+  if (!s) return { ...ut };
+  try {
+    const t = JSON.parse(s);
+    return {
+      mouseControl: !!t.mouseControl,
+      // Absent in tables saved before the flag existed, which means "as shipped".
+      fog: t.fog === void 0 ? ut.fog : !!t.fog,
+      playerSkin: t.playerSkin === "painted" ? "painted" : "taisei",
+      touchControls: t.touchControls === "always" || t.touchControls === "never" ? t.touchControls : "auto",
+      bgmVolume: typeof t.bgmVolume == "number" ? Math.min(1, Math.max(0, t.bgmVolume)) : ut.bgmVolume
+    };
+  } catch {
+    return { ...ut };
+  }
+}
+function eo(s) {
+  var A;
+  (A = Ao()) == null || A.setItem($a, JSON.stringify(s));
+}
+const wc = {
+  randomU32InRange: () => 0,
+  randomF32InRange: () => 0
+};
+function Ji(s) {
+  return new Promise((A) => {
+    const t = new Image();
+    t.onload = () => A(t), t.onerror = () => A(null), t.src = Y(s);
+  });
+}
+class mc {
+  constructor(A) {
+    r(this, "options");
+    r(this, "slots", []);
+    r(this, "pages", []);
+    r(this, "backdropImage", null);
+    r(this, "bySprite", /* @__PURE__ */ new Map());
+    /** Colourised cells, keyed by `sprite:color`; a label keeps its tint all screen. */
+    r(this, "tintCache", /* @__PURE__ */ new Map());
+    r(this, "loaded", !1);
+    r(this, "started", !1);
+    this.options = A;
+    for (const t of A.cells) this.bySprite.set(t.id, t);
+    for (let t = 0; t < A.slots; t++)
+      this.slots.push({ vm: new rA(wc), bound: -1 });
+  }
+  /**
+   * Fetch every page plus the backdrop.
+   *
+   * Retail art is extracted locally and stays out of the repository, so a missing
+   * page is a normal state: the screen then draws whatever did land, which is how
+   * the original behaves when a surface fails to load.
+   */
+  async load() {
+    const [A, ...t] = await Promise.all([
+      this.options.backdrop ? Ji(this.options.backdrop) : Promise.resolve(null),
+      ...this.options.pages.map((e) => Ji(e))
+    ]);
+    return this.backdropImage = A, this.pages = t, this.loaded = !!(A || t.some(Boolean)), this.loaded;
+  }
+  /** True once at least one picture is on screen. */
+  get ready() {
+    return this.loaded;
+  }
+  /** `AddedCallback`: hand script `i` to VM `i` and let the bytecode place it. */
+  start() {
+    for (let A = 0; A < this.slots.length; A++) {
+      const t = this.slots[A], e = this.options.scriptFor(A);
+      t.bound = -1, e ? t.vm.attach(e) : t.vm.reset();
+    }
+    this.started = !0;
+  }
+  /**
+   * Queue an interrupt on one slot, the original's `pendingInterrupt` write.
+   *
+   * The retail screens re-assert the code every frame for a while
+   * (`CheckConfirmButton` holds interrupt 18 for thirty frames), so callers are
+   * expected to drive this from their own state rather than fire it once.
+   */
+  interrupt(A, t) {
+    var e;
+    (e = this.slots[A]) == null || e.vm.setInterrupt(t);
+  }
+  /** Queue an interrupt on every slot, which is how a screen hides or exits as one. */
+  interruptAll(A) {
+    for (const t of this.slots) t.vm.setInterrupt(A);
+  }
+  /** Advance every VM, the draw chain's `ExecuteScript` loop. */
+  step(A = 1) {
+    if (this.started)
+      for (const t of this.slots)
+        for (let e = 0; e < A; e++) t.vm.step();
+  }
+  /**
+   * `ResultScreen::OnDraw:2463-2471`.
+   *
+   * Position is `pos + pos2` for the frame only: the original adds the offset,
+   * draws, and puts `pos` back, so `pos2` behaves as a constant displacement
+   * rather than a velocity.
+   */
+  draw(A) {
+    const { width: t, height: e } = this.options;
+    A.save(), A.imageSmoothingEnabled = !1, this.backdropImage && (A.globalAlpha = 1, A.drawImage(this.backdropImage, 0, 0, t, e));
+    for (const i of this.slots) {
+      const a = i.vm;
+      if (a.deleted || !a.visible || a.color1.a === 0) continue;
+      const o = this.bySprite.get(a.sprite), n = o ? this.pages[o.tex] : null;
+      if (!o || !n || o.w <= 0 || o.h <= 0) continue;
+      const p = Math.max(0, Math.min(1, a.color1.a / 255)), l = a.pos.x + a.pos2.x, c = a.pos.y + a.pos2.y, h = o.w * a.scale.x, d = o.h * a.scale.y, w = a.anchor === 3 ? l : l - h / 2, m = a.anchor === 3 ? c : c - d / 2;
+      A.globalAlpha = p, a.blendMode === 1 && (A.globalCompositeOperation = "lighter");
+      const u = this.tintOf(a.color1.r, a.color1.g, a.color1.b);
+      u ? A.drawImage(
+        this.tint(n, o, u),
+        0,
+        0,
+        o.w,
+        o.h,
+        Math.round(w),
+        Math.round(m),
+        Math.round(h),
+        Math.round(d)
+      ) : A.drawImage(
+        n,
+        o.x,
+        o.y,
+        o.w,
+        o.h,
+        Math.round(w),
+        Math.round(m),
+        Math.round(h),
+        Math.round(d)
+      ), a.blendMode === 1 && (A.globalCompositeOperation = "source-over");
+    }
+    A.globalAlpha = 1, A.restore();
+  }
+  /** One readable line per slot, so a browser pass can tell "no art" from "no script". */
+  debugLines() {
+    return this.slots.map((A, t) => {
+      const e = A.vm;
+      return "#" + t + " sp" + e.sprite + (e.deleted ? " done" : e.visible ? "" : " off") + " " + Math.round(e.pos.x + e.pos2.x) + "," + Math.round(e.pos.y + e.pos2.y) + " a" + Math.round(e.color1.a);
+    });
+  }
+  /** The VM of one slot, for hosts that need its live position to place text. */
+  vmAt(A) {
+    var t;
+    return ((t = this.slots[A]) == null ? void 0 : t.vm) ?? null;
+  }
+  destroy() {
+    this.slots.length = 0, this.pages = [], this.backdropImage = null, this.tintCache.clear(), this.started = !1;
+  }
+  /** Null when the colour is plain white, which is the common case. */
+  tintOf(A, t, e) {
+    return A === 255 && t === 255 && e === 255 ? null : (A & 255) << 16 | (t & 255) << 8 | e & 255;
+  }
+  /**
+   * Multiply one cell by a VM colour.
+   *
+   * A 2D canvas has no vertex colour, so the cheap equivalent is a source-in
+   * pass over a scratch buffer. Results are cached per cell and colour because a
+   * label keeps its tint for the whole screen.
+   */
+  tint(A, t, e) {
+    const i = `${t.id}:${e}`, a = this.tintCache.get(i);
+    if (a) return a;
+    const o = document.createElement("canvas");
+    o.width = t.w, o.height = t.h;
+    const n = o.getContext("2d");
+    return n && (n.drawImage(A, t.x, t.y, t.w, t.h, 0, 0, t.w, t.h), n.globalCompositeOperation = "multiply", n.fillStyle = "#" + ((e >> 16 & 255).toString(16).padStart(2, "0") + (e >> 8 & 255).toString(16).padStart(2, "0") + (e & 255).toString(16).padStart(2, "0")), n.fillRect(0, 0, t.w, t.h), n.globalCompositeOperation = "destination-in", n.drawImage(A, t.x, t.y, t.w, t.h, 0, 0, t.w, t.h)), this.tintCache.set(i, o), o;
+  }
+}
+const fc = "/assets/th08/raw/result.jpg", Bc = [
+  "/assets/th08/anm/result00_t0.png",
+  "/assets/th08/anm/result00_t1.png",
+  "/assets/th08/anm/result00_t2.png",
+  "/assets/th08/anm/result00_t3.png"
+], yc = [
+  { id: 0, tex: 0, x: 0, y: 128, w: 256, h: 32 },
+  // 256x32
+  { id: 1, tex: 0, x: 0, y: 160, w: 256, h: 32 },
+  // 256x32
+  { id: 2, tex: 0, x: 0, y: 192, w: 256, h: 32 },
+  // 256x32
+  { id: 3, tex: 0, x: 0, y: 224, w: 256, h: 32 },
+  // 256x32
+  { id: 4, tex: 0, x: 0, y: 256, w: 256, h: 32 },
+  // 256x32
+  { id: 5, tex: 0, x: 0, y: 256, w: 256, h: 32 },
+  // 256x32
+  { id: 6, tex: 0, x: 0, y: 288, w: 256, h: 32 },
+  // 256x32
+  { id: 7, tex: 0, x: 0, y: 320, w: 256, h: 32 },
+  // 256x32
+  { id: 8, tex: 0, x: 0, y: 352, w: 256, h: 32 },
+  // 256x32
+  { id: 9, tex: 0, x: 0, y: 384, w: 256, h: 32 },
+  // 256x32
+  { id: 10, tex: 0, x: 0, y: 416, w: 256, h: 32 },
+  // 256x32
+  { id: 11, tex: 0, x: 0, y: 448, w: 256, h: 32 },
+  // 256x32
+  { id: 12, tex: 0, x: 0, y: 480, w: 256, h: 32 },
+  // 256x32
+  { id: 13, tex: 0, x: 256, y: 0, w: 256, h: 32 },
+  // 256x32
+  { id: 14, tex: 0, x: 256, y: 32, w: 256, h: 32 },
+  // 256x32
+  { id: 15, tex: 0, x: 256, y: 64, w: 256, h: 32 },
+  // 256x32
+  { id: 16, tex: 0, x: 256, y: 96, w: 256, h: 32 },
+  // 256x32
+  { id: 17, tex: 0, x: 256, y: 128, w: 256, h: 32 },
+  // 256x32
+  { id: 18, tex: 0, x: 256, y: 160, w: 256, h: 32 },
+  // 256x32
+  { id: 19, tex: 0, x: 256, y: 192, w: 256, h: 32 },
+  // 256x32
+  { id: 20, tex: 0, x: 256, y: 224, w: 256, h: 32 },
+  // 256x32
+  { id: 21, tex: 0, x: 0, y: 0, w: 256, h: 32 },
+  // 256x32
+  { id: 22, tex: 0, x: 0, y: 32, w: 256, h: 32 },
+  // 256x32
+  { id: 23, tex: 0, x: 0, y: 64, w: 256, h: 32 },
+  // 256x32
+  { id: 24, tex: 0, x: 0, y: 96, w: 256, h: 32 },
+  // 256x32
+  { id: 25, tex: 1, x: 0, y: 0, w: 112, h: 48 },
+  // 112x48
+  { id: 26, tex: 1, x: 112, y: 0, w: 144, h: 48 },
+  // 144x48
+  { id: 27, tex: 1, x: 0, y: 48, w: 112, h: 48 },
+  // 112x48
+  { id: 28, tex: 1, x: 112, y: 48, w: 144, h: 48 },
+  // 144x48
+  { id: 29, tex: 1, x: 0, y: 96, w: 112, h: 48 },
+  // 112x48
+  { id: 30, tex: 1, x: 112, y: 96, w: 144, h: 48 },
+  // 144x48
+  { id: 31, tex: 1, x: 0, y: 144, w: 256, h: 48 },
+  // 256x48
+  { id: 32, tex: 1, x: 0, y: 240, w: 256, h: 16 },
+  // 256x16
+  { id: 33, tex: 2, x: 0, y: 0, w: 256, h: 32 },
+  // 256x32
+  { id: 34, tex: 2, x: 0, y: 32, w: 48, h: 32 },
+  // 48x32
+  { id: 35, tex: 2, x: 48, y: 32, w: 64, h: 32 },
+  // 64x32
+  { id: 36, tex: 2, x: 0, y: 64, w: 256, h: 48 },
+  // 256x48
+  { id: 37, tex: 2, x: 0, y: 112, w: 256, h: 48 },
+  // 256x48
+  { id: 38, tex: 2, x: 0, y: 176, w: 256, h: 32 },
+  // 256x32
+  { id: 39, tex: 2, x: 0, y: 208, w: 256, h: 48 },
+  // 256x48
+  { id: 40, tex: 3, x: 0, y: 0, w: 256, h: 256 }
+  // 256x256
+], so = {
+  /** The scrolling score table; `OnDraw` slides it in while pos.x < 640. */
+  LISTING: 40,
+  /** Anchor of the stats column; text sits at +210/+32, 22 apart. */
+  PLAYER_RESULTS: 71
+}, io = [
+  {
+    id: 0,
+    base64: "AwAMAAAAAAAVAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAAAAAAAAIBCAACAQgAAAAAUAAAAFAAIABQAAAAVAAwAFAAAABQAAAAhABwAFAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABQAAAABAAAABgAUABQAAAAAAIDAAACAwAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAAAAAAAWQAIABQAAAAVAAwAFAAAABUAAAAhABwAFAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABQAAAABAAAABgAUABQAAAAAAAAAAAAAAAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAABAAAAWQAIABQAAAAVAAwAFAAAABcAAAASABgAFAAAAAAAAEIAAABCAAAAABQAAABZAAgAFAAAABUADAAUAAAAGQAAABgADAAUAAAAAQAAAAYAFAAUAAAAAAAAAAAAAAAAAAAAGAAMABQAAAAAAAAAIQAcABQAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAUAAAAAAAgRAAAAEIAAAAAEgAYAB4AAAAAAABCAAAAQgAAAAAKAAAAFAAIACgAAABZAAgAKAAAABUADAAoAAAAGAAAABgADAAoAAAAAQAAAAYAFAAoAAAAAAAAAAAAAAAAAAAAGAAMACgAAAAAAAAAIQAcACgAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAoAAAAAAAgRAAAAEIAAAAACgAAABQACAAyAAAAWQAIADIAAAAVAAwAMgAAAP////8GABQAMgAAAAAAgMMAAIBCAAAAABIAGAAyAAAAAACAwwAAgEIAAAAAFAAAABcACABGAAAA",
+    length: 70
+  },
+  {
+    id: 1,
+    base64: "AwAMAAAAAAAWAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAMBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAQAAAAAAIBCAADAQgAAAAAUAAAAFAAIABgAAAAVAAwAGAAAABQAAAAhABwAGAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABgAAAABAAAABgAUABgAAAAAAIDAAACAwAAAAAAYAAwAGAAAAAAAAAAlABAAGAABABAnAAAAAAAAWQAIABgAAAAVAAwAGAAAABUAAAAhABwAGAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABgAAAABAAAABgAUABgAAAAAAAAAAAAAAAAAAAAYAAwAGAAAAAAAAAAlABAAGAABABAnAAABAAAAWQAIABgAAAAVAAwAGAAAABcAAAASABgAGAAAAAAAAEIAAABCAAAAABQAAABZAAgAGAAAABUADAAYAAAAGQAAABgADAAYAAAAAQAAAAYAFAAYAAAAAAAAAAAAAAAAAAAAGAAMABgAAAAAAAAAIQAcABgAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAYAAAAAAAgRAAAAEIAAAAAEgAYACIAAAAAAABCAAAAQgAAAAAKAAAAFAAIACwAAABZAAgALAAAABUADAAsAAAAGAAAABgADAAsAAAAAQAAAAYAFAAsAAAAAAAAAAAAAAAAAAAAGAAMACwAAAAAAAAAIQAcACwAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAsAAAAAAAgRAAAAEIAAAAACgAAABQACAA2AAAAWQAIADYAAAAVAAwANgAAAP////8GABQANgAAAAAAgMMAAMBCAAAAABIAGAA2AAAAAACAwwAAwEIAAAAAFAAAABcACABKAAAA",
+    length: 74
+  },
+  {
+    id: 2,
+    base64: "AwAMAAAAAAAXAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAABDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAgAAAAAAIBCAAAAQwAAAAAUAAAAFAAIABwAAAAVAAwAHAAAABQAAAAhABwAHAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABwAAAABAAAABgAUABwAAAAAAIDAAACAwAAAAAAYAAwAHAAAAAAAAAAlABAAHAABABAnAAAAAAAAWQAIABwAAAAVAAwAHAAAABUAAAAhABwAHAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABwAAAABAAAABgAUABwAAAAAAAAAAAAAAAAAAAAYAAwAHAAAAAAAAAAlABAAHAABABAnAAABAAAAWQAIABwAAAAVAAwAHAAAABcAAAASABgAHAAAAAAAAEIAAABCAAAAABQAAABZAAgAHAAAABUADAAcAAAAGQAAABgADAAcAAAAAQAAAAYAFAAcAAAAAAAAAAAAAAAAAAAAGAAMABwAAAAAAAAAIQAcABwAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAcAAAAAAAgRAAAAEIAAAAAEgAYACYAAAAAAABCAAAAQgAAAAAKAAAAFAAIADAAAABZAAgAMAAAABUADAAwAAAAGAAAABgADAAwAAAAAQAAAAYAFAAwAAAAAAAAAAAAAAAAAAAAGAAMADAAAAAAAAAAIQAcADAAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAwAAAAAAAgRAAAAEIAAAAACgAAABQACAA6AAAAWQAIADoAAAAVAAwAOgAAAP////8GABQAOgAAAAAAgMMAAABDAAAAABIAGAA6AAAAAACAwwAAAEMAAAAAFAAAABcACABOAAAA",
+    length: 78
+  },
+  {
+    id: 3,
+    base64: "AwAMAAAAAAAYAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAACBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAwAAAAAAIBCAAAgQwAAAAAUAAAAFAAIACAAAAAVAAwAIAAAABQAAAAhABwAIAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACAAAAABAAAABgAUACAAAAAAAIDAAACAwAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAAAAAAAWQAIACAAAAAVAAwAIAAAABUAAAAhABwAIAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACAAAAABAAAABgAUACAAAAAAAAAAAAAAAAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAABAAAAWQAIACAAAAAVAAwAIAAAABcAAAASABgAIAAAAAAAAEIAAABCAAAAABQAAABZAAgAIAAAABUADAAgAAAAGQAAABgADAAgAAAAAQAAAAYAFAAgAAAAAAAAAAAAAAAAAAAAGAAMACAAAAAAAAAAIQAcACAAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAgAAAAAAAgRAAAAEIAAAAAEgAYACoAAAAAAABCAAAAQgAAAAAKAAAAFAAIADQAAABZAAgANAAAABUADAA0AAAAGAAAABgADAA0AAAAAQAAAAYAFAA0AAAAAAAAAAAAAAAAAAAAGAAMADQAAAAAAAAAIQAcADQAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA0AAAAAAAgRAAAAEIAAAAACgAAABQACAA+AAAAWQAIAD4AAAAVAAwAPgAAAP////8GABQAPgAAAAAAgMMAACBDAAAAABIAGAA+AAAAAACAwwAAIEMAAAAAFAAAABcACABSAAAA",
+    length: 82
+  },
+  {
+    id: 4,
+    base64: "AwAMAAAAAAAAAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAAAAAAAAIBCAACAQgAAAAAUAAAAFAAIABQAAAAVAAwAFAAAABQAAAAhABwAFAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABQAAAABAAAABgAUABQAAAAAAIDAAACAwAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAAAAAAAWQAIABQAAAAVAAwAFAAAABUAAAAhABwAFAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABQAAAABAAAABgAUABQAAAAAAAAAAAAAAAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAABAAAAWQAIABQAAAAVAAwAFAAAABcAAAASABgAFAAAAAAAAEIAAIBCAAAAABQAAABZAAgAFAAAABUADAAUAAAAGQAAABgADAAUAAAAAQAAAAYAFAAUAAAAAAAAAAAAAAAAAAAAGAAMABQAAAAAAAAAIQAcABQAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAUAAAAAAAgRAAAgEIAAAAAEgAYAB4AAAAAAABCAACAQgAAAAAKAAAAFAAIACgAAABZAAgAKAAAABUADAAoAAAAGAAAABgADAAoAAAAAQAAAAYAFAAoAAAAAAAAAAAAAAAAAAAAGAAMACgAAAAAAAAAIQAcACgAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAoAAAAAAAgRAAAgEIAAAAACgAAABQACAAyAAAAWQAIADIAAAAVAAwAMgAAAP////8GABQAMgAAAAAAgMMAAIBCAAAAABIAGAAyAAAAAACAwwAAgEIAAAAAFAAAABcACABGAAAA",
+    length: 70
+  },
+  {
+    id: 5,
+    base64: "AwAMAAAAAAABAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAMBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAQAAAAAAIBCAADAQgAAAAAUAAAAFAAIABgAAAAVAAwAGAAAABQAAAAhABwAGAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABgAAAABAAAABgAUABgAAAAAAIDAAACAwAAAAAAYAAwAGAAAAAAAAAAlABAAGAABABAnAAAAAAAAWQAIABgAAAAVAAwAGAAAABUAAAAhABwAGAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABgAAAABAAAABgAUABgAAAAAAAAAAAAAAAAAAAAYAAwAGAAAAAAAAAAlABAAGAABABAnAAABAAAAWQAIABgAAAAVAAwAGAAAABcAAAASABgAGAAAAAAAAEIAAIBCAAAAABQAAABZAAgAGAAAABUADAAYAAAAGQAAABgADAAYAAAAAQAAAAYAFAAYAAAAAAAAAAAAAAAAAAAAGAAMABgAAAAAAAAAIQAcABgAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAYAAAAAAAgRAAAgEIAAAAAEgAYACIAAAAAAABCAACAQgAAAAAKAAAAFAAIACwAAABZAAgALAAAABUADAAsAAAAGAAAABgADAAsAAAAAQAAAAYAFAAsAAAAAAAAAAAAAAAAAAAAGAAMACwAAAAAAAAAIQAcACwAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAsAAAAAAAgRAAAgEIAAAAACgAAABQACAA2AAAAWQAIADYAAAAVAAwANgAAAP////8GABQANgAAAAAAgMMAAMBCAAAAABIAGAA2AAAAAACAwwAAwEIAAAAAFAAAABcACABKAAAA",
+    length: 74
+  },
+  {
+    id: 6,
+    base64: "AwAMAAAAAAACAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAABDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAgAAAAAAIBCAAAAQwAAAAAUAAAAFAAIABwAAAAVAAwAHAAAABQAAAAhABwAHAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABwAAAABAAAABgAUABwAAAAAAIDAAACAwAAAAAAYAAwAHAAAAAAAAAAlABAAHAABABAnAAAAAAAAWQAIABwAAAAVAAwAHAAAABUAAAAhABwAHAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABwAAAABAAAABgAUABwAAAAAAAAAAAAAAAAAAAAYAAwAHAAAAAAAAAAlABAAHAABABAnAAABAAAAWQAIABwAAAAVAAwAHAAAABcAAAASABgAHAAAAAAAAEIAAIBCAAAAABQAAABZAAgAHAAAABUADAAcAAAAGQAAABgADAAcAAAAAQAAAAYAFAAcAAAAAAAAAAAAAAAAAAAAGAAMABwAAAAAAAAAIQAcABwAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAcAAAAAAAgRAAAgEIAAAAAEgAYACYAAAAAAABCAACAQgAAAAAKAAAAFAAIADAAAABZAAgAMAAAABUADAAwAAAAGAAAABgADAAwAAAAAQAAAAYAFAAwAAAAAAAAAAAAAAAAAAAAGAAMADAAAAAAAAAAIQAcADAAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAwAAAAAAAgRAAAgEIAAAAACgAAABQACAA6AAAAWQAIADoAAAAVAAwAOgAAAP////8GABQAOgAAAAAAgMMAAABDAAAAABIAGAA6AAAAAACAwwAAAEMAAAAAFAAAABcACABOAAAA",
+    length: 78
+  },
+  {
+    id: 7,
+    base64: "AwAMAAAAAAADAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAACBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAwAAAAAAIBCAAAgQwAAAAAUAAAAFAAIACAAAAAVAAwAIAAAABQAAAAhABwAIAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACAAAAABAAAABgAUACAAAAAAAIDAAACAwAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAAAAAAAWQAIACAAAAAVAAwAIAAAABUAAAAhABwAIAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACAAAAABAAAABgAUACAAAAAAAAAAAAAAAAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAABAAAAWQAIACAAAAAVAAwAIAAAABcAAAASABgAIAAAAAAAAEIAAIBCAAAAABQAAABZAAgAIAAAABUADAAgAAAAGQAAABgADAAgAAAAAQAAAAYAFAAgAAAAAAAAAAAAAAAAAAAAGAAMACAAAAAAAAAAIQAcACAAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAgAAAAAAAgRAAAgEIAAAAAEgAYACoAAAAAAABCAACAQgAAAAAKAAAAFAAIADQAAABZAAgANAAAABUADAA0AAAAGAAAABgADAA0AAAAAQAAAAYAFAA0AAAAAAAAAAAAAAAAAAAAGAAMADQAAAAAAAAAIQAcADQAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA0AAAAAAAgRAAAgEIAAAAACgAAABQACAA+AAAAWQAIAD4AAAAVAAwAPgAAAP////8GABQAPgAAAAAAgMMAACBDAAAAABIAGAA+AAAAAACAwwAAIEMAAAAAFAAAABcACABSAAAA",
+    length: 82
+  },
+  {
+    id: 8,
+    base64: "AwAMAAAAAAAEAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAEBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABAAAAAAAIBCAABAQwAAAAAUAAAAFAAIACQAAAAVAAwAJAAAABQAAAAhABwAJAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACQAAAABAAAABgAUACQAAAAAAIDAAACAwAAAAAAYAAwAJAAAAAAAAAAlABAAJAABABAnAAAAAAAAWQAIACQAAAAVAAwAJAAAABUAAAAhABwAJAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACQAAAABAAAABgAUACQAAAAAAAAAAAAAAAAAAAAYAAwAJAAAAAAAAAAlABAAJAABABAnAAABAAAAWQAIACQAAAAVAAwAJAAAABcAAAASABgAJAAAAAAAAEIAAIBCAAAAABQAAABZAAgAJAAAABUADAAkAAAAGQAAABgADAAkAAAAAQAAAAYAFAAkAAAAAAAAAAAAAAAAAAAAGAAMACQAAAAAAAAAIQAcACQAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAkAAAAAAAgRAAAgEIAAAAAEgAYAC4AAAAAAABCAACAQgAAAAAKAAAAFAAIADgAAABZAAgAOAAAABUADAA4AAAAGAAAABgADAA4AAAAAQAAAAYAFAA4AAAAAAAAAAAAAAAAAAAAGAAMADgAAAAAAAAAIQAcADgAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA4AAAAAAAgRAAAgEIAAAAACgAAABQACABCAAAAWQAIAEIAAAAVAAwAQgAAAP////8GABQAQgAAAAAAgMMAAEBDAAAAABIAGABCAAAAAACAwwAAQEMAAAAAFAAAABcACABWAAAA",
+    length: 86
+  },
+  {
+    id: 9,
+    base64: "AwAMAAAAAAAAAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAMBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAQAAAAAAIBCAADAQgAAAAAUAAAAFAAIABgAAAAVAAwAGAAAABQAAAAhABwAGAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABgAAAABAAAABgAUABgAAAAAAIDAAACAwAAAAAAYAAwAGAAAAAAAAAAlABAAGAABABAnAAAAAAAAWQAIABgAAAAVAAwAGAAAABUAAAAhABwAGAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABgAAAABAAAABgAUABgAAAAAAAAAAAAAAAAAAAAYAAwAGAAAAAAAAAAlABAAGAABABAnAAABAAAAWQAIABgAAAAVAAwAGAAAABcAAAASABgAGAAAAAAAAEIAAIBCAAAAABQAAABZAAgAGAAAABUADAAYAAAAGQAAABgADAAYAAAAAQAAAAYAFAAYAAAAAAAAAAAAAAAAAAAAGAAMABgAAAAAAAAAIQAcABgAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAYAAAAAAAgRAAAgEIAAAAAEgAYACIAAAAAAABCAACAQgAAAAAKAAAAFAAIACwAAABZAAgALAAAABUADAAsAAAAGAAAABgADAAsAAAAAQAAAAYAFAAsAAAAAAAAAAAAAAAAAAAAGAAMACwAAAAAAAAAIQAcACwAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAsAAAAAAAgRAAAgEIAAAAACgAAABQACAA2AAAAWQAIADYAAAAVAAwANgAAAP////8GABQANgAAAAAAgMMAAMBCAAAAABIAGAA2AAAAAACAwwAAwEIAAAAAFAAAABcACABKAAAA",
+    length: 74
+  },
+  {
+    id: 10,
+    base64: "AwAMAAAAAAABAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAABDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAgAAAAAAIBCAAAAQwAAAAAUAAAAFAAIABwAAAAVAAwAHAAAABQAAAAhABwAHAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABwAAAABAAAABgAUABwAAAAAAIDAAACAwAAAAAAYAAwAHAAAAAAAAAAlABAAHAABABAnAAAAAAAAWQAIABwAAAAVAAwAHAAAABUAAAAhABwAHAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABwAAAABAAAABgAUABwAAAAAAAAAAAAAAAAAAAAYAAwAHAAAAAAAAAAlABAAHAABABAnAAABAAAAWQAIABwAAAAVAAwAHAAAABcAAAASABgAHAAAAAAAAEIAAIBCAAAAABQAAABZAAgAHAAAABUADAAcAAAAGQAAABgADAAcAAAAAQAAAAYAFAAcAAAAAAAAAAAAAAAAAAAAGAAMABwAAAAAAAAAIQAcABwAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAcAAAAAAAgRAAAgEIAAAAAEgAYACYAAAAAAABCAACAQgAAAAAKAAAAFAAIADAAAABZAAgAMAAAABUADAAwAAAAGAAAABgADAAwAAAAAQAAAAYAFAAwAAAAAAAAAAAAAAAAAAAAGAAMADAAAAAAAAAAIQAcADAAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAwAAAAAAAgRAAAgEIAAAAACgAAABQACAA6AAAAWQAIADoAAAAVAAwAOgAAAP////8GABQAOgAAAAAAgMMAAABDAAAAABIAGAA6AAAAAACAwwAAAEMAAAAAFAAAABcACABOAAAA",
+    length: 78
+  },
+  {
+    id: 11,
+    base64: "AwAMAAAAAAACAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAACBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAwAAAAAAIBCAAAgQwAAAAAUAAAAFAAIACAAAAAVAAwAIAAAABQAAAAhABwAIAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACAAAAABAAAABgAUACAAAAAAAIDAAACAwAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAAAAAAAWQAIACAAAAAVAAwAIAAAABUAAAAhABwAIAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACAAAAABAAAABgAUACAAAAAAAAAAAAAAAAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAABAAAAWQAIACAAAAAVAAwAIAAAABcAAAASABgAIAAAAAAAAEIAAIBCAAAAABQAAABZAAgAIAAAABUADAAgAAAAGQAAABgADAAgAAAAAQAAAAYAFAAgAAAAAAAAAAAAAAAAAAAAGAAMACAAAAAAAAAAIQAcACAAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAgAAAAAAAgRAAAgEIAAAAAEgAYACoAAAAAAABCAACAQgAAAAAKAAAAFAAIADQAAABZAAgANAAAABUADAA0AAAAGAAAABgADAA0AAAAAQAAAAYAFAA0AAAAAAAAAAAAAAAAAAAAGAAMADQAAAAAAAAAIQAcADQAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA0AAAAAAAgRAAAgEIAAAAACgAAABQACAA+AAAAWQAIAD4AAAAVAAwAPgAAAP////8GABQAPgAAAAAAgMMAACBDAAAAABIAGAA+AAAAAACAwwAAIEMAAAAAFAAAABcACABSAAAA",
+    length: 82
+  },
+  {
+    id: 12,
+    base64: "AwAMAAAAAAADAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAEBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABAAAAAAAIBCAABAQwAAAAAUAAAAFAAIACQAAAAVAAwAJAAAABQAAAAhABwAJAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACQAAAABAAAABgAUACQAAAAAAIDAAACAwAAAAAAYAAwAJAAAAAAAAAAlABAAJAABABAnAAAAAAAAWQAIACQAAAAVAAwAJAAAABUAAAAhABwAJAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACQAAAABAAAABgAUACQAAAAAAAAAAAAAAAAAAAAYAAwAJAAAAAAAAAAlABAAJAABABAnAAABAAAAWQAIACQAAAAVAAwAJAAAABcAAAASABgAJAAAAAAAAEIAAIBCAAAAABQAAABZAAgAJAAAABUADAAkAAAAGQAAABgADAAkAAAAAQAAAAYAFAAkAAAAAAAAAAAAAAAAAAAAGAAMACQAAAAAAAAAIQAcACQAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAkAAAAAAAgRAAAgEIAAAAAEgAYAC4AAAAAAABCAACAQgAAAAAKAAAAFAAIADgAAABZAAgAOAAAABUADAA4AAAAGAAAABgADAA4AAAAAQAAAAYAFAA4AAAAAAAAAAAAAAAAAAAAGAAMADgAAAAAAAAAIQAcADgAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA4AAAAAAAgRAAAgEIAAAAACgAAABQACABCAAAAWQAIAEIAAAAVAAwAQgAAAP////8GABQAQgAAAAAAgMMAAEBDAAAAABIAGABCAAAAAACAwwAAQEMAAAAAFAAAABcACABWAAAA",
+    length: 86
+  },
+  {
+    id: 13,
+    base64: "AwAMAAAAAAAEAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAGBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABQAAAAAAIBCAABgQwAAAAAUAAAAFAAIACgAAAAVAAwAKAAAABQAAAAhABwAKAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACgAAAABAAAABgAUACgAAAAAAIDAAACAwAAAAAAYAAwAKAAAAAAAAAAlABAAKAABABAnAAAAAAAAWQAIACgAAAAVAAwAKAAAABUAAAAhABwAKAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACgAAAABAAAABgAUACgAAAAAAAAAAAAAAAAAAAAYAAwAKAAAAAAAAAAlABAAKAABABAnAAABAAAAWQAIACgAAAAVAAwAKAAAABcAAAASABgAKAAAAAAAAEIAAIBCAAAAABQAAABZAAgAKAAAABUADAAoAAAAGQAAABgADAAoAAAAAQAAAAYAFAAoAAAAAAAAAAAAAAAAAAAAGAAMACgAAAAAAAAAIQAcACgAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAoAAAAAAAgRAAAgEIAAAAAEgAYADIAAAAAAABCAACAQgAAAAAKAAAAFAAIADwAAABZAAgAPAAAABUADAA8AAAAGAAAABgADAA8AAAAAQAAAAYAFAA8AAAAAAAAAAAAAAAAAAAAGAAMADwAAAAAAAAAIQAcADwAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA8AAAAAAAgRAAAgEIAAAAACgAAABQACABGAAAAWQAIAEYAAAAVAAwARgAAAP////8GABQARgAAAAAAgMMAAGBDAAAAABIAGABGAAAAAACAwwAAYEMAAAAAFAAAABcACABaAAAA",
+    length: 90
+  },
+  {
+    id: 14,
+    base64: "AwAMAAAAAAAGAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAAAAAAAAIBCAACAQgAAAAAUAAAAFAAIABQAAAAVAAwAFAAAABQAAAAhABwAFAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABQAAAABAAAABgAUABQAAAAAAIDAAACAwAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAAAAAAAWQAIABQAAAAVAAwAFAAAABUAAAAhABwAFAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABQAAAABAAAABgAUABQAAAAAAAAAAAAAAAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAABAAAAWQAIABQAAAAVAAwAFAAAABcAAAASABgAFAAAAAAAAEIAAIBCAAAAABQAAABZAAgAFAAAABUADAAUAAAAGQAAABgADAAUAAAAAQAAAAYAFAAUAAAAAAAAAAAAAAAAAAAAGAAMABQAAAAAAAAAIQAcABQAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAUAAAAAAAgRAAAgEIAAAAAEgAYAB4AAAAAAABCAACAQgAAAAAKAAAAFAAIACgAAABZAAgAKAAAABUADAAoAAAAGAAAABgADAAoAAAAAQAAAAYAFAAoAAAAAAAAAAAAAAAAAAAAGAAMACgAAAAAAAAAIQAcACgAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAoAAAAAAAgRAAAgEIAAAAACgAAABQACAAyAAAAWQAIADIAAAAVAAwAMgAAAP////8GABQAMgAAAAAAgMMAAIBCAAAAABIAGAAyAAAAAACAwwAAgEIAAAAAFAAAABcACABGAAAA",
+    length: 70
+  },
+  {
+    id: 15,
+    base64: "AwAMAAAAAAAHAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAMBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAAAAAAAAIBCAADAQgAAAAAUAAAAFAAIABQAAAAVAAwAFAAAABQAAAAhABwAFAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABQAAAABAAAABgAUABQAAAAAAIDAAACAwAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAAAAAAAWQAIABQAAAAVAAwAFAAAABUAAAAhABwAFAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABQAAAABAAAABgAUABQAAAAAAAAAAAAAAAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAABAAAAWQAIABQAAAAVAAwAFAAAABcAAAASABgAFAAAAAAAAEIAAMBCAAAAABQAAABZAAgAFAAAABUADAAUAAAAGQAAABgADAAUAAAAAQAAAAYAFAAUAAAAAAAAAAAAAAAAAAAAGAAMABQAAAAAAAAAIQAcABQAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAUAAAAAAAgRAAAwEIAAAAAEgAYAB4AAAAAAABCAADAQgAAAAAKAAAAFAAIACgAAABZAAgAKAAAABUADAAoAAAAGAAAABgADAAoAAAAAQAAAAYAFAAoAAAAAAAAAAAAAAAAAAAAGAAMACgAAAAAAAAAIQAcACgAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAoAAAAAAAgRAAAwEIAAAAACgAAABQACAAyAAAAWQAIADIAAAAVAAwAMgAAAP////8GABQAMgAAAAAAgMMAAMBCAAAAABIAGAAyAAAAAACAwwAAwEIAAAAAFAAAABcACABGAAAA",
+    length: 70
+  },
+  {
+    id: 16,
+    base64: "AwAMAAAAAAAIAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAPBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAMAAAAAAIBCAADwQgAAAAAUAAAAFAAIABcAAAAVAAwAFwAAABQAAAAhABwAFwAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABcAAAABAAAABgAUABcAAAAAAIDAAACAwAAAAAAYAAwAFwAAAAAAAAAlABAAFwABABAnAAAAAAAAWQAIABcAAAAVAAwAFwAAABUAAAAhABwAFwAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABcAAAABAAAABgAUABcAAAAAAAAAAAAAAAAAAAAYAAwAFwAAAAAAAAAlABAAFwABABAnAAABAAAAWQAIABcAAAAVAAwAFwAAABcAAAASABgAFwAAAAAAAEIAAMBCAAAAABQAAABZAAgAFwAAABUADAAXAAAAGQAAABgADAAXAAAAAQAAAAYAFAAXAAAAAAAAAAAAAAAAAAAAGAAMABcAAAAAAAAAIQAcABcAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAXAAAAAAAgRAAAwEIAAAAAEgAYACEAAAAAAABCAADAQgAAAAAKAAAAFAAIACsAAABZAAgAKwAAABUADAArAAAAGAAAABgADAArAAAAAQAAAAYAFAArAAAAAAAAAAAAAAAAAAAAGAAMACsAAAAAAAAAIQAcACsAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAArAAAAAAAgRAAAwEIAAAAACgAAABQACAA1AAAAWQAIADUAAAAVAAwANQAAAP////8GABQANQAAAAAAgMMAAPBCAAAAABIAGAA1AAAAAACAwwAA8EIAAAAAFAAAABcACABJAAAA",
+    length: 73
+  },
+  {
+    id: 17,
+    base64: "AwAMAAAAAAAJAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAABBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAYAAAAAAIBCAAAQQwAAAAAUAAAAFAAIABoAAAAVAAwAGgAAABQAAAAhABwAGgAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABoAAAABAAAABgAUABoAAAAAAIDAAACAwAAAAAAYAAwAGgAAAAAAAAAlABAAGgABABAnAAAAAAAAWQAIABoAAAAVAAwAGgAAABUAAAAhABwAGgAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABoAAAABAAAABgAUABoAAAAAAAAAAAAAAAAAAAAYAAwAGgAAAAAAAAAlABAAGgABABAnAAABAAAAWQAIABoAAAAVAAwAGgAAABcAAAASABgAGgAAAAAAAEIAAMBCAAAAABQAAABZAAgAGgAAABUADAAaAAAAGQAAABgADAAaAAAAAQAAAAYAFAAaAAAAAAAAAAAAAAAAAAAAGAAMABoAAAAAAAAAIQAcABoAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAaAAAAAAAgRAAAwEIAAAAAEgAYACQAAAAAAABCAADAQgAAAAAKAAAAFAAIAC4AAABZAAgALgAAABUADAAuAAAAGAAAABgADAAuAAAAAQAAAAYAFAAuAAAAAAAAAAAAAAAAAAAAGAAMAC4AAAAAAAAAIQAcAC4AAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAuAAAAAAAgRAAAwEIAAAAACgAAABQACAA4AAAAWQAIADgAAAAVAAwAOAAAAP////8GABQAOAAAAAAAgMMAABBDAAAAABIAGAA4AAAAAACAwwAAEEMAAAAAFAAAABcACABMAAAA",
+    length: 76
+  },
+  {
+    id: 18,
+    base64: "AwAMAAAAAAAKAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAChDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAkAAAAAAIBCAAAoQwAAAAAUAAAAFAAIAB0AAAAVAAwAHQAAABQAAAAhABwAHQAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMAB0AAAABAAAABgAUAB0AAAAAAIDAAACAwAAAAAAYAAwAHQAAAAAAAAAlABAAHQABABAnAAAAAAAAWQAIAB0AAAAVAAwAHQAAABUAAAAhABwAHQAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMAB0AAAABAAAABgAUAB0AAAAAAAAAAAAAAAAAAAAYAAwAHQAAAAAAAAAlABAAHQABABAnAAABAAAAWQAIAB0AAAAVAAwAHQAAABcAAAASABgAHQAAAAAAAEIAAMBCAAAAABQAAABZAAgAHQAAABUADAAdAAAAGQAAABgADAAdAAAAAQAAAAYAFAAdAAAAAAAAAAAAAAAAAAAAGAAMAB0AAAAAAAAAIQAcAB0AAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAdAAAAAAAgRAAAwEIAAAAAEgAYACcAAAAAAABCAADAQgAAAAAKAAAAFAAIADEAAABZAAgAMQAAABUADAAxAAAAGAAAABgADAAxAAAAAQAAAAYAFAAxAAAAAAAAAAAAAAAAAAAAGAAMADEAAAAAAAAAIQAcADEAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAxAAAAAAAgRAAAwEIAAAAACgAAABQACAA7AAAAWQAIADsAAAAVAAwAOwAAAP////8GABQAOwAAAAAAgMMAAChDAAAAABIAGAA7AAAAAACAwwAAKEMAAAAAFAAAABcACABPAAAA",
+    length: 79
+  },
+  {
+    id: 19,
+    base64: "AwAMAAAAAAALAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAEBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAwAAAAAAIBCAABAQwAAAAAUAAAAFAAIACAAAAAVAAwAIAAAABQAAAAhABwAIAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACAAAAABAAAABgAUACAAAAAAAIDAAACAwAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAAAAAAAWQAIACAAAAAVAAwAIAAAABUAAAAhABwAIAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACAAAAABAAAABgAUACAAAAAAAAAAAAAAAAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAABAAAAWQAIACAAAAAVAAwAIAAAABcAAAASABgAIAAAAAAAAEIAAMBCAAAAABQAAABZAAgAIAAAABUADAAgAAAAGQAAABgADAAgAAAAAQAAAAYAFAAgAAAAAAAAAAAAAAAAAAAAGAAMACAAAAAAAAAAIQAcACAAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAgAAAAAAAgRAAAwEIAAAAAEgAYACoAAAAAAABCAADAQgAAAAAKAAAAFAAIADQAAABZAAgANAAAABUADAA0AAAAGAAAABgADAA0AAAAAQAAAAYAFAA0AAAAAAAAAAAAAAAAAAAAGAAMADQAAAAAAAAAIQAcADQAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA0AAAAAAAgRAAAwEIAAAAACgAAABQACAA+AAAAWQAIAD4AAAAVAAwAPgAAAP////8GABQAPgAAAAAAgMMAAEBDAAAAABIAGAA+AAAAAACAwwAAQEMAAAAAFAAAABcACABSAAAA",
+    length: 82
+  },
+  {
+    id: 20,
+    base64: "AwAMAAAAAAAMAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAFhDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAA8AAAAAAIBCAABYQwAAAAAUAAAAFAAIACMAAAAVAAwAIwAAABQAAAAhABwAIwAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACMAAAABAAAABgAUACMAAAAAAIDAAACAwAAAAAAYAAwAIwAAAAAAAAAlABAAIwABABAnAAAAAAAAWQAIACMAAAAVAAwAIwAAABUAAAAhABwAIwAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACMAAAABAAAABgAUACMAAAAAAAAAAAAAAAAAAAAYAAwAIwAAAAAAAAAlABAAIwABABAnAAABAAAAWQAIACMAAAAVAAwAIwAAABcAAAASABgAIwAAAAAAAEIAAMBCAAAAABQAAABZAAgAIwAAABUADAAjAAAAGQAAABgADAAjAAAAAQAAAAYAFAAjAAAAAAAAAAAAAAAAAAAAGAAMACMAAAAAAAAAIQAcACMAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAjAAAAAAAgRAAAwEIAAAAAEgAYAC0AAAAAAABCAADAQgAAAAAKAAAAFAAIADcAAABZAAgANwAAABUADAA3AAAAGAAAABgADAA3AAAAAQAAAAYAFAA3AAAAAAAAAAAAAAAAAAAAGAAMADcAAAAAAAAAIQAcADcAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA3AAAAAAAgRAAAwEIAAAAACgAAABQACABBAAAAWQAIAEEAAAAVAAwAQQAAAP////8GABQAQQAAAAAAgMMAAFhDAAAAABIAGABBAAAAAACAwwAAWEMAAAAAFAAAABcACABVAAAA",
+    length: 85
+  },
+  {
+    id: 21,
+    base64: "AwAMAAAAAAANAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAHBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABIAAAAAAIBCAABwQwAAAAAUAAAAFAAIACYAAAAVAAwAJgAAABQAAAAhABwAJgAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACYAAAABAAAABgAUACYAAAAAAIDAAACAwAAAAAAYAAwAJgAAAAAAAAAlABAAJgABABAnAAAAAAAAWQAIACYAAAAVAAwAJgAAABUAAAAhABwAJgAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACYAAAABAAAABgAUACYAAAAAAAAAAAAAAAAAAAAYAAwAJgAAAAAAAAAlABAAJgABABAnAAABAAAAWQAIACYAAAAVAAwAJgAAABcAAAASABgAJgAAAAAAAEIAAMBCAAAAABQAAABZAAgAJgAAABUADAAmAAAAGQAAABgADAAmAAAAAQAAAAYAFAAmAAAAAAAAAAAAAAAAAAAAGAAMACYAAAAAAAAAIQAcACYAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAmAAAAAAAgRAAAwEIAAAAAEgAYADAAAAAAAABCAADAQgAAAAAKAAAAFAAIADoAAABZAAgAOgAAABUADAA6AAAAGAAAABgADAA6AAAAAQAAAAYAFAA6AAAAAAAAAAAAAAAAAAAAGAAMADoAAAAAAAAAIQAcADoAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA6AAAAAAAgRAAAwEIAAAAACgAAABQACABEAAAAWQAIAEQAAAAVAAwARAAAAP////8GABQARAAAAAAAgMMAAHBDAAAAABIAGABEAAAAAACAwwAAcEMAAAAAFAAAABcACABYAAAA",
+    length: 88
+  },
+  {
+    id: 22,
+    base64: "AwAMAAAAAAAOAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAIRDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABUAAAAAAIBCAACEQwAAAAAUAAAAFAAIACkAAAAVAAwAKQAAABQAAAAhABwAKQAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACkAAAABAAAABgAUACkAAAAAAIDAAACAwAAAAAAYAAwAKQAAAAAAAAAlABAAKQABABAnAAAAAAAAWQAIACkAAAAVAAwAKQAAABUAAAAhABwAKQAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACkAAAABAAAABgAUACkAAAAAAAAAAAAAAAAAAAAYAAwAKQAAAAAAAAAlABAAKQABABAnAAABAAAAWQAIACkAAAAVAAwAKQAAABcAAAASABgAKQAAAAAAAEIAAMBCAAAAABQAAABZAAgAKQAAABUADAApAAAAGQAAABgADAApAAAAAQAAAAYAFAApAAAAAAAAAAAAAAAAAAAAGAAMACkAAAAAAAAAIQAcACkAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAApAAAAAAAgRAAAwEIAAAAAEgAYADMAAAAAAABCAADAQgAAAAAKAAAAFAAIAD0AAABZAAgAPQAAABUADAA9AAAAGAAAABgADAA9AAAAAQAAAAYAFAA9AAAAAAAAAAAAAAAAAAAAGAAMAD0AAAAAAAAAIQAcAD0AAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA9AAAAAAAgRAAAwEIAAAAACgAAABQACABHAAAAWQAIAEcAAAAVAAwARwAAAP////8GABQARwAAAAAAgMMAAIRDAAAAABIAGABHAAAAAACAwwAAhEMAAAAAFAAAABcACABbAAAA",
+    length: 91
+  },
+  {
+    id: 23,
+    base64: "AwAMAAAAAAAPAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAJBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABgAAAAAAIBCAACQQwAAAAAUAAAAFAAIACwAAAAVAAwALAAAABQAAAAhABwALAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACwAAAABAAAABgAUACwAAAAAAIDAAACAwAAAAAAYAAwALAAAAAAAAAAlABAALAABABAnAAAAAAAAWQAIACwAAAAVAAwALAAAABUAAAAhABwALAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACwAAAABAAAABgAUACwAAAAAAAAAAAAAAAAAAAAYAAwALAAAAAAAAAAlABAALAABABAnAAABAAAAWQAIACwAAAAVAAwALAAAABcAAAASABgALAAAAAAAAEIAAMBCAAAAABQAAABZAAgALAAAABUADAAsAAAAGQAAABgADAAsAAAAAQAAAAYAFAAsAAAAAAAAAAAAAAAAAAAAGAAMACwAAAAAAAAAIQAcACwAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAsAAAAAAAgRAAAwEIAAAAAEgAYADYAAAAAAABCAADAQgAAAAAKAAAAFAAIAEAAAABZAAgAQAAAABUADABAAAAAGAAAABgADABAAAAAAQAAAAYAFABAAAAAAAAAAAAAAAAAAAAAGAAMAEAAAAAAAAAAIQAcAEAAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABAAAAAAAAgRAAAwEIAAAAACgAAABQACABKAAAAWQAIAEoAAAAVAAwASgAAAP////8GABQASgAAAAAAgMMAAJBDAAAAABIAGABKAAAAAACAwwAAkEMAAAAAFAAAABcACABeAAAA",
+    length: 94
+  },
+  {
+    id: 24,
+    base64: "AwAMAAAAAAAQAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAJxDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABsAAAAAAIBCAACcQwAAAAAUAAAAFAAIAC8AAAAVAAwALwAAABQAAAAhABwALwAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMAC8AAAABAAAABgAUAC8AAAAAAIDAAACAwAAAAAAYAAwALwAAAAAAAAAlABAALwABABAnAAAAAAAAWQAIAC8AAAAVAAwALwAAABUAAAAhABwALwAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMAC8AAAABAAAABgAUAC8AAAAAAAAAAAAAAAAAAAAYAAwALwAAAAAAAAAlABAALwABABAnAAABAAAAWQAIAC8AAAAVAAwALwAAABcAAAASABgALwAAAAAAAEIAAMBCAAAAABQAAABZAAgALwAAABUADAAvAAAAGQAAABgADAAvAAAAAQAAAAYAFAAvAAAAAAAAAAAAAAAAAAAAGAAMAC8AAAAAAAAAIQAcAC8AAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAvAAAAAAAgRAAAwEIAAAAAEgAYADkAAAAAAABCAADAQgAAAAAKAAAAFAAIAEMAAABZAAgAQwAAABUADABDAAAAGAAAABgADABDAAAAAQAAAAYAFABDAAAAAAAAAAAAAAAAAAAAGAAMAEMAAAAAAAAAIQAcAEMAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABDAAAAAAAgRAAAwEIAAAAACgAAABQACABNAAAAWQAIAE0AAAAVAAwATQAAAP////8GABQATQAAAAAAgMMAAJxDAAAAABIAGABNAAAAAACAwwAAnEMAAAAAFAAAABcACABhAAAA",
+    length: 97
+  },
+  {
+    id: 25,
+    base64: "AwAMAAAAAAARAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAKhDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAB4AAAAAAIBCAACoQwAAAAAUAAAAFAAIADIAAAAVAAwAMgAAABQAAAAhABwAMgAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMADIAAAABAAAABgAUADIAAAAAAIDAAACAwAAAAAAYAAwAMgAAAAAAAAAlABAAMgABABAnAAAAAAAAWQAIADIAAAAVAAwAMgAAABUAAAAhABwAMgAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMADIAAAABAAAABgAUADIAAAAAAAAAAAAAAAAAAAAYAAwAMgAAAAAAAAAlABAAMgABABAnAAABAAAAWQAIADIAAAAVAAwAMgAAABcAAAASABgAMgAAAAAAAEIAAMBCAAAAABQAAABZAAgAMgAAABUADAAyAAAAGQAAABgADAAyAAAAAQAAAAYAFAAyAAAAAAAAAAAAAAAAAAAAGAAMADIAAAAAAAAAIQAcADIAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAyAAAAAAAgRAAAwEIAAAAAEgAYADwAAAAAAABCAADAQgAAAAAKAAAAFAAIAEYAAABZAAgARgAAABUADABGAAAAGAAAABgADABGAAAAAQAAAAYAFABGAAAAAAAAAAAAAAAAAAAAGAAMAEYAAAAAAAAAIQAcAEYAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABGAAAAAAAgRAAAwEIAAAAACgAAABQACABQAAAAWQAIAFAAAAAVAAwAUAAAAP////8GABQAUAAAAAAAgMMAAKhDAAAAABIAGABQAAAAAACAwwAAqEMAAAAAFAAAABcACABkAAAA",
+    length: 100
+  },
+  {
+    id: 26,
+    base64: "AwAMAAAAAAASAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAALRDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYACEAAAAAAIBCAAC0QwAAAAAUAAAAFAAIADUAAAAVAAwANQAAABQAAAAhABwANQAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMADUAAAABAAAABgAUADUAAAAAAIDAAACAwAAAAAAYAAwANQAAAAAAAAAlABAANQABABAnAAAAAAAAWQAIADUAAAAVAAwANQAAABUAAAAhABwANQAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMADUAAAABAAAABgAUADUAAAAAAAAAAAAAAAAAAAAYAAwANQAAAAAAAAAlABAANQABABAnAAABAAAAWQAIADUAAAAVAAwANQAAABcAAAASABgANQAAAAAAAEIAAMBCAAAAABQAAABZAAgANQAAABUADAA1AAAAGQAAABgADAA1AAAAAQAAAAYAFAA1AAAAAAAAAAAAAAAAAAAAGAAMADUAAAAAAAAAIQAcADUAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAA1AAAAAAAgRAAAwEIAAAAAEgAYAD8AAAAAAABCAADAQgAAAAAKAAAAFAAIAEkAAABZAAgASQAAABUADABJAAAAGAAAABgADABJAAAAAQAAAAYAFABJAAAAAAAAAAAAAAAAAAAAGAAMAEkAAAAAAAAAIQAcAEkAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABJAAAAAAAgRAAAwEIAAAAACgAAABQACABTAAAAWQAIAFMAAAAVAAwAUwAAAP////8GABQAUwAAAAAAgMMAALRDAAAAABIAGABTAAAAAACAwwAAtEMAAAAAFAAAABcACABnAAAA",
+    length: 103
+  },
+  {
+    id: 27,
+    base64: "AwAMAAAAAAAHAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAPBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAMAAAAAAIBCAADwQgAAAAAUAAAAFAAIABcAAAAVAAwAFwAAABQAAAAhABwAFwAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABcAAAABAAAABgAUABcAAAAAAIDAAACAwAAAAAAYAAwAFwAAAAAAAAAlABAAFwABABAnAAAAAAAAWQAIABcAAAAVAAwAFwAAABUAAAAhABwAFwAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABcAAAABAAAABgAUABcAAAAAAAAAAAAAAAAAAAAYAAwAFwAAAAAAAAAlABAAFwABABAnAAABAAAAWQAIABcAAAAVAAwAFwAAABcAAAASABgAFwAAAAAAAEIAAMBCAAAAABQAAABZAAgAFwAAABUADAAXAAAAGQAAABgADAAXAAAAAQAAAAYAFAAXAAAAAAAAAAAAAAAAAAAAGAAMABcAAAAAAAAAIQAcABcAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAXAAAAAAAgRAAAwEIAAAAAEgAYACEAAAAAAABCAADAQgAAAAAKAAAAFAAIACsAAABZAAgAKwAAABUADAArAAAAGAAAABgADAArAAAAAQAAAAYAFAArAAAAAAAAAAAAAAAAAAAAGAAMACsAAAAAAAAAIQAcACsAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAArAAAAAAAgRAAAwEIAAAAACgAAABQACAA1AAAAWQAIADUAAAAVAAwANQAAAP////8GABQANQAAAAAAgMMAAPBCAAAAABIAGAA1AAAAAACAwwAA8EIAAAAAFAAAABcACABJAAAA",
+    length: 73
+  },
+  {
+    id: 28,
+    base64: "AwAMAAAAAAAIAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAABBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAYAAAAAAIBCAAAQQwAAAAAUAAAAFAAIABoAAAAVAAwAGgAAABQAAAAhABwAGgAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABoAAAABAAAABgAUABoAAAAAAIDAAACAwAAAAAAYAAwAGgAAAAAAAAAlABAAGgABABAnAAAAAAAAWQAIABoAAAAVAAwAGgAAABUAAAAhABwAGgAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABoAAAABAAAABgAUABoAAAAAAAAAAAAAAAAAAAAYAAwAGgAAAAAAAAAlABAAGgABABAnAAABAAAAWQAIABoAAAAVAAwAGgAAABcAAAASABgAGgAAAAAAAEIAAMBCAAAAABQAAABZAAgAGgAAABUADAAaAAAAGQAAABgADAAaAAAAAQAAAAYAFAAaAAAAAAAAAAAAAAAAAAAAGAAMABoAAAAAAAAAIQAcABoAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAaAAAAAAAgRAAAwEIAAAAAEgAYACQAAAAAAABCAADAQgAAAAAKAAAAFAAIAC4AAABZAAgALgAAABUADAAuAAAAGAAAABgADAAuAAAAAQAAAAYAFAAuAAAAAAAAAAAAAAAAAAAAGAAMAC4AAAAAAAAAIQAcAC4AAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAuAAAAAAAgRAAAwEIAAAAACgAAABQACAA4AAAAWQAIADgAAAAVAAwAOAAAAP////8GABQAOAAAAAAAgMMAABBDAAAAABIAGAA4AAAAAACAwwAAEEMAAAAAFAAAABcACABMAAAA",
+    length: 76
+  },
+  {
+    id: 29,
+    base64: "AwAMAAAAAAAJAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAChDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAkAAAAAAIBCAAAoQwAAAAAUAAAAFAAIAB0AAAAVAAwAHQAAABQAAAAhABwAHQAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMAB0AAAABAAAABgAUAB0AAAAAAIDAAACAwAAAAAAYAAwAHQAAAAAAAAAlABAAHQABABAnAAAAAAAAWQAIAB0AAAAVAAwAHQAAABUAAAAhABwAHQAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMAB0AAAABAAAABgAUAB0AAAAAAAAAAAAAAAAAAAAYAAwAHQAAAAAAAAAlABAAHQABABAnAAABAAAAWQAIAB0AAAAVAAwAHQAAABcAAAASABgAHQAAAAAAAEIAAMBCAAAAABQAAABZAAgAHQAAABUADAAdAAAAGQAAABgADAAdAAAAAQAAAAYAFAAdAAAAAAAAAAAAAAAAAAAAGAAMAB0AAAAAAAAAIQAcAB0AAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAdAAAAAAAgRAAAwEIAAAAAEgAYACcAAAAAAABCAADAQgAAAAAKAAAAFAAIADEAAABZAAgAMQAAABUADAAxAAAAGAAAABgADAAxAAAAAQAAAAYAFAAxAAAAAAAAAAAAAAAAAAAAGAAMADEAAAAAAAAAIQAcADEAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAxAAAAAAAgRAAAwEIAAAAACgAAABQACAA7AAAAWQAIADsAAAAVAAwAOwAAAP////8GABQAOwAAAAAAgMMAAChDAAAAABIAGAA7AAAAAACAwwAAKEMAAAAAFAAAABcACABPAAAA",
+    length: 79
+  },
+  {
+    id: 30,
+    base64: "AwAMAAAAAAAKAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAEBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAwAAAAAAIBCAABAQwAAAAAUAAAAFAAIACAAAAAVAAwAIAAAABQAAAAhABwAIAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACAAAAABAAAABgAUACAAAAAAAIDAAACAwAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAAAAAAAWQAIACAAAAAVAAwAIAAAABUAAAAhABwAIAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACAAAAABAAAABgAUACAAAAAAAAAAAAAAAAAAAAAYAAwAIAAAAAAAAAAlABAAIAABABAnAAABAAAAWQAIACAAAAAVAAwAIAAAABcAAAASABgAIAAAAAAAAEIAAMBCAAAAABQAAABZAAgAIAAAABUADAAgAAAAGQAAABgADAAgAAAAAQAAAAYAFAAgAAAAAAAAAAAAAAAAAAAAGAAMACAAAAAAAAAAIQAcACAAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAgAAAAAAAgRAAAwEIAAAAAEgAYACoAAAAAAABCAADAQgAAAAAKAAAAFAAIADQAAABZAAgANAAAABUADAA0AAAAGAAAABgADAA0AAAAAQAAAAYAFAA0AAAAAAAAAAAAAAAAAAAAGAAMADQAAAAAAAAAIQAcADQAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA0AAAAAAAgRAAAwEIAAAAACgAAABQACAA+AAAAWQAIAD4AAAAVAAwAPgAAAP////8GABQAPgAAAAAAgMMAAEBDAAAAABIAGAA+AAAAAACAwwAAQEMAAAAAFAAAABcACABSAAAA",
+    length: 82
+  },
+  {
+    id: 31,
+    base64: "AwAMAAAAAAALAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAFhDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAA8AAAAAAIBCAABYQwAAAAAUAAAAFAAIACMAAAAVAAwAIwAAABQAAAAhABwAIwAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACMAAAABAAAABgAUACMAAAAAAIDAAACAwAAAAAAYAAwAIwAAAAAAAAAlABAAIwABABAnAAAAAAAAWQAIACMAAAAVAAwAIwAAABUAAAAhABwAIwAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACMAAAABAAAABgAUACMAAAAAAAAAAAAAAAAAAAAYAAwAIwAAAAAAAAAlABAAIwABABAnAAABAAAAWQAIACMAAAAVAAwAIwAAABcAAAASABgAIwAAAAAAAEIAAMBCAAAAABQAAABZAAgAIwAAABUADAAjAAAAGQAAABgADAAjAAAAAQAAAAYAFAAjAAAAAAAAAAAAAAAAAAAAGAAMACMAAAAAAAAAIQAcACMAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAjAAAAAAAgRAAAwEIAAAAAEgAYAC0AAAAAAABCAADAQgAAAAAKAAAAFAAIADcAAABZAAgANwAAABUADAA3AAAAGAAAABgADAA3AAAAAQAAAAYAFAA3AAAAAAAAAAAAAAAAAAAAGAAMADcAAAAAAAAAIQAcADcAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA3AAAAAAAgRAAAwEIAAAAACgAAABQACABBAAAAWQAIAEEAAAAVAAwAQQAAAP////8GABQAQQAAAAAAgMMAAFhDAAAAABIAGABBAAAAAACAwwAAWEMAAAAAFAAAABcACABVAAAA",
+    length: 85
+  },
+  {
+    id: 32,
+    base64: "AwAMAAAAAAAMAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAHBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABIAAAAAAIBCAABwQwAAAAAUAAAAFAAIACYAAAAVAAwAJgAAABQAAAAhABwAJgAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACYAAAABAAAABgAUACYAAAAAAIDAAACAwAAAAAAYAAwAJgAAAAAAAAAlABAAJgABABAnAAAAAAAAWQAIACYAAAAVAAwAJgAAABUAAAAhABwAJgAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACYAAAABAAAABgAUACYAAAAAAAAAAAAAAAAAAAAYAAwAJgAAAAAAAAAlABAAJgABABAnAAABAAAAWQAIACYAAAAVAAwAJgAAABcAAAASABgAJgAAAAAAAEIAAMBCAAAAABQAAABZAAgAJgAAABUADAAmAAAAGQAAABgADAAmAAAAAQAAAAYAFAAmAAAAAAAAAAAAAAAAAAAAGAAMACYAAAAAAAAAIQAcACYAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAmAAAAAAAgRAAAwEIAAAAAEgAYADAAAAAAAABCAADAQgAAAAAKAAAAFAAIADoAAABZAAgAOgAAABUADAA6AAAAGAAAABgADAA6AAAAAQAAAAYAFAA6AAAAAAAAAAAAAAAAAAAAGAAMADoAAAAAAAAAIQAcADoAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA6AAAAAAAgRAAAwEIAAAAACgAAABQACABEAAAAWQAIAEQAAAAVAAwARAAAAP////8GABQARAAAAAAAgMMAAHBDAAAAABIAGABEAAAAAACAwwAAcEMAAAAAFAAAABcACABYAAAA",
+    length: 88
+  },
+  {
+    id: 33,
+    base64: "AwAMAAAAAAANAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAIRDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABUAAAAAAIBCAACEQwAAAAAUAAAAFAAIACkAAAAVAAwAKQAAABQAAAAhABwAKQAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACkAAAABAAAABgAUACkAAAAAAIDAAACAwAAAAAAYAAwAKQAAAAAAAAAlABAAKQABABAnAAAAAAAAWQAIACkAAAAVAAwAKQAAABUAAAAhABwAKQAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACkAAAABAAAABgAUACkAAAAAAAAAAAAAAAAAAAAYAAwAKQAAAAAAAAAlABAAKQABABAnAAABAAAAWQAIACkAAAAVAAwAKQAAABcAAAASABgAKQAAAAAAAEIAAMBCAAAAABQAAABZAAgAKQAAABUADAApAAAAGQAAABgADAApAAAAAQAAAAYAFAApAAAAAAAAAAAAAAAAAAAAGAAMACkAAAAAAAAAIQAcACkAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAApAAAAAAAgRAAAwEIAAAAAEgAYADMAAAAAAABCAADAQgAAAAAKAAAAFAAIAD0AAABZAAgAPQAAABUADAA9AAAAGAAAABgADAA9AAAAAQAAAAYAFAA9AAAAAAAAAAAAAAAAAAAAGAAMAD0AAAAAAAAAIQAcAD0AAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAA9AAAAAAAgRAAAwEIAAAAACgAAABQACABHAAAAWQAIAEcAAAAVAAwARwAAAP////8GABQARwAAAAAAgMMAAIRDAAAAABIAGABHAAAAAACAwwAAhEMAAAAAFAAAABcACABbAAAA",
+    length: 91
+  },
+  {
+    id: 34,
+    base64: "AwAMAAAAAAAOAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAJBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABgAAAAAAIBCAACQQwAAAAAUAAAAFAAIACwAAAAVAAwALAAAABQAAAAhABwALAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMACwAAAABAAAABgAUACwAAAAAAIDAAACAwAAAAAAYAAwALAAAAAAAAAAlABAALAABABAnAAAAAAAAWQAIACwAAAAVAAwALAAAABUAAAAhABwALAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMACwAAAABAAAABgAUACwAAAAAAAAAAAAAAAAAAAAYAAwALAAAAAAAAAAlABAALAABABAnAAABAAAAWQAIACwAAAAVAAwALAAAABcAAAASABgALAAAAAAAAEIAAMBCAAAAABQAAABZAAgALAAAABUADAAsAAAAGQAAABgADAAsAAAAAQAAAAYAFAAsAAAAAAAAAAAAAAAAAAAAGAAMACwAAAAAAAAAIQAcACwAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAsAAAAAAAgRAAAwEIAAAAAEgAYADYAAAAAAABCAADAQgAAAAAKAAAAFAAIAEAAAABZAAgAQAAAABUADABAAAAAGAAAABgADABAAAAAAQAAAAYAFABAAAAAAAAAAAAAAAAAAAAAGAAMAEAAAAAAAAAAIQAcAEAAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABAAAAAAAAgRAAAwEIAAAAACgAAABQACABKAAAAWQAIAEoAAAAVAAwASgAAAP////8GABQASgAAAAAAgMMAAJBDAAAAABIAGABKAAAAAACAwwAAkEMAAAAAFAAAABcACABeAAAA",
+    length: 94
+  },
+  {
+    id: 35,
+    base64: "AwAMAAAAAAAPAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAJxDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYABsAAAAAAIBCAACcQwAAAAAUAAAAFAAIAC8AAAAVAAwALwAAABQAAAAhABwALwAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMAC8AAAABAAAABgAUAC8AAAAAAIDAAACAwAAAAAAYAAwALwAAAAAAAAAlABAALwABABAnAAAAAAAAWQAIAC8AAAAVAAwALwAAABUAAAAhABwALwAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMAC8AAAABAAAABgAUAC8AAAAAAAAAAAAAAAAAAAAYAAwALwAAAAAAAAAlABAALwABABAnAAABAAAAWQAIAC8AAAAVAAwALwAAABcAAAASABgALwAAAAAAAEIAAMBCAAAAABQAAABZAAgALwAAABUADAAvAAAAGQAAABgADAAvAAAAAQAAAAYAFAAvAAAAAAAAAAAAAAAAAAAAGAAMAC8AAAAAAAAAIQAcAC8AAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAvAAAAAAAgRAAAwEIAAAAAEgAYADkAAAAAAABCAADAQgAAAAAKAAAAFAAIAEMAAABZAAgAQwAAABUADABDAAAAGAAAABgADABDAAAAAQAAAAYAFABDAAAAAAAAAAAAAAAAAAAAGAAMAEMAAAAAAAAAIQAcAEMAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABDAAAAAAAgRAAAwEIAAAAACgAAABQACABNAAAAWQAIAE0AAAAVAAwATQAAAP////8GABQATQAAAAAAgMMAAJxDAAAAABIAGABNAAAAAACAwwAAnEMAAAAAFAAAABcACABhAAAA",
+    length: 97
+  },
+  {
+    id: 36,
+    base64: "AwAMAAAAAAAQAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAKhDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAB4AAAAAAIBCAACoQwAAAAAUAAAAFAAIADIAAAAVAAwAMgAAABQAAAAhABwAMgAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMADIAAAABAAAABgAUADIAAAAAAIDAAACAwAAAAAAYAAwAMgAAAAAAAAAlABAAMgABABAnAAAAAAAAWQAIADIAAAAVAAwAMgAAABUAAAAhABwAMgAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMADIAAAABAAAABgAUADIAAAAAAAAAAAAAAAAAAAAYAAwAMgAAAAAAAAAlABAAMgABABAnAAABAAAAWQAIADIAAAAVAAwAMgAAABcAAAASABgAMgAAAAAAAEIAAMBCAAAAABQAAABZAAgAMgAAABUADAAyAAAAGQAAABgADAAyAAAAAQAAAAYAFAAyAAAAAAAAAAAAAAAAAAAAGAAMADIAAAAAAAAAIQAcADIAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAyAAAAAAAgRAAAwEIAAAAAEgAYADwAAAAAAABCAADAQgAAAAAKAAAAFAAIAEYAAABZAAgARgAAABUADABGAAAAGAAAABgADABGAAAAAQAAAAYAFABGAAAAAAAAAAAAAAAAAAAAGAAMAEYAAAAAAAAAIQAcAEYAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABGAAAAAAAgRAAAwEIAAAAACgAAABQACABQAAAAWQAIAFAAAAAVAAwAUAAAAP////8GABQAUAAAAAAAgMMAAKhDAAAAABIAGABQAAAAAACAwwAAqEMAAAAAFAAAABcACABkAAAA",
+    length: 100
+  },
+  {
+    id: 37,
+    base64: "AwAMAAAAAAARAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAALRDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYACEAAAAAAIBCAAC0QwAAAAAUAAAAFAAIADUAAAAVAAwANQAAABQAAAAhABwANQAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMADUAAAABAAAABgAUADUAAAAAAIDAAACAwAAAAAAYAAwANQAAAAAAAAAlABAANQABABAnAAAAAAAAWQAIADUAAAAVAAwANQAAABUAAAAhABwANQAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMADUAAAABAAAABgAUADUAAAAAAAAAAAAAAAAAAAAYAAwANQAAAAAAAAAlABAANQABABAnAAABAAAAWQAIADUAAAAVAAwANQAAABcAAAASABgANQAAAAAAAEIAAMBCAAAAABQAAABZAAgANQAAABUADAA1AAAAGQAAABgADAA1AAAAAQAAAAYAFAA1AAAAAAAAAAAAAAAAAAAAGAAMADUAAAAAAAAAIQAcADUAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAA1AAAAAAAgRAAAwEIAAAAAEgAYAD8AAAAAAABCAADAQgAAAAAKAAAAFAAIAEkAAABZAAgASQAAABUADABJAAAAGAAAABgADABJAAAAAQAAAAYAFABJAAAAAAAAAAAAAAAAAAAAGAAMAEkAAAAAAAAAIQAcAEkAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABJAAAAAAAgRAAAwEIAAAAACgAAABQACABTAAAAWQAIAFMAAAAVAAwAUwAAAP////8GABQAUwAAAAAAgMMAALRDAAAAABIAGABTAAAAAACAwwAAtEMAAAAAFAAAABcACABnAAAA",
+    length: 103
+  },
+  {
+    id: 38,
+    base64: "AwAMAAAAAAASAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAMBDAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYACQAAAAAAIBCAADAQwAAAAAUAAAAFAAIADgAAAAVAAwAOAAAABQAAAAhABwAOAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMADgAAAABAAAABgAUADgAAAAAAIDAAACAwAAAAAAYAAwAOAAAAAAAAAAlABAAOAABABAnAAAAAAAAWQAIADgAAAAVAAwAOAAAABUAAAAhABwAOAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMADgAAAABAAAABgAUADgAAAAAAAAAAAAAAAAAAAAYAAwAOAAAAAAAAAAlABAAOAABABAnAAABAAAAWQAIADgAAAAVAAwAOAAAABcAAAASABgAOAAAAAAAAEIAAMBCAAAAABQAAABZAAgAOAAAABUADAA4AAAAGQAAABgADAA4AAAAAQAAAAYAFAA4AAAAAAAAAAAAAAAAAAAAGAAMADgAAAAAAAAAIQAcADgAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAA4AAAAAAAgRAAAwEIAAAAAEgAYAEIAAAAAAABCAADAQgAAAAAKAAAAFAAIAEwAAABZAAgATAAAABUADABMAAAAGAAAABgADABMAAAAAQAAAAYAFABMAAAAAAAAAAAAAAAAAAAAGAAMAEwAAAAAAAAAIQAcAEwAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGABMAAAAAAAgRAAAwEIAAAAACgAAABQACABWAAAAWQAIAFYAAAAVAAwAVgAAAP////8GABQAVgAAAAAAgMMAAMBDAAAAABIAGABWAAAAAACAwwAAwEMAAAAAFAAAABcACABqAAAA",
+    length: 106
+  },
+  {
+    id: 39,
+    base64: "AwAMAAAAAAATAAAAFgAIAAAAAAAGABQAAAAAAAAAgMMAAMBCAAAAABcACAAAAAAAFQAMAAAAAAAWAAAAEgAYAAAAAAAAAIBCAADAQgAAAAAUAAAAFAAIABQAAAAVAAwAFAAAABQAAAAhABwAFAAAAAQAAAAAAAAA/wAAAP8AAAD/AAAAGAAMABQAAAABAAAABgAUABQAAAAAAIDAAACAwAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAAAAAAAWQAIABQAAAAVAAwAFAAAABUAAAAhABwAFAAAAAQAAAAAAAAAgAAAAIAAAACAAAAAGAAMABQAAAABAAAABgAUABQAAAAAAAAAAAAAAAAAAAAYAAwAFAAAAAAAAAAlABAAFAABABAnAAABAAAAWQAIABQAAAAVAAwAFAAAABcAAAASABgAFAAAAAAAAEIAAMBCAAAAABQAAABZAAgAFAAAABUADAAUAAAAGQAAABgADAAUAAAAAQAAAAYAFAAUAAAAAAAAAAAAAAAAAAAAGAAMABQAAAAAAAAAIQAcABQAAAAIAAAAAAAAAP8AAAD/AAAA/wAAAAYAFAAUAAAAAAAgRAAAwEIAAAAAEgAYAB4AAAAAAABCAADAQgAAAAAKAAAAFAAIACgAAABZAAgAKAAAABUADAAoAAAAGAAAABgADAAoAAAAAQAAAAYAFAAoAAAAAAAAAAAAAAAAAAAAGAAMACgAAAAAAAAAIQAcACgAAAAIAAAAAAAAAIAAAACAAAAAgAAAABIAGAAoAAAAAAAgRAAAwEIAAAAACgAAABQACAAyAAAAWQAIADIAAAAVAAwAMgAAAP////8GABQAMgAAAAAAgMMAAMBCAAAAABIAGAAyAAAAAACAwwAAwEIAAAAAFAAAABcACABGAAAA",
+    length: 70
+  },
+  {
+    id: 40,
+    base64: "AwAMAAAAAAAWAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAOBCAAAAABcACAAAAAAAFQAMAAAAAAADAAAAFQAMAAAAAAAEAAAAFQAMAAAAAAAFAAAAFQAMAAAAAAAGAAAAFQAMAAAAAAAHAAAAFQAMAAAAAAAIAAAAFQAMAAAAAAAKAAAAHAAMAAAAAAAAAAAAEgAYAAAAAAAAACBEAADgQgAAAAAKAAAAEgAYAAoAAAAAAABCAADgQgAAAAAKAAAAFAAIABQAAAAVAAwAFAAAAP////8cAAwAFAAAAAAAAAASABgAFAAAAAAAIEQAAOBCAAAAAAoAAAAXAAgAKAAAAA==",
+    length: 40
+  },
+  {
+    id: 41,
+    base64: "AwAMAAAAAAAZAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAIBCAAAAABcACAAAAAAAFQAMAAAAAAADAAAAEgAYAAAAAAAAAEBCAACAQgAAAAAUAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAIEQAAIBCAAAAABQAAAAXAAgAeAAAAA==",
+    length: 120
+  },
+  {
+    id: 42,
+    base64: "AwAMAAAAAAAaAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAEAAAAEgAYAAAAAAAAAEBCAACAQgAAAAAUAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAIEQAAIBCAAAAABQAAAAXAAgAeAAAAA==",
+    length: 120
+  },
+  {
+    id: 43,
+    base64: "AwAMAAAAAAAbAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAFAAAAEgAYAAAAAAAAAEBCAACAQgAAAAAUAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAIEQAAIBCAAAAABQAAAAXAAgAeAAAAA==",
+    length: 120
+  },
+  {
+    id: 44,
+    base64: "AwAMAAAAAAAcAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAGAAAAEgAYAAAAAAAAAEBCAACAQgAAAAAUAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAIEQAAIBCAAAAABQAAAAXAAgAeAAAAA==",
+    length: 120
+  },
+  {
+    id: 45,
+    base64: "AwAMAAAAAAAdAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAHAAAAEgAYAAAAAAAAAEBCAACAQgAAAAAUAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAIEQAAIBCAAAAABQAAAAXAAgAUAAAAA==",
+    length: 80
+  },
+  {
+    id: 46,
+    base64: "AwAMAAAAAAAeAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAIAAAAEgAYAAAAAAAAAEBCAACAQgAAAAAUAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAIEQAAIBCAAAAABQAAAAXAAgAUAAAAA==",
+    length: 80
+  },
+  {
+    id: 47,
+    base64: "AwAMAAAAAAAfAAAAFgAIAAAAAAAGABQAAAAAAAAAIEQAAIBCAAAAABcACAAAAAAAFQAMAAAAAAAKAAAAEgAYAAAAAAAAAEBCAACAQgAAAAAUAAAAFAAIABQAAAAVAAwAFAAAAP////8SABgAFAAAAAAAIEQAAIBCAAAAABQAAAAXAAgAKAAAAA==",
+    length: 40
+  },
+  {
+    id: 48,
+    base64: "AwAMAAAAAAAlAAAAFgAIAAAAAAAGABQAAAAAAAAAQEIAAEDCAAAAABcACAAAAAAAFQAMAAAAAAAUAAAAEgAYAAAAAAAAAEBCAAAAQgAAAAA8AAAAFAAIADwAAAAVAAwAPAAAAAMAAAAVAAwAPAAAAAQAAAAVAAwAPAAAAAUAAAAVAAwAPAAAAAYAAAAVAAwAPAAAAAcAAAAVAAwAPAAAAAoAAAASABgAPAAAAAAAQEIAAEBBAAAAADwAAAAUAAgAeAAAABUADAB4AAAA/////xIAGAB4AAAAAABAQgAAQMIAAAAAPAAAABcACAC0AAAA",
+    length: 180
+  },
+  {
+    id: 49,
+    base64: "AwAMAAAAAAAhAAAABgAUAAAAAAAAAKBDAABAQwAAAAAIAAwAAAAAAAAAAAAXAAgAAAAAABUADAAAAAAACwAAAAYAFAAAAAAAAACgQwAAQEMAAAAADwAQAAAAAAD/AAAACgAAABQACAAeAAAAFQAMAB4AAAAOAAAAFQAMAB4AAAAPAAAAFQAMAB4AAAATAAAADwAQAB4AAABAAAAAHgAAABQACAA8AAAAFQAMADwAAAD/////DwAQADwAAAAAAAAACgAAABcACAB4AAAA",
+    length: 120
+  },
+  {
+    id: 50,
+    base64: "AwAMAAAAAAAiAAAABgAUAAAAAAAAAJBDAACAQwAAAAAIAAwAAAAAAAAAAAAXAAgAAAAAABUADAAAAAAACwAAAAYAFAAAAAAAAACQQwAAgEMAAAAADwAQAAAAAAD/AAAACgAAABQACAAeAAAAFQAMAB4AAAANAAAABgAUAB4AAAAAAJBDAABwQwAAAAAPABAAHgAAAP8AAAAKAAAAFAAIADwAAAAVAAwAPAAAAP////8PABAAPAAAAAAAAAAKAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 51,
+    base64: "AwAMAAAAAAAjAAAABgAUAAAAAAAAALBDAACAQwAAAAAIAAwAAAAAAAAAAAAXAAgAAAAAABUADAAAAAAACwAAAAYAFAAAAAAAAACwQwAAgEMAAAAADwAQAAAAAAD/AAAACgAAABQACAAeAAAAFQAMAB4AAAANAAAABgAUAB4AAAAAALBDAABwQwAAAAAPABAAHgAAAP8AAAAKAAAAFAAIADwAAAAVAAwAPAAAAP////8PABAAPAAAAAAAAAAKAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 52,
+    base64: "AwAMAAAAAAAkAAAABgAUAAAAAAAAAKBDAACAQwAAAAAIAAwAAAAAAAAAAAAXAAgAAAAAABUADAAAAAAADgAAAA8AEAAAAAAA/wAAAAoAAAAUAAgAHgAAABUADAAeAAAA/////w8AEAAeAAAAAAAAAAoAAAAXAAgAWgAAAA==",
+    length: 90
+  },
+  {
+    id: 53,
+    base64: "AwAMAAAAAAAnAAAABgAUAAAAAAAAAKBDAACAQwAAAAAIAAwAAAAAAAAAAAAXAAgAAAAAABUADAAAAAAAEwAAAA8AEAAAAAAA/wAAAAoAAAAUAAgAHgAAABUADAAeAAAA/////w8AEAAeAAAAAAAAAAoAAAAXAAgAWgAAAA==",
+    length: 90
+  },
+  {
+    id: 54,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAKBDAABQQwAAAAAIAAwAAAAAAAAAAAAXAAgAAAAAABUADAAAAAAADQAAAA8AEAAAAAAA/wAAAAoAAAAUAAgAHgAAABUADAAeAAAA/////w8AEAAeAAAAAAAAAAoAAAAXAAgAWgAAAA==",
+    length: 90
+  },
+  {
+    id: 55,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAAEMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAD/////EgAYAB4AAAAAAMBBAAAAwgAAAAAeAAAADwAQAB4AAAAAAAAACgAAABcACABaAAAA",
+    length: 90
+  },
+  {
+    id: 56,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAIEMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 57,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAMUMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 58,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAQkMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 59,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAU0MAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 60,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAZEMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 61,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAdUMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 62,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAg0MAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 63,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQCAi0MAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 64,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAlEMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 65,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQCAnEMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 66,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAApUMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 67,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQCArUMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 68,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAtkMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 69,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQCAvkMAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 70,
+    base64: "AwAMAAAAAAAmAAAABgAUAAAAAAAAAMBBAAAAwgAAAAAXAAgAAAAAABUADAAAAAAADAAAABIAGAAAAAAAAADAQQAAx0MAAAAAHgAAABQACAAeAAAAFQAMAB4AAAAQAAAAEgAYAB4AAAAAAMBBAAAgQwAAAAAeAAAAFAAIADwAAAAVAAwAPAAAAP////8SABgAPAAAAAAAwEEAAADCAAAAAB4AAAAPABAAPAAAAAAAAAAeAAAAFwAIAHgAAAA=",
+    length: 120
+  },
+  {
+    id: 71,
+    base64: "AwAMAAAAAAAoAAAAFgAIAAAAAAAIAAwAAAAAAAAAAAAXAAgAAAAAABUADAAAAAAAEgAAAAYAFAAAAAAAAABAQgAAwEIAAAAACAAMAAAAAAAAAAAADwAQAAAAAAD/AAAAHgAAABQACAAeAAAAFQAMAB4AAAD/////DwAQAB4AAAAAAAAAHgAAABcACAA8AAAA",
+    length: 60
+  }
+], Vi = {
+  EXITING: 2,
+  /** Drives the stats panel in; `CheckConfirmButton` holds it for 30 frames. */
+  PLAYER_RESULTS_SHOW: 18
+}, Wi = {
+  /** Interrupt 18 is re-asserted while `frameTimer <= 30`. */
+  showHoldFrames: 30,
+  /** First frame on which the confirm button is read. */
+  confirmAfterFrames: 90
+}, Ct = {
+  textOffsetX: 210,
+  textOffsetY: 32,
+  rowPitch: 22,
+  /**
+   * Retail `spaceWidth`, the advance of one ASCII cell. `AsciiManager.cpp:275`
+   * initialises it to 13 and the settlement screen never changes it, so the four
+   * leading spaces of a percentage row are 52 pixels, not a guess.
+   */
+  spaceWidth: 13
+}, Ki = {
+  easy: "      Easy",
+  normal: "    Normal",
+  hard: "      Hard",
+  lunatic: "   Lunatic",
+  extra: "     Extra"
+}, bc = 195559;
+function MA(s) {
+  const A = String(Math.max(0, Math.floor(s)));
+  return A.length >= 9 ? A.slice(-9) : A.padStart(9, " ");
+}
+function Xi(s) {
+  return "    " + s.toFixed(2) + "%";
+}
+function Ic(s) {
+  if (s.fullCompletion) return 100;
+  const A = s.playFrames / bc;
+  return Math.min(A, 0.99) * 100;
+}
+function Mc(s) {
+  let A = (s - 0.5) * 2;
+  return A < 0 ? A = 0 : A >= 1 && (A = 1), (1 - A) * 100;
+}
+function xc(s) {
+  const A = String(Math.min(9, Math.max(0, Math.floor(s.retries)))), t = s.fullCompletion ? "      100%" : Xi(Ic(s));
+  return [
+    MA(s.score) + A,
+    Ki[s.difficulty] ?? Ki.normal,
+    t,
+    MA(s.retries),
+    MA(s.deaths),
+    MA(s.bombsUsed),
+    MA(s.cardsCaptured),
+    Xi(Mc(s.lagFraction))
+  ];
+}
+const ae = /* @__PURE__ */ new Map();
+function Dc(s) {
+  if (ae.has(s)) return ae.get(s) ?? null;
+  const A = io[s];
+  let t = null;
+  if (A)
+    try {
+      t = nA(A.base64);
+    } catch {
+      t = null;
+    }
+  return ae.set(s, t), t;
+}
+const Zi = so.PLAYER_RESULTS;
+function Qc() {
+  return new mc({
+    slots: io.length,
+    pages: Bc,
+    cells: yc,
+    scriptFor: Dc,
+    width: 640,
+    height: 480,
+    backdrop: fc
+  });
+}
+class St {
+  constructor(A, t) {
+    r(this, "screen");
+    r(this, "ctx");
+    /** `ResultScreen::frameTimer`. */
+    r(this, "frameTimer", 0);
+    r(this, "showing", !1);
+    this.canvas = A, this.ctx = t, this.screen = Qc();
+  }
+  /** Build the screen and fetch its art; false when the extracted art is absent. */
+  static async mount(A) {
+    const t = A.getContext("2d");
+    if (!t) return null;
+    const e = new St(A, t);
+    return await e.screen.load() ? (e.screen.start(), e) : null;
+  }
+  /**
+   * Enter the stats state.
+   *
+   * `CheckConfirmButton:1962` re-asserts interrupt 18 on VM 71 for thirty frames
+   * rather than firing it once, so the panel restarts its arrival every time the
+   * screen is entered.
+   */
+  show() {
+    this.showing = !0, this.frameTimer = 0;
+  }
+  /** Queue the exit interrupt on every slot, the original's `RESULT_INTERRUPT_EXITING`. */
+  exit() {
+    this.showing = !1, this.screen.interruptAll(Vi.EXITING), this.frameTimer = 0;
+  }
+  /** True once the panel has run long enough to accept a confirm. */
+  get confirmable() {
+    return this.frameTimer >= Wi.confirmAfterFrames;
+  }
+  get framesSinceShown() {
+    return this.frameTimer;
+  }
+  /** `OnUpdate`'s ExecuteScript loop plus `OnDraw`. */
+  frame() {
+    this.showing && this.frameTimer <= Wi.showHoldFrames && this.screen.interrupt(Zi, Vi.PLAYER_RESULTS_SHOW), this.screen.step(), this.screen.draw(this.ctx), this.frameTimer++;
+  }
+  /**
+   * Where `DrawFinalStats` would put the first number, read from the live VM.
+   *
+   * The offsets are the original's, but the base position is whatever the bytecode
+   * settled on, so relifting the pack moves the text with the art.
+   */
+  statsAnchor() {
+    const A = this.screen.vmAt(Zi);
+    return A ? {
+      x: A.pos.x + A.pos2.x + Ct.textOffsetX,
+      y: A.pos.y + A.pos2.y + Ct.textOffsetY,
+      width: 640,
+      height: 480
+    } : null;
+  }
+  /** Where a listing row starts, which `OnDraw:2481` offsets by 24/18 from VM 40. */
+  listingAnchor() {
+    const A = this.screen.vmAt(so.LISTING);
+    return A ? {
+      x: A.pos.x + A.pos2.x + 24,
+      y: A.pos.y + A.pos2.y + 18,
+      width: 640,
+      height: 480
+    } : null;
+  }
+  /** Per-slot readout, so a browser pass can tell "no art" from "no script". */
+  debugLines() {
+    return this.screen.debugLines().filter((A) => !A.includes(" off"));
+  }
+  destroy() {
+    this.showing = !1, this.screen.destroy();
+  }
+}
+const oe = ["easy", "normal", "hard", "lunatic"], Ec = {
+  easy: "弹幕稀疏 · 残机 4 · 灵击 5 —— 熟悉谱面的观光模式",
+  normal: "标准谱面 · 残机 3 · 灵击 3 —— 原作平衡",
+  hard: "高速高密度 · 残机 2 · 灵击 3 —— 需要背板",
+  lunatic: "极限谱面 · 残机 2 · 灵击 2 —— 符卡全部强化"
+}, wt = "↑↓ 选择 · Enter 确认 · Esc 返回 · 亦可用鼠标 / 触屏", Cc = {
+  auto: "自动 AUTO",
+  always: "始终显示 ALWAYS",
+  never: "关闭 OFF"
+}, Sc = {
+  taisei: "原作优先 TAISEI",
+  painted: "统一手绘 PAINTED"
+};
+function Fc(s, A, t) {
+  const e = [9e5, 22e5, 4e6, 64e5, 92e5, 128e5][A - 1] ?? 12e6, i = s / (e * pe[t].bulletDensity);
+  return i >= 1.6 ? "SS" : i >= 1.2 ? "S" : i >= 0.95 ? "A" : i >= 0.7 ? "B" : i >= 0.45 ? "C" : i >= 0.2 ? "D" : "E";
+}
+function _c(s) {
+  const A = new Date(s);
+  return Number.isNaN(A.getTime()) ? "     " : String(A.getMonth() + 1).padStart(2, "0") + "/" + String(A.getDate()).padStart(2, "0");
+}
+const O = class O {
+  constructor(A, t, e = new aa()) {
+    r(this, "root");
+    r(this, "callbacks");
+    r(this, "leaderboard");
+    r(this, "screen", "title");
+    r(this, "cursor", 0);
+    r(this, "selection", { stage: 1, difficulty: "normal", character: "reimu-yukari" });
+    r(this, "practiceMode", !1);
+    r(this, "report", null);
+    r(this, "prefs", to());
+    r(this, "keyHandler");
+    /** The live retail settlement screen, when the results page is up. */
+    r(this, "resultScreen", null);
+    r(this, "resultRaf", 0);
+    r(this, "resultObserver", null);
+    this.root = A, this.callbacks = t, this.leaderboard = e;
+  }
+  // ---------------------------------------------------------------- title ---
+  showTitle() {
+    this.screen = "title", this.cursor = 0;
+    const t = ["开始游戏 START", "练习 PRACTICE", "选项 OPTIONS", "排行榜 RANKING", "操作说明 CONTROLS"].map(
+      (e, i) => `<button type="button" class="th08-menu-item${i === 0 ? " is-active" : ""}" data-menu="item" data-index="${i}">${e}</button>`
+    );
+    this.render(
+      "title",
+      [
+        '<p class="th08-menu-kicker">東方永夜抄 ～ Imperishable Night</p>',
+        '<h2 class="th08-title-logo">永夜抄</h2>',
+        '<p class="th08-menu-subtitle">WEB ENGINE · TH08 全六面 · 可扩展弹幕引擎</p>',
+        '<nav class="th08-menu-list">' + t.join("") + "</nav>",
+        '<p class="th08-menu-hint">' + wt + "</p>"
+      ].join("")
+    ), this.root.querySelectorAll('[data-menu="item"]').forEach((e) => {
+      e.addEventListener("click", () => this.activateTitle(Number(e.dataset.index ?? 0)));
+    });
+  }
+  activateTitle(A) {
+    switch (A) {
+      case 0:
+        this.practiceMode = !1, this.selection.stage = 1, this.showCharacter();
+        break;
+      case 1:
+        this.showPractice();
+        break;
+      case 2:
+        this.showOptions();
+        break;
+      case 3:
+        this.showRanking();
+        break;
+      default:
+        this.showControls();
+    }
+  }
+  // ------------------------------------------------------------ practice ---
+  showPractice() {
+    this.practiceMode = !0, this.screen = "practice", this.cursor = 0;
+    const A = EA.map(
+      (t, e) => `<button type="button" class="th08-menu-item${e === 0 ? " is-active" : ""}" data-menu="stage" data-index="${e}">${ll(t)}</button>`
+    );
+    this.render(
+      "title",
+      [
+        '<p class="th08-menu-kicker">PRACTICE · 选关练习</p>',
+        '<h2 class="th08-title-small">选择关卡</h2>',
+        '<nav class="th08-menu-list">' + A.join("") + "</nav>",
+        '<p class="th08-menu-hint">' + wt + "</p>"
+      ].join("")
+    ), this.root.querySelectorAll('[data-menu="stage"]').forEach((t) => {
+      const e = Number(t.dataset.index ?? 0);
+      t.addEventListener("click", () => {
+        this.choosePracticeStage(e);
+      }), t.addEventListener("mouseenter", () => this.setCursor(e));
+    });
+  }
+  /**
+   * Practice rows walk `ROUTE_ORDER`, i.e. the retail `Stage` enum without Extra,
+   * so the drill list offers both branches of 4 and 6 rather than one row per
+   * printed stage number.
+   */
+  choosePracticeStage(A) {
+    const t = EA[Math.max(0, Math.min(EA.length - 1, A))];
+    this.selection.route = t, this.selection.stage = Bt(t), this.showCharacter();
+  }
+  // ------------------------------------------------------------- options ---
+  /** Input / art / audio / fog preferences. Mouse steering is opt-in here (and in the pause menu). */
+  /**
+   * @param keepCursor re-render in place after a change, so the highlight stays on the row
+   * the player just moved. Opening the screen fresh still starts at row 1.
+   */
+  showOptions(A = !1) {
+    this.screen = "options", A || (this.cursor = 0);
+    const e = [
+      { label: "鼠标操作 MOUSE STEERING", value: this.prefs.mouseControl ? "开启 ON" : "关闭 OFF" },
+      { label: "触屏按钮 TOUCH BUTTONS", value: Cc[this.prefs.touchControls] },
+      { label: "自机画风 PLAYER ART", value: Sc[this.prefs.playerSkin] },
+      // Retail's own graphics flag: `cfg.opts.disableFog` (`Supervisor.cpp:1462`).
+      { label: "雾效 FOG", value: this.prefs.fog ? "开启 ON" : "关闭 OFF" },
+      { label: "BGM 音量", value: Math.round(this.prefs.bgmVolume * 100) + "%" },
+      { label: "清空排行榜 CLEAR RANKING", value: "" },
+      { label: "返回 BACK", value: "" }
+    ].map(
+      (i, a) => '<button type="button" class="th08-menu-item' + (a === this.cursor ? " is-active" : "") + '" data-menu="opt" data-index="' + a + '"><span>' + i.label + '</span><span class="th08-opt-value">' + i.value + "</span></button>"
+    ).join("");
+    this.render(
+      "options",
+      [
+        '<p class="th08-menu-kicker">OPTIONS · 设置</p>',
+        '<h2 class="th08-title-small">选项</h2>',
+        '<nav class="th08-menu-list">' + e + "</nav>",
+        '<p class="th08-menu-hint">鼠标操作默认关闭：开启后光标位置即自机目标并自动连射 · ↑↓ Enter 调整</p>'
+      ].join("")
+    ), this.root.querySelectorAll('[data-menu="opt"]').forEach((i) => {
+      const a = Number(i.dataset.index ?? 0);
+      i.addEventListener("click", () => {
+        this.cursor = a, this.activateOption();
+      }), i.addEventListener("mouseenter", () => this.setCursor(a));
+    });
+  }
+  activateOption() {
+    var t, e;
+    const A = { auto: "always", always: "never", never: "auto" };
+    if (this.cursor === 0) this.prefs.mouseControl = !this.prefs.mouseControl;
+    else if (this.cursor === 1) this.prefs.touchControls = A[this.prefs.touchControls];
+    else if (this.cursor === 2)
+      this.prefs.playerSkin = this.prefs.playerSkin === "taisei" ? "painted" : "taisei";
+    else if (this.cursor === 3) this.prefs.fog = !this.prefs.fog;
+    else if (this.cursor === 4)
+      this.prefs.bgmVolume = this.prefs.bgmVolume >= 1 ? 0 : Math.round((this.prefs.bgmVolume + 0.1) * 10) / 10;
+    else if (this.cursor === 5) {
+      this.leaderboard.clear(), this.showOptions(!0);
+      return;
+    } else {
+      this.showTitle();
+      return;
+    }
+    eo(this.prefs), (e = (t = this.callbacks).onPrefsChange) == null || e.call(t, this.prefs), this.showOptions(!0);
+  }
+  get prefsSnapshot() {
+    return { ...this.prefs };
+  }
+  showRanking() {
+    var t;
+    this.screen = "ranking";
+    const A = this.leaderboard.getEntries();
+    this.render(
+      "title",
+      [
+        '<p class="th08-menu-kicker">RANKING · 上位 10</p>',
+        '<h2 class="th08-title-small">排行榜</h2>',
+        /*
+         * The same columns the original's listing screen prints, which is where a
+         * score table belongs: retail keeps the table off the settlement panel and
+         * shows it here instead.
+         */
+        this.retailListing(A),
+        '<button type="button" class="th08-menu-item" data-menu="back">返回 BACK</button>'
+      ].join("")
+    ), (t = this.root.querySelector('[data-menu="back"]')) == null || t.addEventListener("click", () => this.showTitle());
+  }
+  showControls() {
+    var A;
+    this.screen = "controls", this.render(
+      "title",
+      [
+        '<p class="th08-menu-kicker">CONTROLS</p>',
+        '<h2 class="th08-title-small">操作说明</h2>',
+        '<ul class="th08-key-list">',
+        "<li><b>方向键 / WASD</b><span>移动自机</span></li>",
+        "<li><b>Z / Space</b><span>射击（触屏拖动时自动连射）</span></li>",
+        "<li><b>X</b><span>灵击 Spell（清屏 + 无敌）</span></li>",
+        "<li><b>Shift</b><span>低速模式 · 显示判定点</span></li>",
+        "<li><b>ESC</b><span>暂停菜单</span></li>",
+        "<li><b>F12</b><span>性能浮层 FPS / 实体 / 碰撞比较</span></li>",
+        "</ul>",
+        '<button type="button" class="th08-menu-item" data-menu="back">返回 BACK</button>'
+      ].join("")
+    ), (A = this.root.querySelector('[data-menu="back"]')) == null || A.addEventListener("click", () => this.showTitle());
+  }
+  // ------------------------------------------------------- team select ---
+  showCharacter() {
+    this.screen = "character";
+    const A = Object.keys(kA);
+    this.cursor = Math.max(0, A.indexOf(this.selection.character));
+    const t = A.map((e, i) => {
+      const a = kA[e];
+      return [
+        `<button type="button" class="th08-team-card${i === this.cursor ? " is-active" : ""}" data-menu="team" data-index="${i}">`,
+        '<span class="th08-team-pairs">',
+        ...a.members.map((o, n) => `<span class="th08-team-seat"><img class="th08-team-portrait" src="${n === 0 ? xa(e) : Hn(e)}" alt="${O.escape(o.name)}" draggable="false"><i>` + (n === 0 ? "A" : "B · SHIFT") + "</i></span>"),
+        "</span>",
+        '<span class="th08-team-name">' + O.escape(a.name) + "</span>",
+        '<span class="th08-team-sub">' + O.escape(a.subtitle) + "</span>",
+        '<span class="th08-team-pair">' + a.members.map((o) => O.escape(o.name + " " + o.label + "·" + o.blurb)).join(" ⇄ ") + "</span>",
+        '<span class="th08-team-stats">火力 ' + a.members[0].shotDamage + " / " + a.members[1].shotDamage + " · 灵击 " + a.bombDamage + " · 速度 " + a.fastSpeed + "</span>",
+        "</button>"
+      ].join("");
+    });
+    this.render(
+      "character",
+      [
+        '<p class="th08-menu-kicker">STEP 1 / 2 · SELECT TEAM</p>',
+        '<h2 class="th08-title-small">自机组选择</h2>',
+        '<div class="th08-team-grid">' + t.join("") + "</div>",
+        '<p class="th08-menu-hint">' + wt + "</p>"
+      ].join("")
+    ), this.root.querySelectorAll('[data-menu="team"]').forEach((e) => {
+      const i = Number(e.dataset.index ?? 0);
+      e.addEventListener("click", () => this.confirmCharacter(i)), e.addEventListener("mouseenter", () => this.setCursor(i));
+    });
+  }
+  /**
+   * Commit the picked team. Re-rendering the screen first would reset the cursor
+   * back to the previously committed selection, so the index is passed straight in.
+   */
+  confirmCharacter(A = this.cursor) {
+    const t = Object.keys(kA);
+    this.selection.character = t[A] ?? "reimu-yukari", this.showDifficulty();
+  }
+  // ---------------------------------------------------- difficulty select --
+  showDifficulty() {
+    this.screen = "difficulty", this.cursor = Math.max(0, oe.indexOf(this.selection.difficulty));
+    const A = oe.map(
+      (t, e) => `<button type="button" class="th08-diff-row${e === this.cursor ? " is-active" : ""}" data-menu="diff" data-index="${e}"><img class="th08-diff-logo" src="${Y(Gn[t])}" alt="${pe[t].label}" draggable="false"><span class="th08-diff-name">${pe[t].label}</span><span class="th08-diff-brief">${Ec[t]}</span></button>`
+    );
+    this.render(
+      "difficulty",
+      [
+        '<p class="th08-menu-kicker">STEP 2 / 2 · DIFFICULTY</p>',
+        '<h2 class="th08-title-small">难度选择</h2>',
+        '<nav class="th08-menu-list">' + A.join("") + "</nav>",
+        '<p class="th08-menu-hint">' + wt + " · 确认后从第一面开始攻略全六面</p>"
+      ].join("")
+    ), this.root.querySelectorAll('[data-menu="diff"]').forEach((t) => {
+      const e = Number(t.dataset.index ?? 0);
+      t.addEventListener("click", () => this.confirmDifficulty(e)), t.addEventListener("mouseenter", () => this.setCursor(e));
+    });
+  }
+  confirmDifficulty(A = this.cursor) {
+    this.selection.difficulty = oe[A] ?? "normal", this.callbacks.onStart({
+      ...this.selection,
+      stage: this.practiceMode ? this.selection.stage : 1,
+      // A campaign always opens on stage 1, so a route chosen for an earlier drill
+      // must not leak into it.
+      route: this.practiceMode ? this.selection.route : void 0,
+      campaign: !this.practiceMode
+    });
+  }
+  // ------------------------------------------------------------ results ---
+  showResults(A) {
+    var a;
+    this.screen = "results", this.report = A, this.cursor = 0;
+    const t = Fc(A.score, A.stage, A.difficulty), e = kA[A.character];
+    A.demo || this.leaderboard.submit({
+      name: e.name,
+      score: A.score,
+      stage: A.stage,
+      difficulty: A.difficulty,
+      character: A.character
+    }), this.render(
+      "results",
+      [
+        /*
+         * The settlement picture first, exactly as retail puts it up: the JPEG
+         * backdrop and every label on the panel come out of `result00.anm`, and
+         * only the numbers are ours. When the extracted art is missing the canvas
+         * stays blank and the rows below still carry the whole report.
+         */
+        '<div class="th08-result-stage">',
+        '<canvas class="th08-result-anm" data-menu="result-canvas" width="640" height="480" aria-hidden="true"></canvas>',
+        '<div class="th08-result-stats" data-menu="result-stats" hidden></div>',
+        "</div>",
+        /*
+         * A run that ran out of lives used to land on this screen wearing the
+         * stage-clear costume: same "MISSION COMPLETE" kicker, same "STAGE n CLEAR"
+         * heading. Retail separates the two, so the report now carries which one
+         * happened and the heading follows it.
+         */
+        '<p class="th08-result-banner">' + (A.gameOver ? "GAME OVER · REACHED STAGE " + A.stage : A.campaignFinished ? "ALL STAGES CLEARED" : (
+          /*
+           * A practice drill is not a mission: retail closes one with
+           * `THANKS FOR PLAYING`, the same line the playfield banner just
+           * painted, and there is no next stage to report on.
+           */
+          A.practice ? "THANKS FOR PLAYING" : "MISSION COMPLETE · STAGE " + A.stage + " CLEAR"
+        )) + "</p>",
+        /*
+         * Everything the settlement panel has no row for. The panel already carries
+         * the score, difficulty, completion, continues, deaths, bombs, cards and
+         * slow rate, so repeating them here would only compete with the original's
+         * own layout.
+         */
+        '<p class="th08-result-aux">',
+        `<b>${O.escape(e.name)}</b>`,
+        `<span>Spell Bonus ${A.spellBonus.toString().padStart(8, "0")}</span>`,
+        `<span>Graze ${A.graze}</span>`,
+        `<span>残机 / 灵击 ${A.livesLeft} / ${A.bombsLeft}</span>`,
+        `<span>Power ${A.power} / ${A.maxPower}</span>`,
+        `<span class="th08-rank">RANK ${t}</span>`,
+        "</p>",
+        '<div class="th08-result-form">',
+        '<label class="th08-name-entry">登记名称 <input data-menu="name" maxlength="12" value="' + O.escape(e.name) + '"></label>',
+        '<div class="th08-replay-row">',
+        '<button type="button" class="th08-mini-btn" data-menu="save-replay">导出录像 Replay</button>',
+        '<label class="th08-mini-btn">导入录像<input type="file" accept="application/json" data-menu="load-replay" hidden></label>',
+        "</div>",
+        "</div>",
+        '<nav class="th08-menu-list">',
+        '<button type="button" class="th08-menu-item is-active" data-menu="item" data-index="0">再来一次 RETRY</button>',
+        '<button type="button" class="th08-menu-item" data-menu="item" data-index="1">' + (A.gameOver ? "继续挑战 CONTINUE" : A.practice ? "返回选关 STAGE SELECT" : "继续下一面 NEXT STAGE") + "</button>",
+        '<button type="button" class="th08-menu-item" data-menu="item" data-index="2">返回标题 TITLE</button>',
+        "</nav>"
+      ].join("")
+    ), this.setupResultLayer(A), this.root.querySelectorAll('[data-menu="item"]').forEach((o) => {
+      o.addEventListener("click", () => {
+        this.cursor = Number(o.dataset.index ?? 0), this.activateResult();
+      });
+    }), (a = this.root.querySelector('[data-menu="save-replay"]')) == null || a.addEventListener("click", () => this.exportReplay(A));
+    const i = this.root.querySelector('[data-menu="load-replay"]');
+    i == null || i.addEventListener("change", () => {
+      var n;
+      const o = (n = i.files) == null ? void 0 : n[0];
+      o && o.text().then((p) => {
+        var l, c;
+        return (c = (l = this.callbacks).onReplayLoad) == null ? void 0 : c.call(l, p);
+      });
+    });
+  }
+  /**
+   * The score table, in the original's columns.
+   *
+   * `OnDraw:2485` prints the header `No  Name       Score(Stage)   Date   Slow`
+   * and then one row per record. The columns are a real table rather than printf
+   * padding because the team names are CJK, which no monospace advance can line
+   * up; the wording, the order and the row colours are the original's.
+   */
+  retailListing(A) {
+    return `<table class="th08-score-table th08-result-listing"><thead><tr><th>No</th><th>Name</th><th>Score(Stage)</th><th>Date</th><th>Slow</th></tr></thead><tbody>${A.length === 0 ? '<tr><td colspan="5">暂无记录</td></tr>' : A.slice(0, 10).map(
+      (e, i) => {
+        var a;
+        return `<tr${e.score === ((a = this.report) == null ? void 0 : a.score) ? ' class="is-new"' : ""}><td>${String(i + 1).padStart(2, " ")}</td><td>${O.escape(e.name)}</td><td>${MA(e.score)}${Math.min(9, Math.max(0, e.numRetries ?? 0))}(${e.stage})</td><td>${_c(e.createdAt)}</td><td>--</td></tr>`;
+      }
+    ).join("")}</tbody></table>`;
+  }
+  exportReplay(A) {
+    var a, o;
+    const t = A.replayJson ?? ((o = (a = this.callbacks).getReplay) == null ? void 0 : o.call(a)) ?? null;
+    if (!t) return;
+    const e = URL.createObjectURL(new Blob([t], { type: "application/json" })), i = document.createElement("a");
+    i.href = e, i.download = `th08-s${A.stage}-${A.difficulty}-${A.character}.json`, i.click(), URL.revokeObjectURL(e);
+  }
+  activateResult() {
+    const A = this.report;
+    if (!A) {
+      this.showTitle();
+      return;
+    }
+    if (this.cursor === 0) {
+      this.callbacks.onStart({
+        stage: A.stage,
+        difficulty: A.difficulty,
+        character: A.character
+      });
+      return;
+    }
+    if (this.cursor === 1 && A.gameOver) {
+      this.callbacks.onStart({
+        stage: A.stage,
+        difficulty: A.difficulty,
+        character: A.character
+      });
+      return;
+    }
+    if (this.cursor === 1 && A.practice) {
+      this.showPractice();
+      return;
+    }
+    if (this.cursor === 1 && A.stage < 6) {
+      this.callbacks.onStart({
+        stage: A.stage + 1,
+        difficulty: A.difficulty,
+        character: A.character
+      });
+      return;
+    }
+    this.showTitle();
+  }
+  // ------------------------------------------------------- shared chrome ---
+  render(A, t) {
+    this.teardownScreenLayer(), this.root.style.display = "grid", this.root.innerHTML = `<section class="th08-card th08-card-${A}">${t}</section>`, this.bindKeys();
+  }
+  /** Stop the settlement screen's clock and release its art. */
+  teardownScreenLayer() {
+    var A, t;
+    this.resultRaf && cancelAnimationFrame(this.resultRaf), this.resultRaf = 0, (A = this.resultObserver) == null || A.disconnect(), this.resultObserver = null, (t = this.resultScreen) == null || t.destroy(), this.resultScreen = null;
+  }
+  /**
+   * Run the retail settlement screen behind the numbers.
+   *
+   * Two things here have to follow the animation rather than a stylesheet: the
+   * panel arrives on an interrupt, and the stat column hangs off VM 71's own
+   * position (`DrawFinalStats` adds 210/32 to it and steps 22 per row). So the
+   * rows are placed from the live VM every frame, and the monospace advance is
+   * measured once per resize to match the original's 13-pixel text cell.
+   */
+  setupResultLayer(A) {
+    const t = this.root.querySelector('[data-menu="result-canvas"]'), e = this.root.querySelector('[data-menu="result-stats"]');
+    !t || !e || typeof St > "u" || St.mount(t).then((i) => {
+      if (!i) return;
+      if (this.resultScreen) {
+        i.destroy();
+        return;
+      }
+      this.resultScreen = i, i.show(), e.hidden = !1, e.textContent = "";
+      const a = xc(A.stats).map((p) => {
+        const l = document.createElement("span");
+        return l.className = "th08-result-stat", l.textContent = p, e.appendChild(l), l;
+      }), o = () => {
+        var m;
+        const p = i.statsAnchor(), l = a[0];
+        if (!p || !l || !t.clientWidth) return;
+        const c = t.clientWidth / p.width;
+        l.style.transform = "none";
+        const h = ((m = l.textContent) == null ? void 0 : m.length) || 1, d = l.getBoundingClientRect().width / h, w = d > 0 ? Ct.spaceWidth * c / d : 1;
+        for (let u = 0; u < a.length; u++) {
+          const g = a[u];
+          g.style.left = `${p.x * c}px`, g.style.top = `${(p.y + u * Ct.rowPitch) * c}px`, g.style.transform = `scaleX(${w.toFixed(4)})`;
+        }
+      }, n = () => {
+        this.resultScreen && (this.resultScreen.frame(), o(), this.resultRaf = requestAnimationFrame(n));
+      };
+      o(), n(), typeof ResizeObserver < "u" && (this.resultObserver = new ResizeObserver(o), this.resultObserver.observe(t));
+    });
+  }
+  setCursor(A) {
+    const t = this.root.querySelectorAll(O.NAV_SELECTOR).length;
+    t !== 0 && (this.cursor = (A + t) % t, this.root.querySelectorAll(O.NAV_SELECTOR).forEach((e, i) => e.classList.toggle("is-active", i === this.cursor)));
+  }
+  bindKeys() {
+    this.keyHandler && window.removeEventListener("keydown", this.keyHandler), this.keyHandler = (A) => {
+      const t = A.target;
+      if (t && (t.tagName === "INPUT" || t.tagName === "SELECT")) return;
+      const e = this.root.querySelectorAll(O.NAV_SELECTOR).length, i = {
+        ArrowDown: 1,
+        ArrowRight: 1,
+        s: 1,
+        ArrowUp: -1,
+        ArrowLeft: -1,
+        w: -1
+      };
+      if (A.key in i) {
+        if (e === 0) return;
+        A.preventDefault(), this.setCursor(this.cursor + i[A.key]);
+        return;
+      }
+      if (A.key === "Enter" || A.key === " ") {
+        A.preventDefault(), this.confirmCurrent();
+        return;
+      }
+      A.key === "Escape" && (A.preventDefault(), this.goBack());
+    }, window.addEventListener("keydown", this.keyHandler);
+  }
+  confirmCurrent() {
+    this.screen === "title" ? this.activateTitle(this.cursor) : this.screen === "practice" ? this.choosePracticeStage(this.cursor) : this.screen === "options" ? this.activateOption() : this.screen === "character" ? this.confirmCharacter() : this.screen === "difficulty" ? this.confirmDifficulty() : this.screen === "ranking" || this.screen === "controls" ? this.showTitle() : this.activateResult();
+  }
+  goBack() {
+    var A, t;
+    this.screen === "options" ? this.showTitle() : this.screen === "practice" ? (this.practiceMode = !1, this.showTitle()) : this.screen === "character" ? this.practiceMode ? this.showPractice() : this.showTitle() : this.screen === "difficulty" ? this.showCharacter() : this.screen === "results" ? this.showTitle() : this.screen === "ranking" || this.screen === "controls" ? this.showTitle() : (t = (A = this.callbacks).onQuit) == null || t.call(A);
+  }
+  hide() {
+    this.resultRaf && (cancelAnimationFrame(this.resultRaf), this.resultRaf = 0), this.resultObserver && (this.resultObserver.disconnect(), this.resultObserver = null), this.resultScreen && (this.resultScreen.destroy(), this.resultScreen = null), this.root.style.display = "none", this.root.innerHTML = "", this.keyHandler && (window.removeEventListener("keydown", this.keyHandler), this.keyHandler = void 0);
+  }
+  destroy() {
+    this.hide();
+  }
+  static escape(A) {
+    return A.replace(
+      /[&<>"']/g,
+      (t) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[t] ?? t
+    );
+  }
+};
+/** Every focusable row across all screens; one screen renders one kind. */
+r(O, "NAV_SELECTOR", '[data-menu="team"],[data-menu="diff"],[data-menu="stage"],[data-menu="opt"],[data-menu="item"]');
+let ye = O;
+const _t = class _t {
+  constructor(A, t) {
+    r(this, "root");
+    r(this, "options");
+    r(this, "el");
+    r(this, "cursor", 0);
+    r(this, "handler");
+    this.root = A, this.options = t;
+  }
+  get isVisible() {
+    return !!this.el;
+  }
+  show() {
+    if (this.el) return;
+    this.cursor = 0;
+    const A = document.createElement("div");
+    A.className = "th08-pause", A.innerHTML = [
+      '<div class="th08-pause-card">',
+      '<p class="th08-pause-kicker">PAUSED</p>',
+      "<h3>暂停</h3>",
+      '<nav class="th08-pause-list">',
+      '<button type="button" data-pause="0">继续 RESUME</button>',
+      '<button type="button" data-pause="1">重新开始 RESTART</button>',
+      '<button type="button" data-pause="2">返回标题 QUIT</button>',
+      '<button type="button" data-pause="3">鼠标操作 <span data-pause-mouse></span></button>',
+      '<button type="button" data-pause="4">BGM 开关</button>',
+      "</nav>",
+      '<p class="th08-pause-hint">↑↓ Enter · 或直接按 ESC 继续</p>',
+      "</div>"
+    ].join(""), this.root.appendChild(A), this.el = A, this.mark(), A.querySelectorAll("[data-pause]").forEach((t) => {
+      t.addEventListener("click", () => this.activate(Number(t.dataset.pause ?? 0)));
+    }), this.handler = (t) => {
+      this.el && (t.key === "ArrowDown" || t.key === "ArrowRight" ? (t.preventDefault(), this.move(1)) : t.key === "ArrowUp" || t.key === "ArrowLeft" ? (t.preventDefault(), this.move(-1)) : t.key === "Enter" && (t.preventDefault(), this.activate(this.cursor)));
+    }, window.addEventListener("keydown", this.handler);
+  }
+  hide() {
+    var A;
+    this.handler && window.removeEventListener("keydown", this.handler), this.handler = void 0, (A = this.el) == null || A.remove(), this.el = void 0;
+  }
+  move(A) {
+    const t = _t.ITEM_COUNT;
+    this.cursor = (this.cursor + A + t) % t, this.mark();
+  }
+  mark() {
+    var t, e, i, a;
+    (t = this.el) == null || t.querySelectorAll("[data-pause]").forEach((o, n) => {
+      o.classList.toggle("is-active", n === this.cursor);
+    });
+    const A = (e = this.el) == null ? void 0 : e.querySelector("[data-pause-mouse]");
+    A && (A.textContent = (a = (i = this.options).isMouseControl) != null && a.call(i) ? "开启 ON" : "关闭 OFF");
+  }
+  activate(A) {
+    var t, e, i, a;
+    A === 0 ? this.options.onResume() : A === 1 ? (this.hide(), this.options.onRestart()) : A === 2 ? (this.hide(), this.options.onQuit()) : A === 3 ? ((e = (t = this.options).onToggleMouse) == null || e.call(t), this.mark()) : (a = (i = this.options).onToggleBgm) == null || a.call(i);
+  }
+};
+r(_t, "ITEM_COUNT", 5);
+let be = _t;
+const re = {
+  shoot: "KeyZ",
+  bomb: "KeyX",
+  focus: "ShiftLeft",
+  pause: "Escape"
+}, qi = {
+  shoot: "射击",
+  bomb: "灵击",
+  focus: "低速",
+  pause: "暂停"
+};
+class Ft {
+  constructor(A, t) {
+    r(this, "root");
+    r(this, "input");
+    r(this, "el");
+    r(this, "held", /* @__PURE__ */ new Map());
+    r(this, "disposers", []);
+    this.root = A, this.input = t;
+  }
+  /** Show the pad; `auto` only mounts it on coarse-pointer (touch) devices. */
+  show(A = "auto") {
+    if (this.el || A === "never" || A === "auto" && !Ft.isTouch()) return;
+    const t = document.createElement("div");
+    t.className = "th08-touch", t.innerHTML = Object.keys(re).map(
+      (e) => `<button type="button" class="th08-touch-btn th08-touch-${e}" data-touch="${e}" aria-label="${qi[e]}"><img src="${Y(`/assets/ui/touch-${e}.png`)}" alt="" draggable="false"><span>${qi[e]}</span></button>`
+    ).join(""), this.root.appendChild(t), this.el = t, t.querySelectorAll("[data-touch]").forEach((e) => {
+      const i = e.dataset.touch, a = (n) => {
+        n.preventDefault(), this.press(i), e.classList.add("is-down");
+      }, o = (n) => {
+        n.preventDefault(), this.release(i), e.classList.remove("is-down");
+      };
+      e.addEventListener("pointerdown", a), e.addEventListener("pointerup", o), e.addEventListener("pointercancel", o), e.addEventListener("pointerleave", o), this.disposers.push(() => {
+        e.removeEventListener("pointerdown", a), e.removeEventListener("pointerup", o), e.removeEventListener("pointercancel", o), e.removeEventListener("pointerleave", o);
+      });
+    });
+  }
+  hide() {
+    var A;
+    for (const t of this.disposers.splice(0)) t();
+    for (const t of this.held.keys()) this.release(t);
+    (A = this.el) == null || A.remove(), this.el = void 0;
+  }
+  press(A) {
+    this.held.set(A, !0), this.input.simulateKeyDown(re[A]);
+  }
+  release(A) {
+    this.held.get(A) && (this.held.set(A, !1), this.input.simulateKeyUp(re[A]));
+  }
+  static isTouch() {
+    var A;
+    return typeof window > "u" ? !1 : !!((A = window.matchMedia) != null && A.call(window, "(pointer: coarse)").matches) || "ontouchstart" in window;
+  }
+}
+const $i = 400;
+function Pc() {
+  return {
+    stage: 6,
+    difficulty: "lunatic",
+    character: "sakuya-remilia",
+    score: 1845732,
+    graze: 3121,
+    spellBonus: 24e4,
+    livesLeft: 2,
+    bombsLeft: 3,
+    power: 128,
+    maxPower: 128,
+    campaignFinished: !0,
+    demo: !0,
+    stats: {
+      score: 1845732,
+      retries: 1,
+      difficulty: "lunatic",
+      playFrames: 152e3,
+      deaths: 4,
+      bombsUsed: 9,
+      cardsCaptured: 11,
+      lagFraction: 0.12,
+      fullCompletion: !0
+    }
+  };
+}
+class kc {
+  constructor(A, t, e = {}) {
+    r(this, "container");
+    r(this, "menuRoot");
+    r(this, "options");
+    r(this, "prefs", to());
+    r(this, "game");
+    r(this, "menu");
+    r(this, "stopMirror");
+    r(this, "pause");
+    r(this, "touch");
+    r(this, "destroyed", !1);
+    this.container = A, this.menuRoot = t, this.options = e, this.menu = new ye(t, {
+      onStart: (i) => {
+        this.launch(i).catch((a) => {
+          var o, n;
+          (n = (o = this.options).onError) == null || n.call(o, a instanceof Error ? a : new Error(String(a)));
+        });
+      },
+      getReplay: () => {
+        var i;
+        return ((i = this.game) == null ? void 0 : i.getReplayJson()) ?? null;
+      },
+      onReplayLoad: (i) => this.playReplay(i),
+      onPrefsChange: (i) => this.applyPrefs(i)
+    });
+  }
+  getGame() {
+    return this.game;
+  }
+  async boot() {
+    if (!this.destroyed) {
+      if (this.options.listenUrlParams && typeof window < "u") {
+        if (new URLSearchParams(window.location.search).has("resultscreen")) {
+          this.menu.showResults(Pc());
+          return;
+        }
+        const A = Gc();
+        if (A) {
+          await this.launch(A);
+          return;
+        }
+      }
+      this.menu.showTitle();
+    }
+  }
+  async launch(A) {
+    if (this.destroyed) return;
+    this.teardownRun(), this.container.replaceChildren(), this.menu.hide(), this.setPlaying(!0);
+    const t = new uc({
+      ...A,
+      campaign: A.campaign !== !1,
+      recordReplay: !0,
+      showPerformanceMonitor: !1,
+      onStageClear: (e) => {
+        var i, a;
+        (a = (i = this.options).onStageClear) == null || a.call(i, e), this.finishRun(e);
+      }
+    });
+    this.game = t, typeof window < "u" && (window.__TOUHOU_GAME__ = t), this.applyPrefs(this.prefs), this.options.listenUrlParams && this.applyUrlDebugFlags(t);
+    try {
+      if (await t.init(this.container), this.destroyed || this.game !== t) {
+        t.destroy();
+        return;
+      }
+      if (this.mountOverlays(t), this.options.listenUrlParams && (await this.warpFrames(t), this.destroyed || this.game !== t)) {
+        t.destroy();
+        return;
+      }
+      t.start(), this.mirrorState(t);
+    } catch (e) {
+      if (this.destroyed) {
+        t.destroy();
+        return;
+      }
+      throw e;
+    }
+  }
+  applyUrlDebugFlags(A) {
+    if (typeof window > "u") return;
+    const t = new URLSearchParams(window.location.search);
+    A.debugAutoShoot = t.has("autofire"), A.debugAutoBomb = t.has("autobomb"), A.debugAutoSkip = t.has("autoskip"), A.debugSlowMode = t.has("slow"), A.debugNoFail = t.has("nofail"), A.debugMaxPower = t.has("maxpower");
+    const e = t.get("renderer");
+    A.rendererBackend = e === "webgl" || e === "webgpu" ? e : void 0, t.has("nofog") && (A.fogEnabled = !1), A.simTicksPerFrame = Math.max(1, Math.min(12, Number(t.get("ticks")) || 1));
+  }
+  async warpFrames(A) {
+    if (typeof window > "u") return;
+    const t = Number(new URLSearchParams(window.location.search).get("warp"));
+    if (!Number.isFinite(t) || t <= 0) return;
+    const e = Math.min(6e4, Math.floor(t));
+    await A.waitForScript(400);
+    for (let i = 0; i < e; i += $i) {
+      if (this.destroyed || this.game !== A) return;
+      const a = Math.min(e, i + $i);
+      for (let o = i; o < a; o++) A.stepFrame(1);
+      await new Promise((o) => setTimeout(o, 0));
+    }
+  }
+  mirrorState(A) {
+    let t = !0;
+    const e = this.options.listenUrlParams && typeof window < "u" ? new URLSearchParams(window.location.search).has("dbgscene") : !1, i = () => {
+      var m, u, g, B, y, b, D, x, Q;
+      if (!t) return;
+      const a = A.player, o = A.eclRunner, n = (m = A.renderer) == null ? void 0 : m.assets;
+      let p = 0, l = 0;
+      const c = A.bulletSystem.getBullets();
+      let h = 0, d = 0;
+      for (const j of c)
+        j.isAlive && (j.tag === "player-bullet" ? h++ : d++);
+      if (o && n)
+        for (const j of o.enemies.slots)
+          j.active && (l++, n.has(Za(j)) && p++);
+      const w = (o == null ? void 0 : o.bossGauge) ?? null;
+      this.container.dataset.dbg = JSON.stringify({
+        st: A.stageNumber,
+        route: A.route,
+        ecl: o ? 1 : 0,
+        f: o ? o.gs.frame : A.stage.currentFrame,
+        rank: o ? o.gs.rank : 0,
+        sub: o ? o.gs.subRank : 0,
+        fstop: o && o.gs.bombRunning ? 1 : 0,
+        dlg: A.dialogPresent ? 1 : 0,
+        lives: a.lives,
+        bombs: a.bombs,
+        pow: Math.round(a.power),
+        graze: a.graze,
+        score: a.score,
+        x: Math.round(a.position.x),
+        y: Math.round(a.position.y),
+        member: a.member.id,
+        slow: a.isSlowMode ? 1 : 0,
+        state: a.state,
+        blt: o ? o.bullets.activeCount : A.bulletSystem.getCount(),
+        laz: o ? o.lasers.activeCount : 0,
+        pb: h,
+        eb: d,
+        en: o ? o.enemies.activeCount : A.enemies.length,
+        mouse: A.input.mouseControl ? 1 : 0,
+        clk: A.runClockTime,
+        art: o ? p + "/" + l : "-",
+        spr: ((u = A.renderer) == null ? void 0 : u.spriteAudit) ?? null,
+        itm: o ? Rc(o) : null,
+        wash: o ? [
+          ((g = o.activeBomb) == null ? void 0 : g.spec.id) ?? "-",
+          ((B = o.bombBackdrop.plate) == null ? void 0 : B.color) ?? -1,
+          Math.round((((y = o.bombBackdrop.plate) == null ? void 0 : y.alpha) ?? 0) * 100),
+          Math.round((((b = o.bombBackdrop.flash) == null ? void 0 : b.alpha) ?? 0) * 100),
+          o.player.bombStateFlash ? 1 : 0
+        ] : null,
+        anim: ((D = A.renderer) == null ? void 0 : D.playerAnimState) ?? "",
+        gpu: ((x = A.renderer) == null ? void 0 : x.backend) ?? "-",
+        pop: A.activePopupCount,
+        popd: A.popupDebug,
+        fx: A.effectDebug,
+        bnr: A.bannerDebug,
+        card: (o == null ? void 0 : o.gs.spellName) ?? null,
+        pbm: ((Q = o == null ? void 0 : o.activeBomb) == null ? void 0 : Q.spec.nameJp) ?? null,
+        grc: o ? o.player.graceTimer : a.graceTimer,
+        cin: A.hud.spellCutIn,
+        cdt: A.hud.spellCardDisplayTimer,
+        faces: A.facePages,
+        b: w ? [Math.round(w.hp), Math.round(w.maxHp), w.pips, w.timerFrames] : null,
+        to: o ? Math.round(o.gs.timeOrbs) : 0,
+        thr: A.hud.timeOrbThreshold,
+        sb: A.spellBonus,
+        cl: A.spellLog.length,
+        cap: A.hud.spellCaptured ? 1 : 0,
+        std: A.backdropDebug,
+        msg: A.dialogueDebug,
+        req: o ? o.gs.stageMessageRequest : -99,
+        tl: o ? o.timeline.scriptTimer : -99,
+        bgm: A.audio.bgmName,
+        se: [A.audio.seLoaded, A.audio.sePending],
+        pbf: Tc(A),
+        pdr: A.playerWeaponDebug,
+        opt: o ? Uc(o) : null,
+        aim: o ? `${Math.round(o.tailPosition.x)},${Math.round(o.tailPosition.y)}${o.tailPosition.valid ? "b" : "w"}` : null,
+        enm: jc(A)
+      }), e && (this.container.dataset.scene = vc(A)), typeof requestAnimationFrame < "u" && requestAnimationFrame(i);
+    };
+    typeof requestAnimationFrame < "u" && requestAnimationFrame(i), this.stopMirror = () => {
+      t = !1;
+    };
+  }
+  mountOverlays(A) {
+    this.pause = new be(this.container, {
+      onResume: () => A.resume(),
+      onRestart: () => {
+        A.restartStage(), A.start();
+      },
+      onQuit: () => this.returnToTitle(),
+      onToggleMouse: () => (this.prefs.mouseControl = !this.prefs.mouseControl, this.persist(), A.input.setMouseControl(this.prefs.mouseControl), this.prefs.mouseControl),
+      isMouseControl: () => this.prefs.mouseControl,
+      onToggleBgm: () => (this.toggleBgm(A), !0)
+    }), A.onPauseChange = (t) => {
+      var e, i;
+      t ? (e = this.pause) == null || e.show() : (i = this.pause) == null || i.hide();
+    }, this.touch = new Ft(this.container, A.input), this.touch.show(this.prefs.touchControls);
+  }
+  finishRun(A) {
+    var e, i;
+    const t = this.game;
+    t && (A.replayJson = t.getReplayJson() ?? void 0, t.stop()), (e = this.pause) == null || e.hide(), (i = this.touch) == null || i.hide(), this.setPlaying(!1), this.menu.showResults(A);
+  }
+  playReplay(A) {
+    try {
+      const e = JSON.parse(A).metadata ?? {};
+      this.launch({
+        stage: Number(e.stage) || 1,
+        difficulty: e.difficulty ?? "normal",
+        character: e.character ?? "reimu-yukari"
+      }).then(() => {
+        var i, a, o;
+        (i = this.game) == null || i.stop(), (a = this.game) == null || a.loadReplayJson(A), (o = this.game) == null || o.start(), this.menu.hide();
+      });
+    } catch (t) {
+      console.error("Replay load failed", t);
+    }
+  }
+  returnToTitle() {
+    this.teardownRun(), this.setPlaying(!1), this.menu.showTitle();
+  }
+  setPlaying(A) {
+    this.options.toggleBodyClass && typeof document < "u" && document.body.classList.toggle("is-playing", A);
+  }
+  teardownRun() {
+    var A, t, e, i;
+    (A = this.stopMirror) == null || A.call(this), this.stopMirror = void 0, (t = this.pause) == null || t.hide(), (e = this.touch) == null || e.hide(), this.pause = void 0, this.touch = void 0, (i = this.game) == null || i.destroy(), this.game = void 0, typeof window < "u" && window.__TOUHOU_GAME__ && (window.__TOUHOU_GAME__ = void 0);
+  }
+  destroy() {
+    this.destroyed = !0, this.teardownRun(), this.menu.hide(), this.setPlaying(!1);
+  }
+  applyPrefs(A) {
+    var e;
+    Object.assign(this.prefs, A), this.persist();
+    const t = this.game;
+    t && (t.input.setMouseControl(this.prefs.mouseControl), t.audio.setBgmVolume(this.prefs.bgmVolume), t.setPlayerSkin(this.prefs.playerSkin), t.fogEnabled = this.prefs.fog, (e = this.touch) == null || e.hide(), this.touch = new Ft(this.container, t.input), this.touch.show(this.prefs.touchControls));
+  }
+  persist() {
+    eo(this.prefs);
+  }
+  toggleBgm(A) {
+    A.audio.isBgmPlaying ? A.audio.pauseBGM() : A.audio.resumeBGM();
+  }
+}
+function vc(s) {
+  var i, a;
+  const A = (a = (i = s.renderer) == null ? void 0 : i.app) == null ? void 0 : a.stage;
+  if (!A) return "";
+  const t = [], e = (o, n) => {
+    var p, l, c;
+    for (const h of o.children ?? []) {
+      const d = h;
+      if (d.visible === !1 || (d.alpha ?? 1) < 0.05) continue;
+      const w = d.label || n || "node", m = (p = d.getBounds) == null ? void 0 : p.call(d);
+      if (d.texture || d.text !== void 0) {
+        const u = ((l = d.scale) == null ? void 0 : l.x) ?? 1, g = ((c = d.scale) == null ? void 0 : c.y) ?? 1;
+        t.push(
+          n + "/" + w + (d.texture ? " " + d.texture.width + "x" + d.texture.height : ' TXT"' + String(d.text).slice(0, 14) + '"') + (m ? " box=" + Math.round(m.x) + "," + Math.round(m.y) + " " + Math.round(m.width) + "x" + Math.round(m.height) : "") + "@" + Math.round(d.x ?? 0) + "," + Math.round(d.y ?? 0) + (u !== 1 || g !== 1 ? " s=" + u.toFixed(2) + "," + g.toFixed(2) : "") + (d.rotation ? " r=" + d.rotation.toFixed(2) : "")
+        );
+      }
+      e(d, d.label ? d.label : n);
+    }
+  };
+  return e(A, "stage"), t.slice(0, 400).join(" | ");
+}
+function jc(s) {
+  const A = s.eclRunner;
+  if (!A) return "-";
+  const t = s.player.position.x, e = s.player.position.y, i = A.enemies.slots.filter((a) => a.active);
+  return i.sort((a, o) => Math.hypot(a.posX - t, a.posY - e) - Math.hypot(o.posX - t, o.posY - e)), i.slice(0, 5).map(
+    (a) => a.posX.toFixed(0) + "," + a.posY.toFixed(0) + " h" + a.hp + " s" + a.subId + " d" + Math.hypot(a.posX - t, a.posY - e).toFixed(0) + " cell" + (a.anmSprite ?? -1) + "/scr" + a.anmScript + (a.anmUseStagePack ? "S" : "E") + (a.anmFlipX ? "F" : "") + (a.isBoss ? " B" : "") + (a.linkedChild ? " C" : "")
+  ).join(" | ") + " (n=" + i.length + ")";
+}
+function Tc(s) {
+  const A = s.eclRunner;
+  if (!A) return "-";
+  const t = A.shots.shots.filter((o) => o.state !== 0), e = (o) => o.x.toFixed(0) + "," + o.y.toFixed(0) + " v" + Math.hypot(o.vx, o.vy).toFixed(2) + " h" + o.angle.toFixed(2) + (o.entry && o.entry.option > 0 ? "@o" + o.entry.option : "") + (o.state === 2 ? "*" : ""), i = t.filter((o) => o.entry && o.entry.option > 0), a = t.filter((o) => !o.entry || o.entry.option === 0);
+  return `n${t.length} o${i.length} ` + [...i, ...a].slice(0, 4).map(e).join(" | ");
+}
+function Uc(s) {
+  const A = s.options.options.map(
+    (i, a) => `${a}:${i.state}.${i.substate} ${Math.round(i.x)},${Math.round(i.y)} s${i.vm.sprite}/${Math.round(i.vm.color1.a)}${i.vm.visible ? "" : "!"}`
+  ).join(" "), t = s.options.homingTarget, e = t && (t.x < 0 || t.x > F || t.y < 0 || t.y > _) ? "!" : "";
+  return A + (t ? ` tgt ${Math.round(t.x)},${Math.round(t.y)}${e}` : " tgt -");
+}
+function Rc(s) {
+  const A = [0, 0, 0, 0];
+  for (const t of s.items.items)
+    t.active && (t.rise === "hover" || t.rise === "hoverDouble" ? A[2]++ : t.rise === "scatter" ? A[3]++ : t.magnetized ? A[1]++ : A[0]++);
+  return A;
+}
+function Gc() {
+  if (typeof window > "u") return null;
+  const s = new URLSearchParams(window.location.search);
+  if (!s.has("autostart")) return null;
+  const A = ["reimu-yukari", "marisa-alice", "sakuya-remilia", "youmu-yuyuko"], t = ["easy", "normal", "hard", "lunatic"], e = s.get("team") ?? "", i = s.get("diff") ?? "", a = Number(s.get("stage")), o = s.get("route") ?? "", n = EA.includes(o) ? o : void 0;
+  return {
+    character: A.includes(e) ? e : "reimu-yukari",
+    difficulty: t.includes(i) ? i : "normal",
+    stage: a >= 1 && a <= 6 ? Math.floor(a) : 1,
+    route: n,
+    campaign: s.get("practice") !== "1" && !n
+  };
+}
+let mt = 0;
+function Vc(s, A = {}) {
+  let t = !1, e = "title", i = !1, a = !1, o = A.gameRoot, n = A.menuRoot;
+  A.resourceBase !== void 0 && Vo(A.resourceBase), mt++, !s.classList.contains("th08-host") && s.id !== "game-root" && s.classList.add("th08-host"), s.style.setProperty("--th08-title-backdrop", `url("${Y("/assets/ui/title-backdrop.png")}")`), s.style.setProperty("--th08-portrait-frame", `url("${Y("/assets/ui/portrait-frame.png")}")`), o || (o = document.createElement("div"), o.className = "th08-game-root", s.appendChild(o), i = !0), n || (n = document.createElement("div"), n.className = "th08-menu-root", s.appendChild(n), a = !0);
+  const p = new kc(o, n, {
+    listenUrlParams: A.listenUrlParams ?? !1,
+    toggleBodyClass: A.toggleBodyClass ?? !1,
+    onStageClear: A.onStageClear,
+    onError: A.onError
+  }), l = (async () => {
+    var h;
+    if (!t)
+      try {
+        if (A.autostart) {
+          e = "running";
+          const d = typeof A.autostart == "object" ? A.autostart : {
+            character: "reimu-yukari",
+            difficulty: "normal",
+            stage: 1,
+            campaign: !0
+          };
+          await p.launch(d);
+        } else
+          await p.boot();
+      } catch (d) {
+        if (!t) {
+          const w = d instanceof Error ? d : new Error(String(d));
+          throw (h = A.onError) == null || h.call(A, w), w;
+        }
+      }
+  })();
+  return {
+    get shell() {
+      return p;
+    },
+    get game() {
+      return p.getGame();
+    },
+    getGame: () => p.getGame(),
+    getState: () => ({
+      status: t ? "destroyed" : p.getGame() ? "running" : e
+    }),
+    ready: l,
+    updatePrefs: (h) => {
+      p.applyPrefs(h);
+    },
+    launch: async (h) => {
+      t || (e = "running", await p.launch(h));
+    },
+    destroy: () => {
+      t || (t = !0, e = "destroyed", p.destroy(), i && o && o.parentElement === s && o.remove(), a && n && n.parentElement === s && n.remove(), mt = Math.max(0, mt - 1), mt === 0 && Wo());
+    }
+  };
+}
 export {
-  ie as A,
-  wo as B,
-  Fl as D,
-  Kt as S,
-  Tl as T,
-  vi as a,
-  fo as b,
-  Pl as c,
-  zl as d,
-  _t as e,
-  yo as g,
-  jl as i,
-  z as n,
-  vl as r
+  Me as A,
+  $o as B,
+  ut as D,
+  le as S,
+  uc as T,
+  pa as a,
+  Ar as b,
+  pe as c,
+  Lc as d,
+  Jc as e,
+  ye as f,
+  kc as g,
+  Lt as h,
+  Fc as i,
+  vc as j,
+  jc as k,
+  tr as l,
+  Oc as m,
+  R as n,
+  Rc as o,
+  to as p,
+  Vc as q,
+  Nc as r,
+  Uc as s,
+  Tc as t,
+  eo as u,
+  Gc as v,
+  Pc as w
 };
