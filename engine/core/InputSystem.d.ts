@@ -52,6 +52,20 @@ export declare class InputSystem {
     private boundPointerUpHandler?;
     private boundPointerEnterHandler?;
     private boundPointerLeaveHandler?;
+    private boundContextMenuHandler?;
+    /** Right mouse button held. Sampled like a key so a hold bombs once, not every frame. */
+    private pointerBombHeld;
+    /** Right-click released before the next sample. Reported once, then consumed. */
+    private pointerBombTap;
+    /** Touches currently down on the game element, for the two-finger bomb tap. */
+    private activeTouches;
+    /** A second finger landed. Held only while the chord is down. */
+    private touchBombHeld;
+    /** Two-finger tap released before the next sample. Reported once, then consumed. */
+    private touchBombTap;
+    /** Bomb was already down last sample, so a hold does not re-fire every frame. */
+    private pointerBombWasDown;
+    private touchBombWasDown;
     /** True while a touch/pointer is dragging the player ship. */
     isDragging: boolean;
     /**
@@ -107,11 +121,26 @@ export declare class InputSystem {
     setMouseControl(enabled: boolean): void;
     pointerMove(clientX: number, clientY: number): void;
     pointerUp(): void;
+    /** Right mouse button down. Held state bombs on the next sample, exactly once. */
+    pressPointerBomb(): void;
+    /** Right mouse button up. A click shorter than one frame is still one bomb. */
+    releasePointerBomb(): void;
+    /**
+     * A second finger landing while one is already down is the touch bomb. The
+     * first finger keeps steering; lifting either one ends the chord, and a chord
+     * shorter than one frame is still one bomb.
+     */
+    noteTouchDown(pointerId: number): void;
+    noteTouchUp(pointerId: number): void;
     /** True when a pointer device (touch drag or opt-in mouse) is steering the ship. */
     get isSteering(): boolean;
     /** Current steering target in game coordinates, or null when no pointer is driving. */
     getPointerTarget(): Vector2 | null;
     private refreshCurrentActions;
+    /** Fold the right-click and the two-finger tap into the bomb action. */
+    private pollPointerBomb;
+    /** One pointer source: a hold fires on its first sample, a sub-frame tap fires once. */
+    private foldBomb;
     /**
      * Sample connected gamepads (via `navigator.getGamepads()` or an injected
      * provider) and merge pressed actions into the current frame state.

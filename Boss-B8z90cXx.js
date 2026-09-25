@@ -1,11 +1,11 @@
-var Le = Object.defineProperty;
-var Ge = (o, t, e) => t in o ? Le(o, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : o[t] = e;
-var a = (o, t, e) => Ge(o, typeof t != "symbol" ? t + "" : t, e);
-import { Assets as He, Container as W, Sprite as yt, Shader as Oe, compileHighShaderGlProgram as Ve, localUniformBitGl as Ue, textureBitGl as ze, roundPixelsBitGl as Ke, compileHighShaderGpuProgram as We, localUniformBit as Ye, textureBit as Xe, roundPixelsBit as qe, UniformGroup as $e, MeshGeometry as Qe, Buffer as je, BufferUsage as $t, Mesh as Je, Application as Ze, Graphics as A, Text as F, TextStyle as O, RendererType as Qt } from "pixi.js";
-function bt(o = 0, t = 0) {
+var Ne = Object.defineProperty;
+var He = (o, t, e) => t in o ? Ne(o, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : o[t] = e;
+var a = (o, t, e) => He(o, typeof t != "symbol" ? t + "" : t, e);
+import { Assets as Ge, Container as K, Sprite as bt, Shader as Oe, compileHighShaderGlProgram as Ve, localUniformBitGl as Ue, textureBitGl as ze, roundPixelsBitGl as We, compileHighShaderGpuProgram as Ke, localUniformBit as Ye, textureBit as Xe, roundPixelsBit as qe, UniformGroup as $e, MeshGeometry as Qe, Buffer as je, BufferUsage as $t, Mesh as Je, Application as Ze, Graphics as A, Text as F, TextStyle as O, RendererType as Qt } from "pixi.js";
+function yt(o = 0, t = 0) {
   return { x: o, y: t };
 }
-function Wi(o, t) {
+function Ki(o, t) {
   return { x: o.x + t.x, y: o.y + t.y };
 }
 function Yi(o, t) {
@@ -56,7 +56,7 @@ const Tt = class Tt extends Ce {
     a(this, "isAlive");
     a(this, "tag");
     a(this, "_transform");
-    this.id = `entity_${Tt.nextId++}`, this.position = bt(e.x ?? 0, e.y ?? 0), this.velocity = bt(s.x ?? 0, s.y ?? 0), this._transform = { position: this.position, velocity: this.velocity, rotation: 0 }, this.hitbox = {
+    this.id = `entity_${Tt.nextId++}`, this.position = yt(e.x ?? 0, e.y ?? 0), this.velocity = yt(s.x ?? 0, s.y ?? 0), this._transform = { position: this.position, velocity: this.velocity, rotation: 0 }, this.hitbox = {
       radius: i.radius ?? 0,
       offset: i.offset ?? { x: 0, y: 0 }
     }, this.isAlive = !0, this.tag = r;
@@ -286,14 +286,14 @@ function gs(o) {
   let t = o.bombs * ns;
   return o.timeOrbs >= o.lastSpellTimeOrbThreshold && (t += hs), t = Math.min(t, ls), o.spellCardActive && (t = Math.min(t * 2, cs)), fs(o.shotType) && (t = Math.floor(t * 9 / 5)), t;
 }
-function ys(o) {
+function bs(o) {
   return ds[ms(o) & 3] ?? 10;
 }
-function bs(o, t) {
+function ys(o, t) {
   return o ? t < 2 ? Math.max(0, t) : 2 : 1;
 }
 function Jt(o, t) {
-  return Math.min(o + 6, ys(t));
+  return Math.min(o + 6, bs(t));
 }
 const wt = {
   scaleX: 1,
@@ -496,7 +496,7 @@ const V = (o) => o, U = {
     spin: 0.03,
     blurb: "亡灵 · 缓速追踪"
   })
-}, it = 128, Zt = [8, 24, 48, 80, 128, 1 / 0], Ft = 128, Et = 10, Bt = 12, Ts = 16, Ms = 16, lt = {
+}, it = 128, Zt = [8, 24, 48, 80, 128, 1 / 0], Ft = 128, Bt = 10, Et = 12, Ts = 16, Ms = 16, lt = {
   "reimu-yukari": {
     fastSpeed: 4,
     fastDiagonalSpeed: 4 / Math.SQRT2,
@@ -533,8 +533,8 @@ const V = (o) => o, U = {
     subtitle: "平衡型 · 追踪阴阳玉",
     maxPower: it,
     pointItemValueLine: Ft,
-    itemGrabSpeed: Et,
-    itemPickupHalfExtent: Bt,
+    itemGrabSpeed: Bt,
+    itemPickupHalfExtent: Et,
     hitboxHalfExtent: 0.825,
     grazeHalfExtent: 1.4,
     bombDamage: 150,
@@ -568,8 +568,8 @@ const V = (o) => o, U = {
     subtitle: "精准型 · 时停刀刃",
     maxPower: it,
     pointItemValueLine: Ft,
-    itemGrabSpeed: Et,
-    itemPickupHalfExtent: Bt,
+    itemGrabSpeed: Bt,
+    itemPickupHalfExtent: Et,
     hitboxHalfExtent: 1,
     grazeHalfExtent: 3,
     bombDamage: 180,
@@ -585,8 +585,8 @@ const V = (o) => o, U = {
     subtitle: "近战型 · 宽幅灵刃",
     maxPower: it,
     pointItemValueLine: Ft,
-    itemGrabSpeed: Et,
-    itemPickupHalfExtent: Bt,
+    itemGrabSpeed: Bt,
+    itemPickupHalfExtent: Et,
     hitboxHalfExtent: 1,
     grazeHalfExtent: 1.5,
     bombDamage: 190,
@@ -604,7 +604,7 @@ const V = (o) => o, U = {
   maxX: 376,
   minY: 16,
   maxY: 432
-}, Cs = 14, E = class E extends Y {
+}, Cs = 14, B = class B extends Y {
   constructor(e = {}, s = {}) {
     const i = s.profile ?? (s.characterId ? St[s.characterId] : St["reimu-yukari"]);
     super(e, {}, { radius: s.hitboxRadius ?? i.hitboxHalfExtent }, "player");
@@ -813,7 +813,7 @@ const V = (o) => o, U = {
    */
   /** Pull a lane offset back inside `MUZZLE_LIMIT` of the ship centre line. */
   muzzleX(e) {
-    const s = E.MUZZLE_LIMIT;
+    const s = B.MUZZLE_LIMIT;
     return this.position.x + Math.max(-s, Math.min(s, e));
   }
   shoot(e = 0) {
@@ -901,7 +901,7 @@ const V = (o) => o, U = {
    * deathbomb worth its two bombs.
    */
   hit() {
-    return this.isInvulnerable || this.state !== "alive" ? !1 : (this.state = "dying", this.stateTimer = E.DEATH_FRAMES, this.graceTimer = gs({
+    return this.isInvulnerable || this.state !== "alive" ? !1 : (this.state = "dying", this.stateTimer = B.DEATH_FRAMES, this.graceTimer = gs({
       bombs: this.bombs,
       timeOrbs: this.timeOrbs,
       lastSpellTimeOrbThreshold: this.lastSpellTimeOrbThreshold,
@@ -927,7 +927,7 @@ const V = (o) => o, U = {
    * @returns false when there are no lives left, i.e. the run is over.
    */
   respawn() {
-    return this.lives <= 0 ? (this.state = "dead", this.isAlive = !1, this.emit("gameover"), !1) : (this.lives -= 1, this.bombs = E.INITIAL_BOMBS, this.position.x = E.RESPAWN_X, this.position.y = E.RESPAWN_Y, this.velocity.x = 0, this.velocity.y = 0, this.state = "respawning", this.stateTimer = E.SPAWN_FRAMES, this.cancelTimer = E.BULLET_CANCEL_FRAMES, this.graceTimer = 0, this.deathbombArmed = !1, this.isInvulnerable = !1, this.invulnerabilityTimer = 0, this.emit("respawn", this.lives), !0);
+    return this.lives <= 0 ? (this.state = "dead", this.isAlive = !1, this.emit("gameover"), !1) : (this.lives -= 1, this.bombs = B.INITIAL_BOMBS, this.position.x = B.RESPAWN_X, this.position.y = B.RESPAWN_Y, this.velocity.x = 0, this.velocity.y = 0, this.state = "respawning", this.stateTimer = B.SPAWN_FRAMES, this.cancelTimer = B.BULLET_CANCEL_FRAMES, this.graceTimer = 0, this.deathbombArmed = !1, this.isInvulnerable = !1, this.invulnerabilityTimer = 0, this.emit("respawn", this.lives), !0);
   }
   /** True while the ship is on screen and can be hit or can fire. */
   get isFlying() {
@@ -979,7 +979,7 @@ const V = (o) => o, U = {
     if (this.bombs <= 0) return !1;
     const e = this.state === "dying" && this.deathbombArmed && this.graceTimer > 0;
     if (!e && this.state !== "alive") return !1;
-    const s = bs(e, this.bombs);
+    const s = ys(e, this.bombs);
     return s <= 0 ? !1 : (this.bombs -= s, this.graceTimer = Jt(this.graceTimer, this.shotType), this.emit("bomb", this.bombs), !0);
   }
   /**
@@ -1000,16 +1000,16 @@ const V = (o) => o, U = {
 };
 /** 0 = member A (unfocused), 1 = member B (focused). */
 /** Death burst before the ship is allowed back (Player::Die -> 30 frames). */
-a(E, "DEATH_FRAMES", xt), /** Spawn-in scale/fade animation (FUN_0044d180 -> 30 frames). */
-a(E, "SPAWN_FRAMES", zt), /** Post-respawn bullet-cancel volume (playerStateSlotCooldown = 60). */
-a(E, "BULLET_CANCEL_FRAMES", rs), /** plyNNa.sht bombCount: every team restarts a life with 3 bombs. */
-a(E, "INITIAL_BOMBS", 3), /** Respawn point: arcadeRegionSize.x / 2, arcadeRegionSize.y - 64. */
+a(B, "DEATH_FRAMES", xt), /** Spawn-in scale/fade animation (FUN_0044d180 -> 30 frames). */
+a(B, "SPAWN_FRAMES", zt), /** Post-respawn bullet-cancel volume (playerStateSlotCooldown = 60). */
+a(B, "BULLET_CANCEL_FRAMES", rs), /** plyNNa.sht bombCount: every team restarts a life with 3 bombs. */
+a(B, "INITIAL_BOMBS", 3), /** Respawn point: arcadeRegionSize.x / 2, arcadeRegionSize.y - 64. */
 /**
  * 192 = the centre of the 384-wide playfield (`sim/Playfield.ts` RESPAWN_X). This
  * used to read 224, the centre of the retired 448-wide field, so the presentation
  * ship came back 32px right of where the sim put it.
  */
-a(E, "RESPAWN_X", 192), a(E, "RESPAWN_Y", 384), /**
+a(B, "RESPAWN_X", 192), a(B, "RESPAWN_Y", 384), /**
  * How far a volley lane may sit from the hitbox at the instant of firing.
  *
  * Retail fans a weapon out by angle rather than by moving the muzzle sideways, so
@@ -1018,8 +1018,8 @@ a(E, "RESPAWN_X", 192), a(E, "RESPAWN_Y", 384), /**
  * 0x1c bytes of `plyNNa.sht` as `unknown_fields` (`Player.hpp:13-17`) -- so this
  * is an observed bound, and every lane is clamped to it rather than tuned to it.
  */
-a(E, "MUZZLE_LIMIT", 12);
-let te = E;
+a(B, "MUZZLE_LIMIT", 12);
+let te = B;
 const ut = {
   minX: -50,
   maxX: 450,
@@ -1280,6 +1280,20 @@ class ji {
     a(this, "boundPointerUpHandler");
     a(this, "boundPointerEnterHandler");
     a(this, "boundPointerLeaveHandler");
+    a(this, "boundContextMenuHandler");
+    /** Right mouse button held. Sampled like a key so a hold bombs once, not every frame. */
+    a(this, "pointerBombHeld", !1);
+    /** Right-click released before the next sample. Reported once, then consumed. */
+    a(this, "pointerBombTap", !1);
+    /** Touches currently down on the game element, for the two-finger bomb tap. */
+    a(this, "activeTouches", /* @__PURE__ */ new Set());
+    /** A second finger landed. Held only while the chord is down. */
+    a(this, "touchBombHeld", !1);
+    /** Two-finger tap released before the next sample. Reported once, then consumed. */
+    a(this, "touchBombTap", !1);
+    /** Bomb was already down last sample, so a hold does not re-fire every frame. */
+    a(this, "pointerBombWasDown", !1);
+    a(this, "touchBombWasDown", !1);
     /** True while a touch/pointer is dragging the player ship. */
     a(this, "isDragging", !1);
     /**
@@ -1339,23 +1353,23 @@ class ji {
     }, this.boundKeyUpHandler = (i) => {
       this.rawKeysDown.delete(i.code);
     }, s == null || s.addEventListener("keydown", this.boundKeyDownHandler), s == null || s.addEventListener("keyup", this.boundKeyUpHandler), this.enableGamepad(), this.attachTarget && (this.boundPointerDownHandler = (i) => {
-      (i.pointerType === "touch" || i.button === 0) && this.pointerDown(i.clientX, i.clientY);
+      i.pointerType === "touch" ? (this.noteTouchDown(i.pointerId), this.pointerDown(i.clientX, i.clientY)) : i.button === 2 ? this.pressPointerBomb() : i.button === 0 && this.pointerDown(i.clientX, i.clientY);
     }, this.boundPointerMoveHandler = (i) => {
       this.pointerMove(i.clientX, i.clientY);
-    }, this.boundPointerUpHandler = () => {
-      this.pointerUp();
-    }, this.boundPointerEnterHandler = (i) => {
+    }, this.boundPointerUpHandler = (i) => {
+      i.pointerType === "touch" ? (this.noteTouchUp(i.pointerId), this.activeTouches.size === 0 && this.pointerUp()) : i.button === 2 ? this.releasePointerBomb() : i.button === 0 && this.pointerUp();
+    }, this.boundContextMenuHandler = (i) => i.preventDefault(), this.boundPointerEnterHandler = (i) => {
       this.mouseControl && (this.pointerInside = !0, this.pointerMove(i.clientX, i.clientY));
     }, this.boundPointerLeaveHandler = () => {
       this.pointerInside = !1;
-    }, this.attachTarget.addEventListener("pointerdown", this.boundPointerDownHandler), this.attachTarget.addEventListener("pointerenter", this.boundPointerEnterHandler), this.attachTarget.addEventListener("pointerleave", this.boundPointerLeaveHandler), s == null || s.addEventListener("pointermove", this.boundPointerMoveHandler), s == null || s.addEventListener("pointerup", this.boundPointerUpHandler));
+    }, this.attachTarget.addEventListener("pointerdown", this.boundPointerDownHandler), this.attachTarget.addEventListener("pointerenter", this.boundPointerEnterHandler), this.attachTarget.addEventListener("pointerleave", this.boundPointerLeaveHandler), s == null || s.addEventListener("pointermove", this.boundPointerMoveHandler), s == null || s.addEventListener("pointerup", this.boundPointerUpHandler), this.attachTarget.addEventListener("contextmenu", this.boundContextMenuHandler));
   }
   /**
    * 解绑输入监听。参数保留仅为兼容旧 API `detach(window)`。
    */
   detach(t) {
     const e = this.viewport;
-    this.boundKeyDownHandler && (e == null || e.removeEventListener("keydown", this.boundKeyDownHandler)), this.boundKeyUpHandler && (e == null || e.removeEventListener("keyup", this.boundKeyUpHandler)), this.boundPointerDownHandler && this.attachTarget && this.attachTarget.removeEventListener("pointerdown", this.boundPointerDownHandler), this.boundPointerMoveHandler && (e == null || e.removeEventListener("pointermove", this.boundPointerMoveHandler)), this.boundPointerUpHandler && (e == null || e.removeEventListener("pointerup", this.boundPointerUpHandler)), this.boundPointerEnterHandler && this.attachTarget && this.attachTarget.removeEventListener("pointerenter", this.boundPointerEnterHandler), this.boundPointerLeaveHandler && this.attachTarget && this.attachTarget.removeEventListener("pointerleave", this.boundPointerLeaveHandler), this.pointerInside = !1, this.attachTarget = void 0;
+    this.boundKeyDownHandler && (e == null || e.removeEventListener("keydown", this.boundKeyDownHandler)), this.boundKeyUpHandler && (e == null || e.removeEventListener("keyup", this.boundKeyUpHandler)), this.boundPointerDownHandler && this.attachTarget && this.attachTarget.removeEventListener("pointerdown", this.boundPointerDownHandler), this.boundPointerMoveHandler && (e == null || e.removeEventListener("pointermove", this.boundPointerMoveHandler)), this.boundPointerUpHandler && (e == null || e.removeEventListener("pointerup", this.boundPointerUpHandler)), this.boundPointerEnterHandler && this.attachTarget && this.attachTarget.removeEventListener("pointerenter", this.boundPointerEnterHandler), this.boundPointerLeaveHandler && this.attachTarget && this.attachTarget.removeEventListener("pointerleave", this.boundPointerLeaveHandler), this.boundContextMenuHandler && this.attachTarget && this.attachTarget.removeEventListener("contextmenu", this.boundContextMenuHandler), this.pointerInside = !1, this.pointerBombHeld = !1, this.activeTouches.clear(), this.attachTarget = void 0;
   }
   /** Simulate a key press (sampled by the next update() call, like real keydown events). */
   simulateKeyDown(t) {
@@ -1387,6 +1401,25 @@ class ji {
   pointerUp() {
     this.isDragging = !1;
   }
+  /** Right mouse button down. Held state bombs on the next sample, exactly once. */
+  pressPointerBomb() {
+    this.pointerBombHeld = !0;
+  }
+  /** Right mouse button up. A click shorter than one frame is still one bomb. */
+  releasePointerBomb() {
+    this.pointerBombHeld && !this.pointerBombWasDown && (this.pointerBombTap = !0), this.pointerBombHeld = !1;
+  }
+  /**
+   * A second finger landing while one is already down is the touch bomb. The
+   * first finger keeps steering; lifting either one ends the chord, and a chord
+   * shorter than one frame is still one bomb.
+   */
+  noteTouchDown(t) {
+    this.activeTouches.size >= 1 && !this.activeTouches.has(t) && (this.touchBombHeld = !0), this.activeTouches.add(t);
+  }
+  noteTouchUp(t) {
+    this.activeTouches.delete(t), this.touchBombHeld && this.activeTouches.size < 2 && !this.touchBombWasDown && (this.touchBombTap = !0), this.activeTouches.size < 2 && (this.touchBombHeld = !1);
+  }
   /** True when a pointer device (touch drag or opt-in mouse) is steering the ship. */
   get isSteering() {
     return this.isDragging || this.mouseControl && this.pointerInside;
@@ -1405,7 +1438,15 @@ class ji {
         this.bufferedPresses.add(t);
         for (const s of e) this.pressBuffer.delete(s);
       }
-    this.pollGamepad();
+    this.pollGamepad(), this.pollPointerBomb();
+  }
+  /** Fold the right-click and the two-finger tap into the bomb action. */
+  pollPointerBomb() {
+    this.foldBomb(this.pointerBombHeld, this.pointerBombTap, this.pointerBombWasDown), this.pointerBombTap = !1, this.pointerBombWasDown = this.pointerBombHeld, this.foldBomb(this.touchBombHeld, this.touchBombTap, this.touchBombWasDown), this.touchBombTap = !1, this.touchBombWasDown = this.touchBombHeld;
+  }
+  /** One pointer source: a hold fires on its first sample, a sub-frame tap fires once. */
+  foldBomb(t, e, s) {
+    t ? this.currentFrameDown.add("bomb") : e && !s && this.bufferedPresses.add("bomb");
   }
   /**
    * Sample connected gamepads (via `navigator.getGamepads()` or an injected
@@ -1462,9 +1503,9 @@ class ji {
     let t = 0, e = 0;
     if (this.isKeyDown("left") && (t -= 1), this.isKeyDown("right") && (t += 1), this.isKeyDown("up") && (e -= 1), this.isKeyDown("down") && (e += 1), t !== 0 && e !== 0) {
       const s = Math.SQRT1_2;
-      return bt(t * s, e * s);
+      return yt(t * s, e * s);
     }
-    return bt(t, e);
+    return yt(t, e);
   }
   /**
    * The four direction actions as the bit set `core/Movement` resolves.
@@ -1478,14 +1519,14 @@ class ji {
     return (this.isKeyDown("up") ? st.up : 0) | (this.isKeyDown("down") ? st.down : 0) | (this.isKeyDown("left") ? st.left : 0) | (this.isKeyDown("right") ? st.right : 0);
   }
 }
-const dt = 640, Z = 480, Q = 384, tt = 448, at = 32, Gt = 16;
+const dt = 640, Z = 480, Q = 384, tt = 448, at = 32, Ht = 16;
 function Ji(o) {
   return o - at;
 }
 function Zi(o) {
-  return o - Gt;
+  return o - Ht;
 }
-function Es(o, t) {
+function Bs(o, t) {
   let e = null, s = Number.POSITIVE_INFINITY;
   for (const [i, r] of Object.entries(t)) {
     const n = (r >> 16 & 255) - (o >> 16 & 255), l = (r >> 8 & 255) - (o >> 8 & 255), h = (r & 255) - (o & 255), c = n * n + l * l + h * h;
@@ -1527,7 +1568,7 @@ const k = class k {
     if (!this.bulletTexture) return null;
     const s = this.shapeByKey.get(t);
     if (!s || !this.bulletTexture.shapes.includes(s)) return null;
-    const i = Es(e, this.bulletTexture.palette) ?? "master";
+    const i = Bs(e, this.bulletTexture.palette) ?? "master";
     return (this.bulletTexture.template ?? "bullet:{shape}:{color}").replace("{shape}", s).replace("{color}", i);
   }
   /** Standalone texture name registered for a sprite key. */
@@ -1565,7 +1606,7 @@ a(k, "star", (t, e, s, { color: i, radius: r, alpha: n = 1 }) => {
   }
   t.poly(l).fill({ color: i, alpha: n });
 });
-let Ht = k;
+let Gt = k;
 const Pe = 8, v = {
   left: 64,
   top: 19,
@@ -1582,30 +1623,30 @@ const Pe = 8, v = {
   /** bossLifeBarMaxSize easing rates from Gui::FUN_00435900. */
   riseStep: 0.01,
   fallStep: 0.02
-}, Fe = 2105440, Bs = 2105376, ee = {
+}, Fe = 2105440, Es = 2105376, ee = {
   normal: [6088959, 3117008],
   spell: [16769130, 16742972]
 }, pt = [10539263, 10518783, 14713024, 16728128];
 function _s(o) {
   return o >> 2 & 4144959 | 0;
 }
-function Kt(o, t, e, s) {
+function Wt(o, t, e, s) {
   return { x: o, y: v.top, width: t, height: v.height, color: e, shade: s };
 }
 function ks(o) {
-  const t = Ee(o);
-  return Kt(v.left, v.width * t, 16777215, Fe);
+  const t = Be(o);
+  return Wt(v.left, v.width * t, 16777215, Fe);
 }
 function Ds(o, t, e) {
-  const s = Ee(t);
+  const s = Be(t);
   if (s <= 0) return [];
-  const i = Be(o), r = e ? ee.spell : ee.normal, n = [];
+  const i = Ee(o), r = e ? ee.spell : ee.normal, n = [];
   for (let l = 0; l < i; l++) {
     const h = l / i;
     if (h >= s) break;
     const c = Math.min((l + 1) / i, s), d = r[l % r.length];
     n.push(
-      Kt(
+      Wt(
         v.left + h * v.width,
         (c - h) * v.width,
         d,
@@ -1616,39 +1657,39 @@ function Ds(o, t, e) {
   return n;
 }
 function Rs(o) {
-  const t = Be(o);
+  const t = Ee(o);
   if (t <= 0) return [];
   const e = t <= 5 ? 2 : 1, s = [];
   for (let i = 0; i < t; i++) {
     const r = v.pipLeft + i * v.pipWidth / t, n = v.pipLeft + (i + 1) * v.pipWidth / t - e, l = 16777215 - Math.floor(i * 255 / 9);
-    s.push(Kt(r, Math.max(1, n - r), l, Bs));
+    s.push(Wt(r, Math.max(1, n - r), l, Es));
   }
   return s;
 }
-function Ns(o) {
+function Ls(o) {
   return o >= 20 ? pt[0] : o >= 10 ? pt[1] : o >= 5 ? pt[2] : pt[3];
 }
-function Ls(o) {
+function Ns(o) {
   const t = Math.max(0, Math.min(99, Math.floor(o)));
   return {
     x: v.timerX,
     y: v.timerY,
     text: t.toString().padStart(2, "0"),
-    color: Ns(o)
+    color: Ls(o)
   };
 }
-function Ee(o) {
+function Be(o) {
   return Math.max(0, Math.min(1, o));
 }
-function Be(o) {
+function Ee(o) {
   return Math.max(0, Math.min(Pe, Math.floor(o) || 0));
 }
 const _e = "";
 let rt = _e;
-const Gs = "1";
+const Hs = "1";
 function mt(o) {
   const t = o.startsWith("/") ? o : `/${o}`;
-  return o.includes("?") || !t.includes("/assets/") ? o : `${o}?v=${Gs}`;
+  return o.includes("?") || !t.includes("/assets/") ? o : `${o}?v=${Hs}`;
 }
 function ta(o) {
   if (!o || o === "." || o === "./") {
@@ -1663,7 +1704,7 @@ function ea() {
 function sa() {
   rt = _e;
 }
-function Wt(o, t = rt) {
+function Kt(o, t = rt) {
   if (!o || typeof o != "string" || o.startsWith("data:") || o.startsWith("blob:") || o.startsWith("http://") || o.startsWith("https://") || o.startsWith("//"))
     return o;
   if (!t || t === "/")
@@ -1679,13 +1720,13 @@ function Wt(o, t = rt) {
   }
   return mt(`${e}${s}`);
 }
-class Hs {
+class Gs {
   constructor() {
     a(this, "textures", /* @__PURE__ */ new Map());
   }
   async load(t, e) {
     try {
-      const s = await He.load(Wt(e));
+      const s = await Ge.load(Kt(e));
       return this.textures.set(t, s), s;
     } catch {
       return null;
@@ -1717,12 +1758,12 @@ class Hs {
     this.textures.clear();
   }
 }
-class N {
+class L {
   constructor(t, e = "layer") {
     a(this, "container");
     a(this, "pool", []);
     a(this, "cursor", 0);
-    this.container = new W(), this.container.label = e, t.addChild(this.container);
+    this.container = new K(), this.container.label = e, t.addChild(this.container);
   }
   begin() {
     this.cursor = 0;
@@ -1742,7 +1783,7 @@ class N {
   }
   acquire() {
     let t = this.pool[this.cursor];
-    return t || (t = new yt(), t.anchor.set(0.5), this.pool.push(t), this.container.addChild(t)), this.cursor++, t;
+    return t || (t = new bt(), t.anchor.set(0.5), this.pool.push(t), this.container.addChild(t)), this.cursor++, t;
   }
   /** Hide pooled sprites this frame did not touch. */
   end() {
@@ -1850,13 +1891,13 @@ const ot = "aFogDepth", se = (
     )
   }
 };
-function Ks() {
+function Ws() {
   return new $e({
     uFogColor: { value: new Float32Array([0, 0, 0, 1]), type: "vec4<f32>" },
     uFogRange: { value: new Float32Array([0, 0, 0, 0]), type: "vec4<f32>" }
   });
 }
-function Ws(o, t) {
+function Ks(o, t) {
   const e = o.uniforms.uFogRange;
   if (!t || !(t.far > t.near)) {
     e[0] = 0, e[1] = 0, e[2] = 0, o.update();
@@ -1867,13 +1908,13 @@ function Ws(o, t) {
 }
 function Ys(o, t) {
   return new Oe({
-    gpuProgram: We({
+    gpuProgram: Ke({
       name: "fog-mesh-gpu",
       bits: [Ye, Xe, qe, Us]
     }),
     glProgram: Ve({
       name: "fog-mesh-gl",
-      bits: [Ue, ze, Ke, zs]
+      bits: [Ue, ze, We, zs]
     }),
     // The keys are the WGSL binding names, which is how `Shader` sorts each
     // resource into its group. `textureUniforms` is the page's pixel-to-0..1
@@ -2141,7 +2182,7 @@ class Qs {
     return this.anim[this.key(t)];
   }
 }
-const ae = at + Q, ft = 32, q = { w: 128, h: 16 }, js = 432, G = 488, Js = 13, re = 16, R = {
+const ae = at + Q, ft = 32, q = { w: 128, h: 16 }, js = 432, H = 488, Js = 13, re = 16, R = {
   hiscore: 40,
   score: 56,
   player: 88,
@@ -2156,7 +2197,7 @@ const ae = at + Q, ft = 32, q = { w: 128, h: 16 }, js = 432, G = 488, Js = 13, r
 }, ti = (o) => {
   const t = Math.min(nt, Math.max(0, Math.trunc(o)));
   return Math.floor(t / 2) + ":" + (t % 2 ? "30" : "00");
-}, kt = { x: G, y: R.power, h: 16 }, le = 8, ei = 60, si = 0.5, ke = 10, ce = 80, ii = 208, C = {
+}, kt = { x: H, y: R.power, h: 16 }, le = 8, ei = 60, si = 0.5, ke = 10, ce = 80, ii = 208, C = {
   x: at,
   y: 449,
   w: 128,
@@ -2239,7 +2280,7 @@ class Vt {
     this.cursor = 0;
   }
 }
-const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1, z = "★", I = { anchorX: 0, anchorY: 0 }, di = 16773312, K = class K {
+const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1, z = "★", I = { anchorX: 0, anchorY: 0 }, di = 16773312, W = class W {
   constructor() {
     a(this, "app");
     a(this, "gameContainer");
@@ -2248,8 +2289,8 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
     a(this, "bulletGraphics");
     a(this, "entityGraphics");
     /** Named procedural sprites; renderer draws bullets by `Bullet.sprite` key. */
-    a(this, "sprites", new Ht());
-    a(this, "assets", new Hs());
+    a(this, "sprites", new Gt());
+    a(this, "assets", new Gs());
     a(this, "hudGraphics");
     a(this, "debugGraphics");
     a(this, "backgroundGraphics");
@@ -2282,7 +2323,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
      */
     a(this, "playfield", {
       x: at,
-      y: Gt,
+      y: Ht,
       width: Q,
       height: tt
     });
@@ -2426,9 +2467,9 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
     a(this, "screenFadeTint", 16777215);
     a(this, "screenFade");
     a(this, "pendingFx", []);
-    this.app = new Ze(), this.gameContainer = new W(), this.hudContainer = new W(), this.debugContainer = new W(), this.theme = "forestNight", this.playerSkin = "taisei", this.backgroundGraphics = new A(), this.gameContainer.addChild(this.backgroundGraphics), this.bgSky = new N(this.gameContainer, "bg-sky"), this.bgMid = new N(this.gameContainer, "bg-mid"), this.bgNear = new N(this.gameContainer, "bg-near"), this.backdropLayer = new W(), this.gameContainer.addChild(this.backdropLayer), this.backdropQuads = new qs(this.backdropLayer, {
+    this.app = new Ze(), this.gameContainer = new K(), this.hudContainer = new K(), this.debugContainer = new K(), this.theme = "forestNight", this.playerSkin = "taisei", this.backgroundGraphics = new A(), this.gameContainer.addChild(this.backgroundGraphics), this.bgSky = new L(this.gameContainer, "bg-sky"), this.bgMid = new L(this.gameContainer, "bg-mid"), this.bgNear = new L(this.gameContainer, "bg-near"), this.backdropLayer = new K(), this.gameContainer.addChild(this.backdropLayer), this.backdropQuads = new qs(this.backdropLayer, {
       fogShader: (e) => Ys(e, this.fog())
-    }), this.backdropFade = new A(), this.gameContainer.addChild(this.backdropFade), this.washPlate = new A(), this.gameContainer.addChild(this.washPlate), this.frameSprite = D(0, 0), this.gameContainer.addChild(this.frameSprite), this.spellCircle = D(), this.bossShadow = D(), this.gameContainer.addChild(this.spellCircle), this.gameContainer.addChild(this.bossShadow), this.entityLayer = new W(), this.gameContainer.addChild(this.entityLayer), this.itemLayer = new W(), this.gameContainer.addChild(this.itemLayer), this.entityGraphics = new A(), this.gameContainer.addChild(this.entityGraphics), this.bulletGraphics = new A(), this.gameContainer.addChild(this.bulletGraphics), this.partnerSprite = D(), this.playerSprite = D(), this.gameContainer.addChild(this.playerSprite), this.bossSprite = D(), this.gameContainer.addChild(this.bossSprite), this.laserLayer = new N(this.gameContainer, "lasers"), this.bullets = new N(this.gameContainer, "bullets"), this.playerShots = new N(this.gameContainer, "shots"), this.fx = new N(this.gameContainer, "fx"), this.bombGraphics = new A(), this.bombGraphics.blendMode = "add", this.gameContainer.addChild(this.bombGraphics), this.hitboxMarker = D(), this.hitboxMarker.blendMode = "normal", this.gameContainer.addChild(this.hitboxMarker), this.hitboxGraphics = new A(), this.gameContainer.addChild(this.hitboxGraphics), this.washFlash = new A(), this.gameContainer.addChild(this.washFlash), this.playfieldMask = new A().rect(0, 0, Q, tt).fill({ color: 16777215 }), this.gameContainer.addChild(this.playfieldMask), this.gameContainer.mask = this.playfieldMask, this.hudGraphics = new A(), this.hudContainer.addChild(this.hudGraphics), this.panelSprite = D(0, 0), this.bossGaugeGraphics = new A(), this.bossTimerText = new F({
+    }), this.backdropFade = new A(), this.gameContainer.addChild(this.backdropFade), this.washPlate = new A(), this.gameContainer.addChild(this.washPlate), this.frameSprite = D(0, 0), this.gameContainer.addChild(this.frameSprite), this.spellCircle = D(), this.bossShadow = D(), this.gameContainer.addChild(this.spellCircle), this.gameContainer.addChild(this.bossShadow), this.entityLayer = new K(), this.gameContainer.addChild(this.entityLayer), this.itemLayer = new K(), this.gameContainer.addChild(this.itemLayer), this.entityGraphics = new A(), this.gameContainer.addChild(this.entityGraphics), this.bulletGraphics = new A(), this.gameContainer.addChild(this.bulletGraphics), this.partnerSprite = D(), this.playerSprite = D(), this.gameContainer.addChild(this.playerSprite), this.bossSprite = D(), this.gameContainer.addChild(this.bossSprite), this.laserLayer = new L(this.gameContainer, "lasers"), this.bullets = new L(this.gameContainer, "bullets"), this.playerShots = new L(this.gameContainer, "shots"), this.fx = new L(this.gameContainer, "fx"), this.bombGraphics = new A(), this.bombGraphics.blendMode = "add", this.gameContainer.addChild(this.bombGraphics), this.hitboxMarker = D(), this.hitboxMarker.blendMode = "normal", this.gameContainer.addChild(this.hitboxMarker), this.hitboxGraphics = new A(), this.gameContainer.addChild(this.hitboxGraphics), this.washFlash = new A(), this.gameContainer.addChild(this.washFlash), this.playfieldMask = new A().rect(0, 0, Q, tt).fill({ color: 16777215 }), this.gameContainer.addChild(this.playfieldMask), this.gameContainer.mask = this.playfieldMask, this.hudGraphics = new A(), this.hudContainer.addChild(this.hudGraphics), this.panelSprite = D(0, 0), this.bossGaugeGraphics = new A(), this.bossTimerText = new F({
       text: "",
       style: new O({
         fontFamily: "Consolas, monospace",
@@ -2457,7 +2498,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
       this.memberText
     ])
       this.hudContainer.addChild(e);
-    this.hudIcons = new N(this.hudContainer, "hud-icons"), this.powerBar = new A(), this.hudContainer.addChild(this.powerBar), this.nightClockFace = new A(), this.nightClockHand = new A(), this.hudContainer.addChild(this.nightClockFace), this.hudContainer.addChild(this.nightClockHand), this.hudBitmap = new N(this.hudContainer, "hud-bitmap"), this.hudPopups = new N(this.hudContainer, "hud-popups"), this.hudContainer.addChild(this.partnerSprite), this.spellNameText = new F({
+    this.hudIcons = new L(this.hudContainer, "hud-icons"), this.powerBar = new A(), this.hudContainer.addChild(this.powerBar), this.nightClockFace = new A(), this.nightClockHand = new A(), this.hudContainer.addChild(this.nightClockFace), this.hudContainer.addChild(this.nightClockHand), this.hudBitmap = new L(this.hudContainer, "hud-bitmap"), this.hudPopups = new L(this.hudContainer, "hud-popups"), this.hudContainer.addChild(this.partnerSprite), this.spellNameText = new F({
       text: "",
       style: new O({
         fontFamily: "serif, sans-serif",
@@ -2518,7 +2559,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
       preference: t.backend
     }), t.container.appendChild(this.app.canvas), this.app.stage.addChild(this.gameContainer), this.app.stage.addChild(this.hudContainer), this.app.stage.addChild(this.screenFade), this.app.stage.addChild(this.debugContainer), this.app.stage.addChild(this.pauseOverlay), this.app.stage.addChild(this.pauseText), this.playfield = {
       x: at,
-      y: Gt,
+      y: Ht,
       width: Q,
       height: tt
     }, this.rightPanelX = 460, this.gameContainer.position.set(this.playfield.x, this.playfield.y), this.frameSprite.position.set(0, 0), this.panelSprite.position.set(this.rightPanelX - 12, 32);
@@ -2538,28 +2579,28 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
     this.backgroundGraphics.clear(), this.backgroundGraphics.rect(-this.playfield.x, -this.playfield.y, this.width, this.height).fill({ color: m });
     const g = c.theme ?? this.theme;
     g !== this.theme && (this.theme = g, this.scroll = 0), l || (this.scroll += c.scrollSpeed ?? 1.1);
-    const S = this.assets.get("bg:" + g + ":sky"), L = this.assets.get("bg:" + g + ":mid"), B = this.assets.get("bg:" + g + ":near"), X = Math.max(0.42, Math.min(1, c.brightness ?? 1)), De = [S, L, B].filter(Boolean).length > 1 ? 0.34 : 1;
-    this.placeLayer(this.bgSky, u ? void 0 : S, this.scroll * De, X), this.placeLayer(this.bgMid, u ? void 0 : L, this.scroll * 0.68, X * 0.96), this.placeLayer(this.bgNear, u ? void 0 : B, this.scroll, X * 0.92);
+    const S = this.assets.get("bg:" + g + ":sky"), N = this.assets.get("bg:" + g + ":mid"), E = this.assets.get("bg:" + g + ":near"), X = Math.max(0.42, Math.min(1, c.brightness ?? 1)), De = [S, N, E].filter(Boolean).length > 1 ? 0.34 : 1;
+    this.placeLayer(this.bgSky, u ? void 0 : S, this.scroll * De, X), this.placeLayer(this.bgMid, u ? void 0 : N, this.scroll * 0.68, X * 0.96), this.placeLayer(this.bgNear, u ? void 0 : E, this.scroll, X * 0.92);
     const Yt = this.assets.get("ui:frame"), J = this.usingBitmapHud();
     J ? (this.frameSprite.visible = !1, this.panelSprite.visible = !1, this.hudGraphics.clear()) : Yt ? (this.frameSprite.visible = !0, this.frameSprite.texture = Yt, this.frameSprite.position.set(0, 0)) : (this.frameSprite.visible = !1, this.hudGraphics.rect(this.playfield.x, this.playfield.y, this.playfield.width, this.playfield.height).stroke({ width: 2, color: 6011059 }));
     const Xt = this.assets.get("ui:hudPanel");
     if (Xt && !J ? (this.panelSprite.visible = !0, this.panelSprite.texture = Xt, this.panelSprite.position.set(this.rightPanelX - 12, 32)) : J || (this.panelSprite.visible = !1, this.hudGraphics.rect(this.rightPanelX - 12, 32, 180, 416).stroke({ width: 2, color: 12852794 })), this.playerSprite.visible = !1, t.isAlive || t.state === "dying") {
-      const p = t.position.x, f = t.position.y, y = $(t), x = (t.leanX ?? t.velocity.x) / Math.max(1e-3, t.fastSpeed), w = !t.isInvulnerable || Math.floor(t.invulnerabilityTimer / 6) % 2 === 0;
-      this.playerSprite.blendMode = "normal", w && this.drawMember(this.playerSprite, t.member.id, p, f, y, x), this.playerSprite.tint = t.bombStateFlash ? 15736864 : 16777215;
-      const b = this.hitboxGlow, T = b ? this.assets.get(b.key) : void 0;
-      if (b && T && b.alpha > 0 && (this.hitboxMarker.visible = !0, this.hitboxMarker.texture = T, this.hitboxMarker.position.set(p, f), this.hitboxMarker.alpha = y * b.alpha, this.hitboxMarker.rotation = b.rotation, this.hitboxMarker.scale.set(
-        b.width / Math.max(1, T.width),
-        b.height / Math.max(1, T.height)
+      const p = t.position.x, f = t.position.y, b = $(t), x = (t.leanX ?? t.velocity.x) / Math.max(1e-3, t.fastSpeed), w = !t.isInvulnerable || Math.floor(t.invulnerabilityTimer / 6) % 2 === 0;
+      this.playerSprite.blendMode = "normal", w && this.drawMember(this.playerSprite, t.member.id, p, f, b, x), this.playerSprite.tint = t.bombStateFlash ? 15736864 : 16777215;
+      const y = this.hitboxGlow, T = y ? this.assets.get(y.key) : void 0;
+      if (y && T && y.alpha > 0 && (this.hitboxMarker.visible = !0, this.hitboxMarker.texture = T, this.hitboxMarker.position.set(p, f), this.hitboxMarker.alpha = b * y.alpha, this.hitboxMarker.rotation = y.rotation, this.hitboxMarker.scale.set(
+        y.width / Math.max(1, T.width),
+        y.height / Math.max(1, T.height)
       )), t.hitboxVisible) {
-        const M = this.hitboxGraphics, _ = Math.max(yi, t.hitbox.radius);
-        M.circle(p, f, _ + bi).fill({ color: 397855, alpha: 0.82 * y }), M.circle(p, f, _).fill({ color: 16734830, alpha: 0.95 * y }), M.circle(p, f, Math.max(1.4, _ - xi)).fill({ color: 16777215, alpha: y });
+        const M = this.hitboxGraphics, _ = Math.max(bi, t.hitbox.radius);
+        M.circle(p, f, _ + yi).fill({ color: 397855, alpha: 0.82 * b }), M.circle(p, f, _).fill({ color: 16734830, alpha: 0.95 * b }), M.circle(p, f, Math.max(1.4, _ - xi)).fill({ color: 16777215, alpha: b });
       }
       if (t.switchFlash > 0) {
         const M = 1 - t.switchFlash / wi, _ = 14 + M * 30;
         this.hitboxGraphics.circle(p, f, _).stroke({
           width: 2.4 * (1 - M) + 0.4,
           color: t.member.accentColor,
-          alpha: (1 - M) * 0.9 * y
+          alpha: (1 - M) * 0.9 * b
         });
       }
     }
@@ -2567,44 +2608,44 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
     for (const p of s) {
       if (!p.isAlive) continue;
       Mt.add(p);
-      const f = p.position.x, y = p.position.y, x = $(p), w = this.sprites.textureKey(p.spriteKey ?? "enemy") ?? p.spriteKey ?? "enemy", b = this.enemySpriteFor(p);
-      if (this.drawSheet("enemy:" + w, b, f, y, x, 0, p.rotation, p.hitbox.radius * 3.4))
+      const f = p.position.x, b = p.position.y, x = $(p), w = this.sprites.textureKey(p.spriteKey ?? "enemy") ?? p.spriteKey ?? "enemy", y = this.enemySpriteFor(p);
+      if (this.drawSheet("enemy:" + w, y, f, b, x, 0, p.rotation, p.hitbox.radius * 3.4))
         continue;
       const T = this.assets.get(w) ?? this.assets.get("enemy:" + w) ?? this.assets.get("sprite:enemy:" + w);
       if (T) {
         const M = Number.isFinite(p.drawScale) && p.drawScale !== 0 ? p.drawScale : 1;
-        b.visible = !0, b.texture = T, b.position.set(f, y), b.rotation = p.rotation, b.alpha = x, b.scale.set(M);
+        y.visible = !0, y.texture = T, y.position.set(f, b), y.rotation = p.rotation, y.alpha = x, y.scale.set(M);
       } else
-        this.entityGraphics.ellipse(f - 8, y - 4, 10, 5).fill({ color: 16777215, alpha: 0.6 * x }), this.entityGraphics.ellipse(f + 8, y - 4, 10, 5).fill({ color: 16777215, alpha: 0.6 * x }), this.entityGraphics.circle(f, y, p.hitbox.radius).fill({ color: p.color, alpha: x });
+        this.entityGraphics.ellipse(f - 8, b - 4, 10, 5).fill({ color: 16777215, alpha: 0.6 * x }), this.entityGraphics.ellipse(f + 8, b - 4, 10, 5).fill({ color: 16777215, alpha: 0.6 * x }), this.entityGraphics.circle(f, b, p.hitbox.radius).fill({ color: p.color, alpha: x });
     }
     for (const [p, f] of this.enemySprites)
       Mt.has(p) || (f.visible = !1, typeof this.entityLayer.removeChild == "function" && this.entityLayer.removeChild(f), f.destroy(), this.enemySprites.delete(p));
     this.drawnEnemies = Mt.size, this.drawItems(d);
     const Re = e && "alpha" in e ? $(e) : 0;
     if (e && (e.isAlive || e.isDefeated && Re > 0)) {
-      const p = e.position.x, f = e.position.y, y = $(e);
+      const p = e.position.x, f = e.position.y, b = $(e);
       this.bossSprite.visible = !1;
       const x = this.sprites.textureKey(e.spriteKey ?? e.name) ?? e.spriteKey ?? e.name;
-      this.drawBossAura(p, f, y, e.isSpellCardActive, ge(e));
+      this.drawBossAura(p, f, b, e.isSpellCardActive, ge(e));
       const w = e.isAlive && this.drawSheet(
         "boss:" + x,
         this.bossSprite,
         p,
         f,
-        y,
+        b,
         0,
         e.rotation,
         e.hitbox.radius * 3.6
-      ), b = w ? void 0 : this.assets.get(x) ?? this.assets.get("boss:" + x) ?? this.assets.get("enemy:" + x);
-      if (b && e.isAlive)
-        this.bossSprite.visible = !0, this.bossSprite.texture = b, this.bossSprite.position.set(p, f), this.bossSprite.alpha = y, this.bossSprite.rotation = e.rotation, this.bossSprite.scale.set(1);
+      ), y = w ? void 0 : this.assets.get(x) ?? this.assets.get("boss:" + x) ?? this.assets.get("enemy:" + x);
+      if (y && e.isAlive)
+        this.bossSprite.visible = !0, this.bossSprite.texture = y, this.bossSprite.position.set(p, f), this.bossSprite.alpha = b, this.bossSprite.rotation = e.rotation, this.bossSprite.scale.set(1);
       else if (!w) {
-        const T = (0.2 + 0.1 * Math.sin(e.timer * 0.1)) * y;
-        this.entityGraphics.circle(p, f, 32).fill({ color: ge(e), alpha: T }), this.entityGraphics.circle(p, f - 6, 12).fill({ color: Ti(e), alpha: y }), this.entityGraphics.poly([
+        const T = (0.2 + 0.1 * Math.sin(e.timer * 0.1)) * b;
+        this.entityGraphics.circle(p, f, 32).fill({ color: ge(e), alpha: T }), this.entityGraphics.circle(p, f - 6, 12).fill({ color: Ti(e), alpha: b }), this.entityGraphics.poly([
           { x: p, y: f },
           { x: p - 14, y: f + 20 },
           { x: p + 14, y: f + 20 }
-        ]).fill({ color: 1710628, alpha: y });
+        ]).fill({ color: 1710628, alpha: b });
       }
       this.drawBossGauge(e);
     } else
@@ -2612,41 +2653,41 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
     for (const p of c.lasers ?? []) {
       const f = this.assets.get(p.sprite);
       if (!f) continue;
-      const y = Math.max(1, p.length), x = Math.max(1, p.width), w = p.angle;
-      for (const b of [!1, !0]) {
+      const b = Math.max(1, p.length), x = Math.max(1, p.width), w = p.angle;
+      for (const y of [!1, !0]) {
         const T = this.laserLayer.acquire();
-        T.visible = !0, T.texture = f, T.position.set(p.x, p.y), T.rotation = w, T.blendMode = b ? "add" : "normal", T.alpha = p.alpha * (b ? 0.75 : 1);
-        const M = b ? x * 0.5 : x;
-        T.scale.set(y / f.width, M / f.height);
+        T.visible = !0, T.texture = f, T.position.set(p.x, p.y), T.rotation = w, T.blendMode = y ? "add" : "normal", T.alpha = p.alpha * (y ? 0.75 : 1);
+        const M = y ? x * 0.5 : x;
+        T.scale.set(b / f.width, M / f.height);
       }
     }
     this.laserLayer.end();
     for (const p of i) {
       if (!p.isAlive) continue;
-      const y = Math.hypot(p.velocity.x, p.velocity.y) > 0.01 ? Math.atan2(p.velocity.y, p.velocity.x) : p.heading, x = p.tag === "player-bullet", w = x ? this.playerShots : this.bullets, b = x ? this.sprites.textureKey(p.sprite) ?? "shot:" + t.memberId : this.sprites.bulletTextureKey(p.sprite, p.color) ?? // Games that ship their own sliced bullet art name the bullet's `sprite`
+      const b = Math.hypot(p.velocity.x, p.velocity.y) > 0.01 ? Math.atan2(p.velocity.y, p.velocity.x) : p.heading, x = p.tag === "player-bullet", w = x ? this.playerShots : this.bullets, y = x ? this.sprites.textureKey(p.sprite) ?? "shot:" + t.memberId : this.sprites.bulletTextureKey(p.sprite, p.color) ?? // Games that ship their own sliced bullet art name the bullet's `sprite`
       // after the texture itself, so the name is usable as a key directly.
-      (this.assets.has(p.sprite) ? p.sprite : void 0), T = b ? this.assets.get(b) : void 0;
+      (this.assets.has(p.sprite) ? p.sprite : void 0), T = y ? this.assets.get(y) : void 0;
       if (T) {
         const M = p.drawRadius > 0 ? p.drawRadius * 2 : p.hitbox.radius * (x ? 4.2 : 3.1), _ = w.acquire();
-        _.visible = !0, _.texture = T, _.position.set(p.position.x, p.position.y), _.rotation = x ? p.spin * p.lifetime : y + Math.PI / 2, _.alpha = $(p), _.scale.set(M / Math.max(1, T.width));
+        _.visible = !0, _.texture = T, _.position.set(p.position.x, p.position.y), _.rotation = x ? p.spin * p.lifetime : b + Math.PI / 2, _.alpha = $(p), _.scale.set(M / Math.max(1, T.width));
       } else
         this.sprites.draw(this.bulletGraphics, p.sprite, p.position.x, p.position.y, {
           color: p.color,
           radius: p.hitbox.radius,
-          rotation: y,
+          rotation: b,
           alpha: $(p)
         });
     }
     if (this.bullets.end(), this.playerShots.end(), this.bombFlash > 0) {
-      const p = this.playfield.width / 2, f = this.playfield.height / 2, y = this.bombFlash / 18;
-      for (const [w, b] of [
+      const p = this.playfield.width / 2, f = this.playfield.height / 2, b = this.bombFlash / 18;
+      for (const [w, y] of [
         ["taisei:part:blast_huge_rays", 620],
         ["taisei:part:blast_huge_halo", 520]
       ]) {
         const T = this.assets.get(w);
         if (!T) continue;
         const M = this.fx.acquire();
-        M.visible = !0, M.texture = T, M.position.set(p, f), M.rotation = w.endsWith("rays") ? (1 - y) * 0.7 : 0, M.alpha = Math.min(1, y * (w.endsWith("rays") ? 0.9 : 0.7)), M.tint = this.bombFlashTint, M.blendMode = "add", M.scale.set(b / Math.max(1, T.width));
+        M.visible = !0, M.texture = T, M.position.set(p, f), M.rotation = w.endsWith("rays") ? (1 - b) * 0.7 : 0, M.alpha = Math.min(1, b * (w.endsWith("rays") ? 0.9 : 0.7)), M.tint = this.bombFlashTint, M.blendMode = "add", M.scale.set(y / Math.max(1, T.width));
       }
       const x = this.assets.get("fx:bombFlash") ?? this.assets.get("fx:glow");
       if (x) {
@@ -2658,10 +2699,10 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
     for (const p of this.pendingFx.splice(0)) {
       const f = this.assets.get(p.texture);
       if (!f) continue;
-      const y = this.fx.acquire();
-      y.visible = !0, y.texture = f, y.position.set(p.x, p.y), y.alpha = p.alpha, y.rotation = p.rotation ?? 0, p.tint !== void 0 && (y.tint = p.tint), y.blendMode = p.additive ? "add" : "normal";
+      const b = this.fx.acquire();
+      b.visible = !0, b.texture = f, b.position.set(p.x, p.y), b.alpha = p.alpha, b.rotation = p.rotation ?? 0, p.tint !== void 0 && (b.tint = p.tint), b.blendMode = p.additive ? "add" : "normal";
       const x = p.width ?? p.size, w = p.height ?? p.size;
-      y.scale.set(
+      b.scale.set(
         (p.flipX ? -x : x) / Math.max(1, f.width),
         w / Math.max(1, f.height)
       );
@@ -2674,28 +2715,28 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
       this.livesText.text = "Player: " + (p ? "" : r.lives > 0 ? z.repeat(Math.min(8, r.lives)) : "-"), this.bombsText.text = "Spell:  " + (p ? "" : z.repeat(Math.max(0, r.bombs))), this.drawHudIcons(r.lives, r.bombs, (f) => 40 + f * 21), this.powerText.text = "Power:  " + r.power + " / " + r.maxPower, this.grazeText.text = "Graze:  " + r.graze, this.stageText.text = "Stage " + r.stageNumber + " - " + r.difficulty, this.timeText.text = "Time: " + r.timePhase, this.memberText.text = "Member: " + r.memberLabel + (r.focusActive ? " *" : "");
     }
     this.drawTeamStatus(t, c.youkaiMeter), this.drawScorePopups(c.scorePopups);
-    const vt = this.assets.get("taisei:ui:spell"), Ne = this.assets.get("ui:spellBanner"), Ct = r.spellCutIn ? this.assets.get(r.spellCutIn) : void 0;
+    const vt = this.assets.get("taisei:ui:spell"), Le = this.assets.get("ui:spellBanner"), Ct = r.spellCutIn ? this.assets.get(r.spellCutIn) : void 0;
     if (r.spellCardName) {
       this.spellNameText.text = r.spellCardName, this.spellTimerText.text = Math.ceil(r.spellCardTime).toString(), this.spellNameText.visible = !0, this.spellTimerText.visible = !0;
-      const p = K.DISPLAY_WINDOW - Math.max(0, r.spellCardDisplayTimer), f = Math.min(1, p / K.DISPLAY_ANIM_FRAMES), y = 1 - Math.pow(1 - f, 3), x = this.width / 2, w = x + (1 - y) * (this.width - x);
-      this.spellCapturedText.visible = r.spellCaptured, this.spellCapturedText.position.set(this.spellNameText.position.x, this.spellNameText.position.y + 14), this.spellNameText.alpha = Math.min(1, 0.2 + y * 0.8), this.spellNameText.scale.set(1.6 - 0.6 * y), this.spellNameText.position.set(w, this.height / 2 - 14);
-      const b = Ne ?? vt;
-      b ? (this.bannerSprite.visible = !0, this.bannerSprite.texture = b, this.bannerSprite.position.set(w, this.height / 2 - 14), this.bannerSprite.alpha = this.spellNameText.alpha, this.bannerSprite.blendMode = b === vt ? "add" : "normal", this.bannerSprite.scale.set((b === vt ? 430 : 420) / Math.max(1, b.width))) : this.bannerSprite.visible = !1;
+      const p = W.DISPLAY_WINDOW - Math.max(0, r.spellCardDisplayTimer), f = Math.min(1, p / W.DISPLAY_ANIM_FRAMES), b = 1 - Math.pow(1 - f, 3), x = this.width / 2, w = x + (1 - b) * (this.width - x);
+      this.spellCapturedText.visible = r.spellCaptured, this.spellCapturedText.position.set(this.spellNameText.position.x, this.spellNameText.position.y + 14), this.spellNameText.alpha = Math.min(1, 0.2 + b * 0.8), this.spellNameText.scale.set(1.6 - 0.6 * b), this.spellNameText.position.set(w, this.height / 2 - 14);
+      const y = Le ?? vt;
+      y ? (this.bannerSprite.visible = !0, this.bannerSprite.texture = y, this.bannerSprite.position.set(w, this.height / 2 - 14), this.bannerSprite.alpha = this.spellNameText.alpha, this.bannerSprite.blendMode = y === vt ? "add" : "normal", this.bannerSprite.scale.set((y === vt ? 430 : 420) / Math.max(1, y.width))) : this.bannerSprite.visible = !1;
     } else
       this.spellNameText.visible = !1, this.spellTimerText.visible = !1, this.spellCapturedText.visible = !1, this.bannerSprite.visible = !1, this.spellNameText.scale.set(1), this.spellNameText.alpha = 1;
     if (Ct && r.spellCardDisplayTimer > 0) {
-      const p = r.spellCardDisplayTimer, f = (K.DISPLAY_WINDOW - p) / K.DISPLAY_ANIM_FRAMES, y = 1 - Math.pow(1 - Math.min(1, f), 3), x = r.spellCutInSide === "player", w = 210, b = x ? this.playfield.x + this.playfield.width - 6 : this.playfield.x + 6;
+      const p = r.spellCardDisplayTimer, f = (W.DISPLAY_WINDOW - p) / W.DISPLAY_ANIM_FRAMES, b = 1 - Math.pow(1 - Math.min(1, f), 3), x = r.spellCutInSide === "player", w = 210, y = x ? this.playfield.x + this.playfield.width - 6 : this.playfield.x + 6;
       this.cutInSprite.visible = !0, this.cutInSprite.texture = Ct, this.cutInSprite.scale.set(w / Math.max(1, Ct.height)), this.cutInSprite.anchor.set(x ? 1 : 0, 0.5), this.cutInSprite.position.set(
-        b + (x ? 1 : -1) * (1 - y) * (w * 0.8),
+        y + (x ? 1 : -1) * (1 - b) * (w * 0.8),
         this.playfield.y + this.playfield.height - w / 2 - 10
       ), this.cutInSprite.alpha = Math.min(1, p / 18) * 0.96;
     } else
       this.cutInSprite.visible = !1;
     const At = r.bossWarning ? this.assets.get("taisei:ui:boss_indicator") : void 0;
     if (At) {
-      const p = r.centerMessageTimer, f = Math.min(1, (mi - p) / fi), y = 1 - Math.pow(1 - f, 3), x = 210, w = this.playfield.x + this.playfield.width / 2, b = this.playfield.x - x;
+      const p = r.centerMessageTimer, f = Math.min(1, (mi - p) / fi), b = 1 - Math.pow(1 - f, 3), x = 210, w = this.playfield.x + this.playfield.width / 2, y = this.playfield.x - x;
       this.bossWarningSprite.visible = !0, this.bossWarningSprite.texture = At, this.bossWarningSprite.anchor.set(0.5, 0.5), this.bossWarningSprite.scale.set(x / Math.max(1, At.width)), this.bossWarningSprite.position.set(
-        b + (w - b) * y,
+        y + (w - y) * b,
         this.playfield.y + this.playfield.height * 0.3
       ), this.bossWarningSprite.alpha = Math.min(1, p / 24), this.centerBannerText.visible = !1;
     } else
@@ -2749,9 +2790,9 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
         const r = i.alpha;
         switch (i.shape) {
           case "beam": {
-            const n = Math.cos(i.angle), l = Math.sin(i.angle), h = -l, c = n, d = i.x + n * i.radius, u = i.y + l * i.radius, m = (g, S, L) => {
-              const B = i.width * g;
-              s.moveTo(i.x + h * B, i.y + c * B).lineTo(d + h * B * 0.6, u + c * B * 0.6).lineTo(d - h * B * 0.6, u - c * B * 0.6).lineTo(i.x - h * B, i.y - c * B).closePath().fill({ color: S, alpha: L });
+            const n = Math.cos(i.angle), l = Math.sin(i.angle), h = -l, c = n, d = i.x + n * i.radius, u = i.y + l * i.radius, m = (g, S, N) => {
+              const E = i.width * g;
+              s.moveTo(i.x + h * E, i.y + c * E).lineTo(d + h * E * 0.6, u + c * E * 0.6).lineTo(d - h * E * 0.6, u - c * E * 0.6).lineTo(i.x - h * E, i.y - c * E).closePath().fill({ color: S, alpha: N });
             };
             m(2.1, i.color, 0.16 * r), m(1.25, i.color, 0.4 * r), m(0.55, 16777215, 0.92 * r);
             for (let g = -1; g <= 1; g++) {
@@ -2852,7 +2893,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
       n(h);
     for (const h of Rs(t.remainingBars))
       n(h);
-    const l = Ls(t.spellcardSecondsRemaining);
+    const l = Ns(t.spellcardSecondsRemaining);
     this.bossTimerText.visible = t.isSpellCardActive && l.text !== "00", this.bossTimerText.text = l.text, this.bossTimerText.style.fill = l.color, this.bossTimerText.alpha = s;
   }
   drawBossAura(t, e, s, i, r) {
@@ -2980,13 +3021,13 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
       const m = this.assets.get(ai(u)), g = R[u];
       m && i.draw({ texture: m, x: js, y: g, ...I });
     }
-    this.drawHudText(t.formattedHiScore, G, R.hiscore), this.drawHudText(t.formattedScore, G, R.score);
+    this.drawHudText(t.formattedHiScore, H, R.hiscore), this.drawHudText(t.formattedScore, H, R.score);
     const h = this.assets.get(ue("life"));
     if (h)
       for (let u = 0; u < Math.max(0, t.lives); u++)
         i.draw({
           texture: h,
-          x: G + u * re,
+          x: H + u * re,
           y: R.player,
           ...I
         });
@@ -2995,7 +3036,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
       for (let u = 0; u < Math.max(0, t.bombs); u++)
         i.draw({
           texture: c,
-          x: G + u * re,
+          x: H + u * re,
           y: R.spell,
           ...I
         });
@@ -3006,7 +3047,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
         this.powerBar.rect(kt.x + g * m, kt.y, m + 0.5, kt.h).fill({ color: 14737663, alpha: 0.875 - 0.375 * S });
       }
     }
-    if (this.drawHudText(t.power < t.maxPower ? String(t.power) : "MAX", G, R.power), this.drawHudText(String(t.graze), G, R.graze), this.drawPointRow(String(t.pointItems), String(t.nextPointExtend), R.point), t.timeOrbThreshold === null)
+    if (this.drawHudText(t.power < t.maxPower ? String(t.power) : "MAX", H, R.power), this.drawHudText(String(t.graze), H, R.graze), this.drawPointRow(String(t.pointItems), String(t.nextPointExtend), R.point), t.timeOrbThreshold === null)
       this.drawPointRow(String(t.timeOrbs), String(t.timeOrbTotal), R.time);
     else {
       const u = t.timeOrbs >= t.timeOrbThreshold;
@@ -3043,7 +3084,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
    * retail's whole-row `SetColor`, so it has to cover the slash as well as the digits.
    */
   drawPointRow(t, e, s, i) {
-    const r = this.drawHudText(t, G, s, 1, "left", { tint: i }), n = G + r, l = this.assets.get(Ot(47));
+    const r = this.drawHudText(t, H, s, 1, "left", { tint: i }), n = H + r, l = this.assets.get(Ot(47));
     l && this.hudBitmap.draw({
       texture: l,
       x: n,
@@ -3343,12 +3384,12 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
     const r = e.width >= this.playfield.width / 2 ? this.playfield.width / e.width : 1, n = e.width * r, l = e.height * r, h = Math.ceil(this.playfield.width / n), c = Math.min(4, Math.round(2 * r)), d = Math.max(1, l - c), u = Math.ceil(this.playfield.height / d) + 1, m = (s % d + d) % d, g = Mi(i);
     t.begin();
     for (let S = u; S >= -1; S--)
-      for (let L = 0; L < h; L++) {
-        const B = Math.abs(S % 2) === 1, X = Math.abs(L % 2) === 1, H = t.acquire();
-        H.visible = !0, H.anchor.set(0, 0), H.texture = e, H.position.set(
-          L * n + (X ? n : 0),
-          S * d + m - l + (B ? l : 0)
-        ), H.alpha = 1, H.tint = g, H.scale.set(X ? -r : r, B ? -r : r);
+      for (let N = 0; N < h; N++) {
+        const E = Math.abs(S % 2) === 1, X = Math.abs(N % 2) === 1, G = t.acquire();
+        G.visible = !0, G.anchor.set(0, 0), G.texture = e, G.position.set(
+          N * n + (X ? n : 0),
+          S * d + m - l + (E ? l : 0)
+        ), G.alpha = 1, G.tint = g, G.scale.set(X ? -r : r, E ? -r : r);
       }
     t.end();
   }
@@ -3363,7 +3404,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
   }
   /** The backdrop layer's fog block, made on first fogged quad. */
   fog() {
-    return this.fogBlock ?? (this.fogBlock = Ks()), this.fogBlock;
+    return this.fogBlock ?? (this.fogBlock = Ws()), this.fogBlock;
   }
   /**
    * Put a game-authored 3D backdrop onto the GPU.
@@ -3375,7 +3416,7 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
   drawBackdrop(t) {
     if (this.backdropQuads.begin(), this.backdropFade.clear(), !t)
       return this.backdropQuads.end(), !1;
-    if (t.quads.some((e) => e.depth) && Ws(this.fog(), t.fog ?? null), t.quads.some((e) => !this.assets.has(e.page)))
+    if (t.quads.some((e) => e.depth) && Ks(this.fog(), t.fog ?? null), t.quads.some((e) => !this.assets.has(e.page)))
       return this.backdropQuads.end(), !1;
     for (const e of t.quads) {
       const s = this.assets.get(e.page);
@@ -3409,50 +3450,50 @@ const ui = (o, t) => o === ke && t > 0 ? o : o + hi[t], $ = (o) => o.alpha ?? 1,
   }
   itemSpriteFor(t) {
     let e = this.itemSprites.get(t);
-    return e || (e = new yt(), e.anchor.set(0.5, 0.5), this.itemSprites.set(t, e), this.itemLayer.addChild(e)), e;
+    return e || (e = new bt(), e.anchor.set(0.5, 0.5), this.itemSprites.set(t, e), this.itemLayer.addChild(e)), e;
   }
   enemySpriteFor(t) {
     let e = this.enemySprites.get(t);
-    return e || (e = new yt(), e.anchor.set(0.5, 0.5), this.enemySprites.set(t, e), this.entityLayer.addChild(e)), e;
+    return e || (e = new bt(), e.anchor.set(0.5, 0.5), this.enemySprites.set(t, e), this.entityLayer.addChild(e)), e;
   }
   destroy() {
     this.assets.clear(), this.app.destroy(!0, { children: !0, texture: !0 });
   }
 };
 /** HUD.showSpellCard display window (frames); the first slice is the pop-in. */
-a(K, "DISPLAY_WINDOW", 90), a(K, "DISPLAY_ANIM_FRAMES", 30);
-let fe = K;
-const oa = 0, na = 0, ha = (o, t) => (e) => o + ":" + t + ":frame" + String(e).padStart(4, "0"), pi = 96, mi = 150, fi = 18, gi = 1.5, yi = 3.4, bi = 2.6, xi = 1.4, wi = 14, Si = 0.6, la = 0.26, ge = (o) => o.displayColor ?? (o.isSpellCardActive ? 16720469 : 4491519), Ti = (o) => o.accentColor ?? 16769126;
+a(W, "DISPLAY_WINDOW", 90), a(W, "DISPLAY_ANIM_FRAMES", 30);
+let fe = W;
+const oa = 0, na = 0, ha = (o, t) => (e) => o + ":" + t + ":frame" + String(e).padStart(4, "0"), pi = 96, mi = 150, fi = 18, gi = 1.5, bi = 3.4, yi = 2.6, xi = 1.4, wi = 14, Si = 0.6, la = 0.26, ge = (o) => o.displayColor ?? (o.isSpellCardActive ? 16720469 : 4491519), Ti = (o) => o.accentColor ?? 16769126;
 function D(o = 0.5, t = o) {
-  const e = new yt();
+  const e = new bt();
   return e.anchor.set(o, t), e.visible = !1, e;
 }
 function Mi(o) {
   const t = Math.max(0, Math.min(1, o)) * 255, e = Math.round(t);
   return e << 16 | e << 8 | e;
 }
-const vi = 1, ye = 3;
-function Nt(o, t) {
+const vi = 1, be = 3;
+function Lt(o, t) {
   return String.fromCharCode(o[t], o[t + 1], o[t + 2], o[t + 3]);
 }
-function Lt(o, t) {
+function Nt(o, t) {
   return o[t] | o[t + 1] << 8;
 }
-function be(o, t) {
+function ye(o, t) {
   return (o[t] | o[t + 1] << 8 | o[t + 2] << 16 | o[t + 3] << 24) >>> 0;
 }
 function Ci(o) {
-  if (o.length < 12 || Nt(o, 0) !== "RIFF" || Nt(o, 8) !== "WAVE") return null;
+  if (o.length < 12 || Lt(o, 0) !== "RIFF" || Lt(o, 8) !== "WAVE") return null;
   let t = 0, e = 0, s = 0, i = 0, r = null;
   for (let d = 12; d + 8 <= o.length; ) {
-    const u = Nt(o, d), m = be(o, d + 4), g = d + 8;
-    u === "fmt " ? (t = Lt(o, g), e = Lt(o, g + 2), s = be(o, g + 4), i = Lt(o, g + 14)) : u === "data" && (r = o.subarray(g, Math.min(g + m, o.length))), d = g + m + m % 2;
+    const u = Lt(o, d), m = ye(o, d + 4), g = d + 8;
+    u === "fmt " ? (t = Nt(o, g), e = Nt(o, g + 2), s = ye(o, g + 4), i = Nt(o, g + 14)) : u === "data" && (r = o.subarray(g, Math.min(g + m, o.length))), d = g + m + m % 2;
   }
-  if (!(r != null && r.length) || !e || !s || !i || t !== vi && t !== ye) return null;
+  if (!(r != null && r.length) || !e || !s || !i || t !== vi && t !== be) return null;
   const n = i / 8, l = Math.floor(r.length / n), h = new Float32Array(l), c = new DataView(r.buffer, r.byteOffset, r.byteLength);
   for (let d = 0; d < l; d++) {
     const u = d * n;
-    if (t === ye)
+    if (t === be)
       h[d] = i === 32 ? c.getFloat32(u, !0) : c.getFloat64(u, !0);
     else if (i === 8)
       h[d] = (r[u] - 128) / 128;
@@ -3476,7 +3517,7 @@ function Fi(o) {
   const e = 1 - t;
   return 1 - e * e * e;
 }
-function Ei(o, t) {
+function Bi(o, t) {
   const e = Fi(t);
   return e <= 0 ? 0 : Pi(Math.round((o + 5e3) * e) - 5e3);
 }
@@ -3486,9 +3527,9 @@ function xe(o, t, e) {
       return s.panSum += e, s.panCount += 1, !1;
   return o.length >= Ai ? !1 : (o.push({ idx: t, panSum: e, panCount: 1, tries: 0 }), !0);
 }
-const Bi = (o) => fetch(Wt(o)).then((t) => t.ok ? t.arrayBuffer() : Promise.reject(new Error(`HTTP ${t.status}`)));
+const Ei = (o) => fetch(Kt(o)).then((t) => t.ok ? t.arrayBuffer() : Promise.reject(new Error(`HTTP ${t.status}`)));
 class _i {
-  constructor(t, e, s = Bi) {
+  constructor(t, e, s = Ei) {
     a(this, "slots", []);
     /** Decoded audio, keyed by file path so indices sharing a recording share it too. */
     a(this, "buffers", /* @__PURE__ */ new Map());
@@ -3588,7 +3629,7 @@ class _i {
           n && !this.failed.has(n) && i.tries < Ii && (i.tries += 1, xe(this.slots, i.idx, i.panSum / i.panCount));
           continue;
         }
-        const h = Ei(r.mb, this.volume);
+        const h = Bi(r.mb, this.volume);
         if (h <= 0) continue;
         (s = this.voices.get(i.idx)) == null || s.stop();
         const c = t.createBufferSource();
@@ -3741,7 +3782,7 @@ class ca {
     const h = Math.max(0, Math.min(1, i ?? this.bgmVolume));
     if (this.isBgmPlaying = !0, !(typeof window > "u"))
       if (t) {
-        if (this.bgmAudio = new Audio(Wt(t)), this.bgmLoopFrom = s && e.loopFromSeconds !== void 0 && e.loopFromSeconds > 0 ? e.loopFromSeconds : void 0, this.bgmAudio.loop = s && this.bgmLoopFrom === void 0, this.bgmAudio.muted = this.isMuted, this.bgmAudio.volume = this.isMuted ? 0 : h, this.fadeInMs > 0 && !this.isMuted) {
+        if (this.bgmAudio = new Audio(Kt(t)), this.bgmLoopFrom = s && e.loopFromSeconds !== void 0 && e.loopFromSeconds > 0 ? e.loopFromSeconds : void 0, this.bgmAudio.loop = s && this.bgmLoopFrom === void 0, this.bgmAudio.muted = this.isMuted, this.bgmAudio.volume = this.isMuted ? 0 : h, this.fadeInMs > 0 && !this.isMuted) {
           this.bgmAudio.volume = 0;
           const c = 20;
           let d = 0;
@@ -4118,7 +4159,7 @@ const we = {
     bombs: 0
   },
   surge: { sprite: "taisei:item:surge", size: 22, color: 16767088, power: 2, score: 50, lives: 0, bombs: 0 }
-}, Ri = 0.08, Ni = 0.955, Li = 2.2, Gi = 2.6, Hi = 92, Oi = 128, Vi = 48;
+}, Ri = 0.08, Li = 0.955, Ni = 2.2, Hi = 2.6, Gi = 92, Oi = 128, Vi = 48;
 class Ui extends Y {
   constructor(e = {}, s = {}, i = {}) {
     const r = i.kind ?? "powerSmall", n = we[r];
@@ -4137,7 +4178,7 @@ class Ui extends Y {
     this.kind = i, this.spec = we[i], this.hitbox.radius = this.spec.size / 2, this.position.x = e, this.position.y = s, this.velocity.x = 0, this.velocity.y = 0, this.alpha = 1, this.timer = 0, this.magnetized = !1, this.isAlive = !0;
   }
   update(e) {
-    this.isAlive && (this.timer += e, this.velocity.y = Math.min(Li, this.velocity.y + Ri * e), this.velocity.x *= Math.pow(Ni, e), super.update(e));
+    this.isAlive && (this.timer += e, this.velocity.y = Math.min(Ni, this.velocity.y + Ri * e), this.velocity.x *= Math.pow(Li, e), super.update(e));
   }
   /** Curve the item toward `target`, ramping up speed the closer it gets. */
   attract(e, s, i = 1) {
@@ -4184,7 +4225,7 @@ class pa {
     const r = this.pool.pop() ?? new Ui();
     r.reset(e, s, t);
     const n = this.rng() * Math.PI * 2, l = 0.6 + this.rng() * 1.5;
-    return r.velocity.x = Math.cos(n) * l, r.velocity.y = Math.max(-Gi, -Math.abs(Math.sin(n)) * l - 0.4), r.position.x += Math.cos(n) * i * 0.5, r.isAlive = !0, this.items.push(r), this.items.length > Te && this.release(this.items.shift()), r;
+    return r.velocity.x = Math.cos(n) * l, r.velocity.y = Math.max(-Hi, -Math.abs(Math.sin(n)) * l - 0.4), r.position.x += Math.cos(n) * i * 0.5, r.isAlive = !0, this.items.push(r), this.items.length > Te && this.release(this.items.shift()), r;
   }
   /**
    * Advance every item and return the ones the player touched.
@@ -4201,7 +4242,7 @@ class pa {
         continue;
       }
       const d = r - c.position.x, u = n - c.position.y, m = Math.hypot(d, u);
-      (l || m < Hi) && c.attract(e.position, t, l ? 1.6 : 1), c.update(t);
+      (l || m < Gi) && c.attract(e.position, t, l ? 1.6 : 1), c.update(t);
       const g = c.hitbox.radius;
       if (c.position.x < s.minX + g ? (c.position.x = s.minX + g, c.velocity.x = Math.abs(c.velocity.x) * 0.5) : c.position.x > s.maxX - g && (c.position.x = s.maxX - g, c.velocity.x = -Math.abs(c.velocity.x) * 0.5), m <= c.hitbox.radius + 8) {
         i.push(this.toResult(c)), this.items.splice(h, 1), this.release(c);
@@ -4382,7 +4423,7 @@ class ga {
     return e;
   }
 }
-class ya {
+class ba {
   constructor(t) {
     a(this, "cursor", 0);
     this.data = t;
@@ -4398,7 +4439,7 @@ class ya {
     return this.cursor >= this.data.frames.length;
   }
 }
-function ba(o) {
+function ya(o) {
   const t = [
     "up",
     "down",
@@ -4545,7 +4586,7 @@ export {
   ua as N,
   Ut as O,
   Q as P,
-  ya as Q,
+  ba as Q,
   ga as R,
   ma as S,
   Zi as T,
@@ -4564,28 +4605,28 @@ export {
   Se as a4,
   Oi as a5,
   Vi as a6,
-  Ni as a7,
+  Li as a7,
   Ri as a8,
-  Hi as a9,
+  Gi as a9,
   oa as aA,
   Si as aB,
-  Wi as aC,
+  Ki as aC,
   ts as aD,
-  bt as aE,
+  yt as aE,
   ve as aF,
   Xi as aG,
   ht as aH,
   ea as aI,
-  Es as aJ,
-  ba as aK,
+  Bs as aJ,
+  ya as aK,
   as as aL,
   Yi as aM,
-  Li as aa,
-  Gi as ab,
+  Ni as aa,
+  Hi as ab,
   we as ac,
   Ui as ad,
   Te as ae,
-  Hs as af,
+  Gs as af,
   pi as ag,
   mi as ah,
   fi as ai,
@@ -4596,16 +4637,16 @@ export {
   vs as an,
   Y as ao,
   Ce as ap,
-  bi as aq,
+  yi as aq,
   xi as ar,
-  yi as as,
+  bi as as,
   Me as at,
   na as au,
   la as av,
   gi as aw,
   Cs as ax,
   As as ay,
-  Ht as az,
+  Gt as az,
   ri as b,
   oi as c,
   ai as d,
@@ -4613,22 +4654,22 @@ export {
   Dt as f,
   tt as g,
   Ot as h,
-  ys as i,
+  bs as i,
   ss as j,
   xt as k,
   gs as l,
   es as m,
   zt as n,
-  bs as o,
+  ys as o,
   Jt as p,
   ms as q,
-  Wt as r,
+  Kt as r,
   Ss as s,
   ha as t,
   ps as u,
   qi as v,
   Ae as w,
-  Gt as x,
+  Ht as x,
   at as y,
   Vt as z
 };
