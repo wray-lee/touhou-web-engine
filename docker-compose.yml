@@ -1,0 +1,10 @@
+services:
+  th08:
+    image: ghcr.io/wray-lee/touhou-web-engine:latest
+    build: .
+    ports:
+      - "8080:80"
+    # Decoded retail data. Generate with `npm run assets:th08`, then point this
+    # at public/assets/th08. The game runs without it; textures and audio 404.
+    volumes:
+      - ./public/assets/th08:/th08-assets:ro
