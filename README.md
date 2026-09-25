@@ -1,4 +1,4 @@
-# @uestc-touhou/touhou-web-engine
+# TOUHOU web engine
 
 > A high-performance, extensible STG (danmaku) game engine designed to recreate Touhou Project in the browser.
 
