@@ -136,7 +136,7 @@ describe('InputSystem', () => {
         input.attach(env.element, { width: 640, height: 480 });
 
         // Touch pointerdown on the game element starts a drag
-        env.emitOnElement('pointerdown', { pointerType: 'touch', button: 0, clientX: 120, clientY: 300 });
+        env.emitOnElement('pointerdown', { pointerType: 'touch', pointerId: 1, button: 0, clientX: 120, clientY: 300 });
         expect(input.isDragging).toBe(true);
         expect(input.getPointerTarget()).toEqual({ x: 120, y: 300 });
 
@@ -144,9 +144,85 @@ describe('InputSystem', () => {
         env.emitOnWindow('pointermove', { pointerType: 'touch', clientX: 200, clientY: 150 });
         expect(input.getPointerTarget()).toEqual({ x: 200, y: 150 });
 
-        env.emitOnWindow('pointerup', { pointerType: 'touch' });
+        env.emitOnWindow('pointerup', { pointerType: 'touch', pointerId: 1 });
         expect(input.isDragging).toBe(false);
         expect(input.getPointerTarget()).toBeNull();
+      } finally {
+        if (hadWindow) g.window = originalWindow;
+        else delete g.window;
+      }
+    });
+
+    it('right click bombs once, suppresses the browser menu, and does not steer', () => {
+      const env = makePointerEnv({ left: 0, top: 0, width: 640, height: 480 });
+      const g = globalThis as { window?: unknown };
+      const hadWindow = 'window' in g;
+      const originalWindow = g.window;
+      g.window = env.fakeWindow;
+      try {
+        const input = new InputSystem();
+        input.attach(env.element);
+        input.update();
+
+        let prevented = false;
+        env.emitOnElement('contextmenu', { preventDefault: () => { prevented = true; } });
+        expect(prevented).toBe(true);
+
+        env.emitOnElement('pointerdown', { pointerType: 'mouse', button: 2, clientX: 10, clientY: 10 });
+        expect(input.isDragging).toBe(false);
+        input.update();
+        expect(input.wasKeyPressed('bomb')).toBe(true);
+        input.update();
+        expect(input.wasKeyPressed('bomb')).toBe(false);
+
+        env.emitOnElement('pointerup', { pointerType: 'mouse', button: 2 });
+        input.update();
+        expect(input.wasKeyPressed('bomb')).toBe(false);
+      } finally {
+        if (hadWindow) g.window = originalWindow;
+        else delete g.window;
+      }
+    });
+
+    it('a right click shorter than one frame still bombs once', () => {
+      const input = new InputSystem();
+      input.update();
+      input.pressPointerBomb();
+      input.releasePointerBomb();
+      input.update();
+      expect(input.wasKeyPressed('bomb')).toBe(true);
+      input.update();
+      expect(input.wasKeyPressed('bomb')).toBe(false);
+    });
+
+    it('a second finger taps the bomb and the first finger keeps steering', () => {
+      const env = makePointerEnv({ left: 0, top: 0, width: 640, height: 480 });
+      const g = globalThis as { window?: unknown };
+      const hadWindow = 'window' in g;
+      const originalWindow = g.window;
+      g.window = env.fakeWindow;
+      try {
+        const input = new InputSystem();
+        input.attach(env.element);
+        input.update();
+
+        env.emitOnElement('pointerdown', { pointerType: 'touch', pointerId: 1, button: 0, clientX: 10, clientY: 10 });
+        input.update();
+        expect(input.isDragging).toBe(true);
+        expect(input.wasKeyPressed('bomb')).toBe(false);
+
+        env.emitOnElement('pointerdown', { pointerType: 'touch', pointerId: 2, button: 0, clientX: 40, clientY: 40 });
+        input.update();
+        expect(input.wasKeyPressed('bomb')).toBe(true);
+        expect(input.isDragging).toBe(true);
+
+        env.emitOnWindow('pointerup', { pointerType: 'touch', pointerId: 2 });
+        input.update();
+        expect(input.wasKeyPressed('bomb')).toBe(false);
+        expect(input.isDragging).toBe(true);
+
+        env.emitOnWindow('pointerup', { pointerType: 'touch', pointerId: 1 });
+        expect(input.isDragging).toBe(false);
       } finally {
         if (hadWindow) g.window = originalWindow;
         else delete g.window;

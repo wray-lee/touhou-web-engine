@@ -298,11 +298,26 @@ npm run ecl:th08
 npm run ecl:check
 ```
 
-`public/assets/th08/` is gitignored as a whole, so the decoded pages and the `.ogg`
-tracks never enter git. What *is* committed is everything the pipeline derives from them
-that is not copyrighted pixels: the translated stage scripts, the ANM keyframe tables, the
-`.sht` player tables and the `.std` backdrop geometry. Clone, run the two commands above,
-and the campaign is complete.
+`public/assets/th08/` is gitignored as a whole (`.gitignore`). The decoded tree is
+required to run the game and is never committed: generate it from your own copy of the
+data files with the commands above, then mount that directory wherever the page is served.
+A clone without it builds and the campaign logic runs, but every texture, sound effect and
+track resolves to a missing file.
+
+The browser loads three of the four outputs, all under `/assets/th08/` (an embedder prefixes
+that with its own base, e.g. `th08-assets/`):
+
+| Path | Needed at runtime | Contents |
+|---|---|---|
+| `anm/` | yes | Texture pages (`*_tN.png`): bullets, enemies, player, HUD, faces, effects |
+| `bgm/` | yes | `th08_NN.ogg`, one file per track |
+| `raw/` | yes | Sound effects (`se_*.wav`) and full-frame backdrops (`result.jpg`) |
+| `manifest.json` | no | Sprite rects and script bytes for the offline translators only |
+
+What *is* committed is everything the pipeline derives from those files that is not
+copyrighted pixels or audio: the translated stage scripts, the ANM keyframe tables, the
+`.sht` player tables and the `.std` backdrop geometry. Clone, run the commands above,
+mount `anm/`, `bgm/` and `raw/` next to the page, and the campaign is complete.
 
 ### How the scripts become engine code
 

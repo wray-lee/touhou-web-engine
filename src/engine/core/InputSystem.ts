@@ -95,6 +95,20 @@ export class InputSystem {
   private boundPointerUpHandler?: (e: PointerEvent) => void;
   private boundPointerEnterHandler?: (e: PointerEvent) => void;
   private boundPointerLeaveHandler?: (e: PointerEvent) => void;
+  private boundContextMenuHandler?: (e: Event) => void;
+  /** Right mouse button held. Sampled like a key so a hold bombs once, not every frame. */
+  private pointerBombHeld = false;
+  /** Right-click released before the next sample. Reported once, then consumed. */
+  private pointerBombTap = false;
+  /** Touches currently down on the game element, for the two-finger bomb tap. */
+  private activeTouches = new Set<number>();
+  /** A second finger landed. Held only while the chord is down. */
+  private touchBombHeld = false;
+  /** Two-finger tap released before the next sample. Reported once, then consumed. */
+  private touchBombTap = false;
+  /** Bomb was already down last sample, so a hold does not re-fire every frame. */
+  private pointerBombWasDown = false;
+  private touchBombWasDown = false;
 
   /** True while a touch/pointer is dragging the player ship. */
   public isDragging = false;
@@ -193,16 +207,30 @@ export class InputSystem {
     // viewport so the drag continues even when the finger leaves the canvas.
     if (this.attachTarget) {
       this.boundPointerDownHandler = (e: PointerEvent) => {
-        if (e.pointerType === 'touch' || e.button === 0) {
+        if (e.pointerType === 'touch') {
+          this.noteTouchDown(e.pointerId);
+          this.pointerDown(e.clientX, e.clientY);
+        } else if (e.button === 2) {
+          this.pressPointerBomb();
+        } else if (e.button === 0) {
           this.pointerDown(e.clientX, e.clientY);
         }
       };
       this.boundPointerMoveHandler = (e: PointerEvent) => {
         this.pointerMove(e.clientX, e.clientY);
       };
-      this.boundPointerUpHandler = () => {
-        this.pointerUp();
+      this.boundPointerUpHandler = (e: PointerEvent) => {
+        if (e.pointerType === 'touch') {
+          this.noteTouchUp(e.pointerId);
+          if (this.activeTouches.size === 0) this.pointerUp();
+        } else if (e.button === 2) {
+          this.releasePointerBomb();
+        } else if (e.button === 0) {
+          this.pointerUp();
+        }
       };
+      // A right-click otherwise opens the browser menu over the playfield.
+      this.boundContextMenuHandler = (e: Event) => e.preventDefault();
       this.boundPointerEnterHandler = (e: PointerEvent) => {
         if (this.mouseControl) {
           this.pointerInside = true;
@@ -217,6 +245,7 @@ export class InputSystem {
       this.attachTarget.addEventListener('pointerleave', this.boundPointerLeaveHandler as EventListener);
       viewport?.addEventListener('pointermove', this.boundPointerMoveHandler as EventListener);
       viewport?.addEventListener('pointerup', this.boundPointerUpHandler as EventListener);
+      this.attachTarget.addEventListener('contextmenu', this.boundContextMenuHandler as EventListener);
     }
   }
 
@@ -246,7 +275,12 @@ export class InputSystem {
     if (this.boundPointerLeaveHandler && this.attachTarget) {
       this.attachTarget.removeEventListener('pointerleave', this.boundPointerLeaveHandler as EventListener);
     }
+    if (this.boundContextMenuHandler && this.attachTarget) {
+      this.attachTarget.removeEventListener('contextmenu', this.boundContextMenuHandler as EventListener);
+    }
     this.pointerInside = false;
+    this.pointerBombHeld = false;
+    this.activeTouches.clear();
     this.attachTarget = undefined;
   }
 
@@ -293,6 +327,34 @@ export class InputSystem {
     this.isDragging = false;
   }
 
+  /** Right mouse button down. Held state bombs on the next sample, exactly once. */
+  pressPointerBomb(): void {
+    this.pointerBombHeld = true;
+  }
+
+  /** Right mouse button up. A click shorter than one frame is still one bomb. */
+  releasePointerBomb(): void {
+    if (this.pointerBombHeld && !this.pointerBombWasDown) this.pointerBombTap = true;
+    this.pointerBombHeld = false;
+  }
+
+  /**
+   * A second finger landing while one is already down is the touch bomb. The
+   * first finger keeps steering; lifting either one ends the chord, and a chord
+   * shorter than one frame is still one bomb.
+   */
+  noteTouchDown(pointerId: number): void {
+    if (this.activeTouches.size >= 1 && !this.activeTouches.has(pointerId)) this.touchBombHeld = true;
+    this.activeTouches.add(pointerId);
+  }
+
+  noteTouchUp(pointerId: number): void {
+    this.activeTouches.delete(pointerId);
+    // A chord the last sample already reported is a hold, not a second bomb.
+    if (this.touchBombHeld && this.activeTouches.size < 2 && !this.touchBombWasDown) this.touchBombTap = true;
+    if (this.activeTouches.size < 2) this.touchBombHeld = false;
+  }
+
   /** True when a pointer device (touch drag or opt-in mouse) is steering the ship. */
   get isSteering(): boolean {
     return this.isDragging || (this.mouseControl && this.pointerInside);
@@ -319,6 +381,23 @@ export class InputSystem {
     }
     // Poll gamepads and merge — reuses the same edge-detection as keyboard.
     this.pollGamepad();
+    this.pollPointerBomb();
+  }
+
+  /** Fold the right-click and the two-finger tap into the bomb action. */
+  private pollPointerBomb(): void {
+    this.foldBomb(this.pointerBombHeld, this.pointerBombTap, this.pointerBombWasDown);
+    this.pointerBombTap = false;
+    this.pointerBombWasDown = this.pointerBombHeld;
+    this.foldBomb(this.touchBombHeld, this.touchBombTap, this.touchBombWasDown);
+    this.touchBombTap = false;
+    this.touchBombWasDown = this.touchBombHeld;
+  }
+
+  /** One pointer source: a hold fires on its first sample, a sub-frame tap fires once. */
+  private foldBomb(held: boolean, tap: boolean, wasDown: boolean): void {
+    if (held) this.currentFrameDown.add('bomb');
+    else if (tap && !wasDown) this.bufferedPresses.add('bomb');
   }
 
   /**
