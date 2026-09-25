@@ -1,4 +1,4 @@
-# TOUHOU web engine
+# TOUHOU Web Engine
 
 > A high-performance, extensible STG (danmaku) game engine designed to recreate Touhou Project in the browser.
 
