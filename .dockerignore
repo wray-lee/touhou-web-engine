@@ -1,0 +1,7 @@
+node_modules
+dist
+coverage
+.git
+public/assets/th08
+docs/screenshots
+.playwright-mcp
